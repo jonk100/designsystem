@@ -1,0 +1,70 @@
+---
+import { mergeClasses, mergeStyles } from "../shared/functions";
+import type { BaseComponentProps } from "../shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents";
+  [key: string]: any;
+}
+
+const standardProps = [
+  "as",
+  "class",
+  "class:list",
+  "style",
+  "id",
+  "display",
+  "animate",
+];
+const props = Astro.props;
+
+let animationName = "";
+let animationValue = "";
+
+// Find the first prop that isn't a standard prop and is truthy
+// This assumes any non-standard prop is the animation name (e.g. `fadeIn`, `wiggle`)
+for (const [key, value] of Object.entries(props)) {
+  if (!standardProps.includes(key) && value !== false && value !== undefined) {
+    animationName = key;
+    animationValue = typeof value === "string" ? value : "";
+    break;
+  }
+}
+
+// Construct the standard animate prop string expected by mergeClasses/mergeStyles
+const animate = animationName
+  ? `${animationName} ${animationValue}`.trim()
+  : Astro.props.animate;
+
+const { as: Tag = "div", display = "inline-block", ...rest } = props;
+
+// Remove the extracted animation prop from rest so it doesn't get rendered as an HTML attribute
+if (animationName) {
+  delete rest[animationName];
+}
+
+const classes = [display && `m-display--${display}`];
+
+// Pass the constructed `animate` string directly to the shared functions
+const finalClasses = mergeClasses(classes, { ...props, animate });
+const finalStyles = mergeStyles("", { ...props, animate });
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .m-display--block {
+    display: block;
+  }
+  .m-display--inline {
+    display: inline;
+  }
+  .m-display--inline-block {
+    display: inline-block;
+  }
+  .m-display--contents {
+    display: contents;
+  }
+</style>

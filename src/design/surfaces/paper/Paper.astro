@@ -1,0 +1,36 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  elevation?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const {
+  as: Tag = 'div',
+  elevation = 'sm',
+  padding = 'md',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'paper-component',
+  `paper-elevation--${elevation}`,
+  `paper-padding--${padding}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './Paper.css';
+</style>

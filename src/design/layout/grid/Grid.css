@@ -1,0 +1,9 @@
+.grid-component {
+  display: grid;
+  width: 100%;
+}
+
+.grid-gap--sm { gap: var(--sp-sm); }
+.grid-gap--md { gap: var(--sp-md); }
+.grid-gap--lg { gap: var(--sp-lg); }
+.grid-gap--xl { gap: var(--sp-xl); }

@@ -1,0 +1,36 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  variant?: '1' | '2' | '3' | '4' | '5' | 'cosmic' | 'sunset';
+  size?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+}
+
+const {
+  as: Tag = 'div',
+  variant = '3',
+  size = '3xl',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'counter-component',
+  `counter-variant--${variant}`,
+  `counter-size--${size}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './Counter.css';
+</style>

@@ -1,0 +1,53 @@
+---
+import Head from './Head.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title: pageTitle = 'The System', description = 'A beautiful design system' } = Astro.props;
+
+const siteTitle = 'Design System';
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <Head />
+    <slot name="head" />
+    <title>{siteTitle} | {pageTitle}</title>
+  </head>
+  <body>
+    <header>
+      <slot name="header" />
+    </header>
+
+    <div class="hero">
+      <slot name="hero" />
+    </div>
+
+    <main>
+      <div class="main-top">
+        <slot name="main-top" />
+      </div>
+
+      <div class="main-content">
+        <slot />
+      </div>
+
+      <div class="main-bottom">
+        <slot name="main-bottom" />
+      </div>
+    </main>
+
+    <div class="zero">
+      <slot name="zero" />
+    </div>
+
+    <footer>
+      <slot name="footer" />
+    </footer>
+  </body>
+</html>
+

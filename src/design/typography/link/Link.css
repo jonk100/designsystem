@@ -1,0 +1,104 @@
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--color-primary-hover, var(--color-primary));
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Size variants */
+.link--size-0,
+.link--size-xxs { font-size: var(--font-size-xxs); }
+.link--size-1,
+.link--size-xs { font-size: var(--font-size-xs); }
+.link--size-2,
+.link--size-sm { font-size: var(--font-size-sm); }
+.link--size-3,
+.link--size-md { font-size: var(--font-size-md); }
+.link--size-4,
+.link--size-base { font-size: var(--font-size-base); }
+.link--size-5,
+.link--size-lg { font-size: var(--font-size-lg); }
+.link--size-6,
+.link--size-xl { font-size: var(--font-size-xl); }
+.link--size-7,
+.link--size-2xl { font-size: var(--font-size-2xl); }
+.link--size-8,
+.link--size-3xl { font-size: var(--font-size-3xl); }
+.link--size-9,
+.link--size-4xl { font-size: var(--font-size-4xl); }
+.link--size-10,
+.link--size-5xl { font-size: var(--font-size-5xl); }
+.link--size-11,
+.link--size-6xl { font-size: var(--font-size-6xl); }
+
+/* Tone variants */
+.link--tone-0 { color: var(--color-text-0); }
+.link--tone-1 { color: var(--color-text-1); }
+.link--tone-2 { color: var(--color-text-2); }
+.link--tone-3 { color: var(--color-text-3); }
+.link--tone-4 { color: var(--color-text-4); }
+.link--tone-5 { color: var(--color-text-5); }
+.link--tone-primary { color: var(--color-primary); }
+.link--tone-secondary { color: var(--color-secondary); }
+.link--tone-accent { color: var(--color-accent); }
+.link--tone-white { color: var(--color-white); }
+.link--tone-black { color: var(--color-black); }
+.link--tone-default { color: var(--color-text-default); }
+.link--tone-muted { color: var(--color-text-muted); }
+.link--tone-subtle { color: var(--color-text-subtle); }
+.link--tone-danger { color: var(--color-danger); }
+.link--tone-success { color: var(--color-success); }
+.link--tone-currentColor { color: currentColor; }
+.link--tone-inherit { color: inherit; }
+
+/* Weight */
+.link--weight-thin { font-weight: 100; }
+.link--weight-extralight { font-weight: 200; }
+.link--weight-light { font-weight: 300; }
+.link--weight-normal { font-weight: 400; }
+.link--weight-medium { font-weight: 500; }
+.link--weight-semibold { font-weight: 600; }
+.link--weight-bold { font-weight: 700; }
+.link--weight-extrabold { font-weight: 800; }
+.link--weight-black { font-weight: 900; }
+
+/* Underline variants */
+.link--underline-none {
+  text-decoration: none;
+}
+
+.link--underline-hover {
+  text-decoration: none;
+}
+
+.link--underline-hover:hover {
+  text-decoration: underline;
+}
+
+.link--underline-always {
+  text-decoration: underline;
+}
+
+/* External link */
+.link--external {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.link__external-icon {
+  font-size: 0.875em;
+  opacity: 0.7;
+}
+
+/* Made with Bob */

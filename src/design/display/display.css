@@ -1,0 +1,11 @@
+/**
+ * Display Component Shared Styles
+ * This file can contain shared utilities for display components
+ * Variant classes are now in tokens.css
+ */
+
+@import './tokens.css';
+
+/* Add any shared display component utilities here */
+
+/* Made with Bob */

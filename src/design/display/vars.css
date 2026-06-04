@@ -1,0 +1,47 @@
+:root {
+  /* ─── DISPLAY COMPONENT COLORS ──────────────────────────── */
+  
+  /* Default Variant */
+  --color-display-default-bg: rgba(139, 92, 246, 0.2);
+  --color-display-default-border: rgba(139, 92, 246, 0.4);
+  --color-display-default-hover-bg: rgba(139, 92, 246, 0.4);
+  --color-display-default-shadow: rgba(139, 92, 246, 0.3);
+  
+  /* Primary Variant */
+  --color-display-primary-bg: rgba(59, 130, 246, 0.2);
+  --color-display-primary-border: rgba(59, 130, 246, 0.4);
+  --color-display-primary-hover-bg: rgba(59, 130, 246, 0.4);
+  --color-display-primary-shadow: rgba(59, 130, 246, 0.3);
+  
+  /* Secondary Variant */
+  --color-display-secondary-bg: rgba(148, 163, 184, 0.2);
+  --color-display-secondary-border: rgba(148, 163, 184, 0.4);
+  --color-display-secondary-hover-bg: rgba(148, 163, 184, 0.4);
+  --color-display-secondary-shadow: rgba(148, 163, 184, 0.3);
+  
+  /* Success Variant */
+  --color-display-success-bg: rgba(34, 197, 94, 0.2);
+  --color-display-success-border: rgba(34, 197, 94, 0.4);
+  --color-display-success-hover-bg: rgba(34, 197, 94, 0.4);
+  --color-display-success-shadow: rgba(34, 197, 94, 0.3);
+  
+  /* Warning Variant */
+  --color-display-warning-bg: rgba(251, 191, 36, 0.2);
+  --color-display-warning-border: rgba(251, 191, 36, 0.4);
+  --color-display-warning-hover-bg: rgba(251, 191, 36, 0.4);
+  --color-display-warning-shadow: rgba(251, 191, 36, 0.3);
+  
+  /* Danger Variant */
+  --color-display-danger-bg: rgba(239, 68, 68, 0.2);
+  --color-display-danger-border: rgba(239, 68, 68, 0.4);
+  --color-display-danger-hover-bg: rgba(239, 68, 68, 0.4);
+  --color-display-danger-shadow: rgba(239, 68, 68, 0.3);
+  
+  /* Info Variant */
+  --color-display-info-bg: rgba(14, 165, 233, 0.2);
+  --color-display-info-border: rgba(14, 165, 233, 0.4);
+  --color-display-info-hover-bg: rgba(14, 165, 233, 0.4);
+  --color-display-info-shadow: rgba(14, 165, 233, 0.3);
+}
+
+/* Made with Bob */

@@ -1,0 +1,82 @@
+---
+import type { FontSize, TextTone, XAlign } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'h1'> {
+  /**
+   * The heading level (h1-h6)
+   * @default 'h2'
+   */
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  
+  /**
+   * Font size of the heading
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Horizontal text alignment
+   */
+  align?: XAlign;
+  
+  /**
+   * Font weight
+   */
+  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  
+  /**
+   * Truncate text with ellipsis
+   */
+  truncate?: boolean;
+  
+  /**
+   * Letter spacing
+   */
+  tracking?: 'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest';
+  
+  /**
+   * Line height
+   */
+  leading?: 'none' | 'tight' | 'snug' | 'normal' | 'relaxed' | 'loose';
+}
+
+const {
+  as: Element = 'h2',
+  size,
+  tone,
+  align,
+  weight,
+  truncate = false,
+  tracking,
+  leading,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'heading',
+  `heading--level-${Element}`,
+  size && `heading--size-${size}`,
+  tone && `heading--tone-${tone}`,
+  align && `heading--align-${align}`,
+  weight && `heading--weight-${weight}`,
+  truncate && 'heading--truncate',
+  tracking && `heading--tracking-${tracking}`,
+  leading && `heading--leading-${leading}`,
+  className,
+].filter(Boolean).join(' ');
+---
+
+<Element class={classes} {...rest}>
+  <slot />
+</Element>
+
+<style>
+  @import '../typography.css';
+  @import './Heading.css';
+</style>

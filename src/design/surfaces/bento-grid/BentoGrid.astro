@@ -1,0 +1,36 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  columns?: number;
+  gap?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const {
+  as: Tag = 'div',
+  columns = 3,
+  gap = 'lg',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'bento-grid-component',
+  `bento-grid-columns--${columns}`,
+  `bento-grid-gap--${gap}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './BentoGrid.css';
+</style>

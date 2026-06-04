@@ -1,0 +1,19 @@
+@import './vars.css';
+@import '../design/tokens.css';
+
+
+:root {
+
+  /* ─── SPACING ───────────────────────────────────────── */
+  --sp-3xs: clamp(0.125rem, 0.125rem + 0.125vi, 0.25rem);
+  --sp-2xs: clamp(0.25rem, 0.25rem + 0.25vi, 0.5rem);
+  --sp-xs: clamp(0.5rem, 0.5rem + 0.5vi, 0.75rem);
+  --sp-sm: clamp(0.75rem, 0.75rem + 0.5vi, 1rem);
+  --sp-md: clamp(1rem, 1.5vi, 1.5rem);
+  --sp-lg: clamp(1.5rem, 2vi, 2rem);
+  --sp-xl: clamp(2rem, 3vi, 3rem);
+  --sp-2xl: clamp(2.5rem, 4vi, 4rem);
+  --sp-3xl: clamp(3rem, 6vi, 6rem);
+  --sp-4xl: clamp(4rem, 8vi, 8rem);
+  --sp-5xl: clamp(6rem, 12vi, 12rem);
+}

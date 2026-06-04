@@ -1,0 +1,45 @@
+---
+import type { FlexboxProps } from "../layout.types";
+import type { AnimationProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+
+export interface Props extends FlexboxProps {
+  as?: string;
+  class?: string;
+  "class:list"?: Record<string, boolean> | any[];
+  [key: string]: any;
+}
+
+const {
+  as: Tag = "span",
+  gap = "md",
+  align = "center",
+  justify = "start",
+  wrap = true,
+  ...rest
+} = Astro.props;
+
+// Define component-specific classes and styles
+const classes = ["inline", `gap-size--${gap}`];
+
+const styles = "";
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .inline {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    color: inherit;
+    -webkit-text-fill-color: initial;
+    background-clip: initial;
+  }
+</style>

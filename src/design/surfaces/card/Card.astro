@@ -1,0 +1,39 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  align?: 'left' | 'center' | 'right';
+  variant?: 'default' | 'stat';
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'xl',
+  align = 'left',
+  variant = 'default',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-component',
+  `card-padding--${padding}`,
+  `card-align--${align}`,
+  `card-variant--${variant}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './Card.css';
+</style>

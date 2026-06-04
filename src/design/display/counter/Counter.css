@@ -1,0 +1,24 @@
+.counter-component {
+  font-weight: var(--fw-black, 900);
+  -webkit-text-fill-color: transparent;
+  margin-bottom: var(--sp-xs);
+  line-height: var(--lh-none);
+  display: inline-block;
+}
+
+.counter-size--md { font-size: var(--fs-md); }
+.counter-size--lg { font-size: var(--fs-lg); }
+.counter-size--xl { font-size: var(--fs-xl); }
+.counter-size--2xl { font-size: var(--fs-2xl); }
+.counter-size--3xl { font-size: var(--fs-3xl); }
+.counter-size--4xl { font-size: var(--fs-4xl); }
+.counter-size--5xl { font-size: var(--fs-5xl); }
+.counter-size--6xl { font-size: var(--fs-6xl); }
+
+.counter-variant--1 { background: var(--gradient-1); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--2 { background: var(--gradient-2); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--3 { background: var(--gradient-3); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--4 { background: var(--gradient-4); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--5 { background: var(--gradient-5); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--cosmic { background: var(--gradient-cosmic); -webkit-background-clip: text; background-clip: text; }
+.counter-variant--sunset { background: var(--gradient-sunset); -webkit-background-clip: text; background-clip: text; }

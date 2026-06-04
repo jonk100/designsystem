@@ -1,0 +1,41 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  columns?: string | number;
+  gap?: 'sm' | 'md' | 'lg' | 'xl';
+  minWidth?: string;
+}
+
+const {
+  as: Tag = 'div',
+  columns,
+  gap = 'xl',
+  minWidth = '280px',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'grid-component',
+  `grid-gap--${gap}`
+];
+
+const customStyle = columns 
+  ? `grid-template-columns: repeat(${columns}, 1fr);` 
+  : `grid-template-columns: repeat(auto-fit, minmax(${minWidth}, 1fr));`;
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './Grid.css';
+</style>

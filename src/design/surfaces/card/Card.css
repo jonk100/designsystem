@@ -1,0 +1,29 @@
+.card-component {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: var(--rad-xl);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.card-padding--none { padding: 0; }
+.card-padding--sm { padding: var(--sp-sm); }
+.card-padding--md { padding: var(--sp-md); }
+.card-padding--lg { padding: var(--sp-lg); }
+.card-padding--xl { padding: var(--sp-xl); }
+
+.card-align--left { text-align: left; }
+.card-align--center { text-align: center; }
+.card-align--right { text-align: right; }
+
+.card-variant--default:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.card-variant--stat:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139, 92, 246, 0.5);
+}

@@ -1,0 +1,39 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  align?: 'start' | 'center' | 'end' | 'stretch';
+  justify?: 'start' | 'center' | 'end' | 'between';
+}
+
+const {
+  as: Tag = 'div',
+  gap = 'md',
+  align = 'stretch',
+  justify = 'start',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'stack-component',
+  `stack-gap--${gap}`,
+  `stack-align--${align}`,
+  `stack-justify--${justify}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './Stack.css';
+</style>

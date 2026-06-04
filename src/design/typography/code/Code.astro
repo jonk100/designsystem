@@ -1,0 +1,67 @@
+---
+import type { FontSize, TextTone } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'code'> {
+  /**
+   * Font size of the code
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Display as a block (pre-formatted)
+   */
+  block?: boolean;
+  
+  /**
+   * Programming language (for syntax highlighting context)
+   */
+  language?: string;
+  
+  /**
+   * Font weight
+   */
+  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+}
+
+const {
+  size,
+  tone,
+  block = false,
+  language,
+  weight,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'code',
+  size && `code--size-${size}`,
+  tone && `code--tone-${tone}`,
+  block && 'code--block',
+  weight && `code--weight-${weight}`,
+  className,
+].filter(Boolean).join(' ');
+
+const Element = block ? 'pre' : 'code';
+---
+
+{block ? (
+  <pre class={classes} data-language={language} {...rest}>
+    <code><slot /></code>
+  </pre>
+) : (
+  <code class={classes} data-language={language} {...rest}>
+    <slot />
+  </code>
+)}
+
+<style>
+  @import '../typography.css';
+  @import './Code.css';
+</style>

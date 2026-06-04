@@ -1,0 +1,80 @@
+.label {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text-default);
+  margin-bottom: 0.25em;
+  cursor: pointer;
+}
+
+/* Size variants */
+.label--size-0,
+.label--size-xxs { font-size: var(--font-size-xxs); }
+.label--size-1,
+.label--size-xs { font-size: var(--font-size-xs); }
+.label--size-2,
+.label--size-sm { font-size: var(--font-size-sm); }
+.label--size-3,
+.label--size-md { font-size: var(--font-size-md); }
+.label--size-4,
+.label--size-base { font-size: var(--font-size-base); }
+.label--size-5,
+.label--size-lg { font-size: var(--font-size-lg); }
+.label--size-6,
+.label--size-xl { font-size: var(--font-size-xl); }
+.label--size-7,
+.label--size-2xl { font-size: var(--font-size-2xl); }
+.label--size-8,
+.label--size-3xl { font-size: var(--font-size-3xl); }
+.label--size-9,
+.label--size-4xl { font-size: var(--font-size-4xl); }
+.label--size-10,
+.label--size-5xl { font-size: var(--font-size-5xl); }
+.label--size-11,
+.label--size-6xl { font-size: var(--font-size-6xl); }
+
+/* Tone variants */
+.label--tone-0 { color: var(--color-text-0); }
+.label--tone-1 { color: var(--color-text-1); }
+.label--tone-2 { color: var(--color-text-2); }
+.label--tone-3 { color: var(--color-text-3); }
+.label--tone-4 { color: var(--color-text-4); }
+.label--tone-5 { color: var(--color-text-5); }
+.label--tone-primary { color: var(--color-primary); }
+.label--tone-secondary { color: var(--color-secondary); }
+.label--tone-accent { color: var(--color-accent); }
+.label--tone-white { color: var(--color-white); }
+.label--tone-black { color: var(--color-black); }
+.label--tone-default { color: var(--color-text-default); }
+.label--tone-muted { color: var(--color-text-muted); }
+.label--tone-subtle { color: var(--color-text-subtle); }
+.label--tone-danger { color: var(--color-danger); }
+.label--tone-success { color: var(--color-success); }
+.label--tone-currentColor { color: currentColor; }
+.label--tone-inherit { color: inherit; }
+
+/* Weight */
+.label--weight-thin { font-weight: 100; }
+.label--weight-extralight { font-weight: 200; }
+.label--weight-light { font-weight: 300; }
+.label--weight-normal { font-weight: 400; }
+.label--weight-medium { font-weight: 500; }
+.label--weight-semibold { font-weight: 600; }
+.label--weight-bold { font-weight: 700; }
+.label--weight-extrabold { font-weight: 800; }
+.label--weight-black { font-weight: 900; }
+
+/* States */
+.label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Required indicator */
+.label__required {
+  color: var(--color-danger);
+  margin-left: 0.25em;
+}
+
+/* Made with Bob */

@@ -1,0 +1,53 @@
+---
+import type { FontSize, TextTone } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  /**
+   * The HTML element to render
+   * @default 'div'
+   */
+  as?: 'div' | 'article' | 'section';
+  
+  /**
+   * Font size of the prose content
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Maximum width constraint
+   */
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'none';
+}
+
+const {
+  as: Element = 'div',
+  size,
+  tone,
+  maxWidth = 'lg',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'prose',
+  size && `prose--size-${size}`,
+  tone && `prose--tone-${tone}`,
+  maxWidth && maxWidth !== 'none' && `prose--max-width-${maxWidth}`,
+  className,
+].filter(Boolean).join(' ');
+---
+
+<Element class={classes} {...rest}>
+  <slot />
+</Element>
+
+<style>
+  @import '../typography.css';
+  @import './Prose.css';
+</style>

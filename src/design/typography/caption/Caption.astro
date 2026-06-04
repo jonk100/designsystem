@@ -1,0 +1,67 @@
+---
+import type { FontSize, TextTone, XAlign } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'figcaption'> {
+  /**
+   * The HTML element to render
+   * @default 'figcaption'
+   */
+  as?: 'figcaption' | 'span' | 'div' | 'p';
+  
+  /**
+   * Font size of the caption
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Horizontal text alignment
+   */
+  align?: XAlign;
+  
+  /**
+   * Font weight
+   */
+  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  
+  /**
+   * Font style
+   */
+  italic?: boolean;
+}
+
+const {
+  as: Element = 'figcaption',
+  size = 'sm',
+  tone = 'muted',
+  align,
+  weight,
+  italic = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'caption',
+  size && `caption--size-${size}`,
+  tone && `caption--tone-${tone}`,
+  align && `caption--align-${align}`,
+  weight && `caption--weight-${weight}`,
+  italic && 'caption--italic',
+  className,
+].filter(Boolean).join(' ');
+---
+
+<Element class={classes} {...rest}>
+  <slot />
+</Element>
+
+<style>
+  @import '../typography.css';
+  @import './Caption.css';
+</style>

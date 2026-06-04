@@ -1,0 +1,77 @@
+---
+import type { FontSize, TextTone, XAlign } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'blockquote'> {
+  /**
+   * Font size of the blockquote
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Horizontal text alignment
+   */
+  align?: XAlign;
+  
+  /**
+   * Font weight
+   */
+  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  
+  /**
+   * Font style
+   */
+  italic?: boolean;
+  
+  /**
+   * Show citation/attribution
+   */
+  cite?: string;
+  
+  /**
+   * Author of the quote
+   */
+  author?: string;
+}
+
+const {
+  size,
+  tone,
+  align,
+  weight,
+  italic = true,
+  cite,
+  author,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'blockquote',
+  size && `blockquote--size-${size}`,
+  tone && `blockquote--tone-${tone}`,
+  align && `blockquote--align-${align}`,
+  weight && `blockquote--weight-${weight}`,
+  italic && 'blockquote--italic',
+  className,
+].filter(Boolean).join(' ');
+---
+
+<blockquote class={classes} cite={cite} {...rest}>
+  <slot />
+  {author && (
+    <footer class="blockquote__footer">
+      <cite class="blockquote__cite">{author}</cite>
+    </footer>
+  )}
+</blockquote>
+
+<style>
+  @import '../typography.css';
+  @import './Blockquote.css';
+</style>

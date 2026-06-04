@@ -1,0 +1,51 @@
+---
+import type { CommonHTMLProps } from "../../shared";
+import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Inline from "../../layout/inline/Inline.astro";
+import "./Badge.css";
+
+export interface Props extends CommonHTMLProps {
+  /** Icon or emoji to display before the text */
+  icon?: string;
+  /** Variant style of the badge */
+  variant?: DisplayVariant;
+  /** Size of the badge */
+  size?: DisplaySize;
+  /** HTML element to render */
+  as?: string;
+}
+
+const {
+  icon,
+  variant = "default",
+  size = "md",
+  as: Tag = "span",
+  ...rest
+} = Astro.props;
+
+// Define component-specific classes
+// Uses shared display-size--* and display-variant--* classes
+const classes = [
+  "badge",
+  `display-size--${size}`,
+  `display-variant--${variant}`,
+];
+
+const styles = "";
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Inline
+  as={Tag}
+  gap="sm"
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {icon && <span class="badge__icon">{icon}</span>}
+  <span class="badge__text"><slot /></span>
+</Inline>

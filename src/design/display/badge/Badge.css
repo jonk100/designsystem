@@ -1,0 +1,68 @@
+/**
+ * Badge Component Styles
+ * Component-specific styles only - sizes and variants are in tokens.css
+ */
+@import '../tokens.css';
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--display-radius);
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  margin: 0 auto;
+}
+
+.badge:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Badge Elements */
+.badge--icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+}
+
+.badge--text {
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge--2xs {
+  min-width: 80px;
+}
+
+.badge--xs {
+  min-width: 90px;
+}
+
+.badge--sm {
+  min-width: 120px;
+}
+
+.badge--md {
+  min-width: 150px;
+}
+
+.badge--lg {
+  min-width: 180px;
+}
+
+.badge--xl {
+  min-width: 220px;
+}
+
+.badge--2xl {
+  min-width: 250px;
+}
+
+.badge--3xl {
+  min-width: 300px;
+}

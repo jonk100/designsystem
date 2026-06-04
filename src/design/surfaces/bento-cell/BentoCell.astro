@@ -1,0 +1,36 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  span?: 1 | 2 | 3 | 'full';
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const {
+  as: Tag = 'div',
+  span = 1,
+  padding = 'xl',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'bento-cell-component',
+  `bento-cell-span--${span}`,
+  `bento-cell-padding--${padding}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  @import './BentoCell.css';
+</style>

@@ -1,0 +1,47 @@
+@import 'animation/animate.css';
+@import 'layout/tokens.css';
+@import 'typography/tokens.css';
+@import 'display/tokens.css';
+
+:root {
+  --gap-size-2xs: var(--sp-2xs);
+  --gap-size-xs: calc(var(--sp-xs) * 1.1);
+  --gap-size-sm: calc(var(--sp-sm) * 1.2);
+  --gap-size-md: calc(var(--sp-md) * 1.3);
+  --gap-size-lg: calc(var(--sp-lg) * 1.4);
+  --gap-size-xl: calc(var(--sp-xl) * 1.6);
+  --gap-size-2xl: calc(var(--sp-2xl) * 1.8);
+  --gap-size-3xl: calc(var(--sp-3xl) * 2);
+}
+
+.gap-size--2xs {
+  gap: var(--gap-size-2xs);
+}
+
+.gap-size--xs {
+  gap: var(--gap-size-xs);
+}
+
+.gap-size--sm {
+  gap: var(--gap-size-sm);
+}
+
+.gap-size--md {
+  gap: var(--gap-size-md);
+}
+
+.gap-size--lg {
+  gap: var(--gap-size-lg);
+}
+
+.gap-size--xl {
+  gap: var(--gap-size-xl);
+}
+
+.gap-size--2xl {
+  gap: var(--gap-size-2xl);
+}
+
+.gap-size--3xl {
+  gap: var(--gap-size-3xl);
+}

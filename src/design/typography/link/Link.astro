@@ -1,0 +1,79 @@
+---
+import type { FontSize, TextTone } from '../typography.types';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  /**
+   * URL to link to
+   */
+  href?: string;
+  
+  /**
+   * Font size of the link
+   */
+  size?: FontSize;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Font weight
+   */
+  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  
+  /**
+   * Underline style
+   */
+  underline?: 'none' | 'hover' | 'always';
+  
+  /**
+   * External link (opens in new tab)
+   */
+  external?: boolean;
+  
+  /**
+   * Target attribute
+   */
+  target?: string;
+  
+  /**
+   * Rel attribute
+   */
+  rel?: string;
+}
+
+const {
+  href,
+  size,
+  tone = 'primary',
+  weight,
+  underline = 'hover',
+  external = false,
+  target = external ? '_blank' : undefined,
+  rel = external ? 'noopener noreferrer' : undefined,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'link',
+  size && `link--size-${size}`,
+  tone && `link--tone-${tone}`,
+  weight && `link--weight-${weight}`,
+  underline && `link--underline-${underline}`,
+  external && 'link--external',
+  className,
+].filter(Boolean).join(' ');
+---
+
+<a class={classes} href={href} target={target} rel={rel} {...rest}>
+  <slot />
+  {external && <span class="link__external-icon" aria-hidden="true">↗</span>}
+</a>
+
+<style>
+  @import '../typography.css';
+  @import './Link.css';
+</style>

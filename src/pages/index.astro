@@ -1,17 +1,566 @@
 ---
-
+import Text from "../design/typography/text/Text.astro";
+import Inline from "../design/layout/inline/Inline.astro";
+import Stack from "../design/layout/stack/Stack.astro";
+import Spacer from "../design/layout/spacer/Spacer.astro";
+import Grid from "../design/layout/grid/Grid.astro";
+import M from "../design/animation/M.astro";
+import Card from "../design/surfaces/card/Card.astro";
+import Counter from "../design/display/counter/Counter.astro";
+import BentoGrid from "../design/surfaces/bento-grid/BentoGrid.astro";
+import BentoCell from "../design/surfaces/bento-cell/BentoCell.astro";
+import Paper from "../design/surfaces/paper/Paper.astro";
+import Frame from "../design/surfaces/frame/Frame.astro";
+import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import Badge from "../design/display/badge/Badge.astro";
+import Tag from "../design/display/tag/TagComponent.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Home">
+	<div class="hero slide-in">
+		<h1 class="hero-title">
+			<Inline gap="3xl">
+				<Text fs="md" animate="sparkle 1.5s">✨</Text>
+				<Text fs="4xl">Design System Wonderland</Text>
+				<Text fs="md" animate="sparkle 1.5s delay-500ms">✨</Text>
+			</Inline>
+		</h1>
+		<p class="hero-subtitle">
+			<Text tone="black"
+				>Where creativity meets functionality in a symphony of components</Text
+			>
+		</p>
+
+		<Inline gap="md">
+			<M fadeIn="0.5s delay-0.1s">
+				<Badge size="2xs" variant="primary" animate="wiggle 1s delay-0.6s">
+					🎨 Beautiful
+				</Badge>
+			</M>
+			<Badge size="xs" variant="danger" animate="fadeIn 0.5s delay-0.4s"
+				>⚡ Fast
+			</Badge>
+			<Badge size="sm" variant="warning" animate="fadeIn 0.5s delay-.9s"
+				>🎯 Precise
+			</Badge>
+			<Badge size="md" variant="success" animate="fadeIn 0.5s delay-1.4s"
+				>🚀 Modern
+			</Badge>
+			<Badge size="lg" variant="primary" animate="fadeIn 0.5s delay-1.9s"
+				>💎 Premium
+			</Badge>
+			<Badge size="xl" variant="info" animate="fadeIn 0.5s delay-2.5s"
+				>🌈 Colorful
+			</Badge>
+		</Inline>
+	</div>
+
+	<div class="container">
+		<!-- Stats Section -->
+		<Grid columns={3} gap="lg" class="slide-in">
+			<Card animate="ripple" variant="stat" padding="xl" align="center">
+				<Counter variant="3" size="3xl">150+</Counter>
+				<Stack gap="none">
+					<Text fs="lg" weight="semibold">Components</Text>
+					<Text fs="sm" tone="muted">Ready to use</Text>
+				</Stack>
+			</Card>
+			<Card animate="half-ripple" variant="stat" padding="xl" align="center">
+				<Counter variant="3" size="3xl">∞</Counter>
+				<Stack gap="none">
+					<Text fs="lg" weight="semibold">Possibilities</Text>
+					<Text fs="sm" tone="muted">Limited by imagination</Text>
+				</Stack>
+			</Card>
+			<Card animate="quarter-ripple" variant="stat" padding="xl" align="center">
+				<Counter variant="3" size="3xl">100%</Counter>
+				<Stack gap="none">
+					<Text fs="lg" weight="semibold">Awesome</Text>
+					<Text fs="sm" tone="muted">Guaranteed</Text>
+				</Stack>
+			</Card>
+		</Grid>
+
+		<!-- Bento Grid Showcase -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="bounce 2s">🎭</Inline> Component Gallery</Text
+			>
+		</div>
+
+		<BentoGrid columns={3} class="slide-in">
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">🎨 Display</Text>
+				<div class="avatar-stack">
+					<div class="avatar avatar-1">A</div>
+					<div class="avatar avatar-2">B</div>
+					<div class="avatar avatar-3">C</div>
+					<div class="avatar avatar-4">D</div>
+					<div class="avatar avatar-5">E</div>
+				</div>
+				<div class="chip-cloud">
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Avatar</Paper
+					>
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Badge</Paper
+					>
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Chip</Paper
+					>
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Counter</Paper
+					>
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Icon</Paper
+					>
+					<Paper animate="slideIn delay-1s" padding="sm" align="center"
+						>Tag</Paper
+					>
+				</div>
+			</BentoCell>
+
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">📊 Analytics</Text>
+				<Stack gap="sm">
+					<Card padding="md" style="background: rgba(255,255,255,0.05);">
+						<Inline gap="md" align="center" justify="center">
+							<Text fs="3xl" weight="bold">42K</Text>
+							<Text fs="sm" tone="muted">Users</Text>
+						</Inline>
+					</Card>
+					<Card padding="md" style="background: rgba(255,255,255,0.05);">
+						<Inline gap="md" align="center" justify="center">
+							<Text fs="3xl" weight="bold">98%</Text>
+							<Text fs="sm" tone="muted">Uptime</Text>
+						</Inline>
+					</Card>
+				</Stack>
+				<Text fs="sm" tone="muted" style="margin-top: 1.5rem; display: block;">
+					Bar charts, pie charts, sparklines, timelines & more!
+				</Text>
+			</BentoCell>
+
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">⚡ Feedback</Text>
+				<Card
+					padding="sm"
+					style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"
+				>
+					<Inline gap="sm" align="center">
+						<span>✅</span>
+						<Text>System is running smoothly! 🎉</Text>
+					</Inline>
+				</Card>
+				<Stack gap="sm" class="progress-showcase" style="margin-top: 1.5rem;">
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 75%"></div>
+					</div>
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 50%"></div>
+					</div>
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 90%"></div>
+					</div>
+				</Stack>
+				<div style="text-align: left; margin-top: 1rem;">
+					<div class="spinner pulse" style="margin: 0;"></div>
+				</div>
+			</BentoCell>
+
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">🎯 Surfaces</Text>
+				<Card padding="lg" style="background: rgba(255,255,255,0.03);">
+					<Text weight="semibold" class="mb-2">Nested Card</Text>
+					<Text fs="sm">Cards, papers, frames, screens & sections!</Text>
+				</Card>
+				<Text fs="sm" tone="muted" style="margin-top: 1.5rem; display: block;">
+					Build beautiful layouts with our surface components
+				</Text>
+			</BentoCell>
+
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">📐 Layout</Text>
+				<Grid columns={2} gap="sm">
+					<Paper
+						padding="md"
+						style="text-align: center; background: var(--gradient-1); border: none;"
+					>
+						<Text weight="bold">Grid</Text>
+					</Paper>
+					<Paper
+						padding="md"
+						style="text-align: center; background: var(--gradient-2); border: none;"
+					>
+						<Text weight="bold">Stack</Text>
+					</Paper>
+					<Paper
+						padding="md"
+						style="text-align: center; background: var(--gradient-3); border: none;"
+					>
+						<Text weight="bold">Inline</Text>
+					</Paper>
+					<Paper
+						padding="md"
+						style="text-align: center; background: var(--gradient-4); border: none;"
+					>
+						<Text weight="bold">Center</Text>
+					</Paper>
+				</Grid>
+			</BentoCell>
+
+			<BentoCell>
+				<Text fs="2xl" weight="bold" class="mb-4">🎬 Media</Text>
+				<Text fs="sm" class="mb-4" style="display: block;">
+					Images, videos, audio, galleries, lightboxes, waveforms & more!
+				</Text>
+				<Inline gap="md" justify="start">
+					<Frame
+						ratio="1:1"
+						style="width: 60px; background: var(--gradient-5); border-radius: 0.5rem; transition: transform 0.3s;"
+						onmouseover="this.style.transform='scale(1.1) rotate(5deg)'"
+						onmouseout="this.style.transform='scale(1) rotate(0deg)'"
+					/>
+					<Frame
+						ratio="1:1"
+						style="width: 60px; background: var(--gradient-1); border-radius: 0.5rem; transition: transform 0.3s;"
+						onmouseover="this.style.transform='scale(1.1) rotate(-5deg)'"
+						onmouseout="this.style.transform='scale(1) rotate(0deg)'"
+					/>
+					<Frame
+						ratio="1:1"
+						style="width: 60px; background: var(--gradient-2); border-radius: 0.5rem; transition: transform 0.3s;"
+						onmouseover="this.style.transform='scale(1.1) rotate(5deg)'"
+						onmouseout="this.style.transform='scale(1) rotate(0deg)'"
+					/>
+				</Inline>
+			</BentoCell>
+		</BentoGrid>
+
+		<!-- Typography Showcase -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="wiggle 1s">✍️</Inline> Typography Playground</Text
+			>
+		</div>
+		<div style="text-align: center; margin: 3rem 0;" class="slide-in">
+			<div style="margin-bottom: 2rem;">
+				<Text fs="5xl" weight="extrabold" transform="uppercase"
+					>BOLD STATEMENT</Text
+				>
+			</div>
+			<div style="margin-bottom: 2rem;">
+				<Text fs="3xl" weight="light" style="italic">Elegant & Refined</Text>
+			</div>
+			<div style="margin-bottom: 2rem;">
+				<Text fs="2xl" weight="medium" decoration="underline"
+					>Underlined for Emphasis</Text
+				>
+			</div>
+			<div style="margin-bottom: 2rem;">
+				<Text fs="xl" tracking="widest" transform="uppercase"
+					>S P A C E D O U T</Text
+				>
+			</div>
+			<div>
+				<Text fs="lg" leading="loose">
+					Perfect line height for comfortable reading experiences that flow
+					naturally
+				</Text>
+			</div>
+		</div>
+
+		<!-- Feature Cards -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="pulse 2s">🌟</Inline> Key Features</Text
+			>
+		</div>
+		<div class="grid slide-in">
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">🎨 Themeable</Text>
+				<Text>
+					Customize every aspect with CSS variables and design tokens
+				</Text>
+			</div>
+
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">♿ Accessible</Text>
+				<Text> Built with ARIA standards and keyboard navigation in mind </Text>
+			</div>
+
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">📱 Responsive</Text>
+				<Text> Works beautifully on all devices from mobile to desktop </Text>
+			</div>
+
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">⚡ Performant</Text>
+				<Text> Optimized for speed with minimal bundle size </Text>
+			</div>
+
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">🔧 Composable</Text>
+				<Text> Mix and match components to create unique experiences </Text>
+			</div>
+
+			<div class="card">
+				<Text fs="xl" weight="bold" class="mb-2">💎 Premium</Text>
+				<Text> Enterprise-grade quality with attention to every detail </Text>
+			</div>
+		</div>
+
+		<!-- Interactive Animation Playground -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="rotate 3s">🎪</Inline> Animation Playground</Text
+			>
+		</div>
+		<div class="animation-showcase slide-in">
+			<div class="animation-demo">
+				<Inline animate="sparkle 2s"><Text fs="3xl">✨</Text></Inline>
+				<Text fs="sm" tone="muted">sparkle</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="bounce 1s"><Text fs="3xl">🏀</Text></Inline>
+				<Text fs="sm" tone="muted">bounce</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="wiggle 1s"><Text fs="3xl">🐛</Text></Inline>
+				<Text fs="sm" tone="muted">wiggle</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="pulse 2s"><Text fs="3xl">💓</Text></Inline>
+				<Text fs="sm" tone="muted">pulse</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="glow 2s"><Text fs="3xl">💡</Text></Inline>
+				<Text fs="sm" tone="muted">glow</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="rotate 3s"><Text fs="3xl">🌀</Text></Inline>
+				<Text fs="sm" tone="muted">rotate</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="shake 0.5s"><Text fs="3xl">📳</Text></Inline>
+				<Text fs="sm" tone="muted">shake</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="swing 2s"><Text fs="3xl">🎭</Text></Inline>
+				<Text fs="sm" tone="muted">swing</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="float 3s"><Text fs="3xl">🎈</Text></Inline>
+				<Text fs="sm" tone="muted">float</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="flip 2s"><Text fs="3xl">🃏</Text></Inline>
+				<Text fs="sm" tone="muted">flip</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="fadeIn 2s"><Text fs="3xl">👻</Text></Inline>
+				<Text fs="sm" tone="muted">fadeIn</Text>
+			</div>
+			<div class="animation-demo">
+				<Inline animate="slideUp 1s"><Text fs="3xl">🚀</Text></Inline>
+				<Text fs="sm" tone="muted">slideUp</Text>
+			</div>
+		</div>
+
+		<!-- Easter Egg Section -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="flip 2s">🎁</Inline> Hidden Gems</Text
+			>
+		</div>
+		<div class="easter-eggs slide-in">
+			<div
+				class="egg-card"
+				onmouseover="this.querySelector('.egg-reveal').style.opacity='1'"
+				onmouseout="this.querySelector('.egg-reveal').style.opacity='0'"
+			>
+				<Text fs="2xl" animate="bounce 1s">🥚</Text>
+				<div class="egg-reveal">
+					<Text weight="bold">Hover Magic!</Text>
+					<Text fs="sm">You found the first secret!</Text>
+				</div>
+			</div>
+			<div class="egg-card" onclick="this.style.transform='rotateY(180deg)'">
+				<Text fs="2xl" animate="wiggle 1s">🎲</Text>
+				<Text fs="sm" tone="muted">Click me!</Text>
+			</div>
+			<div
+				class="egg-card"
+				style="cursor: pointer;"
+				onclick="this.querySelector('.surprise').style.display='block'; this.querySelector('.surprise').style.animation='sparkle 1s';"
+			>
+				<Text fs="2xl" animate="pulse 2s">🎪</Text>
+				<div class="surprise" style="display: none; margin-top: 1rem;">
+					<Text>🎉 SURPRISE! 🎉</Text>
+				</div>
+			</div>
+		</div>
+
+		<!-- Gradient Gallery -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="glow 2s">🌈</Inline> Gradient Gallery</Text
+			>
+		</div>
+		<div class="gradient-gallery slide-in">
+			<div class="gradient-card" style="background: var(--gradient-1);">
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Sunset</Text
+				>
+			</div>
+			<div class="gradient-card" style="background: var(--gradient-2);">
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Ocean</Text
+				>
+			</div>
+			<div class="gradient-card" style="background: var(--gradient-3);">
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Forest</Text
+				>
+			</div>
+			<div class="gradient-card" style="background: var(--gradient-4);">
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Aurora</Text
+				>
+			</div>
+			<div class="gradient-card" style="background: var(--gradient-5);">
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Cosmic</Text
+				>
+			</div>
+			<div
+				class="gradient-card"
+				style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+			>
+				<Text
+					weight="bold"
+					style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+					>Purple Haze</Text
+				>
+			</div>
+		</div>
+
+		<!-- Fun Facts -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="rotate 3s">🎯</Inline> Fun Facts</Text
+			>
+		</div>
+		<div class="fun-facts slide-in">
+			<div class="fact-card">
+				<Inline animate="sparkle 2s"><Text fs="3xl">🎨</Text></Inline>
+				<Text weight="semibold" class="mb-2">12 Animations</Text>
+				<Text fs="sm" tone="muted"
+					>Each with customizable duration and delay</Text
+				>
+			</div>
+			<div class="fact-card">
+				<Inline animate="bounce 1.5s"><Text fs="3xl">🧩</Text></Inline>
+				<Text weight="semibold" class="mb-2">150+ Components</Text>
+				<Text fs="sm" tone="muted">Across 10 different categories</Text>
+			</div>
+			<div class="fact-card">
+				<Inline animate="pulse 2s"><Text fs="3xl">⚡</Text></Inline>
+				<Text weight="semibold" class="mb-2">Zero Runtime</Text>
+				<Text fs="sm" tone="muted"
+					>Pure CSS animations, no JavaScript needed</Text
+				>
+			</div>
+			<div class="fact-card">
+				<Inline animate="glow 2s"><Text fs="3xl">🎭</Text></Inline>
+				<Text weight="semibold" class="mb-2">Type-Safe</Text>
+				<Text fs="sm" tone="muted">Full TypeScript support throughout</Text>
+			</div>
+		</div>
+
+		<!-- Emoji Parade -->
+		<div class="section-title slide-in">
+			<Text fs="3xl" weight="bold"
+				><Inline animate="swing 2s">🎪</Inline> Emoji Parade</Text
+			>
+		</div>
+		<div class="emoji-parade slide-in">
+			<Inline animate="bounce 1s delay-0s"><Text fs="4xl">🎨</Text></Inline>
+			<Inline animate="bounce 1s delay-0.1s"><Text fs="4xl">🚀</Text></Inline>
+			<Inline animate="bounce 1s delay-0.2s"><Text fs="4xl">✨</Text></Inline>
+			<Inline animate="bounce 1s delay-0.3s"><Text fs="4xl">🎯</Text></Inline>
+			<Inline animate="bounce 1s delay-0.4s"><Text fs="4xl">💎</Text></Inline>
+			<Inline animate="bounce 1s delay-0.5s"><Text fs="4xl">🌈</Text></Inline>
+			<Inline animate="bounce 1s delay-0.6s"><Text fs="4xl">🎭</Text></Inline>
+			<Inline animate="bounce 1s delay-0.7s"><Text fs="4xl">🎪</Text></Inline>
+			<Inline animate="bounce 1s delay-0.8s"><Text fs="4xl">🎡</Text></Inline>
+			<Inline animate="bounce 1s delay-0.9s"><Text fs="4xl">🎢</Text></Inline>
+		</div>
+
+		<!-- Call to Action -->
+		<div class="cta-section slide-in">
+			<Text fs="4xl" weight="extrabold" class="mb-4">
+				<Inline animate="sparkle 2s">✨</Inline> Ready to Build Something Amazing?
+				<Inline animate="sparkle 2s delay-1s">✨</Inline>
+			</Text>
+			<Text fs="xl" tone="muted" class="mb-6">
+				Start creating beautiful, accessible, and performant interfaces today
+			</Text>
+			<div class="cta-buttons">
+				<button class="cta-button primary">
+					<Inline animate="glow 2s"
+						><Text weight="bold">Get Started 🚀</Text></Inline
+					>
+				</button>
+				<button class="cta-button secondary">
+					<Text weight="bold">View Docs 📚</Text>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="footer">
+		<Text fs="2xl" weight="bold" class="mb-2">
+			<Inline animate="glow 2s">🌟</Inline> Built with passion & precision <Inline
+				animate="glow 2s delay-1s">🌟</Inline
+			>
+		</Text>
+		<Text tone="muted">
+			A comprehensive design system for modern web applications
+		</Text>
+		<div>
+			<Inline gap="xs" animate="fadeIn 0.5s delay-0.1s">
+				<Tag size="2xs" variant="primary">Astro</Tag>
+				<Tag size="xs" variant="secondary">TypeScript</Tag>
+				<Tag size="sm" variant="success">CSS</Tag>
+				<Tag size="md" variant="warning">Design Tokens</Tag>
+				<Tag size="lg" variant="danger">Animations</Tag>
+				<Tag size="xl" variant="info">Accessibility</Tag>
+			</Inline>
+			<Inline animate="bounceIn 0.5s delay-2s"
+				><Tag variant="danger" size="sm">Animations</Tag></Inline
+			>
+			<Inline animate="fadeInUp 0.5s delay-2.2s"
+				><Tag variant="info" size="sm">Accessibility</Tag></Inline
+			>
+		</div>
+		<div style="margin-top: 3rem;">
+			<Text fs="sm" tone="muted">
+				Made with <Inline animate="pulse 1s"
+					><Text style="color: #ff6b6b;">❤️</Text></Inline
+				> by developers, for developers
+			</Text>
+		</div>
+	</div>
+</Layout>

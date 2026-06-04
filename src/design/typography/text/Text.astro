@@ -1,0 +1,90 @@
+---
+import type { FontSize, TextTone, XAlign, YAlign } from '../typography.types';
+import { FONT_SIZE_CLASS_MAP, TEXT_TONE_CLASS_MAP, X_ALIGN_CLASS_MAP, Y_ALIGN_CLASS_MAP } from '../typography.maps';
+import type { CommonHTMLProps } from '../../shared';
+import { mergeClasses, mergeStyles } from '../../shared/functions';
+
+export interface Props extends CommonHTMLProps {
+    /** Font size */
+    fs?: FontSize;
+    /** Text color/tone */
+    tone?: TextTone;
+    /** Horizontal text alignment */
+    align?: XAlign;
+    /** Vertical alignment */
+    valign?: YAlign;
+    /** Font weight */
+    weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+    /** Font style */
+    style?: 'normal' | 'italic';
+    /** Text decoration */
+    decoration?: 'none' | 'underline' | 'line-through' | 'overline';
+    /** Text transform */
+    transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+    /** Line height */
+    leading?: 'none' | 'tight' | 'snug' | 'normal' | 'relaxed' | 'loose';
+    /** Letter spacing */
+    tracking?: 'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest';
+    /** Truncate text with ellipsis */
+    truncate?: boolean;
+    /** Line clamp (number of lines before truncating) */
+    clamp?: number;
+    /** HTML element to render */
+    as?: 'span' | 'p' | 'div' | 'strong' | 'em' | 'small' | 'mark' | 'del' | 'ins' | 'sub' | 'sup';
+}
+
+const {
+    fs = '3',
+    tone,
+    align,
+    valign,
+    weight,
+    style: styleAttr,
+    decoration,
+    transform,
+    leading,
+    tracking,
+    truncate = false,
+    clamp,
+    as: Tag = 'span',
+    ...rest
+} = Astro.props;
+
+// Define component-specific classes and styles
+const classes = [
+    fs && FONT_SIZE_CLASS_MAP[fs as FontSize],
+    tone && TEXT_TONE_CLASS_MAP[tone as TextTone],
+    align && X_ALIGN_CLASS_MAP[align as XAlign],
+    valign && Y_ALIGN_CLASS_MAP[valign as YAlign],
+    weight && `font-${weight}`,
+    styleAttr && styleAttr !== 'normal' && `italic`,
+    decoration && decoration !== 'none' && decoration,
+    transform && transform !== 'none' && transform,
+    leading && `leading-${leading}`,
+    tracking && `tracking-${tracking}`,
+    truncate && 'truncate',
+    clamp && `line-clamp-${clamp}`
+];
+
+const styles = [
+    styleAttr && `font-style: ${styleAttr}`,
+    decoration && `text-decoration: ${decoration}`
+].filter(Boolean).join(';');
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+
+---
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+    <slot />
+</Tag>
+
+<style>
+  @import '../typography.css';
+  @import './Text.css';
+</style>

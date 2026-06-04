@@ -1,0 +1,68 @@
+/**
+ * Animation Variables
+ * CSS custom properties for animation timing, easing, and durations
+ */
+
+:root {
+  /* Animation Durations */
+  --speed-1: 100ms;
+  --speed-2: 200ms;
+  --speed-3: 300ms;
+  --speed-4: 500ms;
+  --speed-5: 750ms;
+  --speed-6: 1s;
+  --speed-7: 1.5s;
+  --speed-8: 2s;
+  --speed-9: 3s;
+  --speed-10: 5s;
+
+  /* Animation Timing Functions (Easing) */
+  --ease-linear: linear;
+  --ease-in: ease-in;
+  --ease-out: ease-out;
+  --ease-in-out: ease-in-out;
+
+  /* Custom Cubic Bezier Curves */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.8, 0, 1, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-sharp: cubic-bezier(0.36, 0.07, 0.19, 0.97);
+
+  /* Animation Iteration Counts */
+  --iteration-once: 1;
+  --iteration-infinite: infinite;
+
+  /* Animation Fill Modes */
+  --fill-none: none;
+  --fill-forwards: forwards;
+  --fill-backwards: backwards;
+  --fill-both: both;
+
+  /* Animation Delays */
+  --delay-none: 0s;
+  --delay-short: 0.1s;
+  --delay-medium: 0.3s;
+  --delay-long: 0.5s;
+  --delay-longer: 1s;
+
+  /* Transform Origins */
+  --origin-center: center;
+  --origin-top: top;
+  --origin-bottom: bottom;
+  --origin-left: left;
+  --origin-right: right;
+}
+
+/** Semantic Aliases **/
+:root {
+  --fastest: var(--speed-1);
+  --faster: var(--speed-2);
+  --normal: var(--speed-3);
+  --no-rush: var(--speed-4);
+  --slow: var(--speed-5);
+  --stroll: var(--speed-6);
+  --slower: var(--speed-7);
+  --leisurely: var(--speed-8);
+  --slowest: var(--speed-9);
+  --dead: var(--speed-10);
+}

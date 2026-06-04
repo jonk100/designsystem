@@ -1,0 +1,34 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { BaseComponentProps } from "../../shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents";
+}
+
+const { as: Tag = "div", display, ...rest } = Astro.props;
+
+const classes = ["box-component", display && `box-display--${display}`];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .box-display--block {
+    display: block;
+  }
+  .box-display--inline {
+    display: inline;
+  }
+  .box-display--inline-block {
+    display: inline-block;
+  }
+  .box-display--contents {
+    display: contents;
+  }
+</style>

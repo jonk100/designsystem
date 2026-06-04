@@ -1,0 +1,69 @@
+@import '../tokens.css';
+
+.tag-component {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--rad-sm); /* Smaller radius than Badge */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  /* ─── TAG SPECIFIC FLUID SCALING ───
+     Tags should stay vertically compact. We redefine the display size 
+     variables locally using calc to severely flatten the font-size scaling,
+     while letting horizontal padding expand drastically. */
+  --display-size-2xs: calc(var(--fs-2xs) * 0.65);
+  --display-size-xs:  calc(var(--fs-xs) * 0.65);
+  --display-size-sm:  calc(var(--fs-sm) * 0.65);
+  --display-size-md:  calc(var(--fs-md) * 0.65);
+  --display-size-lg:  calc(var(--fs-lg) * 0.65);
+  --display-size-xl:  calc(var(--fs-xl) * 0.65);
+  --display-size-2xl: calc(var(--fs-2xl) * 0.65);
+  --display-size-3xl: calc(var(--fs-3xl) * 0.65);
+  --display-size-4xl: calc(var(--fs-4xl) * 0.65);
+  --display-size-5xl: calc(var(--fs-5xl) * 0.65);
+
+  /* Cap vertical padding at very small values, let horizontal padding grow */
+  --display-padding-2xs: var(--sp-3xs) var(--sp-xs);
+  --display-padding-xs:  var(--sp-3xs) var(--sp-sm);
+  --display-padding-sm:  var(--sp-3xs) var(--sp-md);
+  --display-padding-md:  var(--sp-3xs) var(--sp-lg);
+  --display-padding-lg:  var(--sp-3xs) var(--sp-xl);
+  --display-padding-xl:  var(--sp-2xs) var(--sp-2xl);
+  --display-padding-2xl: var(--sp-2xs) var(--sp-3xl);
+  --display-padding-3xl: var(--sp-2xs) var(--sp-4xl);
+  --display-padding-4xl: var(--sp-2xs) calc(var(--sp-5xl) * 1.5);
+  --display-padding-5xl: var(--sp-2xs) calc(var(--sp-5xl) * 2);
+  
+
+}
+
+.tag--icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+}
+
+.tag--text {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+
+/* Minimum widths so larger tags don't get dwarfed by smaller tags with more text */
+.tag-component.display-size--2xs { min-width: 60px; }
+.tag-component.display-size--xs  { min-width: 75px; }
+.tag-component.display-size--sm  { min-width: 90px; }
+.tag-component.display-size--md  { min-width: 110px; }
+.tag-component.display-size--lg  { min-width: 135px; }
+.tag-component.display-size--xl  { min-width: 160px; }
+.tag-component.display-size--2xl { min-width: 200px; }
+.tag-component.display-size--3xl { min-width: 240px; }
+.tag-component.display-size--4xl { min-width: 280px; }
+.tag-component.display-size--5xl { min-width: 320px; }

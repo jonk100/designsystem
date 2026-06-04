@@ -1,0 +1,38 @@
+---
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { AnimationProps } from "../../shared/props";
+
+export interface Props extends AnimationProps {
+  as?: string;
+  class?: string;
+  style?: string;
+  ratio?: '1:1' | '4:3' | '16:9' | 'auto';
+  border?: 'none' | 'thin' | 'thick';
+}
+
+const {
+  as: Tag = 'div',
+  ratio = 'auto',
+  border = 'none',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'frame-component',
+  `frame-ratio--${ratio.replace(':', 'x')}`,
+  `frame-border--${border}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <div class="frame-content">
+    <slot />
+  </div>
+</Tag>
+
+<style>
+  @import './Frame.css';
+</style>

@@ -1,0 +1,77 @@
+.caption {
+  display: block;
+  margin-top: 0.5em;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* Size variants */
+.caption--size-0,
+.caption--size-xxs { font-size: var(--font-size-xxs); }
+.caption--size-1,
+.caption--size-xs { font-size: var(--font-size-xs); }
+.caption--size-2,
+.caption--size-sm { font-size: var(--font-size-sm); }
+.caption--size-3,
+.caption--size-md { font-size: var(--font-size-md); }
+.caption--size-4,
+.caption--size-base { font-size: var(--font-size-base); }
+.caption--size-5,
+.caption--size-lg { font-size: var(--font-size-lg); }
+.caption--size-6,
+.caption--size-xl { font-size: var(--font-size-xl); }
+.caption--size-7,
+.caption--size-2xl { font-size: var(--font-size-2xl); }
+.caption--size-8,
+.caption--size-3xl { font-size: var(--font-size-3xl); }
+.caption--size-9,
+.caption--size-4xl { font-size: var(--font-size-4xl); }
+.caption--size-10,
+.caption--size-5xl { font-size: var(--font-size-5xl); }
+.caption--size-11,
+.caption--size-6xl { font-size: var(--font-size-6xl); }
+
+/* Tone variants */
+.caption--tone-0 { color: var(--color-text-0); }
+.caption--tone-1 { color: var(--color-text-1); }
+.caption--tone-2 { color: var(--color-text-2); }
+.caption--tone-3 { color: var(--color-text-3); }
+.caption--tone-4 { color: var(--color-text-4); }
+.caption--tone-5 { color: var(--color-text-5); }
+.caption--tone-primary { color: var(--color-primary); }
+.caption--tone-secondary { color: var(--color-secondary); }
+.caption--tone-accent { color: var(--color-accent); }
+.caption--tone-white { color: var(--color-white); }
+.caption--tone-black { color: var(--color-black); }
+.caption--tone-default { color: var(--color-text-default); }
+.caption--tone-muted { color: var(--color-text-muted); }
+.caption--tone-subtle { color: var(--color-text-subtle); }
+.caption--tone-danger { color: var(--color-danger); }
+.caption--tone-success { color: var(--color-success); }
+.caption--tone-currentColor { color: currentColor; }
+.caption--tone-inherit { color: inherit; }
+
+/* Alignment */
+.caption--align-left { text-align: left; }
+.caption--align-center { text-align: center; }
+.caption--align-right { text-align: right; }
+.caption--align-justify { text-align: justify; }
+.caption--align-start { text-align: start; }
+.caption--align-end { text-align: end; }
+
+/* Weight */
+.caption--weight-thin { font-weight: 100; }
+.caption--weight-extralight { font-weight: 200; }
+.caption--weight-light { font-weight: 300; }
+.caption--weight-normal { font-weight: 400; }
+.caption--weight-medium { font-weight: 500; }
+.caption--weight-semibold { font-weight: 600; }
+.caption--weight-bold { font-weight: 700; }
+.caption--weight-extrabold { font-weight: 800; }
+.caption--weight-black { font-weight: 900; }
+
+/* Style */
+.caption--italic { font-style: italic; }
+
+/* Made with Bob */

@@ -1,0 +1,595 @@
+/**
+ * ANIMATION TOKENS
+ * Animation classes and keyframes for component animations
+ */
+
+@import './motion.vars.css';
+
+/* ============================================================================
+    - - - - - - - -- ANIMATIONS -- - - - - - - - - - - - - - - - - - - - - - -
+=============================================================================== */
+
+/**                 Sparkle________________________________________
+*          Sparkle  */
+.animate--sparkle {
+  display: inline-block;
+  animation-name: sparkle;
+  animation-duration: var(--speed-10);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+/**              Pulse________________________________________
+*         Pulse  */
+.animate--pulse {
+  animation-name: pulse;
+  animation-duration: var(--speed-7);
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/**                Bounce________________________________________
+*          Bounce  */
+.animate--bounce {
+  animation-name: bounce;
+  animation-duration: var(--speed-6);
+  animation-timing-function: var(--ease-bounce);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: var(--ease-bounce);
+  }
+
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: var(--ease-smooth);
+  }
+}
+
+/**                Spin________________________________________
+*          Spin  */
+.animate--spin {
+  animation-name: spin;
+  animation-duration: var(--speed-6);
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/**                Ping________________________________________
+*          Ping  */
+.animate--ping {
+  animation-name: ping;
+  animation-duration: var(--speed-6);
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes ping {
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/**                Wiggle________________________________________
+*         Wiggle  */
+.animate--wiggle {
+  animation-name: wiggle;
+  animation-duration: var(--speed-6);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/**                Float________________________________________
+*          Float  */
+.animate--float {
+  animation-name: float;
+  animation-duration: var(--speed-8);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/**                Glow________________________________________
+*          Glow  */
+.animate--glow {
+  animation-name: glow;
+  animation-duration: var(--speed-7);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px currentColor);
+    opacity: 1;
+  }
+
+  50% {
+    filter: drop-shadow(0 0 20px currentColor);
+    opacity: 0.8;
+  }
+}
+
+/**                Shake________________________________________
+*          Shake  */
+.animate--shake {
+  animation-name: shake;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                Fade In________________________________________
+*         Fade In  */
+.animate--fadeIn {
+  animation-name: fadeIn;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-in);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--delay-none);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/**                Slide In________________________________________
+*          Slide In  */
+.animate--slideIn {
+  animation-name: slideIn;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--delay-none);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                 Scale In________________________________________
+*           Scale In  */
+.animate--scaleIn {
+  animation-name: scaleIn;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-elastic);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--delay-none);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/**                    Jiggle____________________________________
+ *         Jiggle    */
+.animate--jiggle {
+  animation-name: jiggle;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes jiggle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                 Shimmer________________________________________
+*          Shimmer  */
+.animate--shimmer {
+  animation-name: shimmer;
+  animation-duration: var(--speed-7);
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    background-position: 200% 50%;
+  }
+
+  50% {
+    background-position: 0% 50%;
+  }
+}
+
+/**                    Swivel____________________________________
+ *         Swivel    */
+.animate--swivel {
+  animation-name: swivel;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes swivel {
+
+  10%,
+  90% {
+    transform: rotate(2deg);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-2deg);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: rotate(4deg);
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: rotate(-4deg);
+    transform: translateX(4px);
+  }
+}
+
+/**                    Ripple____________________________________
+ *          Ripple    */
+.animate--ripple {
+  animation-name: ripple;
+  animation-duration: var(--speed-10);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes ripple {
+
+  10%,
+  90% {
+    transform: rotate(2deg);
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-2deg);
+    transform: scaleY(1.05);
+    opacity: 0.8;
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+    transform: scaleY(0.95);
+    opacity: 0.5;
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+    transform: scaleY(1.05);
+    opacity: 1;
+  }
+}
+
+/**                    Half Ripple____________________________________
+ *         Half Ripple    */
+.animate--half-ripple {
+  animation-name: half-ripple;
+  animation-duration: var(--speed-10);
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes half-ripple {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    opacity: .75;
+    transform: scaleY(0.6);
+  }
+
+  20%,
+  80% {
+    transform: rotate(0deg);
+    transform: scaleY(.94);
+    opacity: 1;
+  }
+
+  15%,
+  30%,
+  50%,
+  70%,
+  85% {
+    transform: translateX(-2px);
+    transform: scaleY(1);
+    opacity: 0.25;
+  }
+
+  40%,
+  60% {
+    transform: translateX(2px);
+    transform: scaleY(.9);
+    opacity: .75;
+  }
+}
+
+/**                    Quarter Ripple____________________________________
+ *         Quarter Ripple    */
+.animate--quarter-ripple {
+  animation-name: quarter-ripple;
+  animation-duration: var(--speed-10);
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes quarter-ripple {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    opacity: .75;
+    transform: scaleY(0.1.1);
+  }
+
+  20%,
+  50%,
+  80% {
+    transform: rotate(0deg);
+    transform: scaleY(.94);
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    transform: translateX(-2px);
+    transform: scaleY(.6);
+    opacity: 0.25;
+  }
+
+  40%,
+  60% {
+    transform: rotate(-5deg);
+    transform: scaleY(0.1.1);
+    opacity: .75;
+  }
+}
+
+/**                    Pickle____________________________________
+ *          Pickle     */
+.animate--pickle {
+  animation-name: pickle;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pickle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                    Pickle____________________________________
+ *          Pickle     */
+.animate--pickle {
+  animation-name: pickle;
+  animation-duration: var(--speed-5);
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pickle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                    Dancing Monkey____________________________
+ *          Dancing Monkey    */
+.animate--DancingMonkey {
+  animation-name: DancingMonkey;
+  animation-duration: var(--speed-10);
+  animation-timing-function: var(--ease-bounce);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes DancingMonkey {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    transform: translateX(1px);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-5deg);
+    transform: translateX(-2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+    transform: rotate(5deg);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+    transform: rotate(-5deg);
+  }
+}
