@@ -1,0 +1,8 @@
+.columns-component {
+  width: 100%;
+  /* Avoid columns splitting items or headers inappropriately inside columns */
+}
+
+.columns-component > * {
+  break-inside: avoid-column;
+}

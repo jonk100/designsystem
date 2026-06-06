@@ -1,0 +1,93 @@
+---
+import { mergeClasses, mergeStyles } from "../shared/functions";
+import type { BaseComponentProps } from "../shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents" | "flex";
+  duration?: number;
+  [key: string]: any;
+}
+
+const standardProps = [
+  "as",
+  "class",
+  "class:list",
+  "style",
+  "id",
+  "display",
+  "duration",
+  "onScroll",
+];
+const props = Astro.props;
+
+const {
+  as: Tag = "div",
+  display = "block",
+  duration = 300,
+  onScroll,
+  ...rest
+} = props;
+
+if (onScroll) {
+  rest["data-on-scroll"] = "alternating";
+}
+
+const uniqueId = Math.random().toString(36).substr(2, 9);
+const classes = [
+  "alternating-component",
+  display && `alternating-display--${display}`,
+  `alternating-instance-${uniqueId}`,
+];
+
+console.log({ duration });
+
+// Alternating: alternates between slideLeft and slideRight
+// Uses a pronounced delay: max(duration / 2, 200ms)
+let cssRules = "";
+let currentDelay = 0;
+const delayStep = Math.max(duration / 2, 100);
+
+for (let i = 1; i <= 30; i++) {
+  const animName = i % 2 !== 0 ? "staggeredSlideLeft" : "staggeredSlideRight";
+  cssRules += `.alternating-instance-${uniqueId} > *:nth-child(${i}) { 
+    animation-name: ${animName};
+    animation-duration: ${duration}ms;
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: ${Math.round(currentDelay)}ms;
+  }\n`;
+  currentDelay += delayStep;
+}
+console.log({ delayStep });
+const finalClasses = mergeClasses(classes, { ...props, animate: undefined });
+const finalStyles = mergeStyles("", { ...props, animate: undefined });
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style set:html={cssRules}></style>
+
+<style>
+  .alternating-display--block {
+    display: block;
+  }
+  .alternating-display--inline {
+    display: inline;
+  }
+  .alternating-display--inline-block {
+    display: inline-block;
+  }
+  .alternating-display--contents {
+    display: contents;
+  }
+  .alternating-display--flex {
+    display: flex;
+  }
+
+  .alternating-component {
+    container-type: inline-size;
+    width: 100%;
+  }
+</style>

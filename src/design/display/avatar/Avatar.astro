@@ -1,0 +1,56 @@
+---
+/**
+ * src/design/display/avatar/Avatar.astro
+ * Visual identity representation for users/entities with fallback support.
+ * - Displays an image if `src` is provided.
+ * - Falls back to a colored container with `initials` if no src or image fails.
+ * @props (local): src, alt, initials, size, shape, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Avatar.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Image URL */
+  src?: string;
+  /** Accessibility text for the image */
+  alt?: string;
+  /** Fallback initials to display if image is missing */
+  initials?: string;
+  /** Size of the avatar */
+  size?: DisplaySize;
+  /** Shape of the avatar */
+  shape?: 'circle' | 'square' | 'rounded';
+}
+
+const {
+  src,
+  alt = "",
+  initials,
+  size = "md",
+  shape = "circle",
+  as: Tag = "div",
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "avatar",
+  `display-size--${size}`,
+  `avatar-shape--${shape}`,
+  !src && "avatar--fallback"
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  {src ? (
+    <img src={src} alt={alt} class="avatar__image" loading="lazy" />
+  ) : (
+    <span class="avatar__initials">{initials?.substring(0, 2).toUpperCase()}</span>
+  )}
+</Tag>

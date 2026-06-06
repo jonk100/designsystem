@@ -1,0 +1,50 @@
+---
+/**
+ * src/design/layout/scroll-area/ScrollArea.astro
+ * A layout primitive that wraps content and controls scrollbars and overflow behavior.
+ * - Supports customized scrolling (auto, scroll, hidden, visible) along X/Y axes independently.
+ * - Restyles native scrollbars to a subtle "thin" design or completely hides them while preserving scrolling.
+ * @props (local): as, x, y, scrollbar
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { ScrollAreaOverflow, ScrollAreaScrollbar } from "../types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./ScrollArea.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  as?: string;
+  /** Horizontal overflow behavior */
+  x?: ScrollAreaOverflow;
+  /** Vertical overflow behavior */
+  y?: ScrollAreaOverflow;
+  /** Scrollbar styling */
+  scrollbar?: ScrollAreaScrollbar;
+}
+
+const {
+  as: Tag = "div",
+  x = "auto",
+  y = "auto",
+  scrollbar = "thin",
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "scroll-area-component",
+  scrollbar && `scrollbar--${scrollbar}`
+];
+
+const customStyle = [
+  `overflow-x: ${x};`,
+  `overflow-y: ${y};`
+].join(" ");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

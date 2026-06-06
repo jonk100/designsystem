@@ -1,0 +1,41 @@
+---
+/**
+ * src/design/surfaces/well/Well.astro
+ * A recessed surface, visual inverse of a Card.
+ * - Sinks into the page rather than lifting above it.
+ * - Used for code blocks, nested content, and read-only fields.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import '../surfaces.css';
+import './Well.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+}
+
+const {
+  as: Tag = 'div',
+  layer = 1,
+  padding = 'md',
+  bg,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'well-component',
+  `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

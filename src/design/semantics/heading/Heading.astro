@@ -1,0 +1,81 @@
+---
+/**
+ * src/design/semantics/heading/Heading.astro
+ * A flexible heading component for h1-h6 elements.
+ * - Allows dynamic heading levels with semantic HTML tags.
+ * - Supports granular control over spacing, typography, and truncation.
+ * @props (local): as, fs, ws, ff, wrap, tone, xa, fw, truncate, ls, lh, bold, italic, underline, strikethrough, uppercase, lowercase
+ * @props (global): class, class:list, animate, effects
+ */
+import type { FontSize, TextTone, XAlign, LetterSpacing, LineHeight, FontFamily, WhiteSpace, FontStyleProps, FontWeight } from "../../shared/types";
+import type { HeadingLevel } from '../types';
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '../../shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import '../../typography/typography.css';
+import './Heading.css';
+
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'h1'>, keyof BaseComponentProps> {
+
+  as?: HeadingLevel;
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
+  tone?: TextTone;
+  xa?: XAlign;
+  fw?: FontWeight;
+  truncate?: boolean;
+  ls?: LetterSpacing;
+  lh?: LineHeight;
+
+}
+
+const {
+  as: Element = 'h2',
+  fs,
+  tone,
+  xa,
+  fw,
+  truncate = false,
+  ls,
+  lh,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'heading',
+  `heading--level-${Element}`,
+  fs && `heading--size-${fs}`,
+  tone && `heading--tone-${tone}`,
+  xa && `heading--align-${xa}`,
+  fw && `heading--weight-${fw}`,
+  truncate && 'heading--truncate',
+  ls && `heading--tracking-${ls}`,
+  lh && `heading--leading-${lh}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Element class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Element>

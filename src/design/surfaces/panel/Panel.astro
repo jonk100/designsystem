@@ -1,0 +1,44 @@
+---
+/**
+ * src/design/surfaces/panel/Panel.astro
+ * An attached, persistent surface (e.g. sidebar, inspector pane).
+ * - Anchored to the shell, it doesn't float (like an overlay) or scroll (like Paper).
+ * - Uses --layer--2 or --layer--3 based on elevation context.
+ * @props (local): as, layer, position, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import '../surfaces.css';
+import './Panel.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+  position?: 'left' | 'right' | 'top' | 'bottom' | 'none';
+}
+
+const {
+  as: Tag = 'aside',
+  layer = 2,
+  position = 'none',
+  padding = 'default',
+  bg,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'panel-component',
+  `surface-layer--${layer}`,
+  `panel-position--${position}`,
+  SURFACE_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

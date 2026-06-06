@@ -1,0 +1,46 @@
+@import '../tokens.css';
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  /* Use font-size to scale width/height 1:1 */
+  width: 2.5em;
+  height: 2.5em;
+  background-color: var(--surface-2, #f3f4f6);
+  color: var(--text-1, #111827);
+  user-select: none;
+}
+
+.avatar-shape--circle {
+  border-radius: 50%;
+}
+
+.avatar-shape--square {
+  border-radius: 0;
+}
+
+.avatar-shape--rounded {
+  border-radius: var(--rad-md);
+}
+
+.avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar__initials {
+  font-weight: 600;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Subtle fallback styling */
+.avatar--fallback {
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
+}

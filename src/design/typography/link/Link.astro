@@ -1,8 +1,21 @@
 ---
-import type { FontSize, TextTone } from '../typography.types';
+/**
+ * src/design/typography/link/Link.astro
+ * A link component for navigation.
+ * - Custom underlining behavior on hover or active states.
+ * - External link indicator support.
+ * @props (local): href, size, tone, weight, bold, italic, underline, strikethrough, external, target, rel
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { FontSize, TextTone, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
+import type { FontWeight, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
 import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '../../shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import '../typography.css';
+import './Link.css';
 
-interface Props extends HTMLAttributes<'a'> {
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'a'>, keyof BaseComponentProps> {
   /**
    * URL to link to
    */
@@ -11,7 +24,10 @@ interface Props extends HTMLAttributes<'a'> {
   /**
    * Font size of the link
    */
-  size?: FontSize;
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
   
   /**
    * Color tone of the text
@@ -21,12 +37,11 @@ interface Props extends HTMLAttributes<'a'> {
   /**
    * Font weight
    */
-  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  fw?: string;
   
   /**
-   * Underline style
+   * Standard boolean typography styles
    */
-  underline?: 'none' | 'hover' | 'always';
   
   /**
    * External link (opens in new tab)
@@ -46,10 +61,18 @@ interface Props extends HTMLAttributes<'a'> {
 
 const {
   href,
-  size,
+  fs,
   tone = 'primary',
-  weight,
-  underline = 'hover',
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
   external = false,
   target = external ? '_blank' : undefined,
   rel = external ? 'noopener noreferrer' : undefined,
@@ -59,21 +82,33 @@ const {
 
 const classes = [
   'link',
-  size && `link--size-${size}`,
+  fs && `link--size-${fs}`,
   tone && `link--tone-${tone}`,
-  weight && `link--weight-${weight}`,
-  underline && `link--underline-${underline}`,
+  fw && `link--weight-${fw}`,
   external && 'link--external',
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
   className,
-].filter(Boolean).join(' ');
+];
+
+
+
+const textDeco = underline && strikethrough ? 'underline line-through' : underline ? 'underline' : strikethrough ? 'line-through' : null;
+
+const styles = [
+    bold && `font-weight: bold`,
+    italic && `font-style: italic`,
+    textDeco && `text-decoration: ${textDeco}`,
+]
+    .filter(Boolean)
+    .join(";");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
 ---
 
-<a class={classes} href={href} target={target} rel={rel} {...rest}>
+<a class:list={finalClasses} style={finalStyles} href={href} target={target} rel={rel} {...rest}>
   <slot />
   {external && <span class="link__external-icon" aria-hidden="true">↗</span>}
 </a>
-
-<style>
-  @import '../typography.css';
-  @import './Link.css';
-</style>

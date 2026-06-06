@@ -1,0 +1,37 @@
+.indicator-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.indicator-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Base transform maps based on the offset custom property */
+.indicator-pos--top-right {
+  top: 0;
+  right: 0;
+  transform: translate(calc(50% + var(--indicator-offset)), calc(-50% - var(--indicator-offset)));
+}
+
+.indicator-pos--top-left {
+  top: 0;
+  left: 0;
+  transform: translate(calc(-50% - var(--indicator-offset)), calc(-50% - var(--indicator-offset)));
+}
+
+.indicator-pos--bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: translate(calc(50% + var(--indicator-offset)), calc(50% + var(--indicator-offset)));
+}
+
+.indicator-pos--bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translate(calc(-50% - var(--indicator-offset)), calc(50% + var(--indicator-offset)));
+}

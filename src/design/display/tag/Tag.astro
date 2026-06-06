@@ -1,0 +1,58 @@
+---
+/**
+ * src/design/display/tag/Tag.astro
+ * An interactive data categorization indicator.
+ * - Uses shared variant classes for background and borders.
+ * - Visually similar to a badge but intended for selection or filtering.
+ * @props (local): variant, size, as
+ * @props (global): class, class:list, animate, onScroll, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Inline from "../../layout/inline/Inline.astro";
+import "./Tag.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Optional leading icon or emoji */
+  icon?: string;
+  /** Visual variant */
+  variant?: DisplayVariant;
+  /** Size token */
+  size?: DisplaySize;
+  /** HTML element to render */
+  as?: string;
+}
+
+const {
+  icon,
+  variant = "default",
+  size = "md",
+  as: Tag = "span",
+  ...rest
+} = Astro.props;
+
+// Build class list using shared utilities
+const classes = [
+  "tag-component",
+  `display-size--${size}`,
+  `display-variant--${variant}`,
+];
+
+const styles = "";
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Inline
+  as={Tag}
+  gap="sm"
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {icon && <span class="tag--icon">{icon}</span>}
+  <span class="tag--text"><slot /></span>
+</Inline>

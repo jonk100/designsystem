@@ -1,0 +1,44 @@
+@import './tokens.css';
+@import './vars.css';
+
+/** LEARNING LAYOUT */
+/*
+Layout primitives are the building blocks of all layouts. 
+They are a set of wrappers that allow you to control the layout of your components.
+
+STACK
+Inline
+Grid
+Center
+Box
+Spacer
+Container
+*/
+
+.stack-component {
+  border: 1px dotted silver;
+}
+
+.inline-component {
+  border: 1px dotted gold;
+}
+
+.grid-component {
+  border: 1px dotted green;
+}
+
+.center-component {
+  border: 1px dotted red;
+}
+
+.box-component {
+  border: 1px dotted pink;
+}
+
+.spacer-component {
+  background-color: rgba(var(--neutral-15), .3);
+}
+
+.container-component {
+  border: 1px dotted blue;
+}

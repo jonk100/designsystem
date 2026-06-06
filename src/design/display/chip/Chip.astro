@@ -1,0 +1,73 @@
+---
+/**
+ * src/design/display/chip/Chip.astro
+ * An interactive, compact tag for input selection, filtering, or choices.
+ * - Supports an optional icon or avatar (passed as slot or prop).
+ * - Can be dismissible (renders a small close button).
+ * @props (local): variant, size, icon, dismissible, active, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Icon from "../icon/Icon.astro";
+import type { SvgName } from "../../shared/icons/index";
+import "./Chip.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {
+  /** Variant style of the chip */
+  variant?: DisplayVariant;
+  /** Size of the chip */
+  size?: DisplaySize;
+  /** Optional icon to display before the content */
+  icon?: SvgName;
+  /** Whether the chip is dismissible (shows an X icon) */
+  dismissible?: boolean;
+  /** Whether the chip is currently in an active/selected state */
+  active?: boolean;
+}
+
+const {
+  variant = "default",
+  size = "md",
+  icon,
+  dismissible = false,
+  active = false,
+  as: Tag = "button",
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "chip",
+  `display-size--${size}`,
+  `display-variant--${variant}`,
+  active && "chip--active",
+  dismissible && "chip--dismissible",
+  // If it's a button, add interactivity styles
+  Tag === "button" && "chip--interactive"
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+// For accessibility, dismissible chips should have aria-label if not provided
+const ariaLabel = dismissible ? (Astro.props['aria-label'] || "Remove") : Astro.props['aria-label'];
+---
+
+<Tag 
+  class:list={finalClasses} 
+  style={finalStyles} 
+  type={Tag === 'button' ? "button" : undefined}
+  aria-pressed={Tag === 'button' && active ? "true" : undefined}
+  {...rest}
+>
+  {icon && <Icon name={icon} class="chip__icon" />}
+  <slot name="leading" />
+  <span class="chip__label"><slot /></span>
+  {dismissible && (
+    <span class="chip__dismiss" aria-label={ariaLabel} role="button" tabindex="0">
+      <Icon name="x" size="sm" />
+    </span>
+  )}
+</Tag>

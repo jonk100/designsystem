@@ -1,0 +1,125 @@
+ M AGENTS.md
+ M package.json
+ M pnpm-lock.yaml
+ M src/design/AGENTS.md
+ D src/design/ANIMATIONS.md
+ M src/design/animation/M.astro
+ M src/design/animation/animate.css
+ M src/design/animation/motion.types.ts
+ M src/design/display/avatar/Avatar.astro
+ M src/design/display/avatar/Avatar.css
+ M src/design/display/badge/Badge.astro
+ M src/design/display/chip/Chip.astro
+ M src/design/display/chip/Chip.css
+ M src/design/display/counter/Counter.astro
+ M src/design/display/counter/Counter.css
+ D src/design/display/display.consts.ts
+ D src/design/display/display.functions.ts
+ D src/design/display/display.maps.ts
+ D src/design/display/display.types.ts
+ M src/design/display/dot/Dot.astro
+ M src/design/display/dot/Dot.css
+ M src/design/display/icon/Icon.astro
+ M src/design/display/icon/Icon.css
+ M src/design/display/indicator/Indicator.astro
+ M src/design/display/indicator/Indicator.css
+ D src/design/display/tag/TagComponent.astro
+ M src/design/layout/aspect-ratio/AspectRatio.astro
+ M src/design/layout/aspect-ratio/AspectRatio.css
+ M src/design/layout/aspect-ratio/aspect-ratio.svg
+ M src/design/layout/box/Box.astro
+ M src/design/layout/center/Center.astro
+ M src/design/layout/center/Center.css
+ M src/design/layout/center/center.svg
+ M src/design/layout/columns/Columns.astro
+ M src/design/layout/columns/Columns.css
+ M src/design/layout/columns/columns.svg
+ M src/design/layout/container/Container.astro
+ M src/design/layout/container/Container.css
+ M src/design/layout/grid/Grid.astro
+ M src/design/layout/grid/Grid.css
+ M src/design/layout/inline/Inline.astro
+ M src/design/layout/inline/Inline.css
+ D src/design/layout/layout.consts.ts
+ M src/design/layout/layout.css
+ D src/design/layout/layout.functions.ts
+ D src/design/layout/layout.maps.ts
+ D src/design/layout/layout.types.ts
+ M src/design/layout/scroll-area/ScrollArea.astro
+ M src/design/layout/scroll-area/ScrollArea.css
+ M src/design/layout/scroll-area/scroll-area.svg
+ M src/design/layout/separator/Separator.astro
+ M src/design/layout/separator/Separator.css
+ M src/design/layout/separator/separator.svg
+ M src/design/layout/spacer/Spacer.astro
+ M src/design/layout/spacer/Spacer.css
+ M src/design/layout/stack/Stack.astro
+ M src/design/layout/stack/Stack.css
+ M src/design/layout/tokens.css
+ M src/design/layout/vars.css
+ M src/design/shared/functions.ts
+ M src/design/shared/props.ts
+ M src/design/shared/types.ts
+ M src/design/surfaces/card/Card.astro
+ M src/design/tokens.css
+ D src/design/typography/blockquote/Blockquote.astro
+ D src/design/typography/blockquote/Blockquote.css
+ D src/design/typography/blockquote/blockquote.svg
+ M src/design/typography/caption/Caption.astro
+ M src/design/typography/code/Code.astro
+ D src/design/typography/heading/Heading.astro
+ D src/design/typography/heading/Heading.css
+ D src/design/typography/heading/heading.svg
+ M src/design/typography/kbd/Kbd.astro
+ M src/design/typography/label/Label.astro
+ M src/design/typography/link/Link.astro
+ D src/design/typography/prose/Prose.astro
+ D src/design/typography/prose/Prose.css
+ D src/design/typography/prose/prose.svg
+ D src/design/typography/quote/Quote.astro
+ D src/design/typography/quote/Quote.css
+ D src/design/typography/quote/quote.svg
+ M src/design/typography/text/Text.astro
+ D src/design/typography/typography.consts.ts
+ D src/design/typography/typography.functions.ts
+ D src/design/typography/typography.maps.ts
+ D src/design/typography/typography.types.ts
+ M src/design/typography/vars.css
+ M src/design/vars.css
+ M src/layouts/Head.astro
+ M src/layouts/Layout.astro
+ M src/pages/index.astro
+ M src/styles/global.css
+ M src/styles/tokens.css
+ M src/styles/vars.css
+?? .agent_status.json
+?? .agents/
+?? .solopreneur/
+?? docs/
+?? src/design/animation/Alternating.astro
+?? src/design/animation/Staggered.astro
+?? src/design/animation/Wave.astro
+?? src/design/animation/animation.md
+?? src/design/animation/nextlevel.md
+?? src/design/display/consts.ts
+?? src/design/display/display.md
+?? src/design/display/functions.ts
+?? src/design/display/maps.ts
+?? src/design/display/tag/Tag.astro
+?? src/design/display/types.ts
+?? src/design/layout/box/Box.css
+?? src/design/layout/consts.ts
+?? src/design/layout/functions.ts
+?? src/design/layout/layout.md
+?? src/design/layout/maps.ts
+?? src/design/layout/types.ts
+?? src/design/semantics/
+?? src/design/shared/consts.ts
+?? src/design/shared/effects.css
+?? src/design/shared/icons/
+?? src/design/shared/maps.ts
+?? src/design/shared/scripts/
+?? src/design/shared/shared.md
+?? src/design/typography/consts.ts
+?? src/design/typography/types.ts
+?? src/design/typography/typography.md

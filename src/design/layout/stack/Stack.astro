@@ -1,39 +1,54 @@
 ---
+/**
+ * src/design/layout/stack/Stack.astro
+ * A vertical flexbox container (column).
+ * - Enforces vertical stacking of child elements.
+ * - Supports responsive gaps and dynamic X/Y alignment.
+ * @props (local): as, gap, x, y
+ * @props (global): class, class:list, animate, onScroll, and other HTML attributes
+ */
+import type { BaseComponentProps } from "../../shared/props";
+import type { LayoutAlign, SpacingScale } from "../../shared/types";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+import { LAYOUT_ALIGN_MAP } from "../maps";
+import type { HTMLAttributes } from "astro/types";
+import './Stack.css';
 
-export interface Props extends AnimationProps {
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
   as?: string;
-  class?: string;
-  style?: string;
-  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  align?: 'start' | 'center' | 'end' | 'stretch';
-  justify?: 'start' | 'center' | 'end' | 'between';
+  gap?: SpacingScale;
+  /** Horizontal alignment (maps to align-items in column flex) */
+  x?: LayoutAlign;
+  /** Vertical alignment (maps to justify-content in column flex) */
+  y?: LayoutAlign;
 }
 
 const {
   as: Tag = 'div',
   gap = 'md',
-  align = 'stretch',
-  justify = 'start',
+  x = 'stretch',
+  y = 'start',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
   'stack-component',
-  `stack-gap--${gap}`,
-  `stack-align--${align}`,
-  `stack-justify--${justify}`
+  gap && `gap-${gap}`
 ];
 
+// For Stack (flex-direction: column), x is align-items and y is justify-content
+const flexStyles = [
+  x && `align-items: ${LAYOUT_ALIGN_MAP[x]}`,
+  y && `justify-content: ${LAYOUT_ALIGN_MAP[y]}`
+].filter(Boolean).join(';');
+
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles('', Astro.props);
+const finalStyles = mergeStyles(flexStyles, Astro.props);
 ---
 
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './Stack.css';
-</style>

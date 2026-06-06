@@ -1,0 +1,44 @@
+---
+/**
+ * src/design/surfaces/card-header/CardHeader.astro
+ * The top section of a Card component.
+ * - Owns its own padding (top, left, right, and a smaller bottom padding).
+ * - Allows independent background coloring and optional bottom border.
+ * @props (local): as, padding, borderBottom
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { CARD_HEADER_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import './CardHeader.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+  borderBottom?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  borderBottom = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-header-component',
+  padding && CARD_HEADER_PADDING_CLASS_MAP[padding],
+  borderBottom && 'card-header--border-bottom',
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

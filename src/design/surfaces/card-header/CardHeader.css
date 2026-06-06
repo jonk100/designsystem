@@ -1,0 +1,8 @@
+.card-header-component {
+  width: 100%;
+  padding: var(--surface-pad, var(--sp-md)) var(--surface-pad, var(--sp-md)) var(--surface-pad-half, var(--sp-sm));
+}
+
+.card-header--border-bottom {
+  border-bottom: 1px solid var(--border--1);
+}

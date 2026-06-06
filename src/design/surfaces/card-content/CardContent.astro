@@ -1,0 +1,41 @@
+---
+/**
+ * src/design/surfaces/card-content/CardContent.astro
+ * The middle content section of a Card component.
+ * - Owns its own uniform padding.
+ * - Allows independent background coloring.
+ * @props (local): as, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { CARD_CONTENT_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import './CardContent.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-content-component',
+  padding && CARD_CONTENT_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

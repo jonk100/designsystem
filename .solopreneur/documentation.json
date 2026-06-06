@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-06-06T01:46:21.492Z",
+  "documents": [
+    {
+      "path": "README.md",
+      "role": "direction",
+      "status": "active",
+      "solves": "说明项目是什么、服务谁、成功标准和对外表达。",
+      "lastReviewedAt": "",
+      "lastTouchedAt": "2026-06-04T07:43:30.707Z"
+    },
+    {
+      "path": ".solopreneur/README.md",
+      "role": "data_ownership",
+      "status": "active",
+      "solves": "说明项目数据、缓存、运行记录和 Git 管理边界。",
+      "lastReviewedAt": "",
+      "lastTouchedAt": "2026-06-05T10:07:37.625Z"
+    },
+    {
+      "path": "docs/completed_work.md",
+      "role": "reference",
+      "status": "active",
+      "solves": "保存项目长期解释性背景。",
+      "lastReviewedAt": "",
+      "lastTouchedAt": "2026-06-05T02:28:57.909Z"
+    },
+    {
+      "path": "docs/notes_on_design.md",
+      "role": "reference",
+      "status": "active",
+      "solves": "保存项目长期解释性背景。",
+      "lastReviewedAt": "",
+      "lastTouchedAt": "2026-06-05T06:08:35.606Z"
+    }
+  ],
+  "pendingReview": [],
+  "lastAudit": {
+    "auditedAt": "2026-06-05T10:09:19.772Z",
+    "runKind": "roadmap_revision",
+    "nodeId": "__roadmap_revision__",
+    "status": "Failed",
+    "action": "none",
+    "touchedDocuments": [],
+    "pendingReviewCount": 0
+  }
+}

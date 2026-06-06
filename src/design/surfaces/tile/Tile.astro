@@ -1,0 +1,40 @@
+---
+/**
+ * src/design/surfaces/tile/Tile.astro
+ * A flush, borderless, radiusless variant of Card.
+ * - Meant to be used in grids where grid lines provide the separation.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import '../surfaces.css';
+import './Tile.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+}
+
+const {
+  as: Tag = 'div',
+  layer = 2,
+  padding = 'default',
+  bg,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'tile-component',
+  `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

@@ -7,11 +7,12 @@
   box-sizing: border-box;
 }
 
-.card-padding--none { padding: 0; }
-.card-padding--sm { padding: var(--sp-sm); }
-.card-padding--md { padding: var(--sp-md); }
-.card-padding--lg { padding: var(--sp-lg); }
-.card-padding--xl { padding: var(--sp-xl); }
+/* Strip padding if using compound sub-components */
+.card-component:has(> .card-header-component),
+.card-component:has(> .card-content-component),
+.card-component:has(> .card-footer-component) {
+  padding: 0;
+}
 
 .card-align--left { text-align: left; }
 .card-align--center { text-align: center; }

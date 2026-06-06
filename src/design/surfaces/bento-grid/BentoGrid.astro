@@ -1,6 +1,17 @@
 ---
+/**
+ * src/design/surfaces/bento-grid/BentoGrid.astro
+ * A specialized grid container tailored for bento-box style layouts.
+ * - Manages the arrangement of flush or discrete bento cells.
+ * - Relies on CSS Grid under the hood to enforce structural separation.
+ * @props (local): as, columns, gap
+ * @props (global): class, class:list, animate, onScroll
+ * - columns: Defines the number of columns in the bento layout.
+ * - gap: The external spacing between cells, managed by this parent grid.
+ */
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { AnimationProps } from "../../shared/props";
+import './BentoGrid.css';
 
 export interface Props extends AnimationProps {
   as?: string;
@@ -30,7 +41,3 @@ const finalStyles = mergeStyles('', Astro.props);
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './BentoGrid.css';
-</style>

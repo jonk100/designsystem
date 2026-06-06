@@ -1,0 +1,41 @@
+---
+/**
+ * src/design/layout/separator/Separator.astro
+ * A layout primitive used to visually separate content.
+ * - Supports horizontal and vertical orientations.
+ * - Handles ARIA accessibility roles automatically based on whether it is decorative.
+ * @props (local): orientation, decorative
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { SeparatorOrientation } from "../types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Separator.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"hr">, keyof BaseComponentProps> {
+  orientation?: SeparatorOrientation;
+  decorative?: boolean;
+}
+
+const {
+  orientation = "horizontal",
+  decorative = true,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "separator-component",
+  `separator--${orientation}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+// Accessibility attributes
+const attrs = decorative
+  ? { role: "none" }
+  : { role: "separator", "aria-orientation": orientation };
+---
+
+<hr class:list={finalClasses} style={finalStyles} {...attrs} {...rest} />

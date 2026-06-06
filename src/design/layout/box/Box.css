@@ -1,0 +1,12 @@
+.box-display--block {
+  display: block;
+}
+.box-display--inline {
+  display: inline;
+}
+.box-display--inline-block {
+  display: inline-block;
+}
+.box-display--contents {
+  display: contents;
+}

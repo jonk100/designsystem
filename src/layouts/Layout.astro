@@ -1,24 +1,28 @@
 ---
-import Head from './Head.astro';
-import '../styles/global.css';
+import Head from "./Head.astro";
+import "../styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title: pageTitle = 'The System', description = 'A beautiful design system' } = Astro.props;
+const {
+  title: pageTitle = "The System",
+  description = "A beautiful design system",
+} = Astro.props;
 
-const siteTitle = 'Design System';
+const siteTitle = "Design System";
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
   <head>
     <Head />
     <slot name="head" />
     <title>{siteTitle} | {pageTitle}</title>
   </head>
-  <body>
+  <body class="noise-base">
     <header>
       <slot name="header" />
     </header>
@@ -48,6 +52,27 @@ const siteTitle = 'Design System';
     <footer>
       <slot name="footer" />
     </footer>
+
+    <script>
+      // Global observer for elements that should animate on scroll
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+              } else {
+                entry.target.classList.remove("is-visible");
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "50px" },
+        );
+
+        document
+          .querySelectorAll("[data-on-scroll]")
+          .forEach((el) => observer.observe(el));
+      });
+    </script>
   </body>
 </html>
-

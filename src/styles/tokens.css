@@ -3,17 +3,60 @@
 
 
 :root {
+  --font-body: var(--ff-body);
+  --font-heading: var(--ff-heading);
+  --text-xs: var(--fs-xs);
+  --text-sm: var(--fs-sm);
+  --text-md: var(--fs-md);
+  --text-lg: var(--fs-lg);
+  --text-xl: var(--fs-xl);
+  --text-2xl: var(--fs-2xl);
+  --text-3xl: var(--fs-3xl);
+  --text-4xl: var(--fs-4xl);
+  --text-5xl: var(--fs-5xl);
+  --text-6xl: var(--fs-6xl);
+  --text-7xl: var(--fs-7xl);
 
-  /* ─── SPACING ───────────────────────────────────────── */
-  --sp-3xs: clamp(0.125rem, 0.125rem + 0.125vi, 0.25rem);
-  --sp-2xs: clamp(0.25rem, 0.25rem + 0.25vi, 0.5rem);
-  --sp-xs: clamp(0.5rem, 0.5rem + 0.5vi, 0.75rem);
-  --sp-sm: clamp(0.75rem, 0.75rem + 0.5vi, 1rem);
-  --sp-md: clamp(1rem, 1.5vi, 1.5rem);
-  --sp-lg: clamp(1.5rem, 2vi, 2rem);
-  --sp-xl: clamp(2rem, 3vi, 3rem);
-  --sp-2xl: clamp(2.5rem, 4vi, 4rem);
-  --sp-3xl: clamp(3rem, 6vi, 6rem);
-  --sp-4xl: clamp(4rem, 8vi, 8rem);
-  --sp-5xl: clamp(6rem, 12vi, 12rem);
+  --bg-default: var(--layer-1);
+  --bg-muted: rgba(var(--neutral-1), 0.5);
+  --bg-hover: var(--layer--1);
+
+  --text-0: var(--neutral-10);
+  --text-1: var(--neutral-11);
+  --text-2: var(--neutral-12);
+  --text-3: var(--neutral-13);
+  --text-4: var(--neutral-14);
+  --text-5: var(--neutral-15);
+
+  --fg-default: var(--neutral-14);
+  --fg-muted: var(--neutral-10);
+  --fg-hover: var(--neutral-12);
+
+  --surface-default: var(--neutral-2);
+  --surface-muted: rgba(var(--neutral-2), 0.5);
+  --surface-hover: var(--neutral-0);
+
+  --card-default: var(--bg-n-4);
+  --card-muted: rgba(var(--bg-n-3), 0.5);
+
+  /* ─── SEMANTIC TEXT ─────────────────────────────────── */
+  --text-primary: var(--primary-8);
+  --text-secondary: var(--secondary-8);
+  --text-accent: var(--accent-8);
+  --text-success: hsl(142 76% 36%);
+  --text-warning: var(--accent-8);
+  --text-danger: hsl(0 84% 60%);
+  --text-info: var(--primary-8);
+
+  /* ─── SEMANTIC BORDERS ──────────────────────────────── */
+  --border-focus: var(--accent-8);
+  --border-error: hsl(0 84% 60%);
+  --border-success: hsl(142 76% 36%);
+  --border-warning: var(--accent-8);
+  
+  --focus-ring: var(--border-focus);
+  --focus-ring-offset: 2px;
+  
+  /* ─── OVERLAYS / BACKDROP ───────────────────────────── */
+  --backdrop-color: rgb(var(--neutral-rgb-0) / 0.75);
 }

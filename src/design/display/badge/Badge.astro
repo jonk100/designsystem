@@ -1,11 +1,20 @@
 ---
-import type { CommonHTMLProps } from "../../shared";
+/**
+ * src/design/display/badge/Badge.astro
+ * An atomic status indicator.
+ * - Uses shared variant classes for background and borders.
+ * - Supports an optional icon.
+ * @props (local): icon, variant, size, as
+ * @props (global): class, class:list, animate, onScroll, HTML attributes
+ */
+
 import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import Inline from "../../layout/inline/Inline.astro";
 import "./Badge.css";
 
-export interface Props extends CommonHTMLProps {
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   /** Icon or emoji to display before the text */
   icon?: string;
   /** Variant style of the badge */

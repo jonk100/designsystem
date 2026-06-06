@@ -1,0 +1,94 @@
+---
+import { mergeClasses, mergeStyles } from "../shared/functions";
+import type { BaseComponentProps } from "../shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents" | "flex";
+  duration?: number;
+  [key: string]: any;
+}
+
+const standardProps = [
+  "as",
+  "class",
+  "class:list",
+  "style",
+  "id",
+  "display",
+  "duration",
+  "onScroll",
+];
+const props = Astro.props;
+
+const {
+  as: Tag = "div",
+  display = "block",
+  duration = 500,
+  onScroll,
+  ...rest
+} = props;
+
+if (onScroll) {
+  rest["data-on-scroll"] = "staggered";
+}
+
+const uniqueId = Math.random().toString(36).substr(2, 9);
+const classes = [
+  "staggered-component",
+  display && `staggered-display--${display}`,
+  `staggered-instance-${uniqueId}`,
+];
+
+// Generate a unique ID for this instance to scope the child delays
+classes.push(`staggered-instance-${uniqueId}`);
+
+const finalClasses = mergeClasses(classes, { ...props, animate: undefined });
+const finalStyles = mergeStyles("", { ...props, animate: undefined });
+
+// Staggered: alternates between slideLeft and slideRight
+// Starts the next one just before the previous one has finished (e.g., at 85% of duration)
+let cssRules = "";
+let currentDelay = 0;
+const staggerDelay = duration * 0.85;
+
+for (let i = 1; i <= 30; i++) {
+  const animName = i % 2 !== 0 ? "staggeredSlideLeft" : "staggeredSlideRight";
+  cssRules += `.staggered-instance-${uniqueId} > *:nth-child(${i}) { 
+    animation-name: ${animName};
+    animation-duration: ${duration}ms;
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: ${Math.round(currentDelay)}ms;
+  }\n`;
+  currentDelay += staggerDelay;
+}
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style set:html={cssRules}></style>
+
+<style>
+  .staggered-display--block {
+    display: block;
+  }
+  .staggered-display--inline {
+    display: inline;
+  }
+  .staggered-display--inline-block {
+    display: inline-block;
+  }
+  .staggered-display--contents {
+    display: contents;
+  }
+  .staggered-display--flex {
+    display: flex;
+  }
+
+  .staggered-component {
+    container-type: inline-size;
+    width: 100%;
+  }
+</style>

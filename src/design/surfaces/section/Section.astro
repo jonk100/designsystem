@@ -1,0 +1,38 @@
+---
+/**
+ * src/design/surfaces/section/Section.astro
+ * A named region within a page establishing a background context.
+ * - Operates by default transparently, but can accept a layer prop (e.g., --layer--1).
+ * - Accepts padding props via the surface padding scale.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
+import '../surfaces.css';
+import './Section.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+}
+
+const {
+  as: Tag = 'section',
+  layer,
+  padding = 'xl',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'section-component',
+  layer !== undefined && `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

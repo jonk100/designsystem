@@ -1,0 +1,14 @@
+/* src/design/surfaces/surfaces.css */
+.surface-padding--none { --surface-pad: 0; --surface-pad-half: 0; padding: var(--surface-pad); }
+.surface-padding--sm { --surface-pad: var(--sp-sm); --surface-pad-half: var(--sp-xs); padding: var(--surface-pad); }
+.surface-padding--default,
+.surface-padding--md { --surface-pad: var(--sp-md); --surface-pad-half: var(--sp-sm); padding: var(--surface-pad); }
+.surface-padding--lg { --surface-pad: var(--sp-lg); --surface-pad-half: var(--sp-md); padding: var(--surface-pad); }
+.surface-padding--xl { --surface-pad: var(--sp-xl); --surface-pad-half: var(--sp-lg); padding: var(--surface-pad); }
+
+.surface-layer--0 { background-color: var(--layer--0); }
+.surface-layer--1 { background-color: var(--layer--1); }
+.surface-layer--2 { background-color: var(--layer--2); }
+.surface-layer--3 { background-color: var(--layer--3); }
+.surface-layer--4 { background-color: var(--layer--4); }
+.surface-layer--5 { background-color: var(--layer--5); }

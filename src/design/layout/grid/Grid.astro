@@ -1,13 +1,22 @@
 ---
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+/**
+ * src/design/layout/grid/Grid.astro
+ * A layout primitive that arranges its children in a multi-column CSS grid.
+ * - Used for building responsive, two-dimensional layouts where elements align across rows and columns.
+ * - Supports configurable column counts, responsive wrapping, and standardized gaps.
+ * @props (local): as, columns, gap, minWidth
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
 
-export interface Props extends AnimationProps {
+import type { BaseComponentProps } from "../../shared/props";
+import type { SpacingScale } from "../../shared/types";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import './Grid.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   as?: string;
-  class?: string;
-  style?: string;
   columns?: string | number;
-  gap?: 'sm' | 'md' | 'lg' | 'xl';
+  gap?: SpacingScale;
   minWidth?: string;
 }
 
@@ -16,12 +25,15 @@ const {
   columns,
   gap = 'xl',
   minWidth = '280px',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
   'grid-component',
-  `grid-gap--${gap}`
+  gap && `gap-${gap}`
 ];
 
 const customStyle = columns 
@@ -35,7 +47,3 @@ const finalStyles = mergeStyles(customStyle, Astro.props);
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './Grid.css';
-</style>

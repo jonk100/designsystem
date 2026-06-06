@@ -1,0 +1,40 @@
+---
+/**
+ * src/design/display/dot/Dot.astro
+ * A textless micro-indicator for online status or unread notifications.
+ * - Uses shared variant classes for color.
+ * - Enforces a perfect circle shape.
+ * @props (local): variant, size, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Dot.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {
+  /** Variant style of the dot (maps to background color) */
+  variant?: DisplayVariant;
+  /** Size of the dot */
+  size?: DisplaySize;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  as: Tag = "span",
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "dot",
+  `display-size--${size}`,
+  `display-variant--${variant}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} aria-hidden="true" {...rest} />

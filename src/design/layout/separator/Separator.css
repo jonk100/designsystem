@@ -1,0 +1,17 @@
+.separator-component {
+  border: none;
+  background-color: var(--color-border, rgba(148, 163, 184, 0.15));
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.separator--horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.separator--vertical {
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+}

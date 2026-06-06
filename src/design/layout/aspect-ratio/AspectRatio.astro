@@ -1,0 +1,39 @@
+---
+/**
+ * src/design/layout/aspect-ratio/AspectRatio.astro
+ * A layout primitive that forces child elements to maintain a strict aspect ratio.
+ * - Utilizes native CSS `aspect-ratio` property.
+ * - Perfect for media embeds (16:9 videos, 1:1 avatars, 4:3 images) to prevent layout shifts.
+ * @props (local): as, ratio
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./AspectRatio.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  as?: string;
+  /** Aspect ratio value. E.g., '16/9', '4:3', '1:1', or a number like 1.77 */
+  ratio?: string | number;
+}
+
+const {
+  as: Tag = "div",
+  ratio = "1/1",
+  ...rest
+} = Astro.props;
+
+const classes = ["aspect-ratio-component"];
+
+// Handle colon format (e.g. '16:9') and numbers
+const normalizedRatio = typeof ratio === "number" ? ratio : ratio.replace(":", "/");
+const customStyle = `aspect-ratio: ${normalizedRatio};`;
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

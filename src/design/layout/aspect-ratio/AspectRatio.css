@@ -1,0 +1,11 @@
+.aspect-ratio-component {
+  display: block;
+  width: 100%;
+}
+
+/* Ensure images, videos, and frames fill the container correctly */
+.aspect-ratio-component > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

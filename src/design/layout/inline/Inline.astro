@@ -1,45 +1,70 @@
 ---
-import type { FlexboxProps } from "../layout.types";
-import type { AnimationProps } from "../../shared/props";
+/**
+ * src/design/layout/inline/Inline.astro
+ * A horizontal flexbox container (row).
+ * - Enforces horizontal stacking / gap of its child elements.
+ * - Supports responsive gaps, wrapping, and dynamic X/Y alignment.
+ * - NEVER responsible for layout, margin, padding, etc. The space around Inline belongs to its parent.
+ * @props (local): as, gap, x, y, wrap
+ * @props (global): class, class:list, animate, onScroll, and other HTML attributes
+ */
+import type { BaseComponentProps } from "../../shared/props";
+import type { LayoutAlign, SpacingScale } from "../../shared/types";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
+import { LAYOUT_ALIGN_MAP } from "../maps";
+import type { HTMLAttributes } from "astro/types";
+import "./Inline.css";
 
-export interface Props extends FlexboxProps {
+export interface Props
+  extends
+    BaseComponentProps,
+    Omit<HTMLAttributes<"div">, keyof BaseComponentProps> {
   as?: string;
-  class?: string;
-  "class:list"?: Record<string, boolean> | any[];
-  [key: string]: any;
+  gap?: SpacingScale;
+  /** Horizontal alignment (maps to justify-content in row flex) */
+  x?: LayoutAlign;
+  /** Vertical alignment (maps to align-items in row flex) */
+  y?: LayoutAlign;
+  /** Whether items should wrap */
+  wrap?: boolean | "reverse";
 }
 
 const {
   as: Tag = "span",
   gap = "md",
-  align = "center",
-  justify = "start",
+  x = "start",
+  y = "center",
   wrap = true,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 // Define component-specific classes and styles
-const classes = ["inline", `gap-size--${gap}`];
+const classes = [
+  "inline-component",
+  gap && `gap-${gap}`,
+  wrap === true
+    ? "flex-wrap"
+    : wrap === "reverse"
+      ? "flex-wrap-reverse"
+      : "flex-nowrap",
+];
 
-const styles = "";
+// For Inline (flex-direction: row), x is justify-content and y is align-items
+const flexStyles = [
+  x && `justify-content: ${LAYOUT_ALIGN_MAP[x]}`,
+  y && `align-items: ${LAYOUT_ALIGN_MAP[y]}`,
+]
+  .filter(Boolean)
+  .join(";");
 
 // Merge with animation and received props
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles, Astro.props);
+const finalStyles = mergeStyles(flexStyles, Astro.props);
 ---
 
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  .inline {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    color: inherit;
-    -webkit-text-fill-color: initial;
-    background-clip: initial;
-  }
-</style>

@@ -1,0 +1,12 @@
+@import '../tokens.css';
+
+.dot {
+  display: inline-block;
+  border-radius: 50%; /* Perfect circle */
+  /* We use the display-size--* classes which set font-size. 
+     We map the dot's dimensions relative to the font-size */
+  width: 0.6em;
+  height: 0.6em;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}

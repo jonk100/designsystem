@@ -1,0 +1,51 @@
+---
+/**
+ * src/design/display/indicator/Indicator.astro
+ * A role-based smart wrapper to absolutely position a status token (e.g. Dot) over a base element.
+ * - Positions children at the corners.
+ * @props (local): position, offset, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { SpacingScale } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Indicator.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The corner to position the indicator */
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  /** How far to push the indicator outside the bounding box */
+  offset?: SpacingScale | string;
+}
+
+const {
+  position = "top-right",
+  offset = "none",
+  as: Tag = "div",
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "indicator-container",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+// Resolve offset. If it's a known spacing scale, use the var, else use the raw string
+const offsetValue = offset !== 'none' 
+  ? (['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(offset) ? `var(--sp-${offset})` : offset)
+  : '0px';
+
+const styles = [
+  `--indicator-offset: ${offsetValue}`
+].join(';');
+
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+  <div class={`indicator-wrapper indicator-pos--${position}`}>
+    <slot name="indicator" />
+  </div>
+</Tag>

@@ -1,6 +1,17 @@
 ---
+/**
+ * src/design/surfaces/bento-cell/BentoCell.astro
+ * An individual cell within a bento grid layout.
+ * - Designed to sit flush within the grid or as a discrete block.
+ * - Owns its internal padding, but relies on the parent BentoGrid for external gaps.
+ * @props (local): as, span, padding
+ * @props (global): class, class:list, animate, onScroll
+ * - span: How many columns this cell should span (e.g. 1, 2, 3, or 'full').
+ * - padding: Internal padding of the cell.
+ */
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { AnimationProps } from "../../shared/props";
+import './BentoCell.css';
 
 export interface Props extends AnimationProps {
   as?: string;
@@ -30,7 +41,3 @@ const finalStyles = mergeStyles('', Astro.props);
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './BentoCell.css';
-</style>

@@ -1,0 +1,9 @@
+.backdrop-component {
+  position: fixed;
+  inset: 0;
+  background-color: var(--backdrop-color);
+  z-index: 100;
+}
+.backdrop--non-interactive {
+  pointer-events: none;
+}

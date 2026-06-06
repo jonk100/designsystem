@@ -1,0 +1,44 @@
+---
+/**
+ * src/design/surfaces/card-footer/CardFooter.astro
+ * The bottom section of a Card component.
+ * - Owns its own padding (bottom, left, right, and a smaller top padding).
+ * - Allows independent background coloring and optional top border.
+ * @props (local): as, padding, borderTop
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { CARD_FOOTER_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
+import './CardFooter.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+  borderTop?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  borderTop = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-footer-component',
+  padding && CARD_FOOTER_PADDING_CLASS_MAP[padding],
+  borderTop && 'card-footer--border-top',
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

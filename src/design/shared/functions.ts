@@ -1,3 +1,6 @@
+import { BACKGROUND_TONE_CLASS_MAP } from './maps';
+import type { BackgroundTone } from './types';
+
 const TIME_VALUE_RE = /^\d+(\.\d+)?(s|ms)$/;
 
 /**
@@ -42,12 +45,14 @@ export const transformReceivedStyle = (
  */
 export const mergeClasses = (
   componentClasses: (string | undefined | false)[],
-  props: { animate?: string; class?: string; 'class:list'?: any }
+  props: { animate?: string; class?: string; 'class:list'?: any; effects?: string[]; bg?: BackgroundTone }
 ) => {
-  const { animate, class: className, 'class:list': classList } = props;
+  const { animate, class: className, 'class:list': classList, effects, bg } = props;
   const animation = animate ? parseAnimationString(animate) : null;
+  const effectClasses = effects?.map(effect => `effect--${effect}`);
+  const bgClass = bg ? BACKGROUND_TONE_CLASS_MAP[bg] : undefined;
 
-  return [...componentClasses, animation && `animate--${animation.name}`, className, classList]
+  return [...componentClasses, animation && `animate--${animation.name}`, ...(effectClasses || []), bgClass, className, classList]
     .filter(Boolean);
 };
 
@@ -74,4 +79,30 @@ export const mergeStyles = (
   return [componentStyles, animationStyles, transformReceivedStyle(style)]
     .filter(Boolean)
     .join(';');
+};
+
+/**
+ * Combines boolean FontStyleProps into a CSS string
+ * @param props - Object containing boolean font style props
+ * @returns A semicolon-separated CSS string
+ */
+export const combineFontStyleProps = (props: {
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  uppercase?: boolean;
+  lowercase?: boolean;
+}) => {
+  const { bold, italic, underline, strikethrough, uppercase, lowercase } = props;
+  
+  const textDeco = [underline && 'underline', strikethrough && 'line-through'].filter(Boolean).join(' ');
+  const textTransform = uppercase ? 'uppercase' : lowercase ? 'lowercase' : undefined;
+  
+  return [
+    bold && `font-weight: bold`,
+    italic && `font-style: italic`,
+    textDeco && `text-decoration: ${textDeco}`,
+    textTransform && `text-transform: ${textTransform}`
+  ].filter(Boolean).join(';');
 };

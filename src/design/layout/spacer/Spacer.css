@@ -1,0 +1,8 @@
+.spacer {
+  display: block;
+  flex-shrink: 0;
+}
+
+.spacer--horizontal {
+  display: inline-block;
+}

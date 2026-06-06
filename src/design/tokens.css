@@ -2,46 +2,61 @@
 @import 'layout/tokens.css';
 @import 'typography/tokens.css';
 @import 'display/tokens.css';
+@import 'shared/effects.css';
+@import 'shared/background.css';
 
 :root {
-  --gap-size-2xs: var(--sp-2xs);
-  --gap-size-xs: calc(var(--sp-xs) * 1.1);
-  --gap-size-sm: calc(var(--sp-sm) * 1.2);
-  --gap-size-md: calc(var(--sp-md) * 1.3);
-  --gap-size-lg: calc(var(--sp-lg) * 1.4);
-  --gap-size-xl: calc(var(--sp-xl) * 1.6);
-  --gap-size-2xl: calc(var(--sp-2xl) * 1.8);
-  --gap-size-3xl: calc(var(--sp-3xl) * 2);
-}
+  --cabin: --ff-body;
+  --mp1: --ff-heading;
 
-.gap-size--2xs {
-  gap: var(--gap-size-2xs);
-}
+  /* - - - - - GAP - - - - -         | 2xs -> 5xl */
+  --gap--2xs: var(--sp-2xs);
+  --gap--xs: calc(var(--sp-xs) * 1.1);
+  --gap--sm: calc(var(--sp-sm) * 1.2);
+  --gap--md: calc(var(--sp-md) * 1.3);
+  --gap--lg: calc(var(--sp-lg) * 1.4);
+  --gap--xl: calc(var(--sp-xl) * 1.6);
+  --gap--2xl: calc(var(--sp-2xl) * 1.8);
+  --gap--3xl: calc(var(--sp-3xl) * 2);
+  --gap--4xl: calc(var(--sp-4xl) * 2.25);
+  --gap--5xl: calc(var(--sp-5xl) * 2.5);
+  /* - - - - - - - - - - - - - - - - - - - - - - */
+  /* Font Sizes - - - - - - - - - - - - - - - - */
+  --fs--2xs: var(--fs-2xs);
+  --fs--xs: var(--fs-xs);
+  --fs--sm: var(--fs-sm);
+  --fs--md: var(--fs-md);
+  --fs--base: var(--fs-md);
+  --fs--lg: var(--fs-lg);
+  --fs--xl: var(--fs-xl);
+  --fs--2xl: var(--fs-2xl);
+  --fs--3xl: var(--fs-3xl);
+  --fs--4xl: var(--fs-4xl);
+  --fs--5xl: var(--fs-5xl);
+  --fs--6xl: var(--fs-6xl);
+  --fs--7xl: var(--fs-6xl);
+  /* - - - - - - - - - - - - - - - - - - - - - - */
+  /* Line Height - - - - - - - - - - - - - - - - */
+  --lh--2xs: 1.6;
+  --lh--xs: 1.6;
+  --lh--sm: 1.55;
+  --lh--md: 1.5;
+  --lh--base: 1.5;
+  --lh--lg: 1.45;
+  --lh--xl: 1.4;
+  --lh--2xl: 1.35;
+  --lh--3xl: 1.3;
+  --lh--4xl: 1.25;
+  --lh--5xl: 1.2;
+  --lh--6xl: 1.15;
+  /* Border Radius - - - - - - - - - - - - - - - */
+  --radius--none: 0px;
+  --radius--xs: 2px;
+  --radius--sm: 4px;
+  --radius--md: 6px;
+  --radius--lg: 10px;
+  --radius--xl: 14px;
+  --radius--2xl: 20px;
+  --radius--full: 9999px;
 
-.gap-size--xs {
-  gap: var(--gap-size-xs);
-}
-
-.gap-size--sm {
-  gap: var(--gap-size-sm);
-}
-
-.gap-size--md {
-  gap: var(--gap-size-md);
-}
-
-.gap-size--lg {
-  gap: var(--gap-size-lg);
-}
-
-.gap-size--xl {
-  gap: var(--gap-size-xl);
-}
-
-.gap-size--2xl {
-  gap: var(--gap-size-2xl);
-}
-
-.gap-size--3xl {
-  gap: var(--gap-size-3xl);
 }

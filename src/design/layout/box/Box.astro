@@ -1,12 +1,31 @@
 ---
+/**
+ * src/design/layout/box/Box.astro
+ * A foundational layout primitive that acts as a generic wrapper or container.
+ * - Used to apply standard display properties and global attributes safely.
+ * - By default renders as a `div`, but can be morphed via the `as` prop.
+ * @props (local): display, as
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BoxDisplay } from "../types";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { BaseComponentProps } from "../../shared/props";
+import type { HTMLAttributes } from "astro/types";
+import './Box.css';
 
-export interface Props extends BaseComponentProps {
-  display?: "block" | "inline" | "inline-block" | "contents";
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  display?: BoxDisplay;
 }
 
-const { as: Tag = "div", display, ...rest } = Astro.props;
+const { 
+  as: Tag = "div", 
+  display, 
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest 
+} = Astro.props;
 
 const classes = ["box-component", display && `box-display--${display}`];
 
@@ -17,18 +36,3 @@ const finalStyles = mergeStyles("", Astro.props);
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  .box-display--block {
-    display: block;
-  }
-  .box-display--inline {
-    display: inline;
-  }
-  .box-display--inline-block {
-    display: inline-block;
-  }
-  .box-display--contents {
-    display: contents;
-  }
-</style>

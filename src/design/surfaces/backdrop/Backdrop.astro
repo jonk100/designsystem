@@ -1,0 +1,35 @@
+---
+/**
+ * src/design/surfaces/backdrop/Backdrop.astro
+ * A fixed, full-viewport scrim.
+ * - Used behind modals, drawers, and sheets.
+ * - Uses semantic --backdrop-color token for transparency compositing.
+ * @props (local): as, interactive
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import './Backdrop.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+  interactive?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  interactive = true,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'backdrop-component',
+  !interactive && 'backdrop--non-interactive'
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

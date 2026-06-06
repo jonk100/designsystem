@@ -1,0 +1,8 @@
+.card-footer-component {
+  width: 100%;
+  padding: var(--surface-pad-half, var(--sp-sm)) var(--surface-pad, var(--sp-md));
+}
+
+.card-footer--border-top {
+  border-top: 1px solid var(--border--1);
+}

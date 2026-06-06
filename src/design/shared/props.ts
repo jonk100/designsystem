@@ -4,6 +4,7 @@
  */
 
 import type { AnimationName } from '../animation/motion.types';
+import type { DisplayEffect, BackgroundTone } from './types';
 
 /**
  * Animation prop interface — add to any component's Props to enable animations.
@@ -35,7 +36,7 @@ export interface AnimationProps {
    * animate="sparkle 1.5s delay-1s"
    * animate="bounce 3s delay-0.5s"
    */
-  animate?: AnimationName;
+  animate?: AnimationName | (string & {});
 }
 
 export interface CommonHTMLProps {
@@ -43,11 +44,16 @@ export interface CommonHTMLProps {
   'class:list'?: Record<string, boolean> | any[];
   style?: string | Record<string, string | number>;
   id?: string;
+  onScroll?: boolean;
+
   [key: string]: any;
 }
 
 export interface BaseComponentProps extends AnimationProps, CommonHTMLProps {
   as?: string;
+  effects?: DisplayEffect[];
+  /** Background tone — maps to .bg-* utility classes (0-5 = layer tones, or semantic names) */
+  bg?: BackgroundTone;
 }
 
 

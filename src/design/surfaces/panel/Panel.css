@@ -1,0 +1,8 @@
+.panel-component {
+  height: 100%;
+  overflow-y: auto;
+}
+.panel-position--left { border-right: 1px solid var(--border--1); }
+.panel-position--right { border-left: 1px solid var(--border--1); }
+.panel-position--top { border-bottom: 1px solid var(--border--1); }
+.panel-position--bottom { border-top: 1px solid var(--border--1); }

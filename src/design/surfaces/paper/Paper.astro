@@ -1,6 +1,17 @@
 ---
+/**
+ * src/design/surfaces/paper/Paper.astro
+ * A regional document surface sitting just above the page floor (--layer--1).
+ * - Serves as a subtly lifted container for main content areas or editor canvases.
+ * - Distinct from Card as it acts more as a zone or region rather than a discrete object.
+ * @props (local): as, elevation, padding
+ * @props (global): class, class:list, animate, onScroll
+ * - elevation: Controls the visual lift, defaulting to 'sm'.
+ * - padding: Internal space of the paper surface, handled by the component.
+ */
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { AnimationProps } from "../../shared/props";
+import './Paper.css';
 
 export interface Props extends AnimationProps {
   as?: string;
@@ -14,6 +25,9 @@ const {
   as: Tag = 'div',
   elevation = 'sm',
   padding = 'md',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
@@ -30,7 +44,3 @@ const finalStyles = mergeStyles('', Astro.props);
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './Paper.css';
-</style>

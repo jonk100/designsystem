@@ -1,12 +1,28 @@
 ---
-import type { FontSize, TextTone } from '../typography.types';
+/**
+ * src/design/typography/kbd/Kbd.astro
+ * A component to denote keyboard input or shortcuts.
+ * - Displays monospaced keyboard keys.
+ * - Configurable sizes, tones, and font weights.
+ * @props (local): size, tone, weight, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { FontSize, TextTone, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
+import type { FontWeight, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
 import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '../../shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import '../typography.css';
+import './Kbd.css';
 
-interface Props extends HTMLAttributes<'kbd'> {
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'kbd'>, keyof BaseComponentProps> {
   /**
    * Font size of the kbd
    */
-  size?: FontSize;
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
   
   /**
    * Color tone of the text
@@ -16,31 +32,49 @@ interface Props extends HTMLAttributes<'kbd'> {
   /**
    * Font weight
    */
-  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  fw?: string;
+  
+  /**
+   * Standard boolean typography styles
+   */
 }
 
 const {
-  size,
+  fs,
   tone,
-  weight,
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
   class: className,
   ...rest
 } = Astro.props;
 
 const classes = [
   'kbd',
-  size && `kbd--size-${size}`,
+  fs && `kbd--size-${fs}`,
   tone && `kbd--tone-${tone}`,
-  weight && `kbd--weight-${weight}`,
+  fw && `kbd--weight-${fw}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
   className,
-].filter(Boolean).join(' ');
+];
+
+
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
 ---
 
-<kbd class={classes} {...rest}>
+<kbd class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </kbd>
-
-<style>
-  @import '../typography.css';
-  @import './Kbd.css';
-</style>

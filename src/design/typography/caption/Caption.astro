@@ -1,18 +1,35 @@
 ---
-import type { FontSize, TextTone, XAlign } from '../typography.types';
+/**
+ * src/design/typography/caption/Caption.astro
+ * A caption component used to describe or contextualize media content.
+ * - Supports different semantic elements and typography scales.
+ * - Can be styled with different tones, weights, and alignments.
+ * @props (local): as, size, tone, align, weight, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { FontSize, TextTone, XAlign, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
+import type { CaptionElement } from '../types';
+import type { FontWeight, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
 import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '../../shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import '../typography.css';
+import './Caption.css';
 
-interface Props extends HTMLAttributes<'figcaption'> {
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'figcaption'>, keyof BaseComponentProps> {
   /**
    * The HTML element to render
    * @default 'figcaption'
    */
-  as?: 'figcaption' | 'span' | 'div' | 'p';
+  as?: CaptionElement;
   
   /**
    * Font size of the caption
    */
-  size?: FontSize;
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
   
   /**
    * Color tone of the text
@@ -22,46 +39,57 @@ interface Props extends HTMLAttributes<'figcaption'> {
   /**
    * Horizontal text alignment
    */
-  align?: XAlign;
+  xa?: XAlign;
   
   /**
    * Font weight
    */
-  weight?: 'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  fw?: string;
   
   /**
-   * Font style
+   * Standard boolean typography styles
    */
-  italic?: boolean;
 }
 
 const {
   as: Element = 'figcaption',
-  size = 'sm',
+  fs = 'sm',
   tone = 'muted',
-  align,
-  weight,
+  xa,
+  fw,
+  bold = false,
   italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
   class: className,
   ...rest
 } = Astro.props;
 
 const classes = [
   'caption',
-  size && `caption--size-${size}`,
+  fs && `caption--size-${fs}`,
   tone && `caption--tone-${tone}`,
-  align && `caption--align-${align}`,
-  weight && `caption--weight-${weight}`,
-  italic && 'caption--italic',
+  xa && `caption--align-${xa}`,
+  fw && `caption--weight-${fw}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
   className,
-].filter(Boolean).join(' ');
+];
+
+
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
 ---
 
-<Element class={classes} {...rest}>
+<Element class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Element>
-
-<style>
-  @import '../typography.css';
-  @import './Caption.css';
-</style>

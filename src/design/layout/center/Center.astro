@@ -1,0 +1,56 @@
+---
+/**
+ * src/design/layout/center/Center.astro
+ * A layout utility that centers its children horizontally and vertically.
+ * - Utilizes flexbox alignment (`align-items: center; justify-content: center;`).
+ * - Supports block or inline behavior, and optional text alignment centering.
+ * @props (local): as, inline, height, width, text
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Center.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  as?: string;
+  /** Whether to use inline-flex container */
+  inline?: boolean;
+  /** Custom height constraint */
+  height?: string;
+  /** Custom width constraint */
+  width?: string;
+  /** Whether to apply text-align: center style */
+  text?: boolean;
+}
+
+const {
+  as: Tag = "div",
+  inline = false,
+  height,
+  width,
+  text = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "center-component",
+  inline && "center--inline",
+  text && "center--text"
+];
+
+const customStyle = [
+  height && `height: ${height};`,
+  width && `width: ${width};`
+].filter(Boolean).join(" ");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

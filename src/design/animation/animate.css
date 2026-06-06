@@ -1,9 +1,104 @@
 /**
- * ANIMATION TOKENS
- * Animation classes and keyframes for component animations
+ * ============================================================================
+ *                         ANIMATION LIBRARY
+ * ============================================================================
+ * 
+ * ENTRANCES
+ * fadeIn      - opacity 0→1, the reliable workhorse
+ * fadeUp      - fade in while translating up slightly (8–12px), great for cards and list items
+ * fadeDown    - same but from above, good for dropdowns
+ * fadeLeft    - directional entrance from left, for sidebars and drawers
+ * fadeRight   - directional entrance from right, for sidebars and drawers
+ * scaleIn     - scale 0.95→1 with fade, feels native, good for modals and popovers
+ * revealUp    - clip-path reveal from bottom, elegant for headlines
+ * slideIn     - similar to fadeUp/fadeDown with larger translation
+ * slideLeft   - similar to fadeLeft
+ * slideRight  - similar to fadeRight
+ * 
+ * ATTENTION / STATE
+ * pulse       - gentle opacity cycle, good for loading states or "live" indicators
+ * ping        - radiating ring effect, good for notification badges
+ * shimmer     - sweeping highlight across a surface, the skeleton loader standard
+ * blink       - cursor-style blink, useful for terminal or typing UIs
+ * glow        - pulsing shadow/glow effect
+ * 
+ * CONTINUOUS / AMBIENT
+ * spin        - straightforward rotation, loading spinners
+ * spinSlow    - very slow rotation (20–30s), good for background orbs or decorative elements
+ * float       - gentle vertical drift (4–6px), good for hero illustrations
+ * breathe     - subtle scale 1→1.03→1, makes something feel alive without being distracting
+ * sparkle     - scaling and rotating star effect
+ * 
+ * FEEDBACK / INTERACTION
+ * shake       - horizontal jitter, form validation errors
+ * bounce      - vertical snap, success confirmations
+ * wiggle      - small rotation oscillation, softer than shake, good for empty states
+ * headShake   - horizontal with slight rotation, a more expressive "no"
+ * jello       - scale X/Y stagger, playful success feedback
+ * jiggle      - alternative shake
+ * swivel      - 3D-like rotational shake
+ * ripple      - radiating wave effect
+ * vibrate     - rapid micro-movements
+ * 
+ * EXITS
+ * fadeOut     - the obvious pair to fadeIn
+ * scaleOut    - scale 1→0.95 with fade, modal dismiss feel
+ * collapse    - height 0 with fade, for accordion items
+ * 
+ * QUIRKY / MISC
+ * pickle        - playful bounce
+ * DancingMonkey - bouncy rotation
+ * 
+ * ============================================================================
  */
 
 @import './motion.vars.css';
+
+/* ============================================================================
+    - - - - - - - -- SCROLL BEHAVIOR -- - - - - - - - - - - - - - - - - - - - -
+=============================================================================== */
+/**
+*    -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+*    The following styles ensure that animations do not play until the element
+*    is visible in the viewport. This is achieved by setting the animation
+*    to 'none' when the element is not visible and then adding the 'is-visible'
+*    class to the element when it is visible.
+*    -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+*/
+[data-on-scroll]:not(.is-visible) {
+  animation: none !important;
+}
+
+[data-on-scroll="wave"]:not(.is-visible)>*,
+[data-on-scroll="staggered"]:not(.is-visible)>*,
+[data-on-scroll="alternating"]:not(.is-visible)>* {
+  animation: none !important;
+}
+
+@keyframes staggeredSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100cqw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes staggeredSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(100cqw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 
 /* ============================================================================
     - - - - - - - -- ANIMATIONS -- - - - - - - - - - - - - - - - - - - - - - -
@@ -11,10 +106,11 @@
 
 /**                 Sparkle________________________________________
 *          Sparkle  */
-.animate--sparkle {
+.animate--sparkle,
+.wave--sparkle>* {
   display: inline-block;
   animation-name: sparkle;
-  animation-duration: var(--speed-10);
+  animation-duration: var(--animation-duration, var(--speed-10));
   animation-timing-function: var(--ease-in-out);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -35,9 +131,10 @@
 
 /**              Pulse________________________________________
 *         Pulse  */
-.animate--pulse {
+.animate--pulse,
+.wave--pulse>* {
   animation-name: pulse;
-  animation-duration: var(--speed-7);
+  animation-duration: var(--animation-duration, var(--speed-7));
   animation-timing-function: var(--ease-smooth);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -56,9 +153,10 @@
 
 /**                Bounce________________________________________
 *          Bounce  */
-.animate--bounce {
+.animate--bounce,
+.wave--bounce>* {
   animation-name: bounce;
-  animation-duration: var(--speed-6);
+  animation-duration: var(--animation-duration, var(--speed-6));
   animation-timing-function: var(--ease-bounce);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -79,9 +177,10 @@
 
 /**                Spin________________________________________
 *          Spin  */
-.animate--spin {
+.animate--spin,
+.wave--spin>* {
   animation-name: spin;
-  animation-duration: var(--speed-6);
+  animation-duration: var(--animation-duration, var(--speed-6));
   animation-timing-function: var(--ease-linear);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -98,9 +197,10 @@
 
 /**                Ping________________________________________
 *          Ping  */
-.animate--ping {
+.animate--ping,
+.wave--ping>* {
   animation-name: ping;
-  animation-duration: var(--speed-6);
+  animation-duration: var(--animation-duration, var(--speed-6));
   animation-timing-function: var(--ease-smooth);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -116,9 +216,10 @@
 
 /**                Wiggle________________________________________
 *         Wiggle  */
-.animate--wiggle {
+.animate--wiggle,
+.wave--wiggle>* {
   animation-name: wiggle;
-  animation-duration: var(--speed-6);
+  animation-duration: var(--animation-duration, var(--speed-6));
   animation-timing-function: var(--ease-in-out);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -137,9 +238,10 @@
 
 /**                Float________________________________________
 *          Float  */
-.animate--float {
+.animate--float,
+.wave--float>* {
   animation-name: float;
-  animation-duration: var(--speed-8);
+  animation-duration: var(--animation-duration, var(--speed-8));
   animation-timing-function: var(--ease-in-out);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -158,9 +260,10 @@
 
 /**                Glow________________________________________
 *          Glow  */
-.animate--glow {
+.animate--glow,
+.wave--glow>* {
   animation-name: glow;
-  animation-duration: var(--speed-7);
+  animation-duration: var(--animation-duration, var(--speed-7));
   animation-timing-function: var(--ease-in-out);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -181,9 +284,10 @@
 
 /**                Shake________________________________________
 *          Shake  */
-.animate--shake {
+.animate--shake,
+.wave--shake>* {
   animation-name: shake;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -214,12 +318,13 @@
 
 /**                Fade In________________________________________
 *         Fade In  */
-.animate--fadeIn {
+.animate--fadeIn,
+.wave--fadeIn>* {
   animation-name: fadeIn;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-in);
   animation-fill-mode: var(--fill-both);
-  animation-delay: var(--delay-none);
+  animation-delay: var(--animation-delay, var(--delay-none));
 }
 
 @keyframes fadeIn {
@@ -234,12 +339,13 @@
 
 /**                Slide In________________________________________
 *          Slide In  */
-.animate--slideIn {
+.animate--slideIn,
+.wave--slideIn>* {
   animation-name: slideIn;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-out);
   animation-fill-mode: var(--fill-both);
-  animation-delay: var(--delay-none);
+  animation-delay: var(--animation-delay, var(--delay-none));
 }
 
 @keyframes slideIn {
@@ -254,14 +360,61 @@
   }
 }
 
+/**                Slide Left________________________________________
+*          Slide Left  */
+.animate--slideLeft,
+.wave--slideLeft>* {
+  animation-name: slideLeft;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Slide Right________________________________________
+*          Slide Right  */
+.animate--slideRight,
+.wave--slideRight>* {
+  animation-name: slideRight;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /**                 Scale In________________________________________
 *           Scale In  */
-.animate--scaleIn {
+.animate--scaleIn,
+.wave--scaleIn>* {
   animation-name: scaleIn;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-elastic);
   animation-fill-mode: var(--fill-both);
-  animation-delay: var(--delay-none);
+  animation-delay: var(--animation-delay, var(--delay-none));
 }
 
 @keyframes scaleIn {
@@ -279,9 +432,10 @@
 
 /**                    Jiggle____________________________________
  *         Jiggle    */
-.animate--jiggle {
+.animate--jiggle,
+.wave--jiggle>* {
   animation-name: jiggle;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -312,9 +466,10 @@
 
 /**                 Shimmer________________________________________
 *          Shimmer  */
-.animate--shimmer {
+.animate--shimmer,
+.wave--shimmer>* {
   animation-name: shimmer;
-  animation-duration: var(--speed-7);
+  animation-duration: var(--animation-duration, var(--speed-7));
   animation-timing-function: var(--ease-smooth);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -333,9 +488,10 @@
 
 /**                    Swivel____________________________________
  *         Swivel    */
-.animate--swivel {
+.animate--swivel,
+.wave--swivel>* {
   animation-name: swivel;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -368,9 +524,10 @@
 
 /**                    Ripple____________________________________
  *          Ripple    */
-.animate--ripple {
+.animate--ripple,
+.wave--ripple>* {
   animation-name: ripple;
-  animation-duration: var(--speed-10);
+  animation-duration: var(--animation-duration, var(--speed-10));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -409,9 +566,10 @@
 
 /**                    Half Ripple____________________________________
  *         Half Ripple    */
-.animate--half-ripple {
+.animate--half-ripple,
+.wave--half-ripple>* {
   animation-name: half-ripple;
-  animation-duration: var(--speed-10);
+  animation-duration: var(--animation-duration, var(--speed-10));
   animation-timing-function: var(--ease-smooth);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -452,9 +610,10 @@
 
 /**                    Quarter Ripple____________________________________
  *         Quarter Ripple    */
-.animate--quarter-ripple {
+.animate--quarter-ripple,
+.wave--quarter-ripple>* {
   animation-name: quarter-ripple;
-  animation-duration: var(--speed-10);
+  animation-duration: var(--animation-duration, var(--speed-10));
   animation-timing-function: var(--ease-smooth);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -493,9 +652,10 @@
 
 /**                    Pickle____________________________________
  *          Pickle     */
-.animate--pickle {
+.animate--pickle,
+.wave--pickle>* {
   animation-name: pickle;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -526,9 +686,10 @@
 
 /**                    Pickle____________________________________
  *          Pickle     */
-.animate--pickle {
+.animate--pickle,
+.wave--pickle>* {
   animation-name: pickle;
-  animation-duration: var(--speed-5);
+  animation-duration: var(--animation-duration, var(--speed-5));
   animation-timing-function: var(--ease-sharp);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -559,9 +720,10 @@
 
 /**                    Dancing Monkey____________________________
  *          Dancing Monkey    */
-.animate--DancingMonkey {
+.animate--DancingMonkey,
+.wave--DancingMonkey>* {
   animation-name: DancingMonkey;
-  animation-duration: var(--speed-10);
+  animation-duration: var(--animation-duration, var(--speed-10));
   animation-timing-function: var(--ease-bounce);
   animation-iteration-count: var(--iteration-infinite);
 }
@@ -591,5 +753,369 @@
   60% {
     transform: translateX(4px);
     transform: rotate(-5deg);
+  }
+}
+
+/**
+*       Vibrate________________________________________________
+*          Vibrate             */
+.animate--vibrate,
+.wave--vibrate>* {
+  animation-name: vibrate;
+  animation-duration: var(--animation-duration, var(--speed-1));
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes vibrate {
+
+  10%,
+  90% {
+    transform: translateX(1px);
+    transform: rotate(1deg);
+    opacity: .95;
+  }
+
+  20%,
+  80% {
+    transform: translateX(-2px);
+    transform: rotate(-1deg);
+    opacity: 1;
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(1px);
+    transform: rotate(2deg);
+    opacity: .95;
+  }
+
+  40%,
+  60% {
+    transform: translateX(-1px);
+    transform: rotate(-1deg);
+    opacity: 1;
+  }
+}
+
+/**                Fade Up________________________________________
+*          Fade Up  */
+.animate--fadeUp,
+.wave--fadeUp>* {
+  animation-name: fadeUp;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                Fade Down________________________________________
+*          Fade Down  */
+.animate--fadeDown,
+.wave--fadeDown>* {
+  animation-name: fadeDown;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                Fade Left________________________________________
+*          Fade Left  */
+.animate--fadeLeft,
+.wave--fadeLeft>* {
+  animation-name: fadeLeft;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Fade Right________________________________________
+*          Fade Right  */
+.animate--fadeRight,
+.wave--fadeRight>* {
+  animation-name: fadeRight;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Reveal Up________________________________________
+*          Reveal Up  */
+.animate--revealUp,
+.wave--revealUp>* {
+  animation-name: revealUp;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes revealUp {
+  from {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transform: translateY(100%);
+  }
+
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(0);
+  }
+}
+
+/**                Blink________________________________________
+*          Blink  */
+.animate--blink,
+.wave--blink>* {
+  animation-name: blink;
+  animation-duration: var(--animation-duration, 1s);
+  animation-timing-function: steps(2, start);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/**                Spin Slow________________________________________
+*          Spin Slow  */
+.animate--spinSlow,
+.wave--spinSlow>* {
+  animation-name: spinSlow;
+  animation-duration: var(--animation-duration, 20s);
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/**                Breathe________________________________________
+*          Breathe  */
+.animate--breathe,
+.wave--breathe>* {
+  animation-name: breathe;
+  animation-duration: var(--animation-duration, 4s);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/**                Head Shake________________________________________
+*          Head Shake  */
+.animate--headShake,
+.wave--headShake>* {
+  animation-name: headShake;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes headShake {
+  0% {
+    transform: translateX(0);
+  }
+
+  6.5% {
+    transform: translateX(-6px) rotateY(-9deg);
+  }
+
+  18.5% {
+    transform: translateX(5px) rotateY(7deg);
+  }
+
+  31.5% {
+    transform: translateX(-3px) rotateY(-5deg);
+  }
+
+  43.5% {
+    transform: translateX(2px) rotateY(3deg);
+  }
+
+  50% {
+    transform: translateX(0);
+  }
+}
+
+/**                Jello________________________________________
+*          Jello  */
+.animate--jello,
+.wave--jello>* {
+  animation-name: jello;
+  animation-duration: var(--animation-duration, var(--speed-7));
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes jello {
+
+  0%,
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+}
+
+/**                Fade Out________________________________________
+*         Fade Out  */
+.animate--fadeOut,
+.wave--fadeOut>* {
+  animation-name: fadeOut;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/**                Scale Out________________________________________
+*          Scale Out  */
+.animate--scaleOut,
+.wave--scaleOut>* {
+  animation-name: scaleOut;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/**                Collapse________________________________________
+*          Collapse  */
+.animate--collapse,
+.wave--collapse>* {
+  animation-name: collapse;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+  overflow: hidden;
+}
+
+@keyframes collapse {
+  from {
+    opacity: 1;
+    max-height: 1000px;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    margin-top: inherit;
+    margin-bottom: inherit;
+  }
+
+  to {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }

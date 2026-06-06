@@ -1,26 +1,36 @@
 ---
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+/**
+ * src/design/display/counter/Counter.astro
+ * A micro-state visualization component for numerical values.
+ * - Adheres to shared display sizes and variants.
+ * @props (local): variant, size, as
+ * @props (global): class, class:list, animate, onScroll, HTML attributes
+ */
 
-export interface Props extends AnimationProps {
+import type { DisplayVariant, DisplaySize } from "../../shared/types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import './Counter.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   as?: string;
   class?: string;
   style?: string;
-  variant?: '1' | '2' | '3' | '4' | '5' | 'cosmic' | 'sunset';
-  size?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+  variant?: DisplayVariant;
+  size?: DisplaySize;
 }
 
 const {
   as: Tag = 'div',
-  variant = '3',
-  size = '3xl',
+  variant = 'primary',
+  size = 'md',
   ...rest
 } = Astro.props;
 
 const classes = [
   'counter-component',
-  `counter-variant--${variant}`,
-  `counter-size--${size}`
+  `display-variant--${variant}`,
+  `display-size--${size}`
 ];
 
 const finalClasses = mergeClasses(classes, Astro.props);
@@ -31,6 +41,4 @@ const finalStyles = mergeStyles('', Astro.props);
   <slot />
 </Tag>
 
-<style>
-  @import './Counter.css';
-</style>
+

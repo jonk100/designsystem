@@ -1,0 +1,36 @@
+---
+/**
+ * src/design/surfaces/screen/Screen.astro
+ * The outermost surface representing the full viewport or page canvas.
+ * - Establishes the base background at --layer--0.
+ * - Provides the minimum height (100dvh) and a stacking context.
+ * - Is purely environmental, not a layout component.
+ * @props (local): as, layer
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "../surfaces.types";
+import '../surfaces.css';
+import './Screen.css';
+
+export interface Props extends SurfaceComponentProps {
+  as?: string;
+}
+
+const {
+  as: Tag = 'div',
+  layer = 0,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'screen-component',
+  `surface-layer--${layer}`
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

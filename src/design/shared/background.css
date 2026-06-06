@@ -1,0 +1,25 @@
+/* Background Tone Utilities
+ * Maps `bg` prop values to CSS background-color declarations.
+ * Layer tones (0-5) use --layer--N variables from styles/vars.css.
+ */
+
+/* Layer tones (mapped to neutral palette) */
+.bg-0 { background-color: var(--layer--0); }
+.bg-1 { background-color: var(--layer--1); }
+.bg-2 { background-color: var(--layer--2); }
+.bg-3 { background-color: var(--layer--3); }
+.bg-4 { background-color: var(--layer--4); }
+.bg-5 { background-color: var(--layer--5); }
+
+/* Semantic tones */
+.bg-primary { background-color: var(--color-primary, hsl(220 90% 56%)); }
+.bg-secondary { background-color: var(--color-secondary, hsl(280 70% 60%)); }
+.bg-accent { background-color: var(--color-accent, hsl(340 80% 58%)); }
+
+/* Keyword tones */
+.bg-white { background-color: white; }
+.bg-black { background-color: black; }
+.bg-default { background-color: var(--bg-default, var(--layer--1)); }
+.bg-transparent { background-color: transparent; }
+.bg-current { background-color: currentColor; }
+.bg-inherit { background-color: inherit; }

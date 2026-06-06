@@ -1,0 +1,4 @@
+Warning: 'print' is not in the list of known options, but still passed to Electron/Chromium.
+Warning: 'dangerously-skip-permissions' is not in the list of known options, but still passed to Electron/Chromium.
+Warning: 'add-dir' is not in the list of known options, but still passed to Electron/Chromium.
+To read from stdin, append '-' (e.g. 'ps aux | grep code | antigravity -')

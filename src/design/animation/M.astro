@@ -15,6 +15,7 @@ const standardProps = [
   "id",
   "display",
   "animate",
+  "onScroll",
 ];
 const props = Astro.props;
 
@@ -36,7 +37,11 @@ const animate = animationName
   ? `${animationName} ${animationValue}`.trim()
   : Astro.props.animate;
 
-const { as: Tag = "div", display = "inline-block", ...rest } = props;
+const { as: Tag = "div", display = "inline-block", onScroll, ...rest } = props;
+
+if (onScroll) {
+  rest['data-on-scroll'] = "true";
+}
 
 // Remove the extracted animation prop from rest so it doesn't get rendered as an HTML attribute
 if (animationName) {

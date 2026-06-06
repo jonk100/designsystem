@@ -1,39 +1,54 @@
 ---
-import type { AnimationProps, SpacingScale } from '../../shared';
-import { mergeClasses, mergeStyles } from '../../shared';
+/**
+ * src/design/layout/spacer/Spacer.astro
+ * A layout primitive used to create empty space between components.
+ * - Used to push content apart or add precise vertical/horizontal margins within Flex or Grid containers.
+ * - Supports responsive sizing utilizing `--sp-*` variables.
+ * @props (local): size, direction, as
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
 
-export interface Props extends AnimationProps {
+import type { BaseComponentProps } from "../../shared/props";
+import type { SpacingScale } from '../../shared/types';
+import { mergeClasses, mergeStyles } from '../../shared/functions';
+import './Spacer.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   /** Spacing size */
   size?: SpacingScale;
   /** Direction of spacing */
   direction?: 'horizontal' | 'vertical' | 'both';
   /** HTML element to render */
   as?: 'div' | 'span';
-  /** Additional CSS classes */
-  class?: string;
-  "class:list"?: Record<string, boolean> | any[];
-  style?: string | Record<string, string | number>;
-  [key: string]: any;
 }
 
 const {
   size = 'lg',
   direction = 'vertical',
   as: Tag = 'div',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 // Define component-specific classes
 const classes = [
   'spacer',
-  `spacer--${direction}--${size}`,
+  direction === 'horizontal' && 'spacer--horizontal',
 ];
 
-const styles = '';
+// Dynamically compute width and height using central --sp- custom spacing variables
+const spacingVal = `var(--sp-${size}, 1rem)`;
+const inlineStyle = direction === 'vertical'
+  ? `width: 100%; height: ${spacingVal};`
+  : direction === 'horizontal'
+    ? `height: 100%; width: ${spacingVal};`
+    : `width: ${spacingVal}; height: ${spacingVal};`;
 
 // Merge with animation and received props
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles, Astro.props);
+const finalStyles = mergeStyles(inlineStyle, Astro.props);
 ---
 
 <Tag
@@ -42,43 +57,3 @@ const finalStyles = mergeStyles(styles, Astro.props);
   aria-hidden="true"
   {...rest}
 />
-
-<style>
-  .spacer {
-    display: block;
-    flex-shrink: 0;
-  }
-
-  /* Vertical spacing (default) */
-  .spacer--vertical--2xs { width: 100%; height: var(--space-2xs); }
-  .spacer--vertical--xs { width: 100%; height: var(--space-xs); }
-  .spacer--vertical--sm { width: 100%; height: var(--space-sm); }
-  .spacer--vertical--md { width: 100%; height: var(--space-md); }
-  .spacer--vertical--lg { width: 100%; height: var(--space-lg); }
-  .spacer--vertical--xl { width: 100%; height: var(--space-xl); }
-  .spacer--vertical--2xl { width: 100%; height: var(--space-2xl); }
-  .spacer--vertical--3xl { width: 100%; height: var(--space-3xl); }
-  .spacer--vertical--4xl { width: 100%; height: var(--space-4xl); }
-
-  /* Horizontal spacing */
-  .spacer--horizontal--2xs { display: inline-block; height: 100%; width: var(--space-2xs); }
-  .spacer--horizontal--xs { display: inline-block; height: 100%; width: var(--space-xs); }
-  .spacer--horizontal--sm { display: inline-block; height: 100%; width: var(--space-sm); }
-  .spacer--horizontal--md { display: inline-block; height: 100%; width: var(--space-md); }
-  .spacer--horizontal--lg { display: inline-block; height: 100%; width: var(--space-lg); }
-  .spacer--horizontal--xl { display: inline-block; height: 100%; width: var(--space-xl); }
-  .spacer--horizontal--2xl { display: inline-block; height: 100%; width: var(--space-2xl); }
-  .spacer--horizontal--3xl { display: inline-block; height: 100%; width: var(--space-3xl); }
-  .spacer--horizontal--4xl { display: inline-block; height: 100%; width: var(--space-4xl); }
-
-  /* Both directions */
-  .spacer--both--2xs { width: var(--space-2xs); height: var(--space-2xs); }
-  .spacer--both--xs { width: var(--space-xs); height: var(--space-xs); }
-  .spacer--both--sm { width: var(--space-sm); height: var(--space-sm); }
-  .spacer--both--md { width: var(--space-md); height: var(--space-md); }
-  .spacer--both--lg { width: var(--space-lg); height: var(--space-lg); }
-  .spacer--both--xl { width: var(--space-xl); height: var(--space-xl); }
-  .spacer--both--2xl { width: var(--space-2xl); height: var(--space-2xl); }
-  .spacer--both--3xl { width: var(--space-3xl); height: var(--space-3xl); }
-  .spacer--both--4xl { width: var(--space-4xl); height: var(--space-4xl); }
-</style>

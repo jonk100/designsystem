@@ -1,39 +1,53 @@
 ---
+/**
+ * src/design/surfaces/card/Card.astro
+ * A general-purpose container component used to group related content and actions.
+ * - Supports multiple padding sizes, text alignments, and visual variants.
+ * - Inherits animation props for unified motion integration.
+ * @props (local): as, padding, align, variant
+ * @props (global): class, class:list, animate, onScroll
+ * - The internal space (the padding) is handled by the `padding` prop.
+ * - When used as a compound component (with CardHeader/CardContent/CardFooter), the `padding` prop on Card broadcasts CSS variables (`--surface-pad`) to its children, and Card strips its own padding so child borders can run edge-to-edge.
+ * - The exterior space (the margin) is handled by the parent. Card doesn't concern itself with space outside.
+ */
+
+import type { SurfaceComponentProps } from "../surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { AnimationProps } from "../../shared/props";
+import "../surfaces.css";
+import "./Card.css";
 
-export interface Props extends AnimationProps {
+export interface Props extends SurfaceComponentProps {
   as?: string;
   class?: string;
   style?: string;
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  align?: 'left' | 'center' | 'right';
-  variant?: 'default' | 'stat';
+  align?: "left" | "center" | "right";
+  variant?: "default" | "stat";
 }
 
 const {
-  as: Tag = 'div',
-  padding = 'xl',
-  align = 'left',
-  variant = 'default',
+  as: Tag = "div",
+  padding = "xl",
+  align = "left",
+  variant = "default",
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
-  'card-component',
-  `card-padding--${padding}`,
+  "card-component",
+  padding && SURFACE_PADDING_CLASS_MAP[padding],
   `card-align--${align}`,
-  `card-variant--${variant}`
+  `card-variant--${variant}`,
 ];
 
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles('', Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
 ---
 
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>
   <slot />
 </Tag>
-
-<style>
-  @import './Card.css';
-</style>

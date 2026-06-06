@@ -1,0 +1,44 @@
+---
+/**
+ * src/design/layout/container/Container.astro
+ * A layout primitive used to constrain the maximum width of page content.
+ * - Centers content horizontally and provides safe minimum side padding.
+ * - Supports multiple maximum width sizes.
+ * @props (local): as, size
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { ContainerSize } from "../types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Container.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    Omit<
+      import("astro/types").HTMLAttributes<"div">,
+      keyof BaseComponentProps
+    > {
+  as?: string;
+  size?: ContainerSize;
+}
+
+const { 
+  as: Tag = "div", 
+  size = "fluid", 
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest 
+} = Astro.props;
+
+const classes = ["container-component", size && `container-size--${size}`];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>

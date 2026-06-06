@@ -173,3 +173,34 @@
   --te-spring:      cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
 }
+
+/* ─── UTILITY CLASSES ───────────────────────────────── */
+
+/* Tones */
+.text-0 { color: var(--text-0); }
+.text-1 { color: var(--text-1); }
+.text-2 { color: var(--text-2); }
+.text-3 { color: var(--text-3); }
+.text-4 { color: var(--text-4); }
+.text-5 { color: var(--text-5); }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent { color: var(--text-accent); }
+.text-success { color: var(--text-success); }
+.text-danger { color: var(--text-danger); }
+.text-warning { color: var(--text-warning); }
+.text-info { color: var(--text-info); }
+.text-muted { color: var(--fg-muted); }
+.text-subtle { color: var(--fg-muted); opacity: 0.8; }
+.text-default { color: var(--fg-default); }
+
+/* Weights */
+.font-thin { font-weight: var(--fw-thin); }
+.font-extralight { font-weight: var(--fw-extralight); }
+.font-light { font-weight: var(--fw-light); }
+.font-normal { font-weight: var(--fw-regular); }
+.font-medium { font-weight: var(--fw-medium); }
+.font-semibold { font-weight: var(--fw-semibold); }
+.font-bold { font-weight: var(--fw-bold); }
+.font-extrabold { font-weight: var(--fw-extrabold); }
+.font-black { font-weight: var(--fw-black); }
