@@ -1,0 +1,22 @@
+---
+/**
+ * src/design/controls/input-group/InputGroup.astro
+ * A container to group addons (text or buttons) adjacent to an input field.
+ * - Collapses adjacent border-radiuses and borders between components.
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { BaseComponentProps } from "../../shared";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./InputGroup.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {}
+
+const classes = ["input-group"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...Astro.props}>
+  <slot />
+</div>

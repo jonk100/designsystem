@@ -22,6 +22,11 @@ export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAtt
   required?: boolean;
   
   /**
+   * Optional field indicator
+   */
+  optional?: boolean;
+  
+  /**
    * Disabled state
    */
   disabled?: boolean;
@@ -46,6 +51,7 @@ const {
   ff,
   wrap = false,
   required = false,
+  optional = false,
   disabled = false,
   for: htmlFor,
   class: className,
@@ -81,4 +87,5 @@ const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
 <label class:list={finalClasses} style={finalStyles} for={htmlFor} {...rest}>
   <slot />
   {required && <span class="label__required" aria-label="required">*</span>}
+  {optional && <span class="label__optional">(optional)</span>}
 </label>

@@ -1,0 +1,59 @@
+---
+/**
+ * src/design/controls/radio/Radio.astro
+ * A custom styled radio button component.
+ * - Wraps a native hidden radio input for full accessibility.
+ * - Supports disabled, checked, and invalid states.
+ * @props (local): checked, disabled, invalid, name, value, label
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./Radio.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** Checked state */
+  checked?: boolean;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  invalid = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "radio-component",
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<label class:list={finalClasses} style={finalStyles}>
+  <input
+    type="radio"
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="radio-component__native"
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+  <span class="radio-component__indicator">
+    <span class="radio-component__dot"></span>
+  </span>
+  <span class="radio-component__label">
+    <slot />
+  </span>
+</label>

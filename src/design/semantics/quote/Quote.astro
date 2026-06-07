@@ -58,6 +58,11 @@ interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<
    * Author of the quote (only shown for block/pull variants)
    */
   author?: string;
+
+  /**
+   * Source work of the quote (only shown alongside author)
+   */
+  source?: string;
 }
 
 const {
@@ -67,11 +72,12 @@ const {
   xa,
   fw,
   bold = false,
-  italic = variant === "inline",
+  italic = true, // Default to italic for quotes
   underline = false,
   strikethrough = false,
   cite,
   author,
+  source,
   ws,
   ff,
   wrap = false,
@@ -84,7 +90,7 @@ const {
 } = Astro.props;
 
 const classes = [
-  "quote",
+  "quote-component",
   `quote--${variant}`,
   fs && `quote--size-${fs}`,
   tone && `quote--tone-${tone}`,
@@ -95,8 +101,6 @@ const classes = [
   wrap && "break-words",
 ];
 
-
-
 const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
 
 const finalClasses = mergeClasses(classes, Astro.props);
@@ -106,10 +110,16 @@ const Element = variant === "inline" ? "q" : "blockquote";
 ---
 
 <Element class:list={finalClasses} style={finalStyles} cite={cite} {...rest}>
-  <slot />
+  {variant === "inline" ? (
+    <slot />
+  ) : (
+    <p class="quote__text"><slot /></p>
+  )}
   {author && variant !== 'inline' && (
-    <footer class="quote__footer">
-      <cite class="quote__cite">{author}</cite>
+    <footer class="quote__attribution">
+      <span class="quote__dash" aria-hidden="true">—</span>
+      <cite class="quote__author">{author}</cite>
+      {source && <span class="quote__source">· {source}</span>}
     </footer>
   )}
 </Element>

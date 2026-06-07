@@ -1,0 +1,38 @@
+---
+/**
+ * src/design/controls/button-group/ButtonGroup.astro
+ * A container component to group related buttons together.
+ * - Restructures border radiuses to merge adjacent buttons visually.
+ * - Handles horizontal inline alignment.
+ * @props (local): size
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./ButtonGroup.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** Size for all buttons in the group */
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  size,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "button-group",
+  size && `button-group--${size}`
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</div>

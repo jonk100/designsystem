@@ -1,0 +1,91 @@
+---
+/**
+ * src/design/controls/button/Button.astro
+ * A customizable button control for user interactions.
+ * - Supports standard, icon-only, and toggle button variants.
+ * - Dynamically renders as an anchor <a> or <button> based on href.
+ * - Tracks toggled states for screen readers via aria-pressed.
+ * @props (local): variant, size, iconOnly, toggle, active, href
+ * @props (global): class, class:list, animate, onScroll, effects, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./Button.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"button"> & import("astro/types").HTMLAttributes<"a">, keyof ControlComponentProps> {
+  /** Visual theme variant */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'gold' | 'danger';
+  /** Size modifier */
+  size?: 'sm' | 'md' | 'lg';
+  /** Render style optimized for icon-only contents */
+  iconOnly?: boolean;
+  /** Enable toggle button behavior */
+  toggle?: boolean;
+  /** Active pressed state for toggle buttons */
+  active?: boolean;
+  /** Optional URL. If provided, renders as an <a> tag */
+  href?: string;
+}
+
+const {
+  variant = "secondary",
+  size = "md",
+  iconOnly = false,
+  toggle = false,
+  active = false,
+  href,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+// Resolve BEM class structures
+const classes = [
+  toggle ? "toggle-btn" : iconOnly ? "icon-btn" : "btn",
+  toggle && iconOnly && "toggle-btn--icon-only",
+  toggle
+    ? (iconOnly ? `toggle-btn--icon-only--${size}` : `toggle-btn--${size}`)
+    : (iconOnly ? `icon-btn--${size}` : `btn--${size}`),
+  !toggle && (iconOnly ? `icon-btn--${variant}` : `btn--${variant}`),
+  toggle && active && "is-pressed",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  href={href}
+  type={Tag === 'button' ? "button" : undefined}
+  aria-pressed={toggle ? (active ? "true" : "false") : undefined}
+  {...rest as any}
+>
+  <slot />
+</Tag>
+
+<script>
+  const setupToggleButtons = () => {
+    document.querySelectorAll(".toggle-btn").forEach((btn) => {
+      if (btn.getAttribute("data-has-toggle-listener")) return;
+      btn.setAttribute("data-has-toggle-listener", "true");
+
+      btn.addEventListener("click", () => {
+        const isPressed = btn.getAttribute("aria-pressed") === "true";
+        const nextState = !isPressed;
+        
+        btn.setAttribute("aria-pressed", String(nextState));
+        btn.classList.toggle("is-pressed", nextState);
+      });
+    });
+  };
+
+  setupToggleButtons();
+  document.addEventListener("astro:page-load", setupToggleButtons);
+</script>
+

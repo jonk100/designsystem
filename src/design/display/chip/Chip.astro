@@ -16,15 +16,10 @@ import type { SvgName } from "../../shared/icons/index";
 import "./Chip.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {
-  /** Variant style of the chip */
   variant?: DisplayVariant;
-  /** Size of the chip */
   size?: DisplaySize;
-  /** Optional icon to display before the content */
   icon?: SvgName;
-  /** Whether the chip is dismissible (shows an X icon) */
   dismissible?: boolean;
-  /** Whether the chip is currently in an active/selected state */
   active?: boolean;
 }
 

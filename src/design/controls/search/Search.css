@@ -1,0 +1,117 @@
+/* src/design/controls/search/Search.css */
+
+.search-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.search-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-component::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.search-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.search-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers (with left padding offset for icon) */
+.search-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  padding-left: 28px;
+  font-size: 12px;
+}
+
+.search-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  padding-left: 36px;
+  font-size: 13px;
+}
+
+.search-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  padding-left: 44px;
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.search-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.search-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.search-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Inline icon container */
+.search-wrapper__icon {
+  position: absolute;
+  top: 50%;
+  left: var(--sp-xs);
+  transform: translateY(-50%);
+  color: var(--text--m);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.search-component--sm ~ .search-wrapper__icon {
+  left: var(--sp-2xs);
+}
+.search-component--lg ~ .search-wrapper__icon {
+  left: var(--sp-sm);
+}
+
+/* Disabled state */
+.search-component:disabled,
+.search-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+.search-component:disabled ~ .search-wrapper__icon {
+  opacity: 0.5;
+}
+
+/* Readonly state */
+.search-component[readonly],
+.search-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.search-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.search-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}

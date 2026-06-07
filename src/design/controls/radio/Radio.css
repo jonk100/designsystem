@@ -1,0 +1,87 @@
+/* src/design/controls/radio/Radio.css */
+
+.radio-component {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--ff-sans);
+  font-size: 14px;
+  color: var(--text--3);
+}
+
+/* Hide native radio visually but keep it focusable */
+.radio-component__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Styled radio circle */
+.radio-component__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-full);
+  background-color: var(--layer--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  flex-shrink: 0;
+}
+
+.radio-component__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rad-full);
+  background-color: var(--color-gold);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--td-fast) var(--te-in-out), transform var(--td-fast) var(--te-spring);
+}
+
+/* Hover indicator box */
+.radio-component:hover:not(.is-disabled) .radio-component__indicator {
+  border-color: var(--border--1);
+  background-color: var(--layer--3);
+}
+
+/* Focus outline ring */
+.radio-component__native:focus-visible ~ .radio-component__indicator {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Checked state */
+.radio-component__native:checked ~ .radio-component__indicator {
+  border-color: var(--color-gold);
+}
+
+.radio-component__native:checked ~ .radio-component__indicator .radio-component__dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Disabled state */
+.radio-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.radio-component.is-disabled .radio-component__indicator {
+  background-color: var(--layer--1);
+}
+
+/* Invalid state */
+.radio-component.is-invalid .radio-component__indicator {
+  border-color: var(--color-danger-border);
+}

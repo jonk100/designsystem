@@ -1,0 +1,83 @@
+/* src/design/controls/input/Input.css */
+
+.input-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-component::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.input-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.input-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers */
+.input-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+
+.input-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  font-size: 13px;
+}
+
+.input-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.input-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.input-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.input-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Disabled state */
+.input-component:disabled,
+.input-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+/* Readonly state */
+.input-component[readonly],
+.input-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.input-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.input-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}

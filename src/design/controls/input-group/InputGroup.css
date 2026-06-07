@@ -1,0 +1,67 @@
+/* src/design/controls/input-group/InputGroup.css */
+
+.input-group {
+  display: flex;
+  width: 100%;
+  border-radius: var(--rad-md);
+  box-shadow: var(--sh-2xs);
+}
+
+/* Children in an input group (inputs, selects, buttons, text addons) */
+.input-group > * {
+  position: relative;
+  border-radius: 0 !important;
+  flex: 1 1 auto;
+}
+
+/* Direct input styling overrides to adjust flex behavior */
+.input-group > .btn,
+.input-group > .icon-btn,
+.input-group > .toggle-btn {
+  flex-grow: 0;
+}
+
+/* Shift left margins to merge adjacent borders */
+.input-group > *:not(:first-child) {
+  margin-left: -0.5px;
+}
+
+/* First child radius */
+.input-group > *:first-child {
+  border-top-left-radius: var(--rad-md) !important;
+  border-bottom-left-radius: var(--rad-md) !important;
+}
+
+/* Last child radius */
+.input-group > *:last-child {
+  border-top-right-radius: var(--rad-md) !important;
+  border-bottom-right-radius: var(--rad-md) !important;
+}
+
+/* Ensure focus/hover states sit on top of neighbors to preserve borders */
+.input-group > *:hover,
+.input-group > *:focus-within,
+.input-group > *:focus {
+  z-index: 1;
+}
+
+/* Non-interactive text addons in the input group */
+.input-group__addon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-sm);
+  background: var(--layer--3);
+  border: 0.5px solid var(--border--0);
+  color: var(--text--3);
+  font-family: var(--ff-sans);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* If single element, preserve all borders */
+.input-group > *:first-child:last-child {
+  border-radius: var(--rad-md) !important;
+}

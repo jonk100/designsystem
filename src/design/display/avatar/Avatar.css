@@ -7,11 +7,13 @@
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  padding: 0 !important; /* Reset any padding from shared size classes */
   /* Use font-size to scale width/height 1:1 */
   width: 2.5em;
   height: 2.5em;
-  background-color: var(--surface-2, #f3f4f6);
-  color: var(--text-1, #111827);
+  background-color: var(--layer--3);
+  color: var(--text--5);
+  border: 1.5px solid var(--border--0);
   user-select: none;
 }
 

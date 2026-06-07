@@ -1,0 +1,93 @@
+/* src/design/controls/checkbox/Checkbox.css */
+
+.checkbox-component {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--ff-sans);
+  font-size: 14px;
+  color: var(--text--3);
+}
+
+/* Hide native checkbox visually but keep it focusable */
+.checkbox-component__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Styled checkbox box */
+.checkbox-component__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-xs);
+  background-color: var(--layer--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  flex-shrink: 0;
+}
+
+.checkbox-component__check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--td-fast) var(--te-in-out), transform var(--td-fast) var(--te-spring);
+  color: var(--layer--0);
+}
+
+/* Hover indicator box */
+.checkbox-component:hover:not(.is-disabled) .checkbox-component__indicator {
+  border-color: var(--border--1);
+  background-color: var(--layer--3);
+}
+
+/* Focus outline ring */
+.checkbox-component__native:focus-visible ~ .checkbox-component__indicator {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Checked state */
+.checkbox-component__native:checked ~ .checkbox-component__indicator {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+}
+
+.checkbox-component__native:checked ~ .checkbox-component__indicator .checkbox-component__check-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hover when checked */
+.checkbox-component:hover:not(.is-disabled) .checkbox-component__native:checked ~ .checkbox-component__indicator {
+  background-color: hsl(38 50% 60%);
+}
+
+/* Disabled state */
+.checkbox-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.checkbox-component.is-disabled .checkbox-component__indicator {
+  background-color: var(--layer--1);
+}
+
+/* Invalid state */
+.checkbox-component.is-invalid .checkbox-component__indicator {
+  border-color: var(--color-danger-border);
+}

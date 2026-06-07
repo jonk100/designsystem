@@ -17,7 +17,7 @@
   --text-6xl: var(--fs-6xl);
   --text-7xl: var(--fs-7xl);
 
-  --bg-default: var(--layer-1);
+  --bg-default: var(--layer--1);
   --bg-muted: rgba(var(--neutral-1), 0.5);
   --bg-hover: var(--layer--1);
 
@@ -45,12 +45,24 @@
   --text-accent: var(--accent-8);
   --text-success: hsl(142 76% 36%);
   --text-warning: var(--accent-8);
-  --text-danger: hsl(0 84% 60%);
+  --text-danger: var(--color-danger);
   --text-info: var(--primary-8);
+
+  /* Layer Border Radii (increases gently per layer) */
+  --radius-layer--1: var(--rad-md);
+  --radius-layer--2: var(--rad-lg);
+  --radius-layer--3: var(--rad-xl);
+  --radius-layer--4: var(--rad-2xl);
+  --radius-layer--5: var(--rad-3xl);
+  --text--0: var(--neutral-10);
+  --text--1: var(--neutral-11);
+  --text--2: var(--neutral-12);
+  --text--3: var(--neutral-13);
+  --text--5: var(--neutral-15);
 
   /* ─── SEMANTIC BORDERS ──────────────────────────────── */
   --border-focus: var(--accent-8);
-  --border-error: hsl(0 84% 60%);
+  --border-error: var(--color-danger);
   --border-success: hsl(142 76% 36%);
   --border-warning: var(--accent-8);
   
@@ -58,5 +70,9 @@
   --focus-ring-offset: 2px;
   
   /* ─── OVERLAYS / BACKDROP ───────────────────────────── */
-  --backdrop-color: rgb(var(--neutral-rgb-0) / 0.75);
+  --backdrop-color: rgba(var(--neutral-rgb-0), 0.75);
+
+  /* ─── CARD HOVER BORDERS ────────────────────────────── */
+  --card-border-hover: var(--color-gold-border);
+  --card-border-hover-thick: var(--color-gold);
 }

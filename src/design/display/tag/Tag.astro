@@ -12,28 +12,36 @@ import type { DisplayVariant, DisplaySize } from "../../shared/types";
 import type { BaseComponentProps } from "../../shared/props";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import Inline from "../../layout/inline/Inline.astro";
+import Dot from "../dot/Dot.astro";
+import Icon from "../icon/Icon.astro";
+import { icons, type SvgName } from "../../shared/icons/index";
 import "./Tag.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  /** Optional leading icon or emoji */
-  icon?: string;
+  /** Optional leading icon name (from shared icons) or raw emoji/string */
+  icon?: SvgName | string;
   /** Visual variant */
-  variant?: DisplayVariant;
+  variant?: DisplayVariant | 'amber' | 'teal' | 'coral' | 'purple';
   /** Size token */
   size?: DisplaySize;
-  /** HTML element to render */
+  /** Show status dot indicator */
+  dot?: boolean;
 }
 
 const {
   icon,
   variant = "default",
   size = "md",
+  dot = false,
   as: Tag = "span",
   class: className,
   'class:list': classList,
   style,
   ...rest
 } = Astro.props;
+
+// Check if the icon is a registered design system SVG
+const isSvgIcon = icon && icon in icons;
 
 // Build class list using shared utilities
 const classes = [
@@ -50,11 +58,20 @@ const finalStyles = mergeStyles(styles, Astro.props);
 
 <Inline
   as={Tag}
-  gap="sm"
+  gap="xs"
   class:list={finalClasses}
   style={finalStyles}
   {...rest}
 >
-  {icon && <span class="tag--icon">{icon}</span>}
+  {dot && <Dot variant={variant as any} size="2xs" class="tag__dot" />}
+  {icon && (
+    <span class="tag--icon">
+      {isSvgIcon ? (
+        <Icon name={icon as SvgName} size={size} />
+      ) : (
+        icon
+      )}
+    </span>
+  )}
   <span class="tag--text"><slot /></span>
 </Inline>

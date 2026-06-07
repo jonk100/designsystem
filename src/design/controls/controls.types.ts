@@ -1,3 +1,5 @@
+import type { BaseComponentProps } from "../shared";
+
 /**
  * Size variants for control components
  */
@@ -116,4 +118,26 @@ export type LoadingPosition =
   | 'suffix' 
   | 'overlay';
 
-// Made with Bob
+/**
+ * Common properties shared by all control components
+ */
+export interface ControlComponentProps extends BaseComponentProps {
+  /** The size modifier for the control */
+  size?: ControlSize | string;
+  /** Visual theme variant */
+  variant?: ControlVariant | string;
+  /** Disabled state of the control */
+  disabled?: boolean;
+  /** Marks the control as required */
+  required?: boolean;
+  /** Sets the control to read-only */
+  readonly?: boolean;
+  /** Marks the control as invalid or in error state */
+  invalid?: boolean;
+  /** Text label associated with the control */
+  label?: string;
+  /** Name of the control for form submission */
+  name?: string;
+}
+
+

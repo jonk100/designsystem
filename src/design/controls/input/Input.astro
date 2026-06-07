@@ -1,0 +1,60 @@
+---
+/**
+ * src/design/controls/input/Input.astro
+ * A standard customizable text field input.
+ * - Supports various input types (text, email, password, etc.).
+ * - Integrates BEM modifiers for sizes and error/disabled states.
+ * @props (local): type, size, variant, disabled, readonly, invalid, placeholder, value, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./Input.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** The type of input field */
+  type?: import("../controls.types").InputType;
+}
+
+const {
+  type = "text",
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  readonly = false,
+  invalid = false,
+  placeholder,
+  value,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "input-component",
+  `input-component--${size}`,
+  `input-component--${variant}`,
+  disabled && "is-disabled",
+  readonly && "is-readonly",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<input
+  type={type}
+  name={name}
+  value={value}
+  placeholder={placeholder}
+  disabled={disabled}
+  readonly={readonly}
+  class:list={finalClasses}
+  style={finalStyles}
+  aria-invalid={invalid ? "true" : undefined}
+  {...rest}
+/>

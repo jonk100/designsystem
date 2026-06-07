@@ -32,11 +32,12 @@ const {
 
 const classes = [
   'grid-component',
+  columns && 'grid-component--explicit',
   gap && `gap-${gap}`
 ];
 
 const customStyle = columns 
-  ? `grid-template-columns: repeat(${columns}, 1fr);` 
+  ? `--grid-cols: ${columns};` 
   : `grid-template-columns: repeat(auto-fit, minmax(${minWidth}, 1fr));`;
 
 const finalClasses = mergeClasses(classes, Astro.props);

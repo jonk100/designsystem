@@ -1,0 +1,127 @@
+/* src/design/controls/range-slider/RangeSlider.css */
+
+.range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.range-slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.range-slider__label {
+  font-size: 13px;
+  color: var(--text--2);
+  font-family: var(--ff-sans);
+}
+
+.range-slider__display {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text--5);
+}
+
+/* Wrapper holds track, fill, and both inputs stacked */
+.range-slider__track-wrap {
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* The full, unfilled track background */
+.range-slider__track {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: var(--layer--4);
+  border-radius: var(--rad-xs);
+  border: 0.5px solid var(--border--0);
+}
+
+/* The gold selected-range segment — left/width set via JS */
+.range-slider__fill {
+  position: absolute;
+  height: 4px;
+  background: var(--color-gold);
+  border-radius: var(--rad-xs);
+  pointer-events: none;
+  transition: left var(--td-fast) var(--te-out), width var(--td-fast) var(--te-out);
+}
+
+/* Both range inputs stack absolutely and share the same track */
+.range-slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  pointer-events: none; /* re-enabled on thumb only */
+}
+
+/* Clean track for webkit/firefox */
+.range-slider__input::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+.range-slider__input::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.range-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+  position: relative;
+  z-index: 10;
+}
+
+.range-slider__input::-moz-range-thumb {
+  pointer-events: all;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+}
+
+.range-slider__input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+.range-slider__input::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.range-slider__input:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+.range-slider__input:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+
+.range-slider__bounds {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text--m);
+}

@@ -3,6 +3,7 @@
 .dot {
   display: inline-block;
   border-radius: 50%; /* Perfect circle */
+  padding: 0 !important; /* Reset any padding from shared size classes to prevent stretching */
   /* We use the display-size--* classes which set font-size. 
      We map the dot's dimensions relative to the font-size */
   width: 0.6em;
@@ -10,3 +11,8 @@
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
+
+.dot.display-variant--amber { background-color: #EF9F27; border-color: transparent; }
+.dot.display-variant--teal { background-color: #1D9E75; border-color: transparent; }
+.dot.display-variant--coral { background-color: #D85A30; border-color: transparent; }
+.dot.display-variant--purple { background-color: #7F77DD; border-color: transparent; }

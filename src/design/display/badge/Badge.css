@@ -4,11 +4,11 @@
  */
 @import '../tokens.css';
 
-.badge {
+.badge-component {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-width: 1px;
+  /* align-items: center; */
+  /* justify-content: center; */
+  border-width: 0.5px;
   border-style: solid;
   border-radius: var(--display-radius);
   font-weight: 600;
@@ -17,6 +17,7 @@
   cursor: pointer;
   white-space: nowrap;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .badge:hover {
@@ -24,45 +25,46 @@
 }
 
 /* Badge Elements */
-.badge--icon {
+.badge--icon,
+.badge__icon {
   display: inline-flex;
-  align-items: center;
+  /* align-items: center; */
   font-size: 1em;
 }
 
 .badge--text {
   display: inline-flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .badge--2xs {
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .badge--xs {
-  min-width: 90px;
+  min-width: 80px;
 }
 
 .badge--sm {
-  min-width: 120px;
+  min-width: 100px;
 }
 
 .badge--md {
-  min-width: 150px;
+  min-width: 120px;
 }
 
 .badge--lg {
-  min-width: 180px;
+  min-width: 150px;
 }
 
 .badge--xl {
-  min-width: 220px;
+  min-width: 180px;
 }
 
 .badge--2xl {
-  min-width: 250px;
+  min-width: 220px;
 }
 
 .badge--3xl {
-  min-width: 300px;
+  min-width: 260px;
 }

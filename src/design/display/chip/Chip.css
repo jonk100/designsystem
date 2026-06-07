@@ -9,19 +9,15 @@
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  border: 1px solid transparent;
+  border: 0.5px solid var(--border--0);
   transition: all 0.2s ease;
   user-select: none;
   /* Reset button styles */
-  background: none;
-  font-family: inherit;
-  padding: 0;
+  background: var(--layer--2);
+  color: var(--text--2);
+  font-family: var(--ff-sans);
   margin: 0;
-}
-
-/* Base padding mapping to size token. The horizontal padding is larger for a pill shape */
-.chip {
-  padding: 0.4em 0.8em;
+  box-sizing: border-box;
 }
 
 .chip--interactive {
@@ -29,15 +25,20 @@
 }
 
 .chip--interactive:hover {
-  filter: brightness(0.95);
+  border-color: var(--border--1);
+  color: var(--text--5);
+  background: var(--layer--3);
 }
 
 .chip--interactive:active {
   transform: scale(0.98);
 }
 
-.chip--active {
-  box-shadow: inset 0 0 0 2px currentColor;
+.chip--active,
+.chip[aria-pressed="true"] {
+  background: var(--color-gold-subtle) !important;
+  border-color: color-mix(in srgb, var(--color-gold) 50%, transparent) !important;
+  color: var(--color-gold) !important;
 }
 
 .chip__icon {
@@ -73,9 +74,6 @@
 
 /* Dark mode adjustment for hover */
 @media (prefers-color-scheme: dark) {
-  .chip--interactive:hover {
-    filter: brightness(1.1);
-  }
   .chip__dismiss:hover,
   .chip__dismiss:focus-visible {
     background-color: rgba(255, 255, 255, 0.2);

@@ -1,9 +1,12 @@
 /* src/design/typography/label/Label.css */
 .label-component {
-  display: inline-block;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sp-3xs);
   font-size: var(--local-fs, var(--fs-sm));
   font-weight: var(--local-fw, var(--fw-medium));
-  color: var(--local-color, var(--text-default));
+  color: var(--local-color, var(--text--3));
+  font-family: var(--ff-sans);
   margin-bottom: var(--sp-xs);
   cursor: pointer;
 }
@@ -15,7 +18,74 @@
 }
 
 .label-component .label__required {
-  color: var(--text-danger);
-  margin-left: 0.25em;
-  font-weight: bold;
+  color: var(--color-danger);
+  font-size: 11px;
+  font-weight: 400;
 }
+
+.label-component .label__optional {
+  font-size: 11px;
+  font-weight: 400;
+  font-family: var(--ff-mono);
+  color: var(--text--m);
+}
+
+/* Input & Form layout styles for Label Group */
+.label-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.label-input {
+  width: 100%;
+  padding: var(--sp-xs) var(--sp-sm);
+  background: var(--layer--2);
+  border: 1px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.label-input::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.label-input:hover {
+  border-color: var(--border--1);
+}
+
+.label-input:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+.label-input.label-input--error {
+  border-color: var(--color-danger-border) !important;
+}
+
+.label-input.label-input--error:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+.label__helper {
+  font-size: var(--fs-2xs);
+  color: var(--text--m);
+  margin: 0;
+  margin-top: var(--sp-3xs);
+}
+
+.label__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3xs);
+  font-size: var(--fs-2xs);
+  color: var(--color-danger);
+  margin: 0;
+  margin-top: var(--sp-3xs);
+}
+

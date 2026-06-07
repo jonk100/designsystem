@@ -1,0 +1,136 @@
+/* src/design/controls/slider/Slider.css */
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slider__label {
+  font-size: 13px;
+  color: var(--text--2);
+  font-family: var(--ff-sans);
+}
+
+.slider__value {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text--5);
+}
+
+.slider__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.slider__bound {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text--m);
+  flex-shrink: 0;
+}
+
+/* The wrapper positions the fill div behind the thumb */
+.slider__track-wrap {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* Gold fill — width updated via JS as a percentage */
+.slider__fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--color-gold);
+  border-radius: var(--rad-xs);
+  pointer-events: none;
+  transition: width var(--td-fast) var(--te-out);
+}
+
+/* The actual range input — reset then restyle */
+.slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  position: relative; /* sits above .slider__fill */
+}
+
+/* The unfilled track portion */
+.slider__input::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--layer--4);
+  border-radius: var(--rad-xs);
+  z-index: -1;
+  border: 0.5px solid var(--border--0);
+}
+
+.slider__input::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent;
+  border-radius: var(--rad-xs);
+}
+
+.slider__input::-moz-range-track {
+  height: 4px;
+  background: transparent;
+  border-radius: var(--rad-xs);
+}
+
+.slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+  margin-top: -6px; /* center thumb on webkit */
+}
+
+.slider__input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+}
+
+.slider__input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+.slider__input::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.slider__input:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+.slider__input:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}

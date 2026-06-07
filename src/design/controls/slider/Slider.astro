@@ -1,0 +1,107 @@
+---
+/**
+ * src/design/controls/slider/Slider.astro
+ * A single-handle range slider with dynamic filled-progress gold track.
+ * - Supports customized min, max, step, and value properties.
+ * - Auto-updates progress track fill and value display via pure client JS.
+ * - Adheres to accessible focus states and styling.
+ * @props (local): label, value, min, max, step, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Slider.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Label for the slider */
+  label?: string;
+  /** Initial value */
+  value?: number;
+  /** Minimum range bound */
+  min?: number;
+  /** Maximum range bound */
+  max?: number;
+  /** Slider step size */
+  step?: number;
+  /** Form name of the input */
+  name?: string;
+}
+
+const {
+  label,
+  value = 50,
+  min = 0,
+  max = 100,
+  step = 1,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["slider"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+const percentage = ((value - min) / (max - min)) * 100;
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  {label && (
+    <div class="slider__header">
+      <span class="slider__label">{label}</span>
+      <span class="slider__value">{value}</span>
+    </div>
+  )}
+  <div class="slider__row">
+    <span class="slider__bound">{min}</span>
+    <div class="slider__track-wrap">
+      <div class="slider__fill" style={`width: ${percentage}%`}></div>
+      <input
+        class="slider__input"
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        step={step}
+        name={name}
+      />
+    </div>
+    <span class="slider__bound">{max}</span>
+  </div>
+</div>
+
+<script>
+  // Dynamic client-side updates for Slider component
+  const setupSliders = () => {
+    document.querySelectorAll(".slider").forEach((slider) => {
+      const input = slider.querySelector(".slider__input") as HTMLInputElement;
+      const fill = slider.querySelector(".slider__fill") as HTMLDivElement;
+      const valDisplay = slider.querySelector(".slider__value") as HTMLSpanElement;
+
+      if (!input || !fill) return;
+
+      const update = () => {
+        const minVal = parseFloat(input.min) || 0;
+        const maxVal = parseFloat(input.max) || 100;
+        const val = parseFloat(input.value) || 0;
+        const pct = ((val - minVal) / (maxVal - minVal)) * 100;
+        fill.style.width = pct + "%";
+        if (valDisplay) valDisplay.textContent = input.value;
+      };
+
+      // Remove existing listener to prevent duplicates in HMR
+      input.removeEventListener("input", update);
+      input.addEventListener("input", update);
+      
+      // Run once on load
+      update();
+    });
+  };
+
+  // Run on load and after page transitions (if any)
+  setupSliders();
+  document.addEventListener("astro:page-load", setupSliders);
+</script>

@@ -1,0 +1,232 @@
+/* src/design/controls/button/Button.css */
+
+/* ─── STANDARD BUTTON ─────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2xs);
+  padding: 0 var(--sp-md);
+  height: 38px;
+  border-radius: var(--rad-md);
+  border: 0.5px solid var(--border--0);
+  background: var(--layer--2);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--ff-sans);
+  color: var(--text--3);
+  font-weight: 500;
+  transition: all var(--td-fast) var(--te-in-out);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--layer--3);
+  border-color: var(--border--1);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Size modifiers */
+.btn--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+.btn--md {
+  height: 38px;
+}
+.btn--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 16px;
+}
+
+/* Variant modifiers */
+.btn--primary {
+  background: var(--color-gold);
+  border-color: var(--color-gold-dim);
+  color: var(--layer--0);
+}
+.btn--primary:hover {
+  background: hsl(38 50% 60%);
+  border-color: var(--color-gold);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+.btn--ghost:hover {
+  background: var(--layer--2);
+  border-color: var(--border--0);
+}
+
+.btn--gold {
+  background: var(--color-gold-subtle);
+  border-color: var(--color-gold-border);
+  color: var(--color-gold);
+}
+.btn--gold:hover {
+  background: var(--color-gold-focus);
+}
+
+.btn--danger {
+  background: var(--color-danger-subtle);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--color-danger) 25%, transparent);
+}
+
+
+/* ─── ICON BUTTON ─────────────────────────────────────── */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  background: transparent;
+  cursor: pointer;
+  color: var(--text--3);
+  transition: all var(--td-fast) var(--te-in-out);
+  white-space: nowrap;
+}
+
+.icon-btn:hover {
+  background: var(--layer--2);
+  border-color: var(--border--1);
+}
+
+.icon-btn:active {
+  transform: scale(0.96);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Size modifiers */
+.icon-btn--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+.icon-btn--md {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.icon-btn--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+
+/* Variant modifiers */
+.icon-btn--ghost {
+  border-color: transparent;
+}
+.icon-btn--ghost:hover {
+  border-color: var(--border--0);
+}
+
+.icon-btn--gold {
+  border-color: var(--color-gold-border);
+  color: var(--color-gold);
+}
+.icon-btn--gold:hover {
+  background: var(--color-gold-subtle);
+}
+
+.icon-btn--danger {
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+.icon-btn--danger:hover {
+  background: var(--color-danger-subtle);
+}
+
+
+/* ─── TOGGLE BUTTON ───────────────────────────────────── */
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2xs);
+  padding: 0 var(--sp-md);
+  height: 36px;
+  border-radius: var(--rad-md);
+  border: 0.5px solid var(--border--0);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--ff-sans);
+  color: var(--text--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  white-space: nowrap;
+}
+
+.toggle-btn:hover:not([aria-pressed="true"]):not(.is-pressed) {
+  background: var(--layer--3);
+  color: var(--text--3);
+}
+
+.toggle-btn[aria-pressed="true"],
+.toggle-btn.is-pressed {
+  background: var(--color-gold-subtle);
+  border-color: color-mix(in srgb, var(--color-gold) 50%, transparent);
+  color: var(--color-gold);
+}
+
+.toggle-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Sizing and layout modifiers for toggle buttons */
+.toggle-btn--icon-only {
+  padding: 0;
+  justify-content: center;
+}
+
+.toggle-btn--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+.toggle-btn--md {
+  height: 38px;
+}
+.toggle-btn--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 16px;
+}
+
+.toggle-btn--icon-only--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+.toggle-btn--icon-only--md {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.toggle-btn--icon-only--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+

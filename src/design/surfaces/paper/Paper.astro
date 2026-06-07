@@ -9,19 +9,20 @@
  * - elevation: Controls the visual lift, defaulting to 'sm'.
  * - padding: Internal space of the paper surface, handled by the component.
  */
+import type { SpacingScale } from "../../shared";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { BaseComponentProps } from "../../shared/props";
 import './Paper.css';
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   elevation?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  padding?: SpacingScale;
 }
 
 const {
   as: Tag = 'div',
   elevation = 'sm',
-  padding = 'md',
+  padding = 'sm',
   class: className,
   'class:list': classList,
   style,

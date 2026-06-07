@@ -1,11 +1,186 @@
 /**
  * Display Component Shared Styles
- * This file can contain shared utilities for display components
- * Variant classes are now in tokens.css
+ * This file contains shared utility classes for display components.
+ * It imports tokens.css which defines the :root variables.
  */
 
 @import './tokens.css';
 
-/* Add any shared display component utilities here */
+/* ============================================================================
+   SHARED SIZE UTILITY CLASSES
+   Used by: Badge, Chip, Tag, Dot, and all display components
+   ============================================================================ */
 
-/* Made with Bob */
+.display-size--2xs {
+  font-size: var(--display-size-2xs);
+  padding: var(--display-padding-2xs);
+  height: var(--display-height-2xs);
+}
+
+.display-size--xs {
+  font-size: var(--display-size-xs);
+  padding: var(--display-padding-xs);
+  height: var(--display-height-xs);
+}
+
+.display-size--sm {
+  font-size: var(--display-size-sm);
+  padding: var(--display-padding-sm);
+  height: var(--display-height-sm);
+}
+
+.display-size--md {
+  font-size: var(--display-size-md);
+  padding: var(--display-padding-md);
+  height: var(--display-height-md);
+}
+
+.display-size--lg {
+  font-size: var(--display-size-lg);
+  padding: var(--display-padding-lg);
+  height: var(--display-height-lg);
+}
+
+.display-size--xl {
+  font-size: var(--display-size-xl);
+  padding: var(--display-padding-xl);
+  height: var(--display-height-xl);
+}
+
+.display-size--2xl {
+  font-size: var(--display-size-2xl);
+  padding: var(--display-padding-2xl);
+  height: var(--display-height-2xl);
+}
+
+.display-size--3xl {
+  font-size: var(--display-size-3xl);
+  padding: var(--display-padding-3xl);
+  height: var(--display-height-3xl);
+}
+
+.display-size--4xl {
+  font-size: var(--display-size-4xl);
+  padding: var(--display-padding-4xl);
+  height: var(--display-height-4xl);
+}
+
+.display-size--5xl {
+  font-size: var(--display-size-5xl);
+  padding: var(--display-padding-5xl);
+  height: var(--display-height-5xl);
+}
+
+/* ============================================================================
+   SHARED VARIANT UTILITY CLASSES
+   Used by: Badge, Chip, Tag, Dot, and all display components
+   Applies background, border, hover states, and shadows
+   ============================================================================ */
+
+.display-variant--default {
+  background: var(--display-default-bg);
+  border-color: var(--display-default-border);
+}
+
+.display-variant--default:hover {
+  background: var(--display-default-hover-bg);
+  box-shadow: 0 10px 30px var(--display-default-shadow);
+}
+
+.display-variant--primary {
+  background: var(--display-primary-bg);
+  border-color: var(--display-primary-border);
+}
+
+.display-variant--primary:hover {
+  background: var(--display-primary-hover-bg);
+  box-shadow: 0 10px 30px var(--display-primary-shadow);
+}
+
+.display-variant--secondary {
+  background: var(--display-secondary-bg);
+  border-color: var(--display-secondary-border);
+  color: var(--text--0);
+}
+
+.display-variant--secondary:hover {
+  background: var(--display-secondary-hover-bg);
+  box-shadow: 0 10px 30px var(--display-secondary-shadow);
+}
+
+.display-variant--success {
+  background: var(--display-success-bg);
+  border-color: var(--display-success-border);
+}
+
+.display-variant--success:hover {
+  background: var(--display-success-hover-bg);
+  box-shadow: 0 10px 30px var(--display-success-shadow);
+}
+
+.display-variant--warning {
+  background: var(--display-warning-bg);
+  border-color: var(--display-warning-border);
+}
+
+.display-variant--warning:hover {
+  background: var(--display-warning-hover-bg);
+  box-shadow: 0 10px 30px var(--display-warning-shadow);
+}
+
+.display-variant--danger {
+  background: var(--display-danger-bg);
+  border-color: var(--display-danger-border);
+}
+
+.display-variant--danger:hover {
+  background: var(--display-danger-hover-bg);
+  box-shadow: 0 10px 30px var(--display-danger-shadow);
+}
+
+.display-variant--info {
+  background: var(--display-info-bg);
+  border-color: var(--display-info-border);
+}
+
+.display-variant--info:hover {
+  background: var(--display-info-hover-bg);
+  box-shadow: 0 10px 30px var(--display-info-shadow);
+}
+
+/* ─── NEW EDITORIAL DISPLAY VARIANTS ────────────────── */
+.display-variant--amber {
+  background: color-mix(in srgb, #EF9F27 12%, transparent);
+  border-color: color-mix(in srgb, #EF9F27 35%, transparent);
+  color: #FAC775;
+}
+.display-variant--amber:hover {
+  background: color-mix(in srgb, #EF9F27 25%, transparent);
+}
+
+.display-variant--teal {
+  background: color-mix(in srgb, #1D9E75 12%, transparent);
+  border-color: color-mix(in srgb, #1D9E75 35%, transparent);
+  color: #5DCAA5;
+}
+.display-variant--teal:hover {
+  background: color-mix(in srgb, #1D9E75 25%, transparent);
+}
+
+.display-variant--coral {
+  background: color-mix(in srgb, #D85A30 12%, transparent);
+  border-color: color-mix(in srgb, #D85A30 35%, transparent);
+  color: #F0997B;
+}
+.display-variant--coral:hover {
+  background: color-mix(in srgb, #D85A30 25%, transparent);
+}
+
+.display-variant--purple {
+  background: color-mix(in srgb, #7F77DD 12%, transparent);
+  border-color: color-mix(in srgb, #7F77DD 35%, transparent);
+  color: #AFA9EC;
+}
+.display-variant--purple:hover {
+  background: color-mix(in srgb, #7F77DD 25%, transparent);
+}

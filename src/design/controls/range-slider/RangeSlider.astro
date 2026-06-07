@@ -1,0 +1,148 @@
+---
+/**
+ * src/design/controls/range-slider/RangeSlider.astro
+ * A dual-handle range slider component for selection of value intervals.
+ * - Supports customized min, max, step, prefix, and lo/hi initial values.
+ * - Syncs dual overlapping range inputs and visually clips progress fill.
+ * - Fully client-side interactive.
+ * @props (local): label, valLo, valHi, min, max, step, prefix
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./RangeSlider.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Label for the slider */
+  label?: string;
+  /** Initial low value */
+  valLo?: number;
+  /** Initial high value */
+  valHi?: number;
+  /** Minimum range bound */
+  min?: number;
+  /** Maximum range bound */
+  max?: number;
+  /** Slider step size */
+  step?: number;
+  /** Optional display prefix (e.g. £ or $) */
+  prefix?: string;
+}
+
+const {
+  label,
+  valLo = 20,
+  valHi = 80,
+  min = 0,
+  max = 100,
+  step = 1,
+  prefix = "",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["range-slider"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+const pctLo = ((valLo - min) / (max - min)) * 100;
+const pctHi = ((valHi - min) / (max - min)) * 100;
+const fillWidth = pctHi - pctLo;
+---
+
+<div class:list={finalClasses} style={finalStyles} data-prefix={prefix} {...rest}>
+  <div class="range-slider__header">
+    {label && <span class="range-slider__label">{label}</span>}
+    <span class="range-slider__display">{prefix}{valLo} – {prefix}{valHi}</span>
+  </div>
+  <div class="range-slider__track-wrap">
+    <div class="range-slider__track"></div>
+    <div class="range-slider__fill" style={`left: ${pctLo}%; width: ${fillWidth}%`}></div>
+    <input
+      class="range-slider__input range-slider__input--lo"
+      type="range"
+      min={min}
+      max={max}
+      value={valLo}
+      step={step}
+    />
+    <input
+      class="range-slider__input range-slider__input--hi"
+      type="range"
+      min={min}
+      max={max}
+      value={valHi}
+      step={step}
+    />
+  </div>
+  <div class="range-slider__bounds">
+    <span>{prefix}{min}</span>
+    <span>{prefix}{max}</span>
+  </div>
+</div>
+
+<script>
+  const setupRangeSliders = () => {
+    document.querySelectorAll(".range-slider").forEach((slider) => {
+      const loInput = slider.querySelector(".range-slider__input--lo") as HTMLInputElement;
+      const hiInput = slider.querySelector(".range-slider__input--hi") as HTMLInputElement;
+      const fill = slider.querySelector(".range-slider__fill") as HTMLDivElement;
+      const display = slider.querySelector(".range-slider__display") as HTMLSpanElement;
+      const prefix = slider.getAttribute("data-prefix") || "";
+
+      if (!loInput || !hiInput || !fill) return;
+
+      const updateTrack = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+
+        const minVal = parseFloat(loInput.min) || 0;
+        const maxVal = parseFloat(loInput.max) || 100;
+
+        const pctLo = ((loVal - minVal) / (maxVal - minVal)) * 100;
+        const pctHi = ((hiVal - minVal) / (maxVal - minVal)) * 100;
+
+        fill.style.left = pctLo + "%";
+        fill.style.width = (pctHi - pctLo) + "%";
+
+        if (display) {
+          display.textContent = `${prefix}${loVal} – ${prefix}${hiVal}`;
+        }
+      };
+
+      const handleLoInput = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+        if (loVal > hiVal) {
+          loInput.value = hiVal.toString();
+        }
+        updateTrack();
+      };
+
+      const handleHiInput = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+        if (hiVal < loVal) {
+          hiInput.value = loVal.toString();
+        }
+        updateTrack();
+      };
+
+      // Clean up event listeners for HMR
+      loInput.removeEventListener("input", handleLoInput);
+      hiInput.removeEventListener("input", handleHiInput);
+
+      loInput.addEventListener("input", handleLoInput);
+      hiInput.addEventListener("input", handleHiInput);
+
+      // Initial layout update
+      updateTrack();
+    });
+  };
+
+  setupRangeSliders();
+  document.addEventListener("astro:page-load", setupRangeSliders);
+</script>

@@ -7,17 +7,17 @@
 
   /* ─── SPACING ───────────────────────────────────────── */
 
-  --sp-3xs: clamp(0.125rem, 0.125rem + 0.125vi, 0.25rem);
-  --sp-2xs: clamp(0.25rem, 0.25rem + 0.25vi, 0.5rem);
-  --sp-xs: clamp(0.5rem, 0.5rem + 0.5vi, 0.75rem);
-  --sp-sm: clamp(0.75rem, 0.75rem + 0.5vi, 1rem);
-  --sp-md: clamp(1rem, 1.5vi, 1.5rem);
-  --sp-lg: clamp(1.5rem, 2vi, 2rem);
-  --sp-xl: clamp(2rem, 3vi, 3rem);
-  --sp-2xl: clamp(2.5rem, 4vi, 4rem);
-  --sp-3xl: clamp(3rem, 6vi, 6rem);
-  --sp-4xl: clamp(4rem, 8vi, 8rem);
-  --sp-5xl: clamp(6rem, 12vi, 12rem);
+  --sp-3xs: clamp(2px, 2px + 0.25vi, 6px);
+  --sp-2xs: clamp(0.125rem, 0.25rem + 0.5vi, 0.5rem);
+  --sp-xs: clamp(0.25rem, 0.4rem + 0.4vi, 0.75rem);
+  --sp-sm: clamp(0.4rem, 0.6rem + 0.75vi, 1rem);
+  --sp-md: clamp(.6rem, .75rem + 1vi, 1.5rem);
+  --sp-lg: clamp(.8rem, 1rem + 1.5vi, 2rem);
+  --sp-xl: clamp(1rem, 1.125rem + 2.25vi, 3rem);
+  --sp-2xl: clamp(1.125rem, 1.25rem + 3vi, 4rem);
+  --sp-3xl: clamp(1.25rem, 1.5rem + 4vi, 6rem);
+  --sp-4xl: clamp(1.5rem, 1.75rem + 5vi, 8rem);
+  --sp-5xl: clamp(2rem, 2.5rem + 6vi, 12rem);
 
   /* ─── BORDER RADIUS ─────────────────────────────────── */
   --rad-none: 0;
@@ -47,11 +47,11 @@
   --ow-xl: 4px;
 
   /* ─── FONT FAMILY ───────────────────────────────────── */
-  --ff-sans: system-ui, -apple-system, sans-serif;
-  --ff-serif: Georgia, 'Times New Roman', serif;
-  --ff-mono: 'Fira Code', 'Cascadia Code', monospace;
-  --ff-heading: 'M PLUS 1', system-ui, sans-serif;
-  --ff-body: 'Cabin', system-ui, sans-serif;
+  --ff-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --ff-serif: "Playfair Display", Georgia, 'Times New Roman', serif;
+  --ff-mono: "IBM Plex Mono", "Fira Code", monospace;
+  --ff-heading: var(--ff-serif);
+  --ff-body: var(--ff-sans);
 
   /* ─── SHADOW ────────────────────────────────────────── */
   --sh-none: none;
@@ -102,4 +102,10 @@
   --op-80: 0.8;
   --op-90: 0.9;
   --op-100: 1;
+}
+
+/* Classic Fonts Fallback Toggle */
+:root.classic-fonts {
+  --ff-heading: 'M PLUS 1', system-ui, sans-serif;
+  --ff-body: 'Cabin', system-ui, sans-serif;
 }

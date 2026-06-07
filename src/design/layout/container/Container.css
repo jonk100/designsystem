@@ -7,6 +7,21 @@
   padding-right: var(--sp-md, 1rem);
 }
 
+@media (max-width: 480px) {
+  .container-component {
+    padding-left: var(--sp-2xs);
+    padding-right: var(--sp-2xs);
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .container-component {
+    padding-left: var(--sp-3xs);
+    padding-right: var(--sp-3xs);
+  }
+}
 .container-size--sm {
   max-width: 640px;
 }

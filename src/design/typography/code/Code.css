@@ -1,6 +1,6 @@
 /* src/design/typography/code/Code.css */
 .code-component {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--ff-mono, monospace);
   font-size: var(--local-fs, 0.875em);
   font-weight: var(--local-fw, inherit);
   color: var(--local-color, var(--text-accent));

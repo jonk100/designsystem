@@ -1,0 +1,208 @@
+---
+/**
+ * src/design/controls/combobox/Combobox.astro
+ * A searchable single-value dropdown combobox component.
+ * - Allows searching and filtering options.
+ * - Synchronizes with a hidden native `<select>` for form submissions.
+ * @props (local): options, selected, placeholder, label, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import Icon from "../../display/icon/Icon.astro";
+import "./Combobox.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** List of selectable options */
+  options: Array<{ value: string; label: string } | string>;
+  /** Initially selected value */
+  selected?: string;
+  /** Input placeholder when empty */
+  placeholder?: string;
+}
+
+const {
+  options = [],
+  selected = "",
+  placeholder = "Select an option...",
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Standardize options array to { value, label } format
+const formattedOptions = options.map((opt) =>
+  typeof opt === "string" ? { value: opt, label: opt } : opt
+);
+
+const initialSelectedOpt = formattedOptions.find(opt => opt.value === selected);
+const initialLabel = initialSelectedOpt ? initialSelectedOpt.label : "";
+
+const classes = ["combobox"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} data-placeholder={placeholder} {...rest}>
+  <!-- Hidden native select for form integration -->
+  <select name={name} class="combobox__native-select" aria-hidden="true" tabindex="-1">
+    <option value=""></option>
+    {formattedOptions.map((opt) => (
+      <option value={opt.value} selected={opt.value === selected}>{opt.label}</option>
+    ))}
+  </select>
+
+  <div class="combobox__trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+    <input
+      type="text"
+      class="combobox__input"
+      placeholder={placeholder}
+      value={initialLabel}
+      aria-autocomplete="list"
+    />
+    <Icon name="chevron-down" class="combobox__chevron" size="sm" />
+  </div>
+
+  <ul class="combobox__dropdown" role="listbox">
+    {formattedOptions.map((opt) => {
+      const isSelected = opt.value === selected;
+      return (
+        <li
+          class:list={["combobox__option", isSelected && "is-selected"]}
+          role="option"
+          aria-selected={isSelected ? "true" : "false"}
+          data-value={opt.value}
+          data-label={opt.label}
+        >
+          <span class="combobox__check">
+            {isSelected && <Icon name="check" size="2xs" />}
+          </span>
+          <span class="combobox__option-label">{opt.label}</span>
+        </li>
+      );
+    })}
+    <li class="combobox__empty" style="display: none;">No results found</li>
+  </ul>
+</div>
+
+<script>
+  const setupComboboxes = () => {
+    document.querySelectorAll(".combobox").forEach((container) => {
+      const trigger = container.querySelector(".combobox__trigger") as HTMLDivElement;
+      const input = container.querySelector(".combobox__input") as HTMLInputElement;
+      const dropdown = container.querySelector(".combobox__dropdown") as HTMLUListElement;
+      const nativeSelect = container.querySelector(".combobox__native-select") as HTMLSelectElement;
+      const options = container.querySelectorAll(".combobox__option") as NodeListOf<HTMLLIElement>;
+      const emptyItem = container.querySelector(".combobox__empty") as HTMLLIElement;
+
+      if (!trigger || !input || !dropdown || !nativeSelect) return;
+
+      let currentLabel = input.value;
+
+      const toggleDropdown = (open?: boolean) => {
+        const isOpen = open !== undefined ? open : !container.classList.contains("is-open");
+        const wasClosed = !container.classList.contains("is-open");
+
+        if (isOpen) {
+          container.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+          if (wasClosed) {
+            input.value = "";
+            filterOptions();
+          }
+          input.focus();
+        } else {
+          container.classList.remove("is-open");
+          trigger.setAttribute("aria-expanded", "false");
+          input.value = currentLabel;
+        }
+      };
+
+      const filterOptions = () => {
+        const query = input.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        options.forEach((opt) => {
+          const label = (opt.getAttribute("data-label") || "").toLowerCase();
+          if (label.includes(query)) {
+            opt.style.display = "";
+            visibleCount++;
+          } else {
+            opt.style.display = "none";
+          }
+        });
+
+        if (emptyItem) {
+          emptyItem.style.display = visibleCount === 0 ? "" : "none";
+        }
+      };
+
+      const selectOption = (value: string, label: string) => {
+        nativeSelect.value = value;
+        currentLabel = label;
+        input.value = label;
+
+        options.forEach((opt) => {
+          const isSelected = opt.getAttribute("data-value") === value;
+          opt.classList.toggle("is-selected", isSelected);
+          opt.setAttribute("aria-selected", isSelected ? "true" : "false");
+          
+          const check = opt.querySelector(".combobox__check") as HTMLSpanElement;
+          if (check) {
+            check.innerHTML = isSelected ? `<svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-2xs, var(--fs-2xs));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : "";
+          }
+        });
+
+        nativeSelect.dispatchEvent(new Event("change"));
+        toggleDropdown(false);
+      };
+
+      trigger.addEventListener("click", (e) => {
+        if (e.target === input) {
+          toggleDropdown(true);
+        } else {
+          toggleDropdown();
+        }
+      });
+
+      trigger.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          if (e.target === input) return;
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Enter" || e.key === "ArrowDown") {
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Escape") {
+          toggleDropdown(false);
+        }
+      });
+
+      input.addEventListener("input", () => {
+        toggleDropdown(true);
+        filterOptions();
+      });
+
+      options.forEach((opt) => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const value = opt.getAttribute("data-value") || "";
+          const label = opt.getAttribute("data-label") || "";
+          selectOption(value, label);
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!container.contains(e.target as Node)) {
+          toggleDropdown(false);
+        }
+      });
+    });
+  };
+
+  setupComboboxes();
+  document.addEventListener("astro:page-load", setupComboboxes);
+</script>

@@ -1,24 +1,28 @@
-.quote {
+/* src/design/semantics/quote/Quote.css */
+
+.quote-component {
   display: inline;
   font-style: italic;
-  color: var(--color-text-default);
+  font-family: var(--ff-serif);
+  color: var(--text--3);
 }
 
-.quote::before {
+.quote-component::before {
   content: open-quote;
 }
 
-.quote::after {
+.quote-component::after {
   content: close-quote;
 }
 
+/* ─── BLOCK QUOTE VARIANT ─────────────────────────────── */
 .quote--block {
   display: block;
-  margin: 1.5em 0;
-  padding-left: 1.5em;
-  border-left: 4px solid var(--color-border-default);
-  font-size: var(--text-lg);
-  line-height: 1.6;
+  border-left: 2px solid var(--color-gold);
+  padding: var(--sp-sm) var(--sp-md);
+  background: color-mix(in srgb, var(--color-gold) 5%, transparent);
+  border-radius: 0 var(--rad-md) var(--rad-md) 0;
+  margin: 0 0 var(--sp-md) 0;
 }
 
 .quote--block::before,
@@ -26,13 +30,17 @@
   content: none;
 }
 
+/* ─── PULL QUOTE VARIANT ──────────────────────────────── */
 .quote--pull {
   display: block;
-  margin: 2em 0;
+  border-left: none;
+  border-radius: 0;
+  background: transparent;
   text-align: center;
-  font-size: var(--text-2xl);
-  line-height: 1.4;
-  color: var(--color-primary);
+  padding: var(--sp-lg) var(--sp-xl);
+  border-top: 0.5px solid var(--border--0);
+  border-bottom: 0.5px solid var(--border--0);
+  margin: var(--sp-md) 0;
 }
 
 .quote--pull::before,
@@ -40,88 +48,45 @@
   content: none;
 }
 
-/* Size variants */
-.quote--size-0,
-.quote--size-xxs { font-size: var(--text-2xs); }
-.quote--size-1,
-.quote--size-xs { font-size: var(--text-xs); }
-.quote--size-2,
-.quote--size-sm { font-size: var(--text-sm); }
-.quote--size-3,
-.quote--size-md { font-size: var(--text-md); }
-.quote--size-4,
-.quote--size-base { font-size: var(--text-md); }
-.quote--size-5,
-.quote--size-lg { font-size: var(--text-lg); }
-.quote--size-6,
-.quote--size-xl { font-size: var(--text-xl); }
-.quote--size-7,
-.quote--size-2xl { font-size: var(--text-2xl); }
-.quote--size-8,
-.quote--size-3xl { font-size: var(--text-3xl); }
-.quote--size-9,
-.quote--size-4xl { font-size: var(--text-4xl); }
-.quote--size-10,
-.quote--size-5xl { font-size: var(--text-5xl); }
-.quote--size-11,
-.quote--size-6xl { font-size: var(--text-6xl); }
-
-/* Tone variants */
-.quote--tone-0 { color: var(--color-text-0); }
-.quote--tone-1 { color: var(--color-text-1); }
-.quote--tone-2 { color: var(--color-text-2); }
-.quote--tone-3 { color: var(--color-text-3); }
-.quote--tone-4 { color: var(--color-text-4); }
-.quote--tone-5 { color: var(--color-text-5); }
-.quote--tone-primary { color: var(--color-primary); }
-.quote--tone-secondary { color: var(--color-secondary); }
-.quote--tone-accent { color: var(--color-accent); }
-.quote--tone-white { color: var(--color-white); }
-.quote--tone-black { color: var(--color-black); }
-.quote--tone-default { color: var(--color-text-default); }
-.quote--tone-muted { color: var(--color-text-muted); }
-.quote--tone-subtle { color: var(--color-text-subtle); }
-.quote--tone-danger { color: var(--color-danger); }
-.quote--tone-success { color: var(--color-success); }
-.quote--tone-currentColor { color: currentColor; }
-.quote--tone-inherit { color: inherit; }
-
-/* Alignment */
-.quote--align-left { text-align: left; }
-.quote--align-center { text-align: center; }
-.quote--align-right { text-align: right; }
-.quote--align-justify { text-align: justify; }
-.quote--align-start { text-align: start; }
-.quote--align-end { text-align: end; }
-
-/* Weight */
-.quote--weight-thin { font-weight: 100; }
-.quote--weight-extralight { font-weight: 200; }
-.quote--weight-light { font-weight: 300; }
-.quote--weight-normal { font-weight: 400; }
-.quote--weight-medium { font-weight: 500; }
-.quote--weight-semibold { font-weight: 600; }
-.quote--weight-bold { font-weight: 700; }
-.quote--weight-extrabold { font-weight: 800; }
-.quote--weight-black { font-weight: 900; }
-
-/* Style */
-.quote--italic { font-style: italic; }
-
-/* Footer */
-.quote__footer {
-  margin-top: 1em;
-  font-size: 0.875em;
-  color: var(--color-text-muted);
-  text-align: inherit;
+/* ─── INTERNAL COMPONENTS ─────────────────────────────── */
+.quote__text {
+  font-family: var(--ff-serif);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text--5);
+  font-style: italic;
+  margin: 0;
 }
 
-.quote__cite {
+.quote--pull .quote__text {
+  font-size: 17px;
+}
+
+.quote__attribution {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2xs);
+  margin-top: var(--sp-xs);
+}
+
+.quote--pull .quote__attribution {
+  justify-content: center;
+}
+
+.quote__dash {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--color-gold-dim);
+}
+
+.quote__author {
+  font-size: 12px;
   font-style: normal;
+  font-weight: 500;
+  color: var(--text--2);
 }
 
-.quote__cite::before {
-  content: '— ';
+.quote__source {
+  font-size: 12px;
+  color: var(--text--m);
 }
-
-/* Made with Bob */

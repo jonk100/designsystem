@@ -1,14 +1,16 @@
 .paper-component {
-  background: rgba(30, 41, 59, 0.8);
-  border-radius: var(--rad-md);
+  background: var(--layer--1);
+  border: 1px solid var(--border-layer--1);
+  border-radius: var(--radius-layer--1);
   box-sizing: border-box;
 }
 
 .paper-padding--none { padding: 0; }
-.paper-padding--sm { padding: var(--sp-sm); }
-.paper-padding--md { padding: var(--sp-md); }
-.paper-padding--lg { padding: var(--sp-lg); }
-.paper-padding--xl { padding: var(--sp-xl); }
+.paper-padding--xs { padding: var(--sp-2xs); }
+.paper-padding--sm { padding: var(--sp-xs); }
+.paper-padding--md { padding: var(--sp-sm); }
+.paper-padding--lg { padding: var(--sp-md); }
+.paper-padding--xl { padding: var(--sp-lg); }
 
 .paper-elevation--none { box-shadow: none; }
 .paper-elevation--sm { box-shadow: var(--sh-sm, 0 1px 2px rgba(0,0,0,0.1)); }

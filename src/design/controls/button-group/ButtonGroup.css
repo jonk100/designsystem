@@ -1,0 +1,124 @@
+/* src/design/controls/button-group/ButtonGroup.css */
+
+.button-group {
+  display: inline-flex;
+  border-radius: var(--rad-md);
+  box-shadow: var(--sh-2xs);
+}
+
+/* Children in a button group */
+.button-group > * {
+  position: relative;
+  border-radius: 0 !important;
+}
+
+.button-group > *:not(:first-child) {
+  margin-left: -0.5px;
+}
+
+/* First child */
+.button-group > *:first-child {
+  border-top-left-radius: var(--rad-md) !important;
+  border-bottom-left-radius: var(--rad-md) !important;
+}
+
+/* Last child */
+.button-group > *:last-child {
+  border-top-right-radius: var(--rad-md) !important;
+  border-bottom-right-radius: var(--rad-md) !important;
+}
+
+/* Hover, active, focus states need higher z-index to overlay borders */
+.button-group > *:hover,
+.button-group > *:focus-within,
+.button-group > *:focus,
+.button-group > *.is-pressed,
+.button-group > *[aria-pressed="true"] {
+  z-index: 1;
+}
+
+/* If a single button is both first and last, keep all border radiuses */
+.button-group > *:first-child:last-child {
+  border-radius: var(--rad-md) !important;
+}
+
+/* ─── SIZE OVERRIDES ────────────────────────────────── */
+
+/* Small */
+.button-group--sm > .btn {
+  height: 30px !important;
+  padding: 0 var(--sp-sm) !important;
+  font-size: 12px !important;
+}
+.button-group--sm > .icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+}
+.button-group--sm > .toggle-btn {
+  height: 30px !important;
+  padding: 0 var(--sp-sm) !important;
+  font-size: 12px !important;
+}
+.button-group--sm > .toggle-btn.toggle-btn--icon-only {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+  padding: 0 !important;
+}
+.button-group--sm .icon-component {
+  --local-size: var(--display-size-xs) !important;
+}
+
+/* Medium */
+.button-group--md > .btn {
+  height: 38px !important;
+  padding: 0 var(--sp-md) !important;
+  font-size: 14px !important;
+}
+.button-group--md > .icon-btn {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 18px !important;
+}
+.button-group--md > .toggle-btn {
+  height: 38px !important;
+  padding: 0 var(--sp-md) !important;
+  font-size: 13px !important;
+}
+.button-group--md > .toggle-btn.toggle-btn--icon-only {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 18px !important;
+  padding: 0 !important;
+}
+.button-group--md .icon-component {
+  --local-size: var(--display-size-sm) !important;
+}
+
+/* Large */
+.button-group--lg > .btn {
+  height: 46px !important;
+  padding: 0 var(--sp-lg) !important;
+  font-size: 16px !important;
+}
+.button-group--lg > .icon-btn {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 22px !important;
+}
+.button-group--lg > .toggle-btn {
+  height: 46px !important;
+  padding: 0 var(--sp-lg) !important;
+  font-size: 16px !important;
+}
+.button-group--lg > .toggle-btn.toggle-btn--icon-only {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 22px !important;
+  padding: 0 !important;
+}
+.button-group--lg .icon-component {
+  --local-size: var(--display-size-md) !important;
+}
+

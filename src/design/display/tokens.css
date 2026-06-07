@@ -3,27 +3,39 @@
 :root {
   /* ─── DISPLAY COMPONENT TOKENS ──────────────────────────── */
 
-  /* Size tokens reference typography vars */
-  --display-size-2xs: var(--fs-2xs);
-  --display-size-xs: var(--fs-xs);
-  --display-size-sm: var(--fs-sm);
-  --display-size-md: var(--fs-base);
-  --display-size-lg: var(--fs-lg);
-  --display-size-xl: var(--fs-xl);
-  --display-size-2xl: var(--fs-2xl);
-  --display-size-3xl: var(--fs-3xl);
-  --display-size-4xl: var(--fs-4xl);
-  --display-size-5xl: var(--fs-5xl);
+  /* Sizing scale matched to Button font sizes */
+  --display-size-2xs: 10px;
+  --display-size-xs:  11px;
+  --display-size-sm:  12px;
+  --display-size-md:  14px;
+  --display-size-lg:  16px;
+  --display-size-xl:  18px;
+  --display-size-2xl: 20px;
+  --display-size-3xl: 24px;
+  --display-size-4xl: 30px;
+  --display-size-5xl: 36px;
 
-  /* Padding uses spacing scale */
-  --display-padding-2xs: var(--sp-2xs) var(--sp-xs);
-  --display-padding-xs: var(--sp-2xs) var(--sp-sm);
-  --display-padding-sm: var(--sp-sm) var(--sp-md);
-  --display-padding-md: var(--sp-md) var(--sp-lg);
-  --display-padding-lg: var(--sp-lg) var(--sp-xl);
-  --display-padding-xl: var(--sp-xl) var(--sp-2xl);
-  --display-padding-2xl: var(--sp-2xl) var(--sp-2xl);
-  --display-padding-3xl: var(--sp-3xl) var(--sp-3xl);
+  --display-padding-2xs: 0 var(--sp-2xs);
+  --display-padding-xs:  0 var(--sp-2xs);
+  --display-padding-sm:  0 var(--sp-xs);
+  --display-padding-md:  0 var(--sp-xs);
+  --display-padding-lg:  0 var(--sp-md);
+  --display-padding-xl:  0 var(--sp-md);
+  --display-padding-2xl: 0 var(--sp-xl);
+  --display-padding-3xl: 0 var(--sp-xl);
+  --display-padding-4xl: 0 var(--sp-2xl);
+  --display-padding-5xl: 0 var(--sp-3xl);
+
+  --display-height-2xs: 20px;
+  --display-height-xs:  24px;
+  --display-height-sm:  28px;
+  --display-height-md:  32px;
+  --display-height-lg:  38px;
+  --display-height-xl:  44px;
+  --display-height-2xl: 54px;
+  --display-height-3xl: 62px;
+  --display-height-4xl: 70px;
+  --display-height-5xl: 80px;
 
   /* Radius */
   --display-radius: var(--rad-full);
@@ -64,136 +76,3 @@
   --display-info-hover-bg: var(--color-display-info-hover-bg);
   --display-info-shadow: var(--color-display-info-shadow);
 }
-
-/* ============================================================================
-   SHARED SIZE UTILITY CLASSES
-   Used by: Badge, Chip, Tag, Dot, and all display components
-   ============================================================================ */
-
-.display-size--2xs {
-  padding: var(--display-padding-2xs);
-  font-size: var(--display-size-2xs);
-}
-
-.display-size--xs {
-  padding: var(--display-padding-xs);
-  font-size: var(--display-size-xs);
-}
-
-.display-size--sm {
-  padding: var(--display-padding-sm);
-  font-size: var(--display-size-sm);
-}
-
-.display-size--md {
-  padding: var(--display-padding-md);
-  font-size: var(--display-size-md);
-}
-
-.display-size--lg {
-  padding: var(--display-padding-lg);
-  font-size: var(--display-size-lg);
-}
-
-.display-size--xl {
-  padding: var(--display-padding-xl);
-  font-size: var(--display-size-xl);
-}
-
-.display-size--2xl {
-  padding: var(--display-padding-2xl);
-  font-size: var(--display-size-2xl);
-}
-
-.display-size--3xl {
-  padding: var(--display-padding-3xl);
-  font-size: var(--display-size-3xl);
-}
-
-.display-size--4xl {
-  padding: var(--display-padding-4xl);
-  font-size: var(--display-size-4xl);
-}
-
-.display-size--5xl {
-  padding: var(--display-padding-5xl);
-  font-size: var(--display-size-5xl);
-}
-
-/* ============================================================================
-   SHARED VARIANT UTILITY CLASSES
-   Used by: Badge, Chip, Tag, Dot, and all display components
-   Applies background, border, hover states, and shadows
-   ============================================================================ */
-
-.display-variant--default {
-  background: var(--display-default-bg);
-  border-color: var(--display-default-border);
-}
-
-.display-variant--default:hover {
-  background: var(--display-default-hover-bg);
-  box-shadow: 0 10px 30px var(--display-default-shadow);
-}
-
-.display-variant--primary {
-  background: var(--display-primary-bg);
-  border-color: var(--display-primary-border);
-}
-
-.display-variant--primary:hover {
-  background: var(--display-primary-hover-bg);
-  box-shadow: 0 10px 30px var(--display-primary-shadow);
-}
-
-.display-variant--secondary {
-  background: var(--display-secondary-bg);
-  border-color: var(--display-secondary-border);
-}
-
-.display-variant--secondary:hover {
-  background: var(--display-secondary-hover-bg);
-  box-shadow: 0 10px 30px var(--display-secondary-shadow);
-}
-
-.display-variant--success {
-  background: var(--display-success-bg);
-  border-color: var(--display-success-border);
-}
-
-.display-variant--success:hover {
-  background: var(--display-success-hover-bg);
-  box-shadow: 0 10px 30px var(--display-success-shadow);
-}
-
-.display-variant--warning {
-  background: var(--display-warning-bg);
-  border-color: var(--display-warning-border);
-}
-
-.display-variant--warning:hover {
-  background: var(--display-warning-hover-bg);
-  box-shadow: 0 10px 30px var(--display-warning-shadow);
-}
-
-.display-variant--danger {
-  background: var(--display-danger-bg);
-  border-color: var(--display-danger-border);
-}
-
-.display-variant--danger:hover {
-  background: var(--display-danger-hover-bg);
-  box-shadow: 0 10px 30px var(--display-danger-shadow);
-}
-
-.display-variant--info {
-  background: var(--display-info-bg);
-  border-color: var(--display-info-border);
-}
-
-.display-variant--info:hover {
-  background: var(--display-info-hover-bg);
-  box-shadow: 0 10px 30px var(--display-info-shadow);
-}
-
-/* Made with Bob */

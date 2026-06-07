@@ -1,0 +1,15 @@
+/* src/design/controls/radio-group/RadioGroup.css */
+
+.radio-group-component {
+  display: flex;
+  gap: var(--radio-group-gap, var(--sp-sm));
+}
+
+.radio-group-component--vertical {
+  flex-direction: column;
+}
+
+.radio-group-component--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}

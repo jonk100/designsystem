@@ -1,0 +1,62 @@
+---
+/**
+ * src/design/controls/checkbox/Checkbox.astro
+ * A custom styled checkbox component.
+ * - Wraps a native hidden checkbox for full accessibility.
+ * - Supports disabled, checked, and invalid states.
+ * @props (local): checked, disabled, invalid, name, value, label
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import Icon from "../../display/icon/Icon.astro";
+import "./Checkbox.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** Checked state */
+  checked?: boolean;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  invalid = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "checkbox-component",
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<label class:list={finalClasses} style={finalStyles}>
+  <input
+    type="checkbox"
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="checkbox-component__native"
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+  <span class="checkbox-component__indicator">
+    <span class="checkbox-component__check-icon">
+      <Icon name="check" size="2xs" />
+    </span>
+  </span>
+  <span class="checkbox-component__label">
+    <slot />
+  </span>
+</label>

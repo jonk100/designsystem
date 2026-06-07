@@ -1,0 +1,281 @@
+---
+import Text from "../design/typography/text/Text.astro";
+import Inline from "../design/layout/inline/Inline.astro";
+import Stack from "../design/layout/stack/Stack.astro";
+import Grid from "../design/layout/grid/Grid.astro";
+import Container from "../design/layout/container/Container.astro";
+import Center from "../design/layout/center/Center.astro";
+import Spacer from "../design/layout/spacer/Spacer.astro";
+import Card from "../design/surfaces/card/Card.astro";
+import Paper from "../design/surfaces/paper/Paper.astro";
+import Layout from "../layouts/Layout.astro";
+import Tag from "../design/display/tag/Tag.astro";
+---
+
+<Layout title="Layout Debug">
+	<Container size="xl">
+		<Stack gap="2xl">
+			<!-- Page Header -->
+			<Stack gap="sm">
+				<Inline gap="md" y="center">
+					<Text as="span" fs="4xl" bold>Layout Debug Playground</Text>
+					<Tag variant="purple">Debug Borders Enabled</Tag>
+				</Inline>
+				<Text as="p" fs="lg" tone="muted">
+					Visualizing the boundaries of Stack, Inline, Grid, Center, Spacer, and Container components using dotted debug borders.
+				</Text>
+				<Inline gap="md">
+					<a href="/" style="color: var(--color-gold); text-decoration: none; font-weight: 600;">← Back to Home Showcase</a>
+				</Inline>
+			</Stack>
+
+			<!-- ─── BORDER COLOR LEGEND ──────────────────────────── -->
+			<Paper padding="md">
+				<Stack gap="xs">
+					<Text fs="sm" bold>Border Legend:</Text>
+					<Inline gap="md" wrap>
+						<Inline gap="2xs" y="center">
+							<div style="width: 12px; height: 12px; border: 1px dotted silver; background: rgba(255,255,255,0.05);"></div>
+							<Text fs="xs">Stack (Silver)</Text>
+						</Inline>
+						<Inline gap="2xs" y="center">
+							<div style="width: 12px; height: 12px; border: 1px dotted gold; background: rgba(255,255,255,0.05);"></div>
+							<Text fs="xs">Inline (Gold)</Text>
+						</Inline>
+						<Inline gap="2xs" y="center">
+							<div style="width: 12px; height: 12px; border: 1px dotted green; background: rgba(255,255,255,0.05);"></div>
+							<Text fs="xs">Grid (Green)</Text>
+						</Inline>
+						<Inline gap="2xs" y="center">
+							<div style="width: 12px; height: 12px; border: 1px dotted red; background: rgba(255,255,255,0.05);"></div>
+							<Text fs="xs">Center (Red)</Text>
+						</Inline>
+						<Inline gap="2xs" y="center">
+							<div style="width: 12px; height: 12px; border: 1px dotted blue; background: rgba(255,255,255,0.05);"></div>
+							<Text fs="xs">Container (Blue)</Text>
+						</Inline>
+						<Inline gap="2xs" y="center">
+							<div style="width: 24px; height: 12px; background: rgba(255,255,255,0.15); border: 1px dashed var(--color-gold);"></div>
+							<Text fs="xs">Spacer (Highlight)</Text>
+						</Inline>
+					</Inline>
+				</Stack>
+			</Paper>
+
+			<!-- ─── SECTION: Stack ─────────────────────────────── -->
+			<Stack gap="md">
+				<Text as="p" fs="2xl" bold>Stack</Text>
+				<Text as="p" fs="sm" tone="muted">
+					Vertical flex column. Children stack top to bottom with a consistent gap.
+				</Text>
+
+				<Grid columns={2} gap="lg">
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>gap="xs"</Text>
+							<Stack gap="xs" style="padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Item 1</Text></Card>
+								<Card padding="sm"><Text fs="sm">Item 2</Text></Card>
+								<Card padding="sm"><Text fs="sm">Item 3</Text></Card>
+							</Stack>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>gap="xl"</Text>
+							<Stack gap="xl" style="padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Item 1</Text></Card>
+								<Card padding="sm"><Text fs="sm">Item 2</Text></Card>
+								<Card padding="sm"><Text fs="sm">Item 3</Text></Card>
+							</Stack>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>x="center"</Text>
+							<Stack gap="sm" x="center" style="min-height: 120px; padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Centered child</Text></Card>
+								<Card padding="sm"><Text fs="sm">Also centered</Text></Card>
+							</Stack>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>x="end"</Text>
+							<Stack gap="sm" x="end" style="min-height: 120px; padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Pushed right</Text></Card>
+								<Card padding="sm"><Text fs="sm">Also right</Text></Card>
+							</Stack>
+						</Stack>
+					</Paper>
+				</Grid>
+			</Stack>
+
+			<!-- ─── SECTION: Inline ────────────────────────────── -->
+			<Stack gap="md">
+				<Text as="p" fs="2xl" bold>Inline</Text>
+				<Text as="p" fs="sm" tone="muted">
+					Horizontal flex row. Children flow left to right, wrapping by default.
+				</Text>
+
+				<Grid columns={2} gap="lg">
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>gap="md" (default wrap)</Text>
+							<Inline gap="md" style="padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Alpha</Text></Card>
+								<Card padding="sm"><Text fs="sm">Beta</Text></Card>
+								<Card padding="sm"><Text fs="sm">Gamma</Text></Card>
+								<Card padding="sm"><Text fs="sm">Delta</Text></Card>
+								<Card padding="sm"><Text fs="sm">Epsilon</Text></Card>
+							</Inline>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>x="between" y="center"</Text>
+							<Inline gap="md" x="between" y="center" style="padding: 0.5rem;">
+								<Card padding="sm"><Text fs="sm">Left</Text></Card>
+								<Card padding="sm"><Text fs="lg">Tall</Text></Card>
+								<Card padding="sm"><Text fs="sm">Right</Text></Card>
+							</Inline>
+						</Stack>
+					</Paper>
+				</Grid>
+			</Stack>
+
+			<!-- ─── SECTION: Container ─────────────────────────── -->
+			<Stack gap="md">
+				<Text as="p" fs="2xl" bold>Container</Text>
+				<Text as="p" fs="sm" tone="muted">
+					Constrains max-width and centers content. Provides safe side padding.
+				</Text>
+
+				<Stack gap="md">
+					<Paper padding="lg">
+						<Stack gap="sm">
+							<Text fs="sm" tone="muted" bold>size="sm" (640px)</Text>
+							<Container size="sm">
+								<Card padding="md">
+									<Text fs="sm">Content constrained to 640px max-width, centered with auto margins.</Text>
+								</Card>
+							</Container>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="sm">
+							<Text fs="sm" tone="muted" bold>size="md" (768px)</Text>
+							<Container size="md">
+								<Card padding="md">
+									<Text fs="sm">Medium container — 768px max. Good for article content.</Text>
+								</Card>
+							</Container>
+						</Stack>
+					</Paper>
+				</Stack>
+			</Stack>
+
+			<!-- ─── SECTION: Grid ──────────────────────────────── -->
+			<Stack gap="md">
+				<Text as="p" fs="2xl" bold>Grid</Text>
+				<Text as="p" fs="sm" tone="muted">
+					CSS Grid layout. Set explicit columns or auto-fit with a min width.
+				</Text>
+
+				<Paper padding="lg">
+					<Stack gap="sm">
+						<Text fs="sm" tone="muted" bold>columns={3} gap="md"</Text>
+						<Grid columns={3} gap="md">
+							<Card padding="md"><Text fs="sm">Column 1</Text></Card>
+							<Card padding="md"><Text fs="sm">Column 2</Text></Card>
+							<Card padding="md"><Text fs="sm">Column 3</Text></Card>
+							<Card padding="md"><Text fs="sm">Column 4</Text></Card>
+							<Card padding="md"><Text fs="sm">Column 5</Text></Card>
+							<Card padding="md"><Text fs="sm">Column 6</Text></Card>
+						</Grid>
+					</Stack>
+				</Paper>
+			</Stack>
+
+			<!-- ─── SECTION: Center ────────────────────────────── -->
+			<Stack gap="md">
+				<Text as="p" fs="2xl" bold>Center</Text>
+				<Text as="p" fs="sm" tone="muted">
+					Flexbox centering utility — both axes by default.
+				</Text>
+
+				<Grid columns={2} gap="lg">
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>Default (both axes)</Text>
+							<Center style="height: 150px;">
+								<Card padding="md"><Text fs="sm">Dead center</Text></Card>
+							</Center>
+						</Stack>
+					</Paper>
+
+					<Paper padding="lg">
+						<Stack gap="xs">
+							<Text fs="sm" tone="muted" bold>text={true}</Text>
+							<Center text style="height: 150px;">
+								<Text as="p" fs="sm">Text is centered too</Text>
+								<Text as="p" fs="sm" tone="muted">Second line</Text>
+							</Center>
+						</Stack>
+					</Paper>
+				</Grid>
+			</Stack>
+
+			<!-- ─── SECTION: Spacer ────────────────────────────── -->
+			<Paper padding="lg">
+				<Stack gap="sm">
+					<Text fs="lg" bold>Spacer</Text>
+					<Text fs="xs" tone="muted">Invisible layout spacing primitive.</Text>
+					<Stack gap="none">
+						<Text fs="2xs" tone="muted">Top Element</Text>
+						<div style="position: relative;">
+							<Spacer size="md" style="border: 1px dashed var(--color-gold); background: var(--color-gold-subtle);" />
+							<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+								<Text fs="2xs" style="color: var(--color-gold); line-height: 1;">Spacer (md size: vertical)</Text>
+							</div>
+						</div>
+						<Text fs="2xs" tone="muted">Bottom Element</Text>
+					</Stack>
+				</Stack>
+			</Paper>
+
+			<Spacer size="xl" />
+		</Stack>
+	</Container>
+</Layout>
+
+<style is:global>
+  /* Enable dotted layout helper borders on this page only */
+  .stack-component {
+    border: 1px dotted silver !important;
+  }
+  .inline-component {
+    border: 1px dotted gold !important;
+  }
+  .grid-component {
+    border: 1px dotted green !important;
+  }
+  .center-component {
+    border: 1px dotted red !important;
+  }
+  .box-component {
+    border: 1px dotted pink !important;
+  }
+  .spacer-component {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border: 1px dashed var(--color-gold) !important;
+  }
+  .container-component {
+    border: 1px dotted blue !important;
+  }
+</style>

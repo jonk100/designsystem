@@ -1,0 +1,269 @@
+---
+/**
+ * src/design/controls/multiselect/Multiselect.astro
+ * A searchable multi-value combobox component.
+ * - Displays selected values as dismissible chips inside the trigger.
+ * - Filters dropdown options based on input value.
+ * - Synchronizes with a hidden multiple `<select>` for form submissions.
+ * @props (local): options, selected, placeholder, label, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import Icon from "../../display/icon/Icon.astro";
+import Chip from "../../display/chip/Chip.astro";
+import "./Multiselect.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** List of selectable options */
+  options: Array<{ value: string; label: string } | string>;
+  /** Array of initially selected values */
+  selected?: string[];
+  /** Input placeholder when empty */
+  placeholder?: string;
+  /** Label for the form control */
+  label?: string;
+  /** Input name for form submissions */
+  name?: string;
+}
+
+const {
+  options = [],
+  selected = [],
+  placeholder = "Search...",
+  label,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Standardize options array to { value, label } format
+const formattedOptions = options.map((opt) =>
+  typeof opt === "string" ? { value: opt, label: opt } : opt
+);
+
+const classes = ["multiselect"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  {label && <label class="multiselect__label-element">{label}</label>}
+
+  <!-- Hidden native select for form integration -->
+  <select multiple name={name} class="multiselect__native-select" aria-hidden="true" tabindex="-1">
+    {formattedOptions.map((opt) => (
+      <option value={opt.value} selected={selected.includes(opt.value)}>{opt.label}</option>
+    ))}
+  </select>
+
+  <div class="multiselect__trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+    <div class="multiselect__chips-wrap">
+      {formattedOptions.filter(opt => selected.includes(opt.value)).map((opt) => (
+        <Chip variant="primary" size="sm" dismissible data-value={opt.value}>
+          {opt.label}
+        </Chip>
+      ))}
+      <input
+        type="text"
+        class="multiselect__input"
+        placeholder={selected.length === 0 ? placeholder : ""}
+        aria-autocomplete="list"
+      />
+    </div>
+    <Icon name="chevron-down" class="multiselect__chevron" size="md" />
+  </div>
+
+  <ul class="multiselect__dropdown" role="listbox" aria-label={label || "Options"}>
+    {formattedOptions.map((opt) => {
+      const isSelected = selected.includes(opt.value);
+      return (
+        <li
+          class:list={["multiselect__option", isSelected && "is-selected"]}
+          role="option"
+          aria-selected={isSelected ? "true" : "false"}
+          data-value={opt.value}
+          data-label={opt.label}
+        >
+          <span class="multiselect__check">
+            {isSelected && <Icon name="check" size="2xs" />}
+          </span>
+          <span class="multiselect__option-label">{opt.label}</span>
+        </li>
+      );
+    })}
+    <li class="multiselect__empty" style="display: none;">No results found</li>
+  </ul>
+</div>
+
+<script>
+  const setupMultiselects = () => {
+    document.querySelectorAll(".multiselect").forEach((container) => {
+      const trigger = container.querySelector(".multiselect__trigger") as HTMLDivElement;
+      const input = container.querySelector(".multiselect__input") as HTMLInputElement;
+      const dropdown = container.querySelector(".multiselect__dropdown") as HTMLUListElement;
+      const nativeSelect = container.querySelector(".multiselect__native-select") as HTMLSelectElement;
+      const chipsWrap = container.querySelector(".multiselect__chips-wrap") as HTMLDivElement;
+      const options = container.querySelectorAll(".multiselect__option") as NodeListOf<HTMLLIElement>;
+      const emptyItem = container.querySelector(".multiselect__empty") as HTMLLIElement;
+
+      if (!trigger || !input || !dropdown || !nativeSelect || !chipsWrap) return;
+
+      const toggleDropdown = (open?: boolean) => {
+        const isOpen = open !== undefined ? open : !container.classList.contains("is-open");
+        if (isOpen) {
+          container.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+          input.focus();
+        } else {
+          container.classList.remove("is-open");
+          trigger.setAttribute("aria-expanded", "false");
+          input.value = "";
+          filterOptions();
+        }
+      };
+
+      const filterOptions = () => {
+        const query = input.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        options.forEach((opt) => {
+          const label = (opt.getAttribute("data-label") || "").toLowerCase();
+          if (label.includes(query)) {
+            opt.style.display = "";
+            visibleCount++;
+          } else {
+            opt.style.display = "none";
+          }
+        });
+
+        if (emptyItem) {
+          emptyItem.style.display = visibleCount === 0 ? "" : "none";
+        }
+      };
+
+      const selectOption = (value: string) => {
+        const option = nativeSelect.querySelector(`option[value="${value}"]`) as HTMLOptionElement;
+        if (!option) return;
+
+        option.selected = !option.selected;
+        
+        // Update styling of option in dropdown list
+        options.forEach((opt) => {
+          if (opt.getAttribute("data-value") === value) {
+            const isSelected = option.selected;
+            opt.classList.toggle("is-selected", isSelected);
+            opt.setAttribute("aria-selected", isSelected ? "true" : "false");
+            
+            const check = opt.querySelector(".multiselect__check") as HTMLSpanElement;
+            if (check) {
+              check.innerHTML = isSelected ? `<svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-2xs, var(--fs-2xs));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : "";
+            }
+          }
+        });
+
+        rebuildChips();
+        nativeSelect.dispatchEvent(new Event("change"));
+        input.focus();
+      };
+
+      const rebuildChips = () => {
+        // Clear all chips except the input element
+        const chips = chipsWrap.querySelectorAll("button.chip");
+        chips.forEach((c) => c.remove());
+
+        // Rebuild from selected option values
+        Array.from(nativeSelect.options).forEach((opt) => {
+          if (opt.selected) {
+            const chip = document.createElement("button");
+            chip.className = "chip display-size--sm display-variant--primary chip--interactive chip--dismissible";
+            chip.type = "button";
+            chip.setAttribute("data-value", opt.value);
+            chip.innerHTML = `<span class="chip__label">${opt.text}</span><span class="chip__dismiss" aria-label="Remove" role="button" tabindex="0"><svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-sm, var(--fs-sm));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>`;
+            
+            // Event listener for removing
+            chip.querySelector(".chip__dismiss")?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              selectOption(opt.value);
+            });
+            chip.addEventListener("click", (e) => {
+              e.stopPropagation();
+              selectOption(opt.value);
+            });
+
+            chipsWrap.insertBefore(chip, input);
+          }
+        });
+
+        // Toggle placeholder
+        const selectedCount = nativeSelect.querySelectorAll("option:checked").length;
+        input.placeholder = selectedCount === 0 ? (container.getAttribute("data-placeholder") || "Search...") : "";
+      };
+
+      // Toggle dropdown on trigger click
+      trigger.addEventListener("click", (e) => {
+        // Only toggle if not clicking a chip
+        if ((e.target as HTMLElement).closest(".chip")) return;
+        toggleDropdown();
+      });
+
+      // Handle keyboard navigation on trigger
+      trigger.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          if (e.target === input) return;
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Enter" || e.key === "ArrowDown") {
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Escape") {
+          toggleDropdown(false);
+        }
+      });
+
+      // Filter options on input keyup
+      input.addEventListener("input", () => {
+        toggleDropdown(true);
+        filterOptions();
+      });
+
+      // Handle option click
+      options.forEach((opt) => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const value = opt.getAttribute("data-value");
+          if (value) selectOption(value);
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!container.contains(e.target as Node)) {
+          toggleDropdown(false);
+        }
+      });
+
+      // Prevent chip-dismiss clicks inside trigger from bubbling
+      chipsWrap.querySelectorAll("button.chip").forEach((chip) => {
+        const val = chip.getAttribute("data-value");
+        if (val) {
+          chip.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectOption(val);
+          });
+          chip.querySelector(".chip__dismiss")?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectOption(val);
+          });
+        }
+      });
+    });
+  };
+
+  // Execute
+  setupMultiselects();
+  document.addEventListener("astro:page-load", setupMultiselects);
+</script>

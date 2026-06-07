@@ -1,0 +1,62 @@
+---
+/**
+ * src/design/controls/search/Search.astro
+ * A styled search field component.
+ * - Wraps a native search input with an inline search icon.
+ * - Supports sizes and clean states.
+ * @props (local): size, variant, disabled, readonly, invalid, name, value, placeholder
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import Icon from "../../display/icon/Icon.astro";
+import "./Search.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {}
+
+const {
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  readonly = false,
+  invalid = false,
+  placeholder = "Search...",
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "search-component",
+  `search-component--${size}`,
+  `search-component--${variant}`,
+  disabled && "is-disabled",
+  readonly && "is-readonly",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class="search-wrapper">
+  <span class="search-wrapper__icon">
+    <Icon name="search" size={size === 'sm' ? 'xs' : 'sm'} />
+  </span>
+  <input
+    type="search"
+    name={name}
+    value={value}
+    placeholder={placeholder}
+    disabled={disabled}
+    readonly={readonly}
+    class:list={finalClasses}
+    style={finalStyles}
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+</div>

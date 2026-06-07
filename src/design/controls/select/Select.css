@@ -1,0 +1,109 @@
+/* src/design/controls/select/Select.css */
+
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.select-component {
+  width: 100%;
+  background-color: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Padding right is larger to accommodate the absolute chevron */
+.select-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-xs);
+  padding-right: 28px;
+  font-size: 12px;
+}
+
+.select-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  padding-right: 36px;
+  font-size: 13px;
+}
+
+.select-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  padding-right: 44px;
+  font-size: 15px;
+}
+
+.select-component:hover:not(:disabled) {
+  border-color: var(--border--1);
+}
+
+.select-component:focus:not(:disabled) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Variant solid */
+.select-component--solid {
+  background-color: var(--layer--3);
+  border-color: transparent;
+}
+.select-component--solid:hover:not(:disabled) {
+  background-color: var(--layer--4);
+}
+.select-component--solid:focus:not(:disabled) {
+  background-color: var(--layer--2);
+}
+
+/* Chevron indicator */
+.select-wrapper__chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--sp-xs);
+  transform: translateY(-50%);
+  color: var(--text--m);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Align chevron positioning for different sizes */
+.select-component--sm ~ .select-wrapper__chevron {
+  right: var(--sp-2xs);
+}
+.select-component--lg ~ .select-wrapper__chevron {
+  right: var(--sp-sm);
+}
+
+/* Disabled state */
+.select-component:disabled,
+.select-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--layer--1);
+}
+
+.select-component:disabled ~ .select-wrapper__chevron {
+  opacity: 0.5;
+}
+
+/* Invalid / Error state */
+.select-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.select-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}

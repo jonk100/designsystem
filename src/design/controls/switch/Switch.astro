@@ -1,0 +1,62 @@
+---
+/**
+ * src/design/controls/switch/Switch.astro
+ * A binary toggle switch component (accessible switch control).
+ * - Enforces keyboard navigation, ARIA attributes (role="switch"), and focused rings.
+ * - Leverages BEM structure with custom styles for thumb translation.
+ * @props (local): checked, disabled, name, value
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Switch.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {
+  /** If true, the switch is initially checked */
+  checked?: boolean;
+  /** Disables interaction */
+  disabled?: boolean;
+  /** Input name for forms */
+  name?: string;
+  /** Input value for forms */
+  value?: string;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "switch-component",
+  checked && "is-checked",
+  disabled && "is-disabled",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<button
+  type="button"
+  role="switch"
+  aria-checked={checked ? "true" : "false"}
+  aria-disabled={disabled ? "true" : undefined}
+  class:list={finalClasses}
+  style={finalStyles}
+  disabled={disabled}
+  data-name={name}
+  data-value={value}
+  {...rest}
+>
+  <span class="switch-component__track">
+    <span class="switch-component__thumb"></span>
+  </span>
+</button>

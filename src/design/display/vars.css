@@ -2,16 +2,16 @@
   /* ─── DISPLAY COMPONENT COLORS ──────────────────────────── */
   
   /* Default Variant */
-  --color-display-default-bg: rgba(139, 92, 246, 0.2);
-  --color-display-default-border: rgba(139, 92, 246, 0.4);
-  --color-display-default-hover-bg: rgba(139, 92, 246, 0.4);
-  --color-display-default-shadow: rgba(139, 92, 246, 0.3);
+  --color-display-default-bg: var(--layer--2);
+  --color-display-default-border: var(--border--0);
+  --color-display-default-hover-bg: var(--layer--3);
+  --color-display-default-shadow: rgba(0, 0, 0, 0);
   
   /* Primary Variant */
-  --color-display-primary-bg: rgba(59, 130, 246, 0.2);
-  --color-display-primary-border: rgba(59, 130, 246, 0.4);
-  --color-display-primary-hover-bg: rgba(59, 130, 246, 0.4);
-  --color-display-primary-shadow: rgba(59, 130, 246, 0.3);
+  --color-display-primary-bg: var(--color-gold-subtle);
+  --color-display-primary-border: var(--color-gold-border);
+  --color-display-primary-hover-bg: var(--color-gold-focus);
+  --color-display-primary-shadow: rgba(192, 144, 64, 0.2);
   
   /* Secondary Variant */
   --color-display-secondary-bg: rgba(148, 163, 184, 0.2);

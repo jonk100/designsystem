@@ -1,8 +1,8 @@
 .bento-cell-component {
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--layer--2);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  border-radius: var(--rad-2xl);
+  border: 1px solid var(--border-layer--2);
+  border-radius: var(--radius-layer--2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;

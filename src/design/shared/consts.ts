@@ -16,11 +16,11 @@ export const BACKGROUND_TONES = [
 export const X_ALIGNS = ['left', 'center', 'right', 'justify', 'start', 'end'] as const;
 export const Y_ALIGNS = ['super', 'top', 'text-top', 'baseline', 'middle', 'bottom', 'text-bottom', 'sub'] as const;
 
-export const FONT_WEIGHTS = ['thin', 'extralight', 'light', 'normal', 'medium', 'semibold', 'bold', 'extrabold', 'black'] as const;
+export const FONT_WEIGHTS = ['thin', 'extralight', 'light', 'normal', 'medium', 'semibold', 'bold', 'extrabold', 'black', '100', '200', '300', '400', '500', '600', '700', '800', '900'] as const;
 
-export const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'] as const;
+export const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose', '1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8'] as const;
 
-export const LETTER_SPACINGS = ['tighter', 'tight', 'normal', 'wide', 'wider', 'widest'] as const;
+export const LETTER_SPACINGS = ['tighter', 'tight', 'normal', 'wide', 'wider', 'widest', ] as const;
 
 export const FONT_FAMILIES = ['heading', 'body', 'sans', 'serif', 'mono'] as const;
 

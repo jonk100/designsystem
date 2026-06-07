@@ -1,0 +1,65 @@
+---
+/**
+ * src/design/controls/select/Select.astro
+ * A styled select dropdown control that wraps a native HTML <select>.
+ * - Preserves native accessibility and options.
+ * - Places a custom chevron icon on the right.
+ * @props (local): size, variant, disabled, invalid, label, name, placeholder
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import Icon from "../../display/icon/Icon.astro";
+import "./Select.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"select">, keyof ControlComponentProps> {
+  /** Optional placeholder when no option is selected */
+  placeholder?: string;
+}
+
+const {
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  invalid = false,
+  placeholder,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "select-component",
+  `select-component--${size}`,
+  `select-component--${variant}`,
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class="select-wrapper">
+  <select
+    name={name}
+    disabled={disabled}
+    class:list={finalClasses}
+    style={finalStyles}
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  >
+    {placeholder && (
+      <option value="" disabled selected hidden>
+        {placeholder}
+      </option>
+    )}
+    <slot />
+  </select>
+  <span class="select-wrapper__chevron">
+    <Icon name="chevron-down" size={size === 'sm' ? 'xs' : 'sm'} />
+  </span>
+</div>

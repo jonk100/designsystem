@@ -1,0 +1,90 @@
+/* src/design/controls/date-picker/DatePicker.css */
+
+.datepicker-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.datepicker-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.datepicker-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers */
+.datepicker-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+
+.datepicker-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  font-size: 13px;
+}
+
+.datepicker-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.datepicker-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.datepicker-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.datepicker-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Custom calendar icon styling for webkit browsers */
+.datepicker-component::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.6); /* Slightly muted color, matches var(--text--m) */
+  transition: filter var(--td-fast) var(--te-in-out);
+}
+
+.datepicker-component:hover::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+}
+
+/* Disabled state */
+.datepicker-component:disabled,
+.datepicker-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+/* Readonly state */
+.datepicker-component[readonly],
+.datepicker-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.datepicker-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.datepicker-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}

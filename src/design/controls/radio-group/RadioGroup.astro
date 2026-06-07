@@ -1,0 +1,63 @@
+---
+/**
+ * src/design/controls/radio-group/RadioGroup.astro
+ * A layout container for grouping related radio components.
+ * - Supports horizontal and vertical orientations.
+ * - Ensures a consistent gap between options.
+ * @props (local): orientation, gap
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { ControlComponentProps } from "../controls.types";
+import { mergeClasses, mergeStyles } from "../../shared";
+import "./RadioGroup.css";
+
+export interface Props extends Omit<ControlComponentProps, 'variant' | 'size'>, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** Alignment orientation of the radio group */
+  orientation?: "horizontal" | "vertical";
+  /** Gap spacing spacing token suffix (e.g. 'xs', 'sm', 'md') */
+  gap?: string;
+  /** Group name for grouping native radios */
+  name?: string;
+}
+
+const {
+  orientation = "vertical",
+  gap = "sm",
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "radio-group-component",
+  `radio-group-component--${orientation}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const customGapStyle = gap ? `--radio-group-gap: var(--sp-${gap});` : "";
+const finalStyles = mergeStyles(customGapStyle, Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} role="radiogroup" data-name={name} {...rest}>
+  <slot />
+</div>
+
+<script>
+  const setupRadioGroups = () => {
+    document.querySelectorAll(".radio-group-component").forEach((group) => {
+      const name = group.getAttribute("data-name");
+      if (!name) return;
+
+      const nativeInputs = group.querySelectorAll(".radio-component__native") as NodeListOf<HTMLInputElement>;
+      nativeInputs.forEach((input) => {
+        input.setAttribute("name", name);
+      });
+    });
+  };
+
+  setupRadioGroups();
+  document.addEventListener("astro:page-load", setupRadioGroups);
+</script>

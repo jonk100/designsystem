@@ -37,18 +37,31 @@
   --fs--7xl: var(--fs-6xl);
   /* - - - - - - - - - - - - - - - - - - - - - - */
   /* Line Height - - - - - - - - - - - - - - - - */
-  --lh--2xs: 1.6;
-  --lh--xs: 1.6;
-  --lh--sm: 1.55;
-  --lh--md: 1.5;
-  --lh--base: 1.5;
-  --lh--lg: 1.45;
-  --lh--xl: 1.4;
-  --lh--2xl: 1.35;
-  --lh--3xl: 1.3;
-  --lh--4xl: 1.25;
-  --lh--5xl: 1.2;
-  --lh--6xl: 1.15;
+  --lh-2xs: 1.6;
+  --lh-xs: 1.6;
+  --lh-sm: 1.55;
+  --lh-md: 1.5;
+  --lh-base: 1.5;
+  --lh-lg: 1.45;
+  --lh-xl: 1.4;
+  --lh-2xl: 1.35;
+  --lh-3xl: 1.3;
+  --lh-4xl: 1.25;
+  --lh-5xl: 1.2;
+  --lh-6xl: 1.15;
+  /* - - - - - - - - - - - - - - - - - - - - - - */
+  /* Letter Spacing - - - - - - - - - - - - - -  */
+  --ls-2xs: .03em;
+  --ls-xs: .02em;
+  --ls-sm: .01em;
+  --ls-md: 0em;
+  --ls-lg: -.0025em;
+  --ls-xl: -.005em;
+  --ls-2xl: -.01em;
+  --ls-3xl: -.015em;
+  --ls-4xl: -.02em;
+  --ls-5xl: -.025em;
+  --ls-6xl: -.03em;
   /* Border Radius - - - - - - - - - - - - - - - */
   --radius--none: 0px;
   --radius--xs: 2px;
