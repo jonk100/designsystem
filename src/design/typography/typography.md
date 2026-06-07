@@ -13,14 +13,14 @@ This document serves as a guide for developers and designers working with text e
 
 | Component | Type | Shared Props | Solo Props |
 |---|---|---|---|
-| **Text** | Primitive | `size`, `tone`, `weight`, `bold`, `italic`,... | `as`, `align`, `valign`, `transform`, `leading`, `tracking`, `truncate`, `clamp` |
-| **Caption** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `as`, `align` |
-| **Label** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `required`, `disabled`, `for` |
-| **Code** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `block`, `language` |
-| **Link** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `href`, `external`, `target`, `rel` |
-| **Kbd** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | (none) |
+| **Text** | Primitive | `TypographyProps` | `as`, `xa`, `ya`, `transform`, `truncate`, `clamp` |
+| **Caption** | Role-based | `TypographyProps` | `as`, `xa` |
+| **Label** | Role-based | `TypographyProps` | `required`, `disabled`, `for` |
+| **Code** | Role-based | `TypographyProps` | `block`, `language` |
+| **Link** | Role-based | `TypographyProps` | `href`, `external`, `target`, `rel` |
+| **Kbd** | Role-based | `TypographyProps` | (none) |
 
-*(Note: "Shared Props" includes `bold`, `italic`, `underline`, and `strikethrough` across all components.)*
+*(Note: `TypographyProps` includes `fs`, `fw`, `tone`, `lh`, `ls`, `ws`, `ff`, `bold`, `italic`, `underline`, `strikethrough`, `uppercase`, `lowercase` across all components.)*
 
 ---
 

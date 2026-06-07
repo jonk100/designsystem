@@ -21,12 +21,12 @@ import Text from '@/design/typography/text/Text.astro';
 <Text>Hello World</Text>
 
 <!-- With size and tone -->
-<Text size="lg" tone="primary">
+<Text fs="lg" tone="primary">
   Important message
 </Text>
 
 <!-- As a paragraph -->
-<Text as="p" size="md" tone="muted">
+<Text as="p" fs="md" tone="muted">
   This is a paragraph with muted text.
 </Text>
 ```
@@ -40,51 +40,51 @@ import Text from '@/design/typography/text/Text.astro';
 
 ### Typography
 
-- `size` - Font size
+- `fs` - Font size
   - Numeric: `'0'` to `'11'`
-  - Named: `'xxs'`, `'xs'`, `'sm'`, `'md'`, `'base'`, `'lg'`, `'xl'`, `'2xl'`, `'3xl'`, `'4xl'`, `'5xl'`, `'6xl'`
+  - Named: `'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`, `'3xl'`, `'4xl'`, `'5xl'`, `'6xl'`
 
 - `tone` - Text color
   - Numeric: `'0'` to `'5'`
-  - Semantic: `'primary'`, `'secondary'`, `'accent'`, `'danger'`, `'success'`
+  - Semantic: `'primary'`, `'secondary'`, `'accent'`, `'danger'`, `'warning'`, `'success'`, `'info'`
   - Neutral: `'default'`, `'muted'`, `'subtle'`, `'white'`, `'black'`
   - Special: `'currentColor'`, `'inherit'`
 
-- `weight` - Font weight
+- `fw` - Font weight
   - Options: `'thin'`, `'extralight'`, `'light'`, `'normal'`, `'medium'`, `'semibold'`, `'bold'`, `'extrabold'`, `'black'`
 
 ### Alignment
 
-- `align` - Horizontal text alignment
+- `xa` - Horizontal text alignment (X-Align)
   - Options: `'left'`, `'center'`, `'right'`, `'justify'`, `'start'`, `'end'`
 
-- `valign` - Vertical text alignment
+- `ya` - Vertical text alignment (Y-Align)
   - Options: `'super'`, `'top'`, `'text-top'`, `'baseline'`, `'middle'`, `'bottom'`, `'text-bottom'`, `'sub'`
 
 ### Styling
 
 - `italic` - Italic text (boolean)
 - `underline` - Underlined text (boolean)
-- `lineThrough` - Strike-through text (boolean)
+- `strikethrough` - Strike-through text (boolean)
 
 ### Text Transform
 
 - `uppercase` - Transform to uppercase (boolean)
 - `lowercase` - Transform to lowercase (boolean)
-- `capitalize` - Capitalize first letter (boolean)
 
-### Text Overflow
+### Text Overflow & Wrapping
 
 - `truncate` - Truncate with ellipsis (boolean)
-- `lineClamp` - Limit to specific number of lines (number: 1-6)
-- `nowrap` - Prevent text wrapping (boolean)
+- `clamp` - Limit to specific number of lines (number)
+- `wrap` - Allow word breaking/wrapping (boolean)
+- `ws` - White space handling (`'normal'`, `'nowrap'`, `'pre'`, `'pre-line'`, `'pre-wrap'`, `'break-spaces'`)
 
 ### Spacing
 
-- `tracking` - Letter spacing
+- `ls` - Letter spacing (tracking)
   - Options: `'tighter'`, `'tight'`, `'normal'`, `'wide'`, `'wider'`, `'widest'`
 
-- `leading` - Line height
+- `lh` - Line height (leading)
   - Options: `'none'`, `'tight'`, `'snug'`, `'normal'`, `'relaxed'`, `'loose'`
 
 ## Examples
@@ -92,11 +92,11 @@ import Text from '@/design/typography/text/Text.astro';
 ### Headings
 
 ```astro
-<Text as="h1" size="6xl" weight="bold" tone="primary">
+<Text as="h1" fs="6xl" fw="bold" tone="primary">
   Main Heading
 </Text>
 
-<Text as="h2" size="4xl" weight="semibold" tone="secondary">
+<Text as="h2" fs="4xl" fw="semibold" tone="secondary">
   Subheading
 </Text>
 ```
@@ -104,11 +104,11 @@ import Text from '@/design/typography/text/Text.astro';
 ### Body Text
 
 ```astro
-<Text as="p" size="md" leading="relaxed">
+<Text as="p" fs="md" lh="relaxed">
   This is a paragraph with relaxed line height for better readability.
 </Text>
 
-<Text as="p" size="sm" tone="muted">
+<Text as="p" fs="sm" tone="muted">
   Secondary information in smaller, muted text.
 </Text>
 ```
@@ -116,9 +116,9 @@ import Text from '@/design/typography/text/Text.astro';
 ### Inline Text
 
 ```astro
-<Text as="span" weight="bold">Bold text</Text>
+<Text as="span" bold>Bold text</Text>
 <Text as="em" italic>Italic text</Text>
-<Text as="strong" weight="bold" tone="danger">Important warning</Text>
+<Text as="strong" bold tone="danger">Important warning</Text>
 ```
 
 ### Text Utilities
@@ -130,28 +130,27 @@ import Text from '@/design/typography/text/Text.astro';
 </Text>
 
 <!-- Line clamping -->
-<Text as="p" lineClamp={3}>
+<Text as="p" clamp={3}>
   This text will be limited to 3 lines and then truncated with an ellipsis.
   Any additional content beyond three lines will be hidden.
 </Text>
 
 <!-- Text transforms -->
 <Text uppercase>uppercase text</Text>
-<Text capitalize>capitalize first letter</Text>
 ```
 
 ### Alignment
 
 ```astro
-<Text as="p" align="center" size="lg">
+<Text as="p" xa="center" fs="lg">
   Centered text
 </Text>
 
-<Text as="p" align="right" tone="muted">
+<Text as="p" xa="right" tone="muted">
   Right-aligned text
 </Text>
 
-<Text as="p" align="justify">
+<Text as="p" xa="justify">
   Justified text that will stretch to fill the full width of its container.
 </Text>
 ```
@@ -161,12 +160,12 @@ import Text from '@/design/typography/text/Text.astro';
 ```astro
 <Text
   as="p"
-  size="lg"
-  weight="semibold"
+  fs="lg"
+  fw="semibold"
   tone="primary"
-  align="center"
-  leading="relaxed"
-  tracking="wide"
+  xa="center"
+  lh="relaxed"
+  ls="wide"
 >
   Fully styled text with multiple properties
 </Text>
@@ -175,7 +174,7 @@ import Text from '@/design/typography/text/Text.astro';
 ### With Custom Classes
 
 ```astro
-<Text class="custom-class" size="md" tone="primary">
+<Text class="custom-class" fs="md" tone="primary">
   Text with custom classes
 </Text>
 ```
@@ -184,17 +183,17 @@ import Text from '@/design/typography/text/Text.astro';
 
 ```astro
 <!-- Labels -->
-<Text as="label" size="sm" weight="medium">
+<Text as="label" fs="sm" fw="medium">
   Form Label
 </Text>
 
 <!-- Code -->
-<Text as="code" size="sm" tone="accent">
+<Text as="code" fs="sm" tone="accent">
   const value = 42;
 </Text>
 
 <!-- Keyboard shortcuts -->
-<Text as="kbd" size="xs">
+<Text as="kbd" fs="2xs">
   Ctrl+C
 </Text>
 
@@ -204,7 +203,7 @@ import Text from '@/design/typography/text/Text.astro';
 </Text>
 
 <!-- Deleted/Inserted -->
-<Text as="del" lineThrough>
+<Text as="del" strikethrough>
   Old text
 </Text>
 <Text as="ins" underline>
@@ -225,7 +224,7 @@ The Text component supports all standard HTML attributes, including ARIA attribu
   as="p"
   role="status"
   aria-live="polite"
-  size="md"
+  fs="md"
   tone="success"
 >
   Operation completed successfully
@@ -234,18 +233,15 @@ The Text component supports all standard HTML attributes, including ARIA attribu
 
 ## CSS Custom Properties
 
-The component uses CSS custom properties for colors, allowing easy theming:
+The component uses local CSS custom properties for styling. These are set dynamically based on the component's props, providing high performance and PurgeCSS safety.
 
 ```css
-:root {
-  --color-primary: hsl(220 90% 56%);
-  --color-secondary: hsl(280 70% 60%);
-  --color-accent: hsl(340 80% 58%);
-  --color-danger: hsl(0 84% 60%);
-  --color-success: hsl(142 76% 36%);
-  --color-text-default: currentColor;
-  --color-text-muted: hsl(0 0% 50%);
-  --color-text-subtle: hsl(0 0% 70%);
+.text-component {
+  font-size: var(--local-fs, inherit);
+  font-weight: var(--local-fw, inherit);
+  line-height: var(--local-lh, inherit);
+  letter-spacing: var(--local-ls, inherit);
+  color: var(--local-color, inherit);
 }
 ```
 
@@ -256,12 +252,13 @@ The component is fully typed with TypeScript, providing autocomplete and type ch
 ```astro
 ---
 import Text from '@/design/typography/text/Text.astro';
-import type { FontSize, TextTone } from '@/design/typography/typography.types';
+import type { FontSize, TextTone } from '@/design/shared/types';
 
 const size: FontSize = 'lg';
 const tone: TextTone = 'primary';
 ---
 
-<Text {size} {tone}>
+<Text fs={size} tone={tone}>
   Type-safe text
 </Text>
+```

@@ -19,7 +19,6 @@ export interface Props
   extends
     BaseComponentProps,
     Omit<HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   gap?: SpacingScale;
   /** Horizontal alignment (maps to justify-content in row flex) */
   x?: LayoutAlign;

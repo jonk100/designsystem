@@ -21,6 +21,9 @@ export interface Props extends BaseComponentProps, Omit<import("astro/types").HT
 const {
   orientation = "horizontal",
   decorative = true,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
@@ -34,8 +37,8 @@ const finalStyles = mergeStyles("", Astro.props);
 
 // Accessibility attributes
 const attrs = decorative
-  ? { role: "none" }
-  : { role: "separator", "aria-orientation": orientation };
+  ? { role: "none" as const }
+  : { role: "separator" as const, "aria-orientation": orientation };
 ---
 
 <hr class:list={finalClasses} style={finalStyles} {...attrs} {...rest} />

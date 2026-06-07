@@ -20,22 +20,49 @@ Every `.astro` component must include a standardized JSDoc block immediately fol
 *Note: Only explain complex props. Do not explain standard props like `class`, `href`, or `id`.*
 
 ## 2. Directory Hierarchy
-```
-design - shared.vars.css, shared.tokens.css,  component directories, animations directory, shared directory
-|------- animation/
-|        |-----motion.vars.css - variables that attach to a value. eg. --speed-1: 200ms;
-|        |-----animate.css     - semantic references to varibles. eg. --fastest: var(--speed-1);
-|        |-----motion.types.ts - types specific to the animation system, e.g. AnimationName
-|        |_____motion.ts       - functions for use in fetching, sorting, or manipulating values or types within the animations directory
-|         
-|--[Component]/Component.astro - the astro component, pulls shared styles from its parent and grandparent directories
-|--------------vars.css          - variables unique to this component and attached to a raw value
-|--------------tokens.css        - semantic tokens with references to vars.css 
-|--------------Component.types.ts - types specific to this component 
-|--------------Component.ts      - functions for use in fetching, sorting, or manipulating values or types within the component
+```txt
+src/design/category/
+├── vars.css                   # Global primitive values
+├── tokens.css                 # Semantic design tokens
+├── category.css               # Category-level utility classes
+├── category.maps.ts           # Category-level generator maps
+└── component-name/
+    ├── ComponentName.astro    # Required
+    ├── ComponentName.css      # Required
+    ├── ComponentName.svg      # Required
+    ├── ComponentName.types.ts # Optional — component-specific types
+    ├── ComponentName.consts.ts# Optional — component-specific constants
+    ├── ComponentName.maps.ts  # Optional — component-specific maps
+    ├── ComponentName.functions.ts # Optional — component-specific functions
+    ├── ComponentName.props.ts # Optional — component Props interface
+    ├── index.ts               # Optional — barrel file
+    ├── vars.css               # Optional — only if category-level vars.css grows too large
+    └── tokens.css             # Optional — only if category-level tokens.css grows too large
 ```
 
-## 3. Component Spacing Responsibilities
+Additional relevant files:
+- `../../shared/functions.ts` - Global shared utilities (e.g. mergeClasses, mergeStyles)
+- `../../shared/types.ts` - Global types and interfaces
+- `../{category}.types.ts` - Category-level types and interfaces
+- `../{category}.maps.ts` - Category-level mapping functions (e.g. generator maps)
+
+### 2. Destructure Global Props Before Rest Spreads
+When extracting component props using `Astro.props`, **ALWAYS** explicitly destructure global props (`class`, `class:list`, and `style`) before rest-spreading `...rest`. This prevents Astro's `<Tag {...rest}>` spread from silently overwriting your component's explicitly computed `class:list` or `style` attributes.
+**Example:**
+```astro
+const {
+  as: Tag = 'div',
+  variant,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+```
+
+### 3. Category-Level Mappings (`*.maps.ts`)
+
+## 4. Component Spacing Responsibilities
 
 **Spacing responsibility follows a clean boundary:**
 
@@ -501,3 +528,5 @@ Default browser underlines cut through descenders on most fonts. Fix it once.
 ```
 
 The `Link` component inherits this automatically.
+
+##

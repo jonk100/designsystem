@@ -66,7 +66,7 @@ const classes = [
 ];
 
 // Generate a unique ID for this instance to scope the child delays
-const uniqueId = Math.random().toString(36).substr(2, 9);
+const uniqueId = Math.random().toString(36).slice(2, 11);
 classes.push(`wave-instance-${uniqueId}`);
 
 // We do NOT pass `animate` to mergeClasses because we don't want the `.animate--` class on the container itself!

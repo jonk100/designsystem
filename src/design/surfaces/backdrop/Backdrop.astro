@@ -12,13 +12,15 @@ import type { SurfaceComponentProps } from "../surfaces.types";
 import './Backdrop.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
   interactive?: boolean;
 }
 
 const {
   as: Tag = 'div',
   interactive = true,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

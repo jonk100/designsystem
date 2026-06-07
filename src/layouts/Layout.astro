@@ -18,9 +18,8 @@ const siteTitle = "Design System";
 <!doctype html>
 <html lang="en">
   <head>
-    <Head />
+    <Head title={`${siteTitle} | ${pageTitle}`} description={description} />
     <slot name="head" />
-    <title>{siteTitle} | {pageTitle}</title>
   </head>
   <body class="noise-base">
     <header>

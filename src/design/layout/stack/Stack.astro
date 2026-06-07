@@ -15,7 +15,6 @@ import type { HTMLAttributes } from "astro/types";
 import './Stack.css';
 
 export interface Props extends BaseComponentProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
-  as?: string;
   gap?: SpacingScale;
   /** Horizontal alignment (maps to align-items in column flex) */
   x?: LayoutAlign;

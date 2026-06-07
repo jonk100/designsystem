@@ -1,7 +1,7 @@
 import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign } from '../shared/types';
 
 export const FONT_SIZES: FontSize[] = [
-  '0', 'xxs',
+  '0', '2xs',
   '1', 'xs',
   '2', 'sm',
   '3', 'md',

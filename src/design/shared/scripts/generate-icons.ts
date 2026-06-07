@@ -16,7 +16,7 @@ const OUTPUT_FILE = path.join(ICON_DIR, 'index.ts');
 
 const files = fs
   .readdirSync(ICON_DIR)
-  .filter(f => f.endsWith('.svg'))
+  .filter((f: string) => f.endsWith('.svg'))
   .sort();
 
 const imports: string[] = [];
@@ -34,7 +34,7 @@ for (const file of files) {
    */
   const importName = name
     .split('-')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
 
   const safeImportName = `Icon${importName}`;

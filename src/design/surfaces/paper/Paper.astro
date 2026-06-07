@@ -10,13 +10,10 @@
  * - padding: Internal space of the paper surface, handled by the component.
  */
 import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+import type { BaseComponentProps } from "../../shared/props";
 import './Paper.css';
 
-export interface Props extends AnimationProps {
-  as?: string;
-  class?: string;
-  style?: string;
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   elevation?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
 }

@@ -7,48 +7,21 @@
  * @props (local): as, size, tone, align, weight, bold, italic, underline, strikethrough
  * @props (global): class, class:list, animate, onScroll
  */
-import type { FontSize, TextTone, XAlign, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
-import type { CaptionElement } from '../types';
-import type { FontWeight, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
 import type { HTMLAttributes } from 'astro/types';
 import type { BaseComponentProps } from '../../shared/props';
+import type { TypographyProps } from '../types';
+import type { CaptionElement } from '../types';
 import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import { STYLE_VAR_MAP, X_ALIGN_CLASS_MAP } from '../../shared/maps';
 import '../typography.css';
 import './Caption.css';
 
-interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'figcaption'>, keyof BaseComponentProps> {
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'figcaption'>, keyof BaseComponentProps | keyof TypographyProps> {
   /**
    * The HTML element to render
    * @default 'figcaption'
    */
   as?: CaptionElement;
-  
-  /**
-   * Font size of the caption
-   */
-  fs?: FontSize;
-  ws?: WhiteSpace;
-  ff?: FontFamily;
-  wrap?: boolean;
-  
-  /**
-   * Color tone of the text
-   */
-  tone?: TextTone;
-  
-  /**
-   * Horizontal text alignment
-   */
-  xa?: XAlign;
-  
-  /**
-   * Font weight
-   */
-  fw?: string;
-  
-  /**
-   * Standard boolean typography styles
-   */
 }
 
 const {
@@ -67,27 +40,32 @@ const {
   ff,
   wrap = false,
   class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
-  'caption',
-  fs && `caption--size-${fs}`,
-  tone && `caption--tone-${tone}`,
-  xa && `caption--align-${xa}`,
-  fw && `caption--weight-${fw}`,
+  'caption-component',
+  xa && X_ALIGN_CLASS_MAP[xa],
   ws && `whitespace-${ws}`,
   ff && `font-${ff}`,
   wrap && "break-words",
-  className,
 ];
 
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
 
-
-const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
 
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
 ---
 
 <Element class:list={finalClasses} style={finalStyles} {...rest}>

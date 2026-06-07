@@ -15,7 +15,7 @@ description: Audit components for workspace compatibility and alignment with the
   For .astro files:
   - If the file has a jsdoc comment, check it for consistency with the template defined in `AGENTS.md` (Section 4). Ensure the description is NOT a placeholder (like "Component description.") but rather briefly defines the purpose of the component and how it is generally used. Correct any issues.
   - If not, write a jsdoc comment following the template in `AGENTS.md` (Section 4), including a clear, meaningful purpose and usage description.
-  - Ensure that the component strictly follows all established architectural patterns as defined in `AGENTS.md` (Section 5: Utilizing Established Patterns). This includes using `mergeClasses`, utilizing boolean styling props, extracting inline unions to shared types, and using frontmatter CSS imports.
+  - Ensure that the component strictly follows all established architectural patterns as defined in `AGENTS.md` (Section 5: Utilizing Established Patterns). This includes using `mergeClasses`, passing a string to `mergeStyles`, utilizing `combineFontStyleProps` for boolean styling props, extracting inline unions to shared types, and using frontmatter CSS imports.
 
 If at any point you require or could benefit from additional context, ask for more context before continuing.
 

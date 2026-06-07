@@ -61,7 +61,7 @@ export const getAnimationStyles = (animation: AnimationConfig | null): string =>
 /**
  * Animation descriptions for documentation
  */
-export const ANIMATION_DESCRIPTIONS: Record<AnimationName, string> = {
+export const ANIMATION_DESCRIPTIONS: Partial<Record<AnimationName, string>> = {
   sparkle: 'Scale and rotate with opacity change',
   pulse: 'Fade in and out',
   bounce: 'Bounce up and down',

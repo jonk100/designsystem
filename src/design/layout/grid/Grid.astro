@@ -14,7 +14,6 @@ import { mergeClasses, mergeStyles } from "../../shared/functions";
 import './Grid.css';
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   columns?: string | number;
   gap?: SpacingScale;
   minWidth?: string;

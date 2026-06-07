@@ -15,7 +15,6 @@ import { mergeClasses, mergeStyles } from "../../shared/functions";
 import "./Columns.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   /** Number of columns */
   count?: number | string;
   /** Gap spacing between columns */
@@ -32,6 +31,9 @@ const {
   gap = "lg",
   width,
   rule = false,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

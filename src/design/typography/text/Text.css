@@ -1,9 +1,13 @@
 /* Text Component Styles */
 
-.text {
+.text-component {
   display: inline;
   font-family: inherit;
-  color: inherit;
+  font-size: var(--local-fs, inherit);
+  font-weight: var(--local-fw, inherit);
+  line-height: var(--local-lh, inherit);
+  letter-spacing: var(--local-ls, inherit);
+  color: var(--local-color, inherit);
 }
 
 /* Font Sizes */
@@ -291,30 +295,37 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-clamp: attr(data-line-clamp);
 }
 
 .text--line-clamp-1 {
   -webkit-line-clamp: 1;
+  line-clamp: 1;
 }
 
 .text--line-clamp-2 {
   -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .text--line-clamp-3 {
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .text--line-clamp-4 {
   -webkit-line-clamp: 4;
+  line-clamp: 4;
 }
 
 .text--line-clamp-5 {
   -webkit-line-clamp: 5;
+  line-clamp: 5;
 }
 
 .text--line-clamp-6 {
   -webkit-line-clamp: 6;
+  line-clamp: 6;
 }
 
 /* Whitespace */

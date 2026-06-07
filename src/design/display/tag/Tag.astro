@@ -22,7 +22,6 @@ export interface Props extends BaseComponentProps, Omit<import("astro/types").HT
   /** Size token */
   size?: DisplaySize;
   /** HTML element to render */
-  as?: string;
 }
 
 const {
@@ -30,6 +29,9 @@ const {
   variant = "default",
   size = "md",
   as: Tag = "span",
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

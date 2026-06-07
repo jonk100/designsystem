@@ -13,7 +13,6 @@ import { mergeClasses, mergeStyles } from "../../shared/functions";
 import "./Center.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   /** Whether to use inline-flex container */
   inline?: boolean;
   /** Custom height constraint */

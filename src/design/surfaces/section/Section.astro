@@ -14,13 +14,15 @@ import '../surfaces.css';
 import './Section.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
 }
 
 const {
   as: Tag = 'section',
   layer,
   padding = 'xl',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

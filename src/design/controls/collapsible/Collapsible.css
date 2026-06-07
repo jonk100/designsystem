@@ -1,0 +1,38 @@
+.collapsible {
+  width: 100%;
+}
+
+.collapsible__summary {
+  cursor: pointer;
+  list-style: none; /* Hide default arrow in most browsers */
+  user-select: none;
+  /* padding moved to inner Paper component */
+}
+
+.collapsible__summary-paper {
+  display: block;
+  width: 100%;
+}
+
+.collapsible__summary-inner {
+  width: 100%;
+}
+
+.collapsible__summary::-webkit-details-marker {
+  display: none; /* Hide default arrow in Safari */
+}
+
+.collapsible__icon {
+  display: inline-flex;
+  transition: transform var(--td-normal, 0.2s) var(--te-out, ease-out);
+  flex-shrink: 0;
+}
+
+.collapsible[open] .collapsible__icon {
+  transform: rotate(180deg);
+}
+
+.collapsible__content {
+  padding-top: var(--collapsible-gap, var(--sp-xs, 0.25rem));
+  padding-bottom: var(--sp-md, 1rem);
+}

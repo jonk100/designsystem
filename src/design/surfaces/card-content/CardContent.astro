@@ -9,12 +9,11 @@
  */
 import { mergeClasses, mergeStyles } from "../../shared/functions";
 import type { SurfaceComponentProps } from "../surfaces.types";
-import { CARD_CONTENT_PADDING_CLASS_MAP } from "../surfaces.maps";
+import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
 import { BACKGROUND_TONE_CLASS_MAP } from "../../shared/maps";
 import './CardContent.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
 }
 
 const {
@@ -29,8 +28,8 @@ const {
 
 const classes = [
   'card-content-component',
-  padding && CARD_CONTENT_PADDING_CLASS_MAP[padding],
-  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+  padding && SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
 ];
 const finalClasses = mergeClasses(classes, Astro.props);
 const finalStyles = mergeStyles('', Astro.props);

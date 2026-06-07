@@ -5,6 +5,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Use mapped size token */
+  font-size: var(--local-size, var(--display-size-md));
   /* Enforce 1:1 aspect ratio using width/height mapped to font-size */
   width: 1em;
   height: 1em;

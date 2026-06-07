@@ -1,14 +1,27 @@
 ---
 import Text from "../design/typography/text/Text.astro";
+import Code from "../design/typography/code/Code.astro";
+import Link from "../design/typography/link/Link.astro";
+import Caption from "../design/typography/caption/Caption.astro";
+import Label from "../design/typography/label/Label.astro";
+import Kbd from "../design/typography/kbd/Kbd.astro";
 import Inline from "../design/layout/inline/Inline.astro";
 import Stack from "../design/layout/stack/Stack.astro";
 import Grid from "../design/layout/grid/Grid.astro";
 import Container from "../design/layout/container/Container.astro";
 import Center from "../design/layout/center/Center.astro";
-import Box from "../design/layout/box/Box.astro";
 import Spacer from "../design/layout/spacer/Spacer.astro";
 import Card from "../design/surfaces/card/Card.astro";
 import Paper from "../design/surfaces/paper/Paper.astro";
+import Collapsible from "../design/controls/collapsible/Collapsible.astro";
+import Badge from "../design/display/badge/Badge.astro";
+import Tag from "../design/display/tag/Tag.astro";
+import Avatar from "../design/display/avatar/Avatar.astro";
+import Icon from "../design/display/icon/Icon.astro";
+import Indicator from "../design/display/indicator/Indicator.astro";
+import Dot from "../design/display/dot/Dot.astro";
+import Chip from "../design/display/chip/Chip.astro";
+import Counter from "../design/display/counter/Counter.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -299,71 +312,172 @@ import Layout from "../layouts/Layout.astro";
 			</Stack>
 
 			<!-- ─── SECTION: Text ──────────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Text</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Typography primitive. Controls size, weight, tone, spacing, and
-					decoration.
-				</Text>
+			<Collapsible gap="xl">
+				<Stack as="span" gap="xs" slot="summary">
+					<Text as="span" fs="2xl" bold>Text</Text>
+					<Text as="span" fs="sm" tone="muted">
+						Typography primitive. Controls size, weight, tone, letter-spacing,
+						and decoration.
+					</Text>
+				</Stack>
 
-				<Card padding="lg">
-					<Stack gap="md">
-						<!-- Size scale -->
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>Size scale</Text>
-							<Inline gap="md" y="baseline">
-								<Text fs="xs">xs</Text>
-								<Text fs="sm">sm</Text>
-								<Text fs="md">md</Text>
-								<Text fs="lg">lg</Text>
-								<Text fs="xl">xl</Text>
-								<Text fs="2xl">2xl</Text>
-								<Text fs="3xl">3xl</Text>
+				<Stack gap="md">
+
+					<Card padding="lg">
+						<Stack gap="md">
+							<!-- Size scale -->
+							<Stack gap="xs">
+								<Text fs="sm" tone="muted" bold>Size scale</Text>
+								<Inline gap="md" y="baseline">
+									<Text fs="xs">xs</Text>
+									<Text fs="sm">sm</Text>
+									<Text fs="md">md</Text>
+									<Text fs="lg">lg</Text>
+									<Text fs="xl">xl</Text>
+									<Text fs="2xl">2xl</Text>
+									<Text fs="3xl">3xl</Text>
+								</Inline>
+							</Stack>
+
+							<!-- Tones -->
+							<Stack gap="xs">
+								<Text fs="sm" tone="muted" bold>Tones</Text>
+								<Inline gap="md">
+									<Text tone="default">default</Text>
+									<Text tone="muted">muted</Text>
+									<Text tone="subtle">subtle</Text>
+									<Text tone="primary">primary</Text>
+									<Text tone="secondary">secondary</Text>
+									<Text tone="accent">accent</Text>
+									<Text tone="success">success</Text>
+									<Text tone="danger">danger</Text>
+								</Inline>
+							</Stack>
+
+							<!-- Weight -->
+							<Stack gap="xs">
+								<Text fs="sm" tone="muted" bold>Weights</Text>
+								<Inline gap="md">
+									<Text fs="sm" fw="light">light</Text>
+									<Text fs="sm" fw="normal">normal</Text>
+									<Text fs="sm" fw="medium">medium</Text>
+									<Text fs="sm" fw="semibold">semibold</Text>
+									<Text fs="sm" bold>bold</Text>
+									<Text fs="sm" fw="extrabold">extrabold</Text>
+								</Inline>
+							</Stack>
+
+							<!-- Decorations -->
+							<Stack gap="xs">
+								<Text fs="sm" tone="muted" bold>Decorations</Text>
+								<Inline gap="md">
+									<Text italic>italic</Text>
+									<Text underline>underline</Text>
+									<Text strikethrough>strikethrough</Text>
+									<Text uppercase fs="sm">uppercase</Text>
+									<Text lowercase fs="sm">LOWERCASE</Text>
+								</Inline>
+							</Stack>
+						</Stack>
+					</Card>
+				</Stack>
+			</Collapsible>
+
+			<!-- ─── SECTION: Typography Components ────────────────── -->
+			<Collapsible gap="xl">
+				<Stack as="span" gap="xs" slot="summary">
+					<Text as="span" fs="2xl" bold>Typography Components</Text>
+					<Text as="span" fs="sm" tone="muted">
+						Role-based text wrappers built on the Typography primitive (Code, Link, Caption, Label, Kbd).
+					</Text>
+				</Stack>
+
+				<Stack gap="md">
+					<Grid columns={2} gap="lg">
+						<Card padding="lg">
+							<Stack gap="sm">
+								<Text fs="sm" tone="muted" bold>Caption</Text>
+								<Caption fs="sm" tone="subtle" xa="center">
+									This is a caption, often used below media or figures.
+								</Caption>
+							</Stack>
+						</Card>
+
+						<Card padding="lg">
+							<Stack gap="sm">
+								<Text fs="sm" tone="muted" bold>Label</Text>
+								<Label for="example" required fs="sm" fw="medium">Email Address</Label>
+								<Label for="example-disabled" disabled fs="sm" fw="medium">Password</Label>
+							</Stack>
+						</Card>
+
+						<Card padding="lg">
+							<Stack gap="sm">
+								<Text fs="sm" tone="muted" bold>Code & Kbd</Text>
+								<Inline gap="sm" y="center">
+									<Code fs="sm">npm install</Code>
+									<Text fs="sm" tone="muted">or press</Text>
+									<Inline gap="2xs" y="center">
+										<Kbd>Ctrl</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>C</Kbd>
+									</Inline>
+								</Inline>
+							</Stack>
+						</Card>
+
+						<Card padding="lg">
+							<Stack gap="sm">
+								<Text fs="sm" tone="muted" bold>Link</Text>
+								<Inline gap="md" wrap>
+									<Link href="#">Internal Link</Link>
+									<Link href="https://example.com" external>External Link</Link>
+								</Inline>
+							</Stack>
+						</Card>
+					</Grid>
+				</Stack>
+			</Collapsible>
+
+			<!-- ─── SECTION: Display ─────────────────────────── -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Display</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Visual elements for communicating status, counts, and metadata.
+					</Text>
+				</Stack>
+
+				<Stack gap="md">
+					<Card padding="lg">
+						<Stack gap="md">
+							<Text fs="sm" tone="muted" bold>Badge & Tag</Text>
+							<Inline gap="sm" y="center">
+								<Badge variant="primary">New Feature</Badge>
+								<Badge variant="success">Active</Badge>
+								<Badge variant="danger">Error</Badge>
+								<Tag size="sm">v2.4.0</Tag>
+								<Tag variant="warning" size="md">Beta</Tag>
 							</Inline>
 						</Stack>
+					</Card>
 
-						<!-- Tones -->
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>Tones</Text>
-							<Inline gap="md">
-								<Text tone="default">default</Text>
-								<Text tone="muted">muted</Text>
-								<Text tone="subtle">subtle</Text>
-								<Text tone="primary">primary</Text>
-								<Text tone="secondary">secondary</Text>
-								<Text tone="accent">accent</Text>
-								<Text tone="success">success</Text>
-								<Text tone="danger">danger</Text>
+					<Card padding="lg">
+						<Stack gap="md">
+							<Text fs="sm" tone="muted" bold>Avatar, Counter, & Indicators</Text>
+							<Inline gap="md" y="center">
+								<Avatar size="lg" src="https://i.pravatar.cc/150?u=1" alt="User 1" />
+								<Avatar size="md" src="https://i.pravatar.cc/150?u=2" alt="User 2" />
+								<Inline gap="xs" y="center">
+									<Dot variant="success" />
+									<Text fs="sm" tone="muted">Online</Text>
+								</Inline>
+								<Counter variant="primary">42</Counter>
+								<Counter variant="danger">99+</Counter>
+								<Chip>Clickable Chip</Chip>
 							</Inline>
 						</Stack>
-
-						<!-- Weight -->
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>Weights</Text>
-							<Inline gap="md">
-								<Text fs="sm" fw="light">light</Text>
-								<Text fs="sm" fw="normal">normal</Text>
-								<Text fs="sm" fw="medium">medium</Text>
-								<Text fs="sm" fw="semibold">semibold</Text>
-								<Text fs="sm" bold>bold</Text>
-								<Text fs="sm" fw="extrabold">extrabold</Text>
-							</Inline>
-						</Stack>
-
-						<!-- Decorations -->
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>Decorations</Text>
-							<Inline gap="md">
-								<Text italic>italic</Text>
-								<Text underline>underline</Text>
-								<Text strikethrough>strikethrough</Text>
-								<Text uppercase fs="sm">uppercase</Text>
-								<Text lowercase fs="sm">LOWERCASE</Text>
-							</Inline>
-						</Stack>
-					</Stack>
-				</Card>
-			</Stack>
+					</Card>
+				</Stack>
+			</Collapsible>
 
 			<!-- ─── SECTION: Composition ───────────────────────── -->
 			<Stack gap="md">

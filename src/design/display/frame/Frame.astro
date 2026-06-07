@@ -1,11 +1,8 @@
 ---
 import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+import type { BaseComponentProps } from "../../shared/props";
 
-export interface Props extends AnimationProps {
-  as?: string;
-  class?: string;
-  style?: string;
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   ratio?: '1:1' | '4:3' | '16:9' | 'auto';
   border?: 'none' | 'thin' | 'thick';
 }
@@ -14,6 +11,9 @@ const {
   as: Tag = 'div',
   ratio = 'auto',
   border = 'none',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

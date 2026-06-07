@@ -14,7 +14,6 @@ import { mergeClasses, mergeStyles } from "../../shared/functions";
 import "./ScrollArea.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   /** Horizontal overflow behavior */
   x?: ScrollAreaOverflow;
   /** Vertical overflow behavior */
@@ -28,6 +27,9 @@ const {
   x = "auto",
   y = "auto",
   scrollbar = "thin",
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

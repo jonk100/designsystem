@@ -35,6 +35,9 @@ const {
   dismissible = false,
   active = false,
   as: Tag = "button",
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
@@ -58,7 +61,7 @@ const ariaLabel = dismissible ? (Astro.props['aria-label'] || "Remove") : Astro.
 <Tag 
   class:list={finalClasses} 
   style={finalStyles} 
-  type={Tag === 'button' ? "button" : undefined}
+  type={Tag === 'button' ? "button" : (undefined as any)}
   aria-pressed={Tag === 'button' && active ? "true" : undefined}
   {...rest}
 >

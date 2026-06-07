@@ -14,7 +14,6 @@ import '../surfaces.css';
 import './Tile.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
 }
 
 const {
@@ -22,6 +21,9 @@ const {
   layer = 2,
   padding = 'default',
   bg,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

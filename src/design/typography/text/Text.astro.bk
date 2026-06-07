@@ -5,17 +5,29 @@
  * - Provides low-level control over various typography tokens.
  * - Dynamically changes its underlying HTML element based on the `as` prop.
  * - NEVER responsible for layout, margin, padding, etc. The space around Text belongs to its parent.
- * @props (local): truncate, clamp, wrap, as
- * @props (global): class, class:list, animate, onScroll, fs, tone, align, valign, weight, transform, leading, tracking, bold, italic, underline, strikethrough
+ * @props (local): fs, tone, align, valign, weight, transform, leading, tracking, truncate, clamp, as, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
  */
-import type { TextTag } from './Text.types';
-import type { BaseComponentProps } from "../../shared/props";
-import type { TypographyProps } from "../types";
+import { TextTags } from './';
+import type {
+    FontSize,
+    TextTone,
+    XAlign,
+    YAlign,
+    LineHeight,
+    LetterSpacing,
+    FontFamily,
+    WhiteSpace,
+    BlockType,
+    FontStyleProps,
+} from "../../shared/types";
 import {
+    getFontSizeClass,
+    TEXT_TONE_CLASS_MAP,
     X_ALIGN_CLASS_MAP,
     Y_ALIGN_CLASS_MAP,
-    STYLE_VAR_MAP,
 } from "../../shared/maps";
+import type { BaseComponentProps } from "../../shared/props";
 import {
     mergeClasses,
     mergeStyles,
@@ -28,12 +40,21 @@ import "./Text.css";
 export interface Props
     extends
         BaseComponentProps,
-        TypographyProps,
-        Omit<HTMLAttributes<"span">, keyof BaseComponentProps | keyof TypographyProps> {
+        FontStyleProps,
+        Omit<HTMLAttributes<"span">, keyof BaseComponentProps> {
+    fs?: FontSize;
+    tone?: TextTone;
+    xa?: XAlign;
+    ya?: YAlign;
+    fw?: string; // e.g. "bold", "500"
+    lh?: LineHeight;
+    ls?: LetterSpacing;
+    ws?: WhiteSpace;
+    ff?: FontFamily;
     wrap?: boolean;
     truncate?: boolean;
     clamp?: number;
-    as?: TextTag;
+    as?: BlockType;
 }
 
 const {
@@ -65,31 +86,33 @@ const {
 // Define component-specific classes and styles
 const classes = [
     "text-component",
-    xa && X_ALIGN_CLASS_MAP[xa],
-    ya && Y_ALIGN_CLASS_MAP[ya],
+    fs && getFontSizeClass(fs as FontSize),
+    tone && TEXT_TONE_CLASS_MAP[tone as TextTone],
+    xa && X_ALIGN_CLASS_MAP[xa as XAlign],
+    ya && Y_ALIGN_CLASS_MAP[ya as YAlign],
+    fw && `font-${fw}`,
+    lh && `leading-${lh}`,
+    ls && `tracking-${ls}`,
     ws && `whitespace-${ws}`,
     ff && `font-${ff}`,
     wrap && "break-words",
     truncate && "truncate",
     clamp !== undefined && `line-clamp-${clamp}`,
+    className,
 ];
 
-const typographyVars = [
-    fs && STYLE_VAR_MAP.fontSize(fs),
-    fw && STYLE_VAR_MAP.fontWeight(fw),
-    lh && STYLE_VAR_MAP.leading(lh),
-    ls && STYLE_VAR_MAP.tracking(ls),
-    tone && STYLE_VAR_MAP.tone(tone)
-].filter(Boolean).join(';');
-
-const styles = [
-    typographyVars,
-    combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
-];
+const styles = combineFontStyleProps({
+    bold,
+    italic,
+    underline,
+    strikethrough,
+    uppercase,
+    lowercase,
+});
 
 // Merge with animation and received props
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
 ---
 
 <Tag class:list={finalClasses} style={finalStyles} {...rest}>

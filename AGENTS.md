@@ -54,22 +54,27 @@ Components are nested, generally, in the following structure:
 
 ```txt
 src/design/category/
----------------------
-..component-name/
-  ├── ComponentName.astro     # Component implementation
-  ├── ComponentName.css       # Component-specific styles only
-  ├── *ComponentName.types.ts # Component-specific types and enums; should extend parent-directory objects whenever possible 
-  ├── *.ts                    # Mixed typescript file
-  ├── *.functions.ts          # functions and helpers
-  ├── *.maps.ts               # mapppings / enums
-  ├── *.consts.ts             # static data
-  └── component-name.svg      # Icon/asset (if applicable)
+├── vars.css                   # Global primitive values
+├── tokens.css                 # Semantic design tokens
+├── category.css               # Category-level utility classes
+├── category.maps.ts           # Category-level generator maps
+└── component-name/
+    ├── ComponentName.astro    # Required
+    ├── ComponentName.css      # Required
+    ├── ComponentName.svg      # Required
+    ├── ComponentName.types.ts # Optional — component-specific types
+    ├── ComponentName.consts.ts# Optional — component-specific constants
+    ├── ComponentName.maps.ts  # Optional — component-specific maps
+    ├── ComponentName.functions.ts # Optional — component-specific functions
+    ├── ComponentName.props.ts # Optional — component Props interface
+    └── index.ts               # Optional — barrel file
 ```
 
 Additional relevant files:
-- `../shared/*.functions.ts` - category-level reusable / helper functions (data fetching, preperation, etc. e.g. mergeClasses)
-- `../shared/*.maps.ts` - category-level mapping functions (e.g. semantic names to variables)
-- `../shared/*.types.ts` - category-level types and interfaces (e.g. SpacingScale)
+- `../../shared/functions.ts` - Global shared utilities (e.g. mergeClasses, mergeStyles, combineFontStyleProps)
+- `../../shared/types.ts` - Global types and interfaces
+- `../{category}.types.ts` - Category-level types and interfaces
+- `../{category}.maps.ts` - Category-level mapping functions (e.g. generator maps)
 
 ## 3. Token Organization
 
@@ -107,10 +112,11 @@ When creating or modifying components, strictly adhere to the following establis
 
 ### 1. The `mergeClasses` & `mergeStyles` Utility Pattern
 Instead of manually concatenating string templates for classes or styles, gather internal component rules into arrays. Filter out falsy values and pass them through `mergeClasses(classes, Astro.props)` and `mergeStyles(styles, Astro.props)`. This ensures user-provided `class`, `class:list`, and `style` props are seamlessly and safely applied.
+**Important:** `mergeStyles` expects a `string` as its first argument. Join any array of styles into a string before passing.
 **Example:**
 ```astro
 const classes = ['button', `button--size-${size}`];
-const styles = [bold && 'font-weight: bold'];
+const styles = [bold && 'font-weight: bold'].filter(Boolean).join(';');
 const finalClasses = mergeClasses(classes, Astro.props);
 const finalStyles = mergeStyles(styles, Astro.props);
 ```
@@ -146,7 +152,7 @@ import './Component.css';
 ```
 
 ### 7. Boolean Props for Styling
-Instead of inline union types for text styling (e.g., `style?: "normal" | "italic"` or `decoration?: "none" | "underline"`), implement a standard series of boolean props (`bold?: boolean`, `italic?: boolean`, `underline?: boolean`, `strikethrough?: boolean`) and apply them directly to the inline `styles` array via `mergeStyles`.
+Instead of inline union types for text styling (e.g., `style?: "normal" | "italic"` or `decoration?: "none" | "underline"`), implement a standard series of boolean props (`bold?: boolean`, `italic?: boolean`, `underline?: boolean`, `strikethrough?: boolean`, `uppercase?: boolean`, `lowercase?: boolean`) and convert them into a CSS string using the `combineFontStyleProps` utility from shared functions, then include them in your styles string.
 
 ### 8. Centralized Type Definitions
 Do not use inline union types for component properties (e.g., `weight?: "light" | "normal"...`). Extract them into shared or category-level type definitions and reference them. Global types (e.g., `FontWeight`) should go in `src/design/shared/types.ts`, and category-specific types (e.g., `LineHeight`) should go in `../category.types.ts`.

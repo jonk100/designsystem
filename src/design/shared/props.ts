@@ -50,7 +50,7 @@ export interface CommonHTMLProps {
 }
 
 export interface BaseComponentProps extends AnimationProps, CommonHTMLProps {
-  as?: string;
+  as?: import('astro/types').HTMLTag;
   effects?: DisplayEffect[];
   /** Background tone — maps to .bg-* utility classes (0-5 = layer tones, or semantic names) */
   bg?: BackgroundTone;

@@ -8,11 +8,12 @@
  * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
  */
 
-import type { DisplaySize, TextTone } from "../../shared/types";
 import type { BaseComponentProps } from "../../shared/props";
+import type { DisplaySize, TextTone } from "../../shared/types";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
+import { DISPLAY_VAR_MAP } from "../maps";
 import { icons, type SvgName } from "../../shared/icons/index";
-import "./Icon.css";
+import './Icon.css';
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"svg">, keyof BaseComponentProps> {
   /** The icon identifier */
@@ -27,6 +28,9 @@ const {
   name,
   size = "md",
   tone = "inherit",
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
@@ -35,12 +39,15 @@ const SvgComponent = icons[name];
 
 const classes = [
   "icon-component",
-  `display-size--${size}`,
   `text-tone--${tone}`
 ];
 
+const styles = [
+  size && DISPLAY_VAR_MAP.size(size)
+].filter(Boolean).join(';');
+
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles("", Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
 
 // If the icon name doesn't exist, we don't render anything (could throw an error, but fallback is safer for UI)
 ---

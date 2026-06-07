@@ -10,7 +10,6 @@ import type {
   SheetPosition,
   PopoverArrow,
   TooltipDelay,
-  ContextMenuTrigger,
   DropdownAlignment,
   CommandPaletteMode,
   OverlayLayer,

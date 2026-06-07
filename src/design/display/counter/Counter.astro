@@ -13,7 +13,6 @@ import { mergeClasses, mergeStyles } from "../../shared/functions";
 import './Counter.css';
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  as?: string;
   class?: string;
   style?: string;
   variant?: DisplayVariant;
@@ -24,6 +23,9 @@ const {
   as: Tag = 'div',
   variant = 'primary',
   size = 'md',
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

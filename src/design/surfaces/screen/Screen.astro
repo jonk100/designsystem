@@ -14,12 +14,14 @@ import '../surfaces.css';
 import './Screen.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
 }
 
 const {
   as: Tag = 'div',
   layer = 0,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 

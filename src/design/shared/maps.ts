@@ -136,10 +136,22 @@ export const GAP_MAP: Record<string, string> = {
  * getGapClass('md')   // → 'gap--md'
  * getGapClass('2xl')  // → 'gap--2xl'
  */
-export function getGapClass(gap: GapSize): string {
+export function getGapClass(gap: SpacingScale): string {
   const normalized =
     gap in GAP_MAP
       ? GAP_MAP[gap as keyof typeof GAP_MAP]
       : gap;
   return `gap--${normalized}`;
 }
+
+/**
+ * Generates local CSS variables for typographic and semantic props.
+ * This pattern replaces utility classes for properties that map to complex design tokens.
+ */
+export const STYLE_VAR_MAP = {
+  fontSize: (val: string) => `--local-fs: var(--fs-${FONT_SIZE_MAP[val] || val})`,
+  fontWeight: (val: string) => `--local-fw: var(--fw-${val})`,
+  leading: (val: string) => `--local-lh: var(--lh-${val})`,
+  tracking: (val: string) => `--local-ls: var(--ls-${val})`,
+  tone: (val: string) => `--local-color: var(--text-${val})`, // Adjust variable name if some use --fg-*
+};

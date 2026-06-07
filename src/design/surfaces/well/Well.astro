@@ -15,7 +15,6 @@ import '../surfaces.css';
 import './Well.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
 }
 
 const {
@@ -23,14 +22,17 @@ const {
   layer = 1,
   padding = 'md',
   bg,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
   'well-component',
   `surface-layer--${layer}`,
-  SURFACE_PADDING_CLASS_MAP[padding],
-  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+  SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
 ];
 const finalClasses = mergeClasses(classes, Astro.props);
 const finalStyles = mergeStyles('', Astro.props);

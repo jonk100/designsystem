@@ -8,16 +8,7 @@ export interface Props extends BaseComponentProps {
   [key: string]: any;
 }
 
-const standardProps = [
-  "as",
-  "class",
-  "class:list",
-  "style",
-  "id",
-  "display",
-  "duration",
-  "onScroll",
-];
+
 const props = Astro.props;
 
 const {
@@ -32,7 +23,7 @@ if (onScroll) {
   rest["data-on-scroll"] = "alternating";
 }
 
-const uniqueId = Math.random().toString(36).substr(2, 9);
+const uniqueId = Math.random().toString(36).slice(2, 11);
 const classes = [
   "alternating-component",
   display && `alternating-display--${display}`,

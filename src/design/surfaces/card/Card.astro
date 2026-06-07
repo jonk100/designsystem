@@ -14,12 +14,11 @@
 import type { SurfaceComponentProps } from "../surfaces.types";
 import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
 import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { AnimationProps } from "../../shared/props";
+
 import "../surfaces.css";
 import "./Card.css";
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
   class?: string;
   style?: string;
   align?: "left" | "center" | "right";

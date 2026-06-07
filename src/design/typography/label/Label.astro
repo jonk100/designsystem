@@ -7,37 +7,15 @@
  * @props (local): size, tone, weight, bold, italic, underline, strikethrough, required, disabled, for
  * @props (global): class, class:list, animate, onScroll
  */
-import type { FontSize, TextTone, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
-import type { FontWeight, FontFamily, WhiteSpace, FontStyleProps } from "../../shared/types";
 import type { HTMLAttributes } from 'astro/types';
 import type { BaseComponentProps } from '../../shared/props';
+import type { TypographyProps } from '../types';
 import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
+import { STYLE_VAR_MAP } from '../../shared/maps';
 import '../typography.css';
 import './Label.css';
 
-interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'label'>, keyof BaseComponentProps> {
-  /**
-   * Font size of the label
-   */
-  fs?: FontSize;
-  ws?: WhiteSpace;
-  ff?: FontFamily;
-  wrap?: boolean;
-  
-  /**
-   * Color tone of the text
-   */
-  tone?: TextTone;
-  
-  /**
-   * Font weight
-   */
-  fw?: string;
-  
-  /**
-   * Standard boolean typography styles
-   */
-  
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'label'>, keyof BaseComponentProps | keyof TypographyProps> {
   /**
    * Required field indicator
    */
@@ -71,28 +49,33 @@ const {
   disabled = false,
   for: htmlFor,
   class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
 const classes = [
-  'label',
-  fs && `label--size-${fs}`,
-  tone && `label--tone-${tone}`,
-  fw && `label--weight-${fw}`,
+  'label-component',
   required && 'label--required',
   disabled && 'label--disabled',
   ws && `whitespace-${ws}`,
   ff && `font-${ff}`,
   wrap && "break-words",
-  className,
 ];
 
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
 
-
-const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
 
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
 ---
 
 <label class:list={finalClasses} style={finalStyles} for={htmlFor} {...rest}>

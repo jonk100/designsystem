@@ -5,7 +5,6 @@ import type {
   FeedbackAnimation,
   FeedbackDuration,
   FeedbackSize,
-  FeedbackIconPosition,
   ProgressType,
   ProgressSize,
   SkeletonAnimation,

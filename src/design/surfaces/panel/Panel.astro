@@ -15,7 +15,6 @@ import '../surfaces.css';
 import './Panel.css';
 
 export interface Props extends SurfaceComponentProps {
-  as?: string;
   position?: 'left' | 'right' | 'top' | 'bottom' | 'none';
 }
 
@@ -25,6 +24,9 @@ const {
   position = 'none',
   padding = 'default',
   bg,
+  class: className,
+  'class:list': classList,
+  style,
   ...rest
 } = Astro.props;
 
