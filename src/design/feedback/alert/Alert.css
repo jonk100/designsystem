@@ -1,0 +1,86 @@
+/**
+ * src/design/feedback/alert/Alert.css
+ * Component-specific styles for Alert
+ */
+@import '../tokens.css';
+@import '../feedback.css';
+
+.alert-component {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Size modifications for paddings */
+.alert-component.feedback-sm {
+  padding: var(--alert-padding-sm);
+  gap: var(--sp-xs);
+}
+
+.alert-component.feedback-md {
+  padding: var(--alert-padding-md);
+  gap: var(--sp-sm);
+}
+
+.alert-component.feedback-lg {
+  padding: var(--alert-padding-lg);
+  gap: var(--sp-md);
+}
+
+/* Alert Layout Elements */
+.alert__icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px; /* slight visual offset for top alignment */
+}
+
+.alert__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xs, 4px);
+}
+
+.alert__title {
+  font-weight: 600;
+  line-height: var(--lh-sm, 1.4);
+}
+
+.alert__description {
+  font-weight: 400;
+  line-height: var(--lh-md, 1.5);
+  opacity: 0.9;
+}
+
+.alert__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs);
+  margin: -4px -4px 0 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: var(--rad-xs, 2px);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.alert__close-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dismissing state animation */
+.alert-component.is-dismissing {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}

@@ -1,0 +1,102 @@
+---
+/**
+ * src/design/feedback/alert-dialog/AlertDialogRegion.astro
+ * The container mount point and client-side manager for Alert Dialog confirmation dialogs.
+ * Renders a native <dialog> element and resolves prompt requests.
+ */
+import "./AlertDialog.css";
+---
+
+<dialog class="alert-dialog-modal">
+  <div class="alert-dialog__card">
+    <div class="alert-dialog__body">
+      <h4 class="alert-dialog__title"></h4>
+      <p class="alert-dialog__description"></p>
+    </div>
+    <div class="alert-dialog__actions">
+      <button type="button" class="btn btn--secondary alert-dialog__btn-cancel"></button>
+      <button type="button" class="btn btn--primary alert-dialog__btn-confirm"></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const setupAlertDialogListener = () => {
+    if ((window as any).__alert_dialog_listener_active) return;
+    (window as any).__alert_dialog_listener_active = true;
+
+    const dialog = document.querySelector(".alert-dialog-modal") as HTMLDialogElement;
+    if (!dialog) return;
+
+    const titleEl = dialog.querySelector(".alert-dialog__title") as HTMLElement;
+    const descEl = dialog.querySelector(".alert-dialog__description") as HTMLElement;
+    const cancelBtn = dialog.querySelector(".alert-dialog__btn-cancel") as HTMLButtonElement;
+    const confirmBtn = dialog.querySelector(".alert-dialog__btn-confirm") as HTMLButtonElement;
+
+    let currentId: string | null = null;
+
+    window.addEventListener("alert-dialog:show", (event: any) => {
+      const { id, title, description, confirmLabel, cancelLabel } = event.detail || {};
+      currentId = id;
+
+      if (titleEl) {
+        if (title) {
+          titleEl.style.display = "block";
+          titleEl.textContent = title;
+        } else {
+          titleEl.style.display = "none";
+        }
+      }
+
+      if (descEl) {
+        descEl.textContent = description || "";
+      }
+
+      if (cancelBtn) {
+        cancelBtn.textContent = cancelLabel || "Cancel";
+      }
+
+      if (confirmBtn) {
+        confirmBtn.textContent = confirmLabel || "Confirm";
+      }
+
+      dialog.showModal();
+    });
+
+    const handleResolve = (result: boolean) => {
+      if (!currentId) return;
+      dialog.close();
+      window.dispatchEvent(
+        new CustomEvent("alert-dialog:resolve", {
+          detail: { id: currentId, result },
+        })
+      );
+      currentId = null;
+    };
+
+    cancelBtn?.addEventListener("click", () => handleResolve(false));
+    confirmBtn?.addEventListener("click", () => handleResolve(true));
+
+    // Handle Escape key (which fires cancel event on native dialog)
+    dialog.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      handleResolve(false);
+    });
+
+    // Close on clicking backdrop (dialog direct border box boundary)
+    dialog.addEventListener("click", (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) {
+        handleResolve(false);
+      }
+    });
+  };
+
+  setupAlertDialogListener();
+</script>

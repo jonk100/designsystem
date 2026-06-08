@@ -1,0 +1,8 @@
+:root {
+  /* ─── FEEDBACK COLOR VARS ────────────────────────────── */
+  --color-feedback-info: #0ea5e9;
+  --color-feedback-success: #10b981;
+  --color-feedback-warning: #f59e0b;
+  --color-feedback-error: var(--color-danger, #e24b4a);
+  --color-feedback-neutral: var(--border--0, #64697d);
+}

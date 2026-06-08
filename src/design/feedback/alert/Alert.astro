@@ -1,0 +1,126 @@
+---
+/**
+ * src/design/feedback/alert/Alert.astro
+ * An inline messaging banner to communicate states to the user.
+ * - Supports five severity levels: info, success, warning, error, neutral.
+ * - Supports four variants: solid, outline, soft, subtle.
+ * - Can be dismissible, with custom exit animation.
+ * @props (local): severity, variant, size, title, dismissible
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+
+import type { FeedbackSeverity, FeedbackVariant, FeedbackSize } from "../feedback.types";
+import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SIZE_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP, FEEDBACK_SEVERITY_ARIA_ROLE_MAP } from "../feedback.maps";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Icon from "../../display/icon/Icon.astro";
+import type { SvgName } from "../../shared/icons/index";
+import Text from "../../typography/text/Text.astro";
+import Button from "../../controls/button/Button.astro";
+import "./Alert.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The severity tone of the alert */
+  severity?: FeedbackSeverity;
+  /** Visual variant style */
+  variant?: FeedbackVariant;
+  /** Size of the alert */
+  size?: FeedbackSize;
+  /** Optional header title for the alert */
+  title?: string;
+  /** Whether the alert can be closed by the user */
+  dismissible?: boolean;
+}
+
+const {
+  severity = "info",
+  variant = "soft",
+  size = "md",
+  title,
+  dismissible = true,
+  as: Tag = "div",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Get severity icon name
+const iconName = FEEDBACK_SEVERITY_ICON_MAP[severity] as SvgName;
+
+const classes = [
+  "alert-component",
+  FEEDBACK_SEVERITY_CLASS_MAP[severity],
+  FEEDBACK_VARIANT_CLASS_MAP[variant],
+  FEEDBACK_SIZE_CLASS_MAP[size],
+];
+
+const styles = "";
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  role={FEEDBACK_SEVERITY_ARIA_ROLE_MAP[severity] as any}
+  {...rest}
+>
+  <div class="alert__icon-container">
+    <slot name="icon">
+      <Icon name={iconName} size={size} />
+    </slot>
+  </div>
+  
+  <div class="alert__content">
+    {title && (
+      <Text as="div" class="alert__title" bold>{title}</Text>
+    )}
+    <Text as="div" class="alert__description">
+      <slot />
+    </Text>
+  </div>
+  
+  {dismissible && (
+    <Button
+      variant="ghost"
+      iconOnly
+      size={size === "lg" ? "md" : "sm"}
+      class="alert__close-btn"
+      aria-label="Close alert"
+    >
+      <Icon name="x" size={size} />
+    </Button>
+  )}
+</Tag>
+
+<script>
+  const setupAlertDismiss = () => {
+    document.querySelectorAll(".alert-component").forEach((alert) => {
+      const closeBtn = alert.querySelector(".alert__close-btn");
+      if (!closeBtn || closeBtn.getAttribute("data-has-listener")) return;
+      
+      closeBtn.setAttribute("data-has-listener", "true");
+      closeBtn.addEventListener("click", () => {
+        alert.classList.add("is-dismissing");
+        
+        // Wait for potential animations to finish before removing from DOM
+        const onAnimationEnd = () => {
+          alert.remove();
+        };
+        
+        alert.addEventListener("animationend", onAnimationEnd, { once: true });
+        
+        // Fallback safety if no animation is defined
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.remove();
+          }
+        }, 300);
+      });
+    });
+  };
+
+  setupAlertDismiss();
+  document.addEventListener("astro:page-load", setupAlertDismiss);
+</script>

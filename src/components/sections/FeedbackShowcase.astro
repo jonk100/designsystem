@@ -1,0 +1,349 @@
+---
+/**
+ * src/components/sections/FeedbackShowcase.astro
+ * Showcase component for feedback: Alerts, Banners, progress tracks, loading spinners, and interactive dialogs.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+import Button from "../../design/controls/button/Button.astro";
+import Input from "../../design/controls/input/Input.astro";
+import Alert from "../../design/feedback/alert/Alert.astro";
+import Tag from "../../design/display/tag/Tag.astro";
+import Banner from "../../design/feedback/banner/Banner.astro";
+import Progress from "../../design/feedback/progress/Progress.astro";
+import Skeleton from "../../design/feedback/skeleton/Skeleton.astro";
+import Spinner from "../../design/feedback/spinner/Spinner.astro";
+import Icon from "../../design/display/icon/Icon.astro";
+import "../../design/feedback/toast/Toast.css";
+---
+
+<Stack gap="md">
+  <!-- Inline Alerts -->
+  <Paper>
+    <Stack gap="md">
+      <Inline gap="xs" y="center">
+        <Text fs="sm" tone="muted" bold>Alert Variants & Severities</Text>
+        <Tag variant="teal" size="sm">Compact Sizing</Tag>
+      </Inline>
+      <Grid columns={2} gap="md">
+        <Stack gap="sm">
+          <Alert severity="info" variant="soft" title="Info Alert">
+            This is a soft info alert containing contextual information.
+          </Alert>
+          <Alert severity="success" variant="soft" title="Success Alert">
+            Your settings have been saved successfully.
+          </Alert>
+          <Alert severity="warning" variant="soft" title="Warning Alert">
+            Please review the details before proceeding.
+          </Alert>
+          <Alert severity="error" variant="soft" title="Error Alert" dismissible>
+            Something went wrong. This alert is dismissible.
+          </Alert>
+        </Stack>
+        <Stack gap="sm">
+          <Alert severity="info" variant="solid" title="Solid Info">
+            High contrast solid variant alert. Reads easily with dark text.
+          </Alert>
+          <Alert severity="success" variant="outline" title="Outline Success">
+            Outline variant alert with success theme.
+          </Alert>
+          <Alert severity="warning" variant="subtle" title="Subtle Warning">
+            Very low contrast subtle variant alert.
+          </Alert>
+          <Alert severity="neutral" variant="soft" title="Neutral Soft">
+            A neutral colored soft alert.
+          </Alert>
+        </Stack>
+      </Grid>
+    </Stack>
+  </Paper>
+
+  <!-- Full-Width Banners -->
+  <Paper>
+    <Stack gap="md">
+      <Text fs="sm" tone="muted" bold>Banners (Page-Level Callouts)</Text>
+      <Text fs="xs" tone="muted">Full-width alerts spanning the top boundary of content blocks.</Text>
+      <Stack gap="sm">
+        <Banner severity="info" variant="soft" title="System Notice">
+          A new workspace configuration is available for download.
+        </Banner>
+        <Banner severity="warning" variant="outline" title="Scheduled Upgrades" dismissible={true}>
+          Server maintenance is scheduled for tonight at 11:00 PM UTC. This banner is dismissible.
+        </Banner>
+      </Stack>
+    </Stack>
+  </Paper>
+
+  <!-- Interactive Toasts -->
+  <Paper>
+    <Stack gap="md">
+      <Text fs="sm" tone="muted" bold>Interactive Toast Notifications</Text>
+      <Text fs="xs" tone="muted">
+        Enter a workspace name (minimum 3 characters) and trigger a mock server save. It will fire success or error toasts as feedback.
+      </Text>
+      <form id="toast-demo-form" style="width: 100%;">
+        <Inline gap="sm" y="center" wrap>
+          <div style="flex-grow: 1; max-width: 320px;">
+            <Input id="toast-demo-input" placeholder="Workspace name..." required />
+          </div>
+          <Button type="submit" variant="primary" id="toast-demo-submit-btn">
+            <span class="btn__icon-wrapper"><Icon name="zap" size="xs" /></span>
+            <span class="btn__text">Save Settings</span>
+          </Button>
+        </Inline>
+      </form>
+    </Stack>
+  </Paper>
+
+  <!-- Progress Indicators & Loading Skeletons -->
+  <Paper>
+    <Grid columns={2} gap="lg">
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Progress Indicators</Text>
+        <Progress id="determinate-progress" value={0} max={100} label="Uploading Workspace Assets" showValue={true} variant="success" size="sm" />
+        <Inline gap="xs" y="center">
+          <Button variant="secondary" size="sm" id="start-upload-btn">Start Upload</Button>
+          <Button variant="ghost" size="sm" id="reset-upload-btn" disabled>Reset</Button>
+        </Inline>
+        <Progress label="Configuring Build Sandbox (Indeterminate)" variant="info" size="md" />
+      </Stack>
+      <Stack gap="md">
+        <Inline y="center" justify="between">
+          <Text fs="sm" tone="muted" bold>Loading Skeleton Shimmers</Text>
+          <Button variant="ghost" size="sm" id="skeleton-toggle-btn">Load Content</Button>
+        </Inline>
+        
+        <div id="skeleton-demo-wrapper" style="width: 100%;">
+          <!-- Skeleton State -->
+          <div id="skeleton-state-view" style="display: block;">
+            <Paper class="effect-glow" style="padding: var(--sp-md);">
+              <Inline gap="md" y="center">
+                <Skeleton shape="circle" width="48px" height="48px" />
+                <Stack gap="2xs" style="flex-grow: 1; min-width: 120px;">
+                  <Skeleton shape="line" width="60%" height="16px" />
+                  <Skeleton shape="line" width="85%" height="12px" />
+                </Stack>
+              </Inline>
+            </Paper>
+          </div>
+          
+          <!-- Loaded State (Hidden by default) -->
+          <div id="loaded-state-view" style="display: none;">
+            <Paper class="effect-glow" style="padding: var(--sp-md);">
+              <Inline gap="md" y="center">
+                <div style="width: 48px; height: 48px; border-radius: var(--rad-full); background: var(--gradient-cosmic); display: flex; align-items: center; justify-content: center; color: white;">
+                  <Icon name="astro" size="sm" />
+                </div>
+                <Stack gap="3xs">
+                  <Text fs="sm" bold>Design System Workspace</Text>
+                  <Text fs="xs" tone="muted">Main configuration files, tokens, and components.</Text>
+                </Stack>
+              </Inline>
+            </Paper>
+          </div>
+        </div>
+      </Stack>
+    </Grid>
+  </Paper>
+
+  <!-- Spinner Async Interactions -->
+  <Paper>
+    <Stack gap="md">
+      <Text fs="sm" tone="muted" bold>Spinner Loaders & Async Prompt Flows</Text>
+      <Text fs="xs" tone="muted">
+        Clicking the button replaces its trash icon with a spinner loader and runs a modal confirm prompt. Restores once resolved.
+      </Text>
+      <Inline gap="md" y="center" wrap>
+        <Button variant="danger" id="spinner-demo-btn">
+          <span class="btn__icon-wrapper"><Icon name="zap" size="xs" /></span>
+          <span class="btn__text">Delete Workspace</span>
+        </Button>
+        
+        <Inline gap="xs" y="center">
+          <Spinner size="xs" variant="info" /> <Text fs="xs" tone="muted">xs</Text>
+          <Spinner size="sm" variant="success" /> <Text fs="xs" tone="muted">sm</Text>
+          <Spinner size="md" variant="warning" /> <Text fs="xs" tone="muted">md</Text>
+          <Spinner size="lg" variant="error" /> <Text fs="xs" tone="muted">lg</Text>
+        </Inline>
+      </Inline>
+    </Stack>
+  </Paper>
+</Stack>
+
+<script>
+  import { toast } from "../../design/feedback/toast/toast";
+  import { alertDialog } from "../../design/feedback/alert-dialog/alertDialog";
+
+  const setupToastFormDemo = () => {
+    const form = document.getElementById("toast-demo-form") as HTMLFormElement;
+    if (!form || form.getAttribute("data-has-listener")) return;
+    form.setAttribute("data-has-listener", "true");
+
+    const btn = form.querySelector("#toast-demo-submit-btn") as HTMLButtonElement;
+    const input = form.querySelector("#toast-demo-input") as HTMLInputElement;
+    const iconWrapper = btn ? btn.querySelector(".btn__icon-wrapper") as HTMLElement : null;
+    const originalIcon = iconWrapper ? iconWrapper.innerHTML : '';
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (btn.classList.contains("is-loading")) return;
+
+      const val = input.value.trim();
+      
+      // Enter loading state
+      btn.classList.add("is-loading");
+      btn.setAttribute("disabled", "true");
+      input.setAttribute("disabled", "true");
+      if (iconWrapper) {
+        iconWrapper.innerHTML = `<span class="spinner-component spinner-size--sm spinner-variant--neutral" role="status"><span class="sr-only">Loading...</span></span>`;
+      }
+
+      // Mock save delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Clear loading state
+      btn.classList.remove("is-loading");
+      btn.removeAttribute("disabled");
+      input.removeAttribute("disabled");
+      if (iconWrapper) {
+        iconWrapper.innerHTML = originalIcon;
+      }
+
+      // Trigger success/error toasts depending on value length
+      if (val.length < 3) {
+        toast.error("Workspace name must be at least 3 characters.", "Save Failed");
+      } else {
+        toast.success(`Workspace name "${val}" has been updated.`, "Settings Saved");
+      }
+    });
+  };
+
+  const setupProgressDemo = () => {
+    const startBtn = document.getElementById("start-upload-btn") as HTMLButtonElement;
+    const resetBtn = document.getElementById("reset-upload-btn") as HTMLButtonElement;
+    const progressEl = document.getElementById("determinate-progress") as HTMLElement;
+    if (!startBtn || !progressEl || startBtn.getAttribute("data-has-listener")) return;
+    
+    startBtn.setAttribute("data-has-listener", "true");
+    
+    let intervalId: any = null;
+    let currentValue = 0;
+    
+    const updateProgress = (val: number) => {
+      currentValue = val;
+      progressEl.setAttribute("aria-valuenow", val.toString());
+      progressEl.style.setProperty("--progress-value", `${val}%`);
+      
+      const valueText = progressEl.querySelector(".progress__value") as HTMLElement;
+      if (valueText) {
+        valueText.textContent = `${val}%`;
+      }
+    };
+    
+    startBtn.addEventListener("click", () => {
+      if (intervalId) return;
+      
+      startBtn.setAttribute("disabled", "true");
+      resetBtn.removeAttribute("disabled");
+      
+      intervalId = setInterval(() => {
+        if (currentValue >= 100) {
+          clearInterval(intervalId);
+          intervalId = null;
+          startBtn.removeAttribute("disabled");
+          toast.success("All workspace assets have been uploaded.", "Upload Complete");
+          return;
+        }
+        
+        updateProgress(currentValue + 5);
+      }, 150);
+    });
+    
+    resetBtn.addEventListener("click", () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      updateProgress(0);
+      startBtn.removeAttribute("disabled");
+      resetBtn.setAttribute("disabled", "true");
+    });
+  };
+
+  const setupSkeletonDemo = () => {
+    const btn = document.getElementById("skeleton-toggle-btn") as HTMLButtonElement;
+    const skeletonView = document.getElementById("skeleton-state-view") as HTMLElement;
+    const loadedView = document.getElementById("loaded-state-view") as HTMLElement;
+    if (!btn || !skeletonView || !loadedView || btn.getAttribute("data-has-listener")) return;
+    
+    btn.setAttribute("data-has-listener", "true");
+    
+    btn.addEventListener("click", () => {
+      const isLoaded = loadedView.style.display !== "none";
+      if (isLoaded) {
+        loadedView.style.display = "none";
+        skeletonView.style.display = "block";
+        btn.textContent = "Load Content";
+      } else {
+        skeletonView.style.display = "none";
+        loadedView.style.display = "block";
+        btn.textContent = "Show Skeleton";
+      }
+    });
+  };
+
+  const setupSpinnerDemo = () => {
+    const btn = document.getElementById("spinner-demo-btn") as HTMLButtonElement;
+    if (!btn || btn.getAttribute("data-has-listener")) return;
+    btn.setAttribute("data-has-listener", "true");
+
+    const iconWrapper = btn.querySelector(".btn__icon-wrapper") as HTMLElement;
+    const originalIcon = iconWrapper ? iconWrapper.innerHTML : '';
+
+    btn.addEventListener("click", async () => {
+      if (btn.classList.contains("is-loading")) return;
+
+      // Enter loading state
+      btn.classList.add("is-loading");
+      btn.setAttribute("disabled", "true");
+      if (iconWrapper) {
+        iconWrapper.innerHTML = `<span class="spinner-component spinner-size--sm spinner-variant--neutral" role="status"><span class="sr-only">Loading...</span></span>`;
+      }
+
+      // Run Alert Dialog Promise
+      const confirmed = await alertDialog.confirm({
+        title: "Delete Workspace",
+        description: "Are you sure you want to permanently delete this workspace? This operation cannot be undone.",
+        confirmLabel: "Delete Workspace",
+        cancelLabel: "Cancel",
+      });
+
+      // Clear loading state
+      btn.classList.remove("is-loading");
+      btn.removeAttribute("disabled");
+      if (iconWrapper) {
+        iconWrapper.innerHTML = originalIcon;
+      }
+
+      // Trigger result toast
+      if (confirmed) {
+        toast.success("The workspace was successfully deleted.", "Workspace Deleted");
+      } else {
+        toast.info("Workspace deletion cancelled.", "Cancelled");
+      }
+    });
+  };
+
+  const initDemos = () => {
+    setupToastFormDemo();
+    setupProgressDemo();
+    setupSkeletonDemo();
+    setupSpinnerDemo();
+  };
+
+  initDemos();
+  document.addEventListener("astro:page-load", initDemos);
+</script>

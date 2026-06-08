@@ -1,0 +1,2268 @@
+--- File: feedback.types.ts ---
+/**
+ * Severity levels for feedback components
+ */
+export type FeedbackSeverity = 
+  | 'info' 
+  | 'success' 
+  | 'warning' 
+  | 'error' 
+  | 'neutral';
+
+/**
+ * Visual variants for feedback components
+ */
+export type FeedbackVariant = 
+  | 'solid' 
+  | 'outline' 
+  | 'soft' 
+  | 'subtle';
+
+/**
+ * Position options for feedback components
+ */
+export type FeedbackPosition = 
+  | 'top' 
+  | 'top-left' 
+  | 'top-right' 
+  | 'bottom' 
+  | 'bottom-left' 
+  | 'bottom-right' 
+  | 'center';
+
+/**
+ * Animation types for feedback components
+ */
+export type FeedbackAnimation = 
+  | 'fade' 
+  | 'slide' 
+  | 'scale' 
+  | 'bounce' 
+  | 'none';
+
+/**
+ * Duration options for feedback components
+ */
+export type FeedbackDuration = 
+  | 'short' 
+  | 'medium' 
+  | 'long' 
+  | 'persistent';
+
+/**
+ * Size variants for feedback components
+ */
+export type FeedbackSize = 
+  | 'sm' 
+  | 'md' 
+  | 'lg';
+
+/**
+ * Icon position in feedback components
+ */
+export type FeedbackIconPosition = 
+  | 'left' 
+  | 'right' 
+  | 'top' 
+  | 'none';
+
+/**
+ * Progress indicator types
+ */
+export type ProgressType = 
+  | 'linear' 
+  | 'circular' 
+  | 'indeterminate';
+
+/**
+ * Progress size variants
+ */
+export type ProgressSize = 
+  | 'xs' 
+  | 'sm' 
+  | 'md' 
+  | 'lg' 
+  | 'xl';
+
+/**
+ * Skeleton animation types
+ */
+export type SkeletonAnimation = 
+  | 'pulse' 
+  | 'wave' 
+  | 'none';
+
+/**
+ * Skeleton shape variants
+ */
+export type SkeletonShape = 
+  | 'text' 
+  | 'circular' 
+  | 'rectangular' 
+  | 'rounded';
+
+/**
+ * Spinner size variants
+ */
+export type SpinnerSize = 
+  | 'xs' 
+  | 'sm' 
+  | 'md' 
+  | 'lg' 
+  | 'xl';
+
+/**
+ * Toast action types
+ */
+export type ToastAction = {
+  label: string;
+  onClick: () => void;
+};
+
+/**
+ * Alert dialog types
+ */
+export type AlertDialogType = 
+  | 'info' 
+  | 'warning' 
+  | 'error' 
+  | 'success' 
+  | 'confirm';
+
+/**
+ * Banner display modes
+ */
+export type BannerMode = 
+  | 'inline' 
+  | 'floating' 
+  | 'sticky';
+
+// Made with Bob
+
+
+--- File: feedback.maps.ts ---
+import type { 
+  FeedbackSeverity, 
+  FeedbackVariant, 
+  FeedbackPosition, 
+  FeedbackAnimation,
+  FeedbackDuration,
+  FeedbackSize,
+  FeedbackIconPosition,
+  ProgressType,
+  ProgressSize,
+  SkeletonAnimation,
+  SkeletonShape,
+  SpinnerSize,
+  AlertDialogType,
+  BannerMode
+} from './feedback.types';
+
+/**
+ * Maps feedback severities to their CSS class names
+ */
+export const FEEDBACK_SEVERITY_CLASS_MAP: Record<FeedbackSeverity, string> = {
+  'info': 'feedback-info',
+  'success': 'feedback-success',
+  'warning': 'feedback-warning',
+  'error': 'feedback-error',
+  'neutral': 'feedback-neutral'
+};
+
+/**
+ * Maps feedback variants to their CSS class names
+ */
+export const FEEDBACK_VARIANT_CLASS_MAP: Record<FeedbackVariant, string> = {
+  'solid': 'feedback-solid',
+  'outline': 'feedback-outline',
+  'soft': 'feedback-soft',
+  'subtle': 'feedback-subtle'
+};
+
+/**
+ * Maps feedback positions to their CSS class names
+ */
+export const FEEDBACK_POSITION_CLASS_MAP: Record<FeedbackPosition, string> = {
+  'top': 'feedback-top',
+  'top-left': 'feedback-top-left',
+  'top-right': 'feedback-top-right',
+  'bottom': 'feedback-bottom',
+  'bottom-left': 'feedback-bottom-left',
+  'bottom-right': 'feedback-bottom-right',
+  'center': 'feedback-center'
+};
+
+/**
+ * Maps feedback animations to their CSS class names
+ */
+export const FEEDBACK_ANIMATION_CLASS_MAP: Record<FeedbackAnimation, string> = {
+  'fade': 'feedback-animate-fade',
+  'slide': 'feedback-animate-slide',
+  'scale': 'feedback-animate-scale',
+  'bounce': 'feedback-animate-bounce',
+  'none': 'feedback-animate-none'
+};
+
+/**
+ * Maps feedback durations to their millisecond values
+ */
+export const FEEDBACK_DURATION_VALUE_MAP: Record<FeedbackDuration, number | null> = {
+  'short': 3000,
+  'medium': 5000,
+  'long': 8000,
+  'persistent': null
+};
+
+/**
+ * Maps feedback sizes to their CSS class names
+ */
+export const FEEDBACK_SIZE_CLASS_MAP: Record<FeedbackSize, string> = {
+  'sm': 'feedback-sm',
+  'md': 'feedback-md',
+  'lg': 'feedback-lg'
+};
+
+/**
+ * Maps feedback icon positions to their CSS class names
+ */
+export const FEEDBACK_ICON_POSITION_CLASS_MAP: Record<FeedbackIconPosition, string> = {
+  'left': 'feedback-icon-left',
+  'right': 'feedback-icon-right',
+  'top': 'feedback-icon-top',
+  'none': 'feedback-icon-none'
+};
+
+/**
+ * Maps progress types to their CSS class names
+ */
+export const PROGRESS_TYPE_CLASS_MAP: Record<ProgressType, string> = {
+  'linear': 'progress-linear',
+  'circular': 'progress-circular',
+  'indeterminate': 'progress-indeterminate'
+};
+
+/**
+ * Maps progress sizes to their CSS class names
+ */
+export const PROGRESS_SIZE_CLASS_MAP: Record<ProgressSize, string> = {
+  'xs': 'progress-xs',
+  'sm': 'progress-sm',
+  'md': 'progress-md',
+  'lg': 'progress-lg',
+  'xl': 'progress-xl'
+};
+
+/**
+ * Maps skeleton animations to their CSS class names
+ */
+export const SKELETON_ANIMATION_CLASS_MAP: Record<SkeletonAnimation, string> = {
+  'pulse': 'skeleton-pulse',
+  'wave': 'skeleton-wave',
+  'none': 'skeleton-none'
+};
+
+/**
+ * Maps skeleton shapes to their CSS class names
+ */
+export const SKELETON_SHAPE_CLASS_MAP: Record<SkeletonShape, string> = {
+  'text': 'skeleton-text',
+  'circular': 'skeleton-circular',
+  'rectangular': 'skeleton-rectangular',
+  'rounded': 'skeleton-rounded'
+};
+
+/**
+ * Maps spinner sizes to their CSS class names
+ */
+export const SPINNER_SIZE_CLASS_MAP: Record<SpinnerSize, string> = {
+  'xs': 'spinner-xs',
+  'sm': 'spinner-sm',
+  'md': 'spinner-md',
+  'lg': 'spinner-lg',
+  'xl': 'spinner-xl'
+};
+
+/**
+ * Maps alert dialog types to their CSS class names
+ */
+export const ALERT_DIALOG_TYPE_CLASS_MAP: Record<AlertDialogType, string> = {
+  'info': 'alert-dialog-info',
+  'warning': 'alert-dialog-warning',
+  'error': 'alert-dialog-error',
+  'success': 'alert-dialog-success',
+  'confirm': 'alert-dialog-confirm'
+};
+
+/**
+ * Maps banner modes to their CSS class names
+ */
+export const BANNER_MODE_CLASS_MAP: Record<BannerMode, string> = {
+  'inline': 'banner-inline',
+  'floating': 'banner-floating',
+  'sticky': 'banner-sticky'
+};
+
+/**
+ * Maps feedback severities to their icon names
+ */
+export const FEEDBACK_SEVERITY_ICON_MAP: Record<FeedbackSeverity, string> = {
+  'info': 'info',
+  'success': 'check-circle',
+  'warning': 'alert-triangle',
+  'error': 'alert-circle',
+  'neutral': 'info'
+};
+
+/**
+ * Maps feedback severities to their ARIA roles
+ */
+export const FEEDBACK_SEVERITY_ARIA_ROLE_MAP: Record<FeedbackSeverity, string> = {
+  'info': 'status',
+  'success': 'status',
+  'warning': 'alert',
+  'error': 'alert',
+  'neutral': 'status'
+};
+
+/**
+ * Maps feedback severities to their semantic colors
+ */
+export const FEEDBACK_SEVERITY_COLOR_MAP: Record<FeedbackSeverity, string> = {
+  'info': 'blue',
+  'success': 'green',
+  'warning': 'yellow',
+  'error': 'red',
+  'neutral': 'gray'
+};
+
+/**
+ * Maps progress sizes to their dimensions
+ */
+export const PROGRESS_SIZE_DIMENSIONS: Record<ProgressSize, { height: string; width?: string }> = {
+  'xs': { height: '0.25rem' },
+  'sm': { height: '0.5rem' },
+  'md': { height: '0.75rem' },
+  'lg': { height: '1rem' },
+  'xl': { height: '1.25rem' }
+};
+
+/**
+ * Maps spinner sizes to their dimensions
+ */
+export const SPINNER_SIZE_DIMENSIONS: Record<SpinnerSize, string> = {
+  'xs': '1rem',
+  'sm': '1.5rem',
+  'md': '2rem',
+  'lg': '2.5rem',
+  'xl': '3rem'
+};
+
+// Made with Bob
+
+
+--- File: feedback.consts.ts ---
+import type { 
+  FeedbackSeverity, 
+  FeedbackVariant, 
+  FeedbackPosition, 
+  FeedbackAnimation,
+  FeedbackDuration,
+  FeedbackSize,
+  FeedbackIconPosition,
+  ProgressType,
+  ProgressSize,
+  SkeletonAnimation,
+  SkeletonShape,
+  SpinnerSize,
+  AlertDialogType,
+  BannerMode
+} from './feedback.types';
+
+/**
+ * Available feedback severity levels
+ */
+export const FEEDBACK_SEVERITIES: FeedbackSeverity[] = [
+  'info', 'success', 'warning', 'error', 'neutral'
+];
+
+/**
+ * Available feedback variants
+ */
+export const FEEDBACK_VARIANTS: FeedbackVariant[] = [
+  'solid', 'outline', 'soft', 'subtle'
+];
+
+/**
+ * Available feedback positions
+ */
+export const FEEDBACK_POSITIONS: FeedbackPosition[] = [
+  'top', 'top-left', 'top-right',
+  'bottom', 'bottom-left', 'bottom-right',
+  'center'
+];
+
+/**
+ * Available feedback animations
+ */
+export const FEEDBACK_ANIMATIONS: FeedbackAnimation[] = [
+  'fade', 'slide', 'scale', 'bounce', 'none'
+];
+
+/**
+ * Available feedback durations
+ */
+export const FEEDBACK_DURATIONS: FeedbackDuration[] = [
+  'short', 'medium', 'long', 'persistent'
+];
+
+/**
+ * Duration values in milliseconds
+ */
+export const FEEDBACK_DURATION_VALUES: Record<FeedbackDuration, number | null> = {
+  'short': 3000,
+  'medium': 5000,
+  'long': 8000,
+  'persistent': null
+};
+
+/**
+ * Available feedback sizes
+ */
+export const FEEDBACK_SIZES: FeedbackSize[] = ['sm', 'md', 'lg'];
+
+/**
+ * Available feedback icon positions
+ */
+export const FEEDBACK_ICON_POSITIONS: FeedbackIconPosition[] = [
+  'left', 'right', 'top', 'none'
+];
+
+/**
+ * Available progress types
+ */
+export const PROGRESS_TYPES: ProgressType[] = [
+  'linear', 'circular', 'indeterminate'
+];
+
+/**
+ * Available progress sizes
+ */
+export const PROGRESS_SIZES: ProgressSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+
+/**
+ * Available skeleton animations
+ */
+export const SKELETON_ANIMATIONS: SkeletonAnimation[] = [
+  'pulse', 'wave', 'none'
+];
+
+/**
+ * Available skeleton shapes
+ */
+export const SKELETON_SHAPES: SkeletonShape[] = [
+  'text', 'circular', 'rectangular', 'rounded'
+];
+
+/**
+ * Available spinner sizes
+ */
+export const SPINNER_SIZES: SpinnerSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+
+/**
+ * Available alert dialog types
+ */
+export const ALERT_DIALOG_TYPES: AlertDialogType[] = [
+  'info', 'warning', 'error', 'success', 'confirm'
+];
+
+/**
+ * Available banner modes
+ */
+export const BANNER_MODES: BannerMode[] = ['inline', 'floating', 'sticky'];
+
+/**
+ * Default values
+ */
+export const DEFAULT_FEEDBACK_SEVERITY: FeedbackSeverity = 'info';
+export const DEFAULT_FEEDBACK_VARIANT: FeedbackVariant = 'solid';
+export const DEFAULT_FEEDBACK_POSITION: FeedbackPosition = 'top-right';
+export const DEFAULT_FEEDBACK_ANIMATION: FeedbackAnimation = 'slide';
+export const DEFAULT_FEEDBACK_DURATION: FeedbackDuration = 'medium';
+export const DEFAULT_FEEDBACK_SIZE: FeedbackSize = 'md';
+export const DEFAULT_FEEDBACK_ICON_POSITION: FeedbackIconPosition = 'left';
+export const DEFAULT_PROGRESS_TYPE: ProgressType = 'linear';
+export const DEFAULT_PROGRESS_SIZE: ProgressSize = 'md';
+export const DEFAULT_SKELETON_ANIMATION: SkeletonAnimation = 'pulse';
+export const DEFAULT_SKELETON_SHAPE: SkeletonShape = 'rectangular';
+export const DEFAULT_SPINNER_SIZE: SpinnerSize = 'md';
+export const DEFAULT_ALERT_DIALOG_TYPE: AlertDialogType = 'info';
+export const DEFAULT_BANNER_MODE: BannerMode = 'inline';
+
+// Made with Bob
+
+
+--- File: feedback.functions.ts ---
+import type { 
+  FeedbackSeverity, 
+  FeedbackVariant, 
+  FeedbackPosition, 
+  FeedbackAnimation,
+  FeedbackDuration,
+  FeedbackSize,
+  ProgressType,
+  ProgressSize,
+  SkeletonAnimation,
+  SkeletonShape,
+  SpinnerSize,
+  AlertDialogType,
+  BannerMode
+} from './feedback.types';
+import { FEEDBACK_DURATION_VALUES } from './feedback.consts';
+
+/**
+ * Validates if a value is a valid feedback severity
+ */
+export function isValidFeedbackSeverity(value: string): value is FeedbackSeverity {
+  const validSeverities: FeedbackSeverity[] = ['info', 'success', 'warning', 'error', 'neutral'];
+  return validSeverities.includes(value as FeedbackSeverity);
+}
+
+/**
+ * Validates if a value is a valid feedback variant
+ */
+export function isValidFeedbackVariant(value: string): value is FeedbackVariant {
+  const validVariants: FeedbackVariant[] = ['solid', 'outline', 'soft', 'subtle'];
+  return validVariants.includes(value as FeedbackVariant);
+}
+
+/**
+ * Validates if a value is a valid feedback position
+ */
+export function isValidFeedbackPosition(value: string): value is FeedbackPosition {
+  const validPositions: FeedbackPosition[] = [
+    'top', 'top-left', 'top-right',
+    'bottom', 'bottom-left', 'bottom-right',
+    'center'
+  ];
+  return validPositions.includes(value as FeedbackPosition);
+}
+
+/**
+ * Gets the CSS class name for feedback severity
+ */
+export function getFeedbackSeverityClass(severity: FeedbackSeverity): string {
+  return `feedback-${severity}`;
+}
+
+/**
+ * Gets the CSS class name for feedback variant
+ */
+export function getFeedbackVariantClass(variant: FeedbackVariant): string {
+  return `feedback-${variant}`;
+}
+
+/**
+ * Gets the CSS class name for feedback position
+ */
+export function getFeedbackPositionClass(position: FeedbackPosition): string {
+  return `feedback-${position}`;
+}
+
+/**
+ * Gets the CSS class name for feedback animation
+ */
+export function getFeedbackAnimationClass(animation: FeedbackAnimation): string {
+  return `feedback-animate-${animation}`;
+}
+
+/**
+ * Gets the CSS class name for feedback size
+ */
+export function getFeedbackSizeClass(size: FeedbackSize): string {
+  return `feedback-${size}`;
+}
+
+/**
+ * Gets the duration value in milliseconds
+ */
+export function getFeedbackDurationValue(duration: FeedbackDuration): number | null {
+  return FEEDBACK_DURATION_VALUES[duration];
+}
+
+/**
+ * Gets the CSS class name for progress type
+ */
+export function getProgressTypeClass(type: ProgressType): string {
+  return `progress-${type}`;
+}
+
+/**
+ * Gets the CSS class name for progress size
+ */
+export function getProgressSizeClass(size: ProgressSize): string {
+  return `progress-${size}`;
+}
+
+/**
+ * Gets the CSS class name for skeleton animation
+ */
+export function getSkeletonAnimationClass(animation: SkeletonAnimation): string {
+  return `skeleton-${animation}`;
+}
+
+/**
+ * Gets the CSS class name for skeleton shape
+ */
+export function getSkeletonShapeClass(shape: SkeletonShape): string {
+  return `skeleton-${shape}`;
+}
+
+/**
+ * Gets the CSS class name for spinner size
+ */
+export function getSpinnerSizeClass(size: SpinnerSize): string {
+  return `spinner-${size}`;
+}
+
+/**
+ * Gets the CSS class name for alert dialog type
+ */
+export function getAlertDialogTypeClass(type: AlertDialogType): string {
+  return `alert-dialog-${type}`;
+}
+
+/**
+ * Gets the CSS class name for banner mode
+ */
+export function getBannerModeClass(mode: BannerMode): string {
+  return `banner-${mode}`;
+}
+
+/**
+ * Calculates progress percentage
+ */
+export function calculateProgressPercentage(current: number, total: number): number {
+  if (total === 0) return 0;
+  return Math.min(Math.max((current / total) * 100, 0), 100);
+}
+
+/**
+ * Formats progress percentage for display
+ */
+export function formatProgressPercentage(percentage: number): string {
+  return `${Math.round(percentage)}%`;
+}
+
+/**
+ * Checks if feedback should auto-dismiss
+ */
+export function shouldAutoDismiss(duration: FeedbackDuration): boolean {
+  return duration !== 'persistent';
+}
+
+/**
+ * Gets the icon name for feedback severity
+ */
+export function getFeedbackSeverityIcon(severity: FeedbackSeverity): string {
+  const iconMap: Record<FeedbackSeverity, string> = {
+    'info': 'info-circle',
+    'success': 'check-circle',
+    'warning': 'exclamation-triangle',
+    'error': 'times-circle',
+    'neutral': 'circle'
+  };
+  return iconMap[severity];
+}
+
+/**
+ * Gets the ARIA role for feedback severity
+ */
+export function getFeedbackAriaRole(severity: FeedbackSeverity): string {
+  const roleMap: Record<FeedbackSeverity, string> = {
+    'info': 'status',
+    'success': 'status',
+    'warning': 'alert',
+    'error': 'alert',
+    'neutral': 'status'
+  };
+  return roleMap[severity];
+}
+
+/**
+ * Combines multiple feedback classes
+ */
+export function combineFeedbackClasses(...classes: (string | undefined | false)[]): string {
+  return classes.filter(Boolean).join(' ');
+}
+
+/**
+ * Checks if feedback is dismissible
+ */
+export function isFeedbackDismissible(duration: FeedbackDuration): boolean {
+  return duration === 'persistent';
+}
+
+/**
+ * Gets skeleton width based on text length
+ */
+export function getSkeletonWidth(textLength: number): string {
+  const baseWidth = 50;
+  const widthPerChar = 8;
+  return `${Math.min(baseWidth + (textLength * widthPerChar), 100)}%`;
+}
+
+// Made with Bob
+
+
+--- File: feedback.css ---
+@import './tokens.css';
+
+/* ============================================================================
+   SHARED SEVERITY CLASSES
+   Sets the CSS custom property --feedback-color which is consumed by variants
+   ============================================================================ */
+
+.feedback-info {
+  --feedback-color: var(--color-feedback-info);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-info) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-0, #08090c); /* Dark text on bright cyan */
+}
+
+.feedback-success {
+  --feedback-color: var(--color-feedback-success);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-success) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on green */
+}
+
+.feedback-warning {
+  --feedback-color: var(--color-feedback-warning);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-warning) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-0, #08090c); /* Dark text on bright yellow */
+}
+
+.feedback-error {
+  --feedback-color: var(--color-feedback-error);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-error) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on red */
+}
+
+.feedback-neutral {
+  --feedback-color: var(--color-feedback-neutral);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-neutral) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on grey */
+}
+
+/* ============================================================================
+   SHARED VARIANT CLASSES
+   Consumes the --feedback-color variable for background, border, and text styling
+   ============================================================================ */
+
+.feedback-solid {
+  background: var(--feedback-color);
+  border: 1px solid var(--feedback-color);
+  color: var(--feedback-solid-text);
+}
+
+.feedback-outline {
+  background: transparent;
+  border: 1px solid var(--feedback-color);
+  color: var(--feedback-color);
+}
+
+.feedback-soft {
+  background: color-mix(in srgb, var(--feedback-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--feedback-color) 25%, transparent);
+  color: var(--feedback-color-light);
+}
+
+.feedback-subtle {
+  background: color-mix(in srgb, var(--feedback-color) 6%, transparent);
+  border: 1px solid transparent;
+  color: var(--feedback-color-light);
+}
+
+/* ============================================================================
+   SHARED SIZE CLASSES
+   ============================================================================ */
+
+.feedback-sm {
+  font-size: var(--fs--xs);
+  border-radius: var(--feedback-rad-sm);
+}
+
+.feedback-md {
+  font-size: var(--fs--sm);
+  border-radius: var(--feedback-rad-md);
+}
+
+.feedback-lg {
+  font-size: var(--fs--md);
+  border-radius: var(--feedback-rad-lg);
+}
+
+
+--- File: toast/Toast.css ---
+/**
+ * src/design/feedback/toast/Toast.css
+ * Component-specific styles for Toast
+ */
+@import '../tokens.css';
+@import '../feedback.css';
+
+.toast-component {
+  display: flex;
+  align-items: flex-start;
+  width: var(--toast-width);
+  max-width: var(--toast-max-width);
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: var(--toast-shadow);
+  box-sizing: border-box;
+  z-index: var(--z-toast, 500);
+  
+  /* Animated entrance by default */
+  animation: toast-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Size modifications for paddings */
+.toast-component.feedback-sm {
+  padding: var(--toast-padding-sm);
+  gap: var(--sp-xs);
+}
+
+.toast-component.feedback-md {
+  padding: var(--toast-padding-md);
+  gap: var(--sp-sm);
+}
+
+.toast-component.feedback-lg {
+  padding: var(--toast-padding-lg);
+  gap: var(--sp-md);
+}
+
+/* Toast Layout Elements */
+.toast__icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xs, 4px);
+}
+
+.toast__title {
+  font-weight: 600;
+  line-height: var(--lh-sm, 1.4);
+}
+
+.toast__description {
+  font-weight: 400;
+  line-height: var(--lh-md, 1.5);
+  opacity: 0.9;
+}
+
+.toast__actions {
+  display: flex;
+  gap: var(--sp-xs);
+  margin-top: var(--sp-xs);
+}
+
+.toast__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs) var(--sp-xs);
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875em;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--rad-xs, 2px);
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.toast__action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.toast__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs);
+  margin: -4px -4px 0 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: var(--rad-xs, 2px);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.toast__close-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dismissing state animation */
+.toast-component.is-dismissing,
+.toast-component.is-leaving {
+  animation: toast-leave 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* Animation Keyframes */
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-leave {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    max-height: 120px;
+    margin-bottom: 12px;
+    padding-top: var(--toast-padding-y, 12px);
+    padding-bottom: var(--toast-padding-y, 12px);
+  }
+  50% {
+    transform: translateX(120%);
+    opacity: 0;
+    max-height: 120px;
+    margin-bottom: 12px;
+    padding-top: var(--toast-padding-y, 12px);
+    padding-bottom: var(--toast-padding-y, 12px);
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-component,
+  .toast-component.is-dismissing,
+  .toast-component.is-leaving {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Toast Container for fixed stacking on screen */
+.toast-container {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  left: auto !important;
+  top: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  pointer-events: none !important; /* let clicks pass through container spacing */
+  z-index: 9999 !important;
+}
+
+.toast-container .toast-component {
+  pointer-events: auto !important; /* restore pointer events for toasts */
+}
+
+
+--- File: toast/toast.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+
+
+--- File: toast/toast.ts ---
+/**
+ * src/design/feedback/toast/toast.ts
+ * A client-side developer utility for showing toasts dynamically.
+ * Exposes methods to trigger toasts from any component without direct DOM access.
+ */
+
+export interface ToastShowDetail {
+  severity: "success" | "error" | "info" | "warning";
+  title?: string;
+  description: string;
+  duration?: number;
+}
+
+export const toast = {
+  show(detail: ToastShowDetail) {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("toast:show", { detail }));
+    }
+  },
+  success(description: string, title?: string, duration?: number) {
+    this.show({ severity: "success", title, description, duration });
+  },
+  error(description: string, title?: string, duration?: number) {
+    this.show({ severity: "error", title, description, duration });
+  },
+  info(description: string, title?: string, duration?: number) {
+    this.show({ severity: "info", title, description, duration });
+  },
+  warning(description: string, title?: string, duration?: number) {
+    this.show({ severity: "warning", title, description, duration });
+  },
+};
+
+
+--- File: toast/ToastRegion.astro ---
+---
+/**
+ * src/design/feedback/toast/ToastRegion.astro
+ * The container mount point and client-side manager for Toast notifications.
+ * Renders the container where toasts appear and handles toast:show custom events.
+ */
+import "./Toast.css";
+---
+
+<div class="toast-container" role="status" aria-live="polite"></div>
+
+<script>
+  // SVG icons mapped to severity
+  const toastIcons = {
+    success: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+    error: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+    info: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
+    warning: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`
+  };
+
+  const showToast = (severity: 'success' | 'error' | 'info' | 'warning', title?: string, description?: string, duration = 4000) => {
+    const container = document.querySelector(".toast-container");
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = `toast-component feedback-${severity} feedback-solid feedback-md`;
+
+    toast.innerHTML = `
+      <div class="toast__icon-container">
+        ${toastIcons[severity]}
+      </div>
+      <div class="toast__content">
+        <div class="toast__title"></div>
+        <div class="toast__description"></div>
+      </div>
+      <button type="button" class="toast__close-btn" aria-label="Close notification">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    `;
+
+    // Set text elements safely (prevent XSS)
+    const titleEl = toast.querySelector(".toast__title");
+    if (titleEl) {
+      if (title) {
+        titleEl.textContent = title;
+      } else {
+        titleEl.remove();
+      }
+    }
+
+    const descEl = toast.querySelector(".toast__description");
+    if (descEl) {
+      descEl.textContent = description || "";
+    }
+
+    const closeBtn = toast.querySelector(".toast__close-btn");
+    const dismiss = () => {
+      if (toast.classList.contains("is-leaving") || toast.classList.contains("is-dismissing")) return;
+      toast.classList.add("is-leaving");
+      
+      const removeToast = () => {
+        toast.remove();
+      };
+      
+      toast.addEventListener("animationend", removeToast, { once: true });
+      setTimeout(removeToast, 400); // safety fallback
+    };
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", dismiss);
+    }
+
+    // Dismissal timing with hover-to-pause
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+
+    const startTimer = (delay: number) => {
+      timerId = setTimeout(dismiss, delay);
+    };
+
+    toast.addEventListener("mouseenter", () => {
+      if (timerId) clearTimeout(timerId);
+    });
+
+    toast.addEventListener("mouseleave", () => {
+      startTimer(1500); // restart timer at 1.5s
+    });
+
+    if (duration > 0) {
+      startTimer(duration);
+    }
+
+    container.appendChild(toast);
+  };
+
+  const setupToastListener = () => {
+    if ((window as any).__toast_listener_active) return;
+    (window as any).__toast_listener_active = true;
+
+    window.addEventListener("toast:show", (event: any) => {
+      const { severity, title, description, duration } = event.detail || {};
+      showToast(severity, title, description, duration);
+    });
+  };
+
+  setupToastListener();
+</script>
+
+
+--- File: alert/Alert.astro ---
+---
+/**
+ * src/design/feedback/alert/Alert.astro
+ * An inline messaging banner to communicate states to the user.
+ * - Supports five severity levels: info, success, warning, error, neutral.
+ * - Supports four variants: solid, outline, soft, subtle.
+ * - Can be dismissible, with custom exit animation.
+ * @props (local): severity, variant, size, title, dismissible
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+
+import type { FeedbackSeverity, FeedbackVariant, FeedbackSize } from "../feedback.types";
+import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SIZE_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP } from "../feedback.maps";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Icon from "../../display/icon/Icon.astro";
+import type { SvgName } from "../../shared/icons/index";
+import Text from "../../typography/text/Text.astro";
+import Button from "../../controls/button/Button.astro";
+import "./Alert.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The severity tone of the alert */
+  severity?: FeedbackSeverity;
+  /** Visual variant style */
+  variant?: FeedbackVariant;
+  /** Size of the alert */
+  size?: FeedbackSize;
+  /** Optional header title for the alert */
+  title?: string;
+  /** Whether the alert can be closed by the user */
+  dismissible?: boolean;
+}
+
+const {
+  severity = "info",
+  variant = "soft",
+  size = "md",
+  title,
+  dismissible = true,
+  as: Tag = "div",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Get severity icon name
+const iconName = FEEDBACK_SEVERITY_ICON_MAP[severity] as SvgName;
+
+const classes = [
+  "alert-component",
+  FEEDBACK_SEVERITY_CLASS_MAP[severity],
+  FEEDBACK_VARIANT_CLASS_MAP[variant],
+  FEEDBACK_SIZE_CLASS_MAP[size],
+];
+
+const styles = "";
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  role="alert"
+  {...rest}
+>
+  <div class="alert__icon-container">
+    <slot name="icon">
+      <Icon name={iconName} size={size} />
+    </slot>
+  </div>
+  
+  <div class="alert__content">
+    {title && (
+      <Text as="div" class="alert__title" bold>{title}</Text>
+    )}
+    <Text as="div" class="alert__description">
+      <slot />
+    </Text>
+  </div>
+  
+  {dismissible && (
+    <Button
+      variant="ghost"
+      iconOnly
+      size={size === "lg" ? "md" : "sm"}
+      class="alert__close-btn"
+      aria-label="Close alert"
+    >
+      <Icon name="x" size={size} />
+    </Button>
+  )}
+</Tag>
+
+<script>
+  const setupAlertDismiss = () => {
+    document.querySelectorAll(".alert-component").forEach((alert) => {
+      const closeBtn = alert.querySelector(".alert__close-btn");
+      if (!closeBtn || closeBtn.getAttribute("data-has-listener")) return;
+      
+      closeBtn.setAttribute("data-has-listener", "true");
+      closeBtn.addEventListener("click", () => {
+        alert.classList.add("is-dismissing");
+        
+        // Wait for potential animations to finish before removing from DOM
+        const onAnimationEnd = () => {
+          alert.remove();
+        };
+        
+        alert.addEventListener("animationend", onAnimationEnd, { once: true });
+        
+        // Fallback safety if no animation is defined
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.remove();
+          }
+        }, 300);
+      });
+    });
+  };
+
+  setupAlertDismiss();
+  document.addEventListener("astro:page-load", setupAlertDismiss);
+</script>
+
+
+--- File: alert/Alert.css ---
+/**
+ * src/design/feedback/alert/Alert.css
+ * Component-specific styles for Alert
+ */
+@import '../tokens.css';
+@import '../feedback.css';
+
+.alert-component {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Size modifications for paddings */
+.alert-component.feedback-sm {
+  padding: var(--alert-padding-sm);
+  gap: var(--sp-xs);
+}
+
+.alert-component.feedback-md {
+  padding: var(--alert-padding-md);
+  gap: var(--sp-sm);
+}
+
+.alert-component.feedback-lg {
+  padding: var(--alert-padding-lg);
+  gap: var(--sp-md);
+}
+
+/* Alert Layout Elements */
+.alert__icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px; /* slight visual offset for top alignment */
+}
+
+.alert__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xs, 4px);
+}
+
+.alert__title {
+  font-weight: 600;
+  line-height: var(--lh-sm, 1.4);
+}
+
+.alert__description {
+  font-weight: 400;
+  line-height: var(--lh-md, 1.5);
+  opacity: 0.9;
+}
+
+.alert__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs);
+  margin: -4px -4px 0 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: var(--rad-xs, 2px);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.alert__close-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dismissing state animation */
+.alert-component.is-dismissing {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+
+--- File: alert/alert.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <line x1="12" y1="8" x2="12" y2="12"></line>
+  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+</svg>
+
+
+--- File: alert-dialog/AlertDialog.astro ---
+
+
+--- File: alert-dialog/AlertDialog.css ---
+/* src/design/feedback/alert-dialog/AlertDialog.css */
+
+.alert-dialog-modal {
+  border: 1px solid var(--border--1);
+  border-radius: var(--rad-lg, 8px);
+  background-color: var(--layer--1);
+  color: var(--text--3);
+  padding: 0;
+  max-width: 480px;
+  width: calc(100% - 32px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+  box-sizing: border-box;
+}
+
+/* Backdrop styles with a subtle blur effect */
+.alert-dialog-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+}
+
+.alert-dialog__card {
+  padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.alert-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.alert-dialog__title {
+  margin: 0;
+  font-size: var(--fs-4, 1.25rem);
+  font-weight: 600;
+  color: var(--text--3);
+  font-family: var(--ff-sans);
+  line-height: var(--lh-sm, 1.3);
+}
+
+.alert-dialog__description {
+  margin: 0;
+  font-size: var(--fs-3, 0.875rem);
+  color: var(--text--2);
+  line-height: var(--lh-md, 1.5);
+}
+
+.alert-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alert-dialog-modal::backdrop {
+    backdrop-filter: none !important;
+    transition: none !important;
+  }
+}
+
+
+--- File: alert-dialog/alert-dialog.svg ---
+
+
+--- File: alert-dialog/alertDialog.ts ---
+/**
+ * src/design/feedback/alert-dialog/alertDialog.ts
+ * Client-side utility for executing confirmation dialogs programmatically.
+ * Exposes alertDialog.confirm() which returns a Promise<boolean>.
+ */
+
+export interface AlertDialogConfirmOptions {
+  title?: string;
+  description: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+}
+
+export const alertDialog = {
+  confirm(options: AlertDialogConfirmOptions): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (typeof window !== "undefined") {
+        // Unique ID to match this specific confirmation request
+        const id = Math.random().toString(36).substring(2, 9);
+
+        const onResolve = (e: Event) => {
+          const ev = e as CustomEvent;
+          if (ev.detail && ev.detail.id === id) {
+            window.removeEventListener("alert-dialog:resolve", onResolve);
+            resolve(ev.detail.result);
+          }
+        };
+
+        window.addEventListener("alert-dialog:resolve", onResolve);
+
+        window.dispatchEvent(
+          new CustomEvent("alert-dialog:show", {
+            detail: {
+              id,
+              title: options.title,
+              description: options.description,
+              confirmLabel: options.confirmLabel || "Confirm",
+              cancelLabel: options.cancelLabel || "Cancel",
+            },
+          })
+        );
+      } else {
+        resolve(false);
+      }
+    });
+  },
+};
+
+
+--- File: alert-dialog/AlertDialogRegion.astro ---
+---
+/**
+ * src/design/feedback/alert-dialog/AlertDialogRegion.astro
+ * The container mount point and client-side manager for Alert Dialog confirmation dialogs.
+ * Renders a native <dialog> element and resolves prompt requests.
+ */
+import "./AlertDialog.css";
+---
+
+<dialog class="alert-dialog-modal">
+  <div class="alert-dialog__card">
+    <div class="alert-dialog__body">
+      <h4 class="alert-dialog__title"></h4>
+      <p class="alert-dialog__description"></p>
+    </div>
+    <div class="alert-dialog__actions">
+      <button type="button" class="btn btn--secondary alert-dialog__btn-cancel"></button>
+      <button type="button" class="btn btn--primary alert-dialog__btn-confirm"></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const setupAlertDialogListener = () => {
+    if ((window as any).__alert_dialog_listener_active) return;
+    (window as any).__alert_dialog_listener_active = true;
+
+    const dialog = document.querySelector(".alert-dialog-modal") as HTMLDialogElement;
+    if (!dialog) return;
+
+    const titleEl = dialog.querySelector(".alert-dialog__title") as HTMLElement;
+    const descEl = dialog.querySelector(".alert-dialog__description") as HTMLElement;
+    const cancelBtn = dialog.querySelector(".alert-dialog__btn-cancel") as HTMLButtonElement;
+    const confirmBtn = dialog.querySelector(".alert-dialog__btn-confirm") as HTMLButtonElement;
+
+    let currentId: string | null = null;
+
+    window.addEventListener("alert-dialog:show", (event: any) => {
+      const { id, title, description, confirmLabel, cancelLabel } = event.detail || {};
+      currentId = id;
+
+      if (titleEl) {
+        if (title) {
+          titleEl.style.display = "block";
+          titleEl.textContent = title;
+        } else {
+          titleEl.style.display = "none";
+        }
+      }
+
+      if (descEl) {
+        descEl.textContent = description || "";
+      }
+
+      if (cancelBtn) {
+        cancelBtn.textContent = cancelLabel || "Cancel";
+      }
+
+      if (confirmBtn) {
+        confirmBtn.textContent = confirmLabel || "Confirm";
+      }
+
+      dialog.showModal();
+    });
+
+    const handleResolve = (result: boolean) => {
+      if (!currentId) return;
+      dialog.close();
+      window.dispatchEvent(
+        new CustomEvent("alert-dialog:resolve", {
+          detail: { id: currentId, result },
+        })
+      );
+      currentId = null;
+    };
+
+    cancelBtn?.addEventListener("click", () => handleResolve(false));
+    confirmBtn?.addEventListener("click", () => handleResolve(true));
+
+    // Handle Escape key (which fires cancel event on native dialog)
+    dialog.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      handleResolve(false);
+    });
+
+    // Close on clicking backdrop (dialog direct border box boundary)
+    dialog.addEventListener("click", (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) {
+        handleResolve(false);
+      }
+    });
+  };
+
+  setupAlertDialogListener();
+</script>
+
+
+--- File: spinner/Spinner.astro ---
+---
+/**
+ * src/design/feedback/spinner/Spinner.astro
+ * An animated circular loader representing ongoing activity.
+ * - Supports sizes: xs, sm, md, lg.
+ * - Renders a visually hidden text element for screen readers.
+ * @props (local): size, variant, label
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { FeedbackSeverity, FeedbackSize } from "../feedback.types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Spinner.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {
+  /** Size scale of loading spinner */
+  size?: FeedbackSize | 'xs';
+  /** Visual severity tone color */
+  variant?: FeedbackSeverity;
+  /** Screen reader accessible description label */
+  label?: string;
+}
+
+const {
+  size = "md",
+  variant = "neutral",
+  label = "Loading...",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "spinner-component",
+  `spinner-size--${size}`,
+  `spinner-variant--${variant}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<span
+  class:list={finalClasses}
+  style={finalStyles}
+  role="status"
+  {...rest}
+>
+  <span class="sr-only">{label}</span>
+</span>
+
+
+--- File: spinner/Spinner.css ---
+/* src/design/feedback/spinner/Spinner.css */
+@import '../vars.css';
+
+.spinner-component {
+  display: inline-block;
+  border-radius: var(--rad-full, 9999px);
+  border-style: solid;
+  border-color: currentColor;
+  border-right-color: transparent;
+  animation: spinner-spin 0.75s linear infinite;
+  box-sizing: border-box;
+  vertical-align: text-bottom;
+  flex-shrink: 0;
+}
+
+/* Size modifiers */
+.spinner-size--xs {
+  width: 12px;
+  height: 12px;
+  border-width: 1.5px;
+}
+.spinner-size--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+.spinner-size--md {
+  width: 24px;
+  height: 24px;
+  border-width: 2.5px;
+}
+.spinner-size--lg {
+  width: 36px;
+  height: 36px;
+  border-width: 3.5px;
+}
+
+/* Variant color overrides */
+.spinner-variant--neutral {
+  color: var(--color-feedback-neutral);
+}
+.spinner-variant--info {
+  color: var(--color-feedback-info);
+}
+.spinner-variant--success {
+  color: var(--color-feedback-success);
+}
+.spinner-variant--warning {
+  color: var(--color-feedback-warning);
+}
+.spinner-variant--error {
+  color: var(--color-feedback-error);
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Visually hidden accessibility helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+--- File: spinner/spinner.svg ---
+
+
+--- File: skeleton/Skeleton.astro ---
+---
+/**
+ * src/design/feedback/skeleton/Skeleton.astro
+ * Placeholder elements representing loading structures.
+ * - Supports shapes: line, circle, rect.
+ * - Supports multi-line line layouts via the lines prop.
+ * @props (local): width, height, shape, lines
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Skeleton.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Width style constraint (e.g. '120px', '100%') */
+  width?: string;
+  /** Height style constraint */
+  height?: string;
+  /** Visual shape of loading block */
+  shape?: 'line' | 'circle' | 'rect';
+  /** Number of text placeholder lines to generate */
+  lines?: number;
+}
+
+const {
+  width,
+  height,
+  shape = "rect",
+  lines = 1,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "skeleton-component",
+  `skeleton-shape--${shape}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+
+// Build style parameters
+const customStyles = [
+  width && `width: ${width}`,
+  height && `height: ${height}`,
+].filter(Boolean).join(';');
+
+const finalStyles = mergeStyles(customStyles, Astro.props);
+const items = Array.from({ length: lines });
+---
+
+{lines > 1 ? (
+  <div class="skeleton-group" {...rest}>
+    {items.map((_, i) => (
+      <div
+        class:list={finalClasses}
+        style={i === lines - 1 ? `${finalStyles}; width: 80%` : finalStyles}
+      />
+    ))}
+  </div>
+) : (
+  <div
+    class:list={finalClasses}
+    style={finalStyles}
+    {...rest}
+  />
+)}
+
+
+--- File: skeleton/Skeleton.css ---
+/* src/design/feedback/skeleton/Skeleton.css */
+
+.skeleton-component {
+  background-color: var(--layer--2);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Shimmer overlay block */
+.skeleton-component::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.04) 20%,
+    rgba(255, 255, 255, 0.08) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeleton-shimmer 1.8s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Shape variations */
+.skeleton-shape--rect {
+  border-radius: var(--rad-md, 4px);
+  width: 100%;
+  height: 100px;
+}
+
+.skeleton-shape--line {
+  border-radius: var(--rad-sm, 2px);
+  width: 100%;
+  height: 14px;
+}
+
+.skeleton-shape--circle {
+  border-radius: var(--rad-full, 9999px);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* Skeleton group lines wrapper */
+.skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-component::after {
+    animation: none !important;
+  }
+}
+
+
+--- File: skeleton/skeleton.svg ---
+
+
+--- File: progress/Progress.astro ---
+---
+/**
+ * src/design/feedback/progress/Progress.astro
+ * A visual indicator showing completion status for workflows.
+ * - Supports sizes: sm, md, lg.
+ * - Supports indeterminate sliding states when value is undefined.
+ * @props (local): value, max, size, variant, label, showValue
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { FeedbackSeverity, FeedbackSize } from "../feedback.types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Text from "../../typography/text/Text.astro";
+import "./Progress.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The progress value (0 to max). If undefined, component enters indeterminate state. */
+  value?: number;
+  /** The maximum progress limit */
+  max?: number;
+  /** Size of progress bar height */
+  size?: FeedbackSize;
+  /** Color theme variant */
+  variant?: FeedbackSeverity;
+  /** Descriptive loading label */
+  label?: string;
+  /** Whether to show completion percentage text */
+  showValue?: boolean;
+}
+
+const {
+  value,
+  max = 100,
+  size = "md",
+  variant = "info",
+  label,
+  showValue = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const isIndeterminate = value === undefined;
+const percentage = isIndeterminate ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
+
+const classes = [
+  "progress-component",
+  `progress-size--${size}`,
+  `progress-variant--${variant}`,
+  isIndeterminate && "is-indeterminate",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(isIndeterminate ? "" : `--progress-value: ${percentage}%;`, Astro.props);
+---
+
+<div
+  class:list={finalClasses}
+  style={finalStyles}
+  role="progressbar"
+  aria-valuenow={value}
+  aria-valuemin="0"
+  aria-valuemax={max}
+  aria-label={label}
+  {...rest}
+>
+  {label && (
+    <div class="progress__header">
+      <Text class="progress__label" bold fs="2">{label}</Text>
+      {showValue && !isIndeterminate && (
+        <Text class="progress__value" tone="muted" fs="2">{Math.round(percentage)}%</Text>
+      )}
+    </div>
+  )}
+  <div class="progress__track">
+    <div class="progress__bar"></div>
+  </div>
+</div>
+
+
+--- File: progress/Progress.css ---
+/* src/design/feedback/progress/Progress.css */
+@import '../vars.css';
+
+.progress-component {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progress__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress__track {
+  width: 100%;
+  border-radius: var(--rad-full, 9999px);
+  background-color: var(--layer--2);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress__bar {
+  height: 100%;
+  border-radius: var(--rad-full, 9999px);
+  background-color: var(--progress-color, var(--color-feedback-info));
+  width: var(--progress-value, 0%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Size modifiers */
+.progress-size--sm .progress__track {
+  height: 6px;
+}
+.progress-size--md .progress__track {
+  height: 10px;
+}
+.progress-size--lg .progress__track {
+  height: 14px;
+}
+
+/* Variant colors mapping */
+.progress-variant--neutral {
+  --progress-color: var(--color-feedback-neutral);
+}
+.progress-variant--info {
+  --progress-color: var(--color-feedback-info);
+}
+.progress-variant--success {
+  --progress-color: var(--color-feedback-success);
+}
+.progress-variant--warning {
+  --progress-color: var(--color-feedback-warning);
+}
+.progress-variant--error {
+  --progress-color: var(--color-feedback-error);
+}
+
+/* Indeterminate status sliding animations */
+.progress-component.is-indeterminate .progress__bar {
+  width: 33% !important;
+  position: absolute;
+  left: -33%;
+  animation: progress-indeterminate 1.6s infinite cubic-bezier(0.65, 0.815, 0.735, 0.395);
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    left: -33%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-component.is-indeterminate .progress__bar {
+    animation: none !important;
+    left: 0;
+    width: 100% !important;
+    opacity: 0.5;
+  }
+}
+
+
+--- File: progress/progress.svg ---
+
+
+--- File: banner/Banner.astro ---
+---
+/**
+ * src/design/feedback/banner/Banner.astro
+ * A full-width messaging banner positioned at the top of pages or content sections.
+ * - Supports five severity levels: info, success, warning, error, neutral.
+ * - Supports four variants: solid, outline, soft, subtle.
+ * - Can be dismissible, with custom exit animation.
+ * @props (local): severity, variant, title, dismissible
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { FeedbackSeverity, FeedbackVariant } from "../feedback.types";
+import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP } from "../feedback.maps";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Icon from "../../display/icon/Icon.astro";
+import Text from "../../typography/text/Text.astro";
+import Button from "../../controls/button/Button.astro";
+import type { SvgName } from "../../shared/icons/index";
+import "./Banner.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The severity tone of the banner */
+  severity?: FeedbackSeverity;
+  /** Visual variant style */
+  variant?: FeedbackVariant;
+  /** Optional header title for the banner */
+  title?: string;
+  /** Whether the banner can be closed by the user */
+  dismissible?: boolean;
+}
+
+const {
+  severity = "info",
+  variant = "soft",
+  dismissible = false,
+  title,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Get severity icon name
+const iconName = FEEDBACK_SEVERITY_ICON_MAP[severity] as SvgName;
+
+const classes = [
+  "banner-component",
+  FEEDBACK_SEVERITY_CLASS_MAP[severity],
+  FEEDBACK_VARIANT_CLASS_MAP[variant],
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div
+  class:list={finalClasses}
+  style={finalStyles}
+  role="status"
+  {...rest}
+>
+  <div class="banner__container">
+    <div class="banner__icon-container">
+      <slot name="icon">
+        <Icon name={iconName} size="md" />
+      </slot>
+    </div>
+    
+    <div class="banner__content">
+      {title && (
+        <Text as="div" class="banner__title" bold>{title}</Text>
+      )}
+      <Text as="div" class="banner__description">
+        <slot />
+      </Text>
+    </div>
+    
+    {dismissible && (
+      <Button
+        variant="ghost"
+        iconOnly
+        size="sm"
+        class="banner__close-btn"
+        aria-label="Dismiss banner"
+      >
+        <Icon name="x" size="sm" />
+      </Button>
+    )}
+  </div>
+</div>
+
+<script>
+  const setupBannerDismiss = () => {
+    document.querySelectorAll(".banner-component").forEach((banner) => {
+      const closeBtn = banner.querySelector(".banner__close-btn");
+      if (!closeBtn || closeBtn.getAttribute("data-has-listener")) return;
+      
+      closeBtn.setAttribute("data-has-listener", "true");
+      closeBtn.addEventListener("click", () => {
+        banner.classList.add("is-dismissing");
+        
+        const removeBanner = () => {
+          banner.remove();
+        };
+        
+        banner.addEventListener("animationend", removeBanner, { once: true });
+        
+        // Fallback safety
+        setTimeout(() => {
+          if (banner.parentNode) {
+            banner.remove();
+          }
+        }, 300);
+      });
+    });
+  };
+
+  setupBannerDismiss();
+  document.addEventListener("astro:page-load", setupBannerDismiss);
+</script>
+
+
+--- File: banner/Banner.css ---
+/* src/design/feedback/banner/Banner.css */
+@import '../tokens.css';
+@import '../feedback.css';
+
+.banner-component {
+  width: 100%;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.2s ease, padding 0.2s ease;
+  box-sizing: border-box;
+}
+
+.banner__container {
+  max-width: var(--container-xl, 1280px);
+  margin: 0 auto;
+  padding: var(--sp-sm) var(--sp-md);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.banner__icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xs, 2px);
+}
+
+.banner__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.banner__description {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.banner__close-btn {
+  flex-shrink: 0;
+}
+
+.banner-component.is-dismissing {
+  opacity: 0;
+  transform: translateY(-100%);
+  max-height: 0;
+  padding: 0;
+  border-width: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner-component {
+    transition: none !important;
+  }
+}
+
+
+--- File: banner/banner.svg ---
+
+
+--- File: tokens.css ---
+@import './vars.css';
+
+:root {
+  /* ─── FEEDBACK COMPONENT TOKENS ───────────────────────── */
+  --feedback-rad-sm: var(--radius--sm, 4px);
+  --feedback-rad-md: var(--radius--md, 6px);
+  --feedback-rad-lg: var(--radius--lg, 10px);
+
+  /* Compact explicit paddings for Alerts to avoid fluid viewport bloating */
+  --alert-padding-sm: 6px 12px;
+  --alert-padding-md: 10px 16px;
+  --alert-padding-lg: 14px 20px;
+
+  /* Compact explicit paddings and dimensions for Toasts */
+  --toast-width: 320px;
+  --toast-max-width: 100%;
+  --toast-padding-sm: 8px 12px;
+  --toast-padding-md: 12px 16px;
+  --toast-padding-lg: 16px 20px;
+  --toast-shadow: var(--sh-l, 0 10px 15px -3px rgba(0, 0, 0, 0.2));
+}
+
+
+--- File: vars.css ---
+:root {
+  /* ─── FEEDBACK COLOR VARS ────────────────────────────── */
+  --color-feedback-info: #0ea5e9;
+  --color-feedback-success: #10b981;
+  --color-feedback-warning: #f59e0b;
+  --color-feedback-error: var(--color-danger, #e24b4a);
+  --color-feedback-neutral: var(--border--0, #64697d);
+}
+
+

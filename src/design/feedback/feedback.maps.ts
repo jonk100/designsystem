@@ -163,11 +163,11 @@ export const BANNER_MODE_CLASS_MAP: Record<BannerMode, string> = {
  * Maps feedback severities to their icon names
  */
 export const FEEDBACK_SEVERITY_ICON_MAP: Record<FeedbackSeverity, string> = {
-  'info': 'info-circle',
+  'info': 'info',
   'success': 'check-circle',
-  'warning': 'exclamation-triangle',
-  'error': 'times-circle',
-  'neutral': 'circle'
+  'warning': 'alert-triangle',
+  'error': 'alert-circle',
+  'neutral': 'info'
 };
 
 /**

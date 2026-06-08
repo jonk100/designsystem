@@ -1,0 +1,72 @@
+---
+/**
+ * src/components/sections/CompositionShowcase.astro
+ * Showcase component demonstrating how primitives compose together to build realistic card layouts.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Card from "../../design/surfaces/card/Card.astro";
+import Tag from "../../design/display/tag/Tag.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+---
+
+<Stack gap="md">
+
+  <Grid columns={3} gap="lg">
+    <Card padding="lg">
+      <Stack gap="md">
+        <Inline gap="sm" y="center">
+          <Text fs="2xl">📊</Text>
+          <Text fs="lg" bold>Analytics</Text>
+        </Inline>
+        <Stack gap="xs">
+          <Inline gap="sm" x="between">
+            <Text fs="sm" tone="muted">Users</Text>
+            <Text fs="sm" bold>42,819</Text>
+          </Inline>
+          <Inline gap="sm" x="between">
+            <Text fs="sm" tone="muted">Sessions</Text>
+            <Text fs="sm" bold>128,403</Text>
+          </Inline>
+          <Inline gap="sm" x="between">
+            <Text fs="sm" tone="muted">Bounce Rate</Text>
+            <Text fs="sm" bold>24.3%</Text>
+          </Inline>
+        </Stack>
+      </Stack>
+    </Card>
+
+    <Card padding="lg">
+      <Stack gap="md">
+        <Inline gap="sm" y="center">
+          <Text fs="2xl">🚀</Text>
+          <Text fs="lg" bold>Deployment</Text>
+        </Inline>
+        <Stack gap="xs">
+          <Text fs="sm" tone="success">● Production — Healthy</Text>
+          <Text fs="sm" tone="muted">● Staging — Idle</Text>
+          <Text fs="sm" tone="muted">● Preview — Building</Text>
+        </Stack>
+        <Text fs="xs" tone="subtle">Last deployed 3 minutes ago</Text>
+      </Stack>
+    </Card>
+
+    <Card padding="lg">
+      <Stack gap="md">
+        <Inline gap="sm" y="center">
+          <Text fs="2xl">🎨</Text>
+          <Text fs="lg" bold>Design Tokens</Text>
+        </Inline>
+        <Inline gap="xs">
+          <Tag size="sm">--sp-xs</Tag>
+          <Tag size="sm">--sp-sm</Tag>
+          <Tag size="sm">--sp-md</Tag>
+          <Tag size="sm">--sp-lg</Tag>
+          <Tag size="sm">--sp-xl</Tag>
+        </Inline>
+        <Text fs="xs" tone="subtle">5 spacing tokens in active use</Text>
+      </Stack>
+    </Card>
+  </Grid>
+</Stack>

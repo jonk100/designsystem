@@ -1,0 +1,86 @@
+/* src/design/feedback/progress/Progress.css */
+@import '../vars.css';
+
+.progress-component {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progress__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress__track {
+  width: 100%;
+  border-radius: var(--rad-full, 9999px);
+  background-color: var(--layer--2);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress__bar {
+  height: 100%;
+  border-radius: var(--rad-full, 9999px);
+  background-color: var(--progress-color, var(--color-feedback-info));
+  width: var(--progress-value, 0%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Size modifiers */
+.progress-size--sm .progress__track {
+  height: 6px;
+}
+.progress-size--md .progress__track {
+  height: 10px;
+}
+.progress-size--lg .progress__track {
+  height: 14px;
+}
+
+/* Variant colors mapping */
+.progress-variant--neutral {
+  --progress-color: var(--color-feedback-neutral);
+}
+.progress-variant--info {
+  --progress-color: var(--color-feedback-info);
+}
+.progress-variant--success {
+  --progress-color: var(--color-feedback-success);
+}
+.progress-variant--warning {
+  --progress-color: var(--color-feedback-warning);
+}
+.progress-variant--error {
+  --progress-color: var(--color-feedback-error);
+}
+
+/* Indeterminate status sliding animations */
+.progress-component.is-indeterminate .progress__bar {
+  width: 33% !important;
+  position: absolute;
+  left: -33%;
+  animation: progress-indeterminate 1.6s infinite cubic-bezier(0.65, 0.815, 0.735, 0.395);
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    left: -33%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-component.is-indeterminate .progress__bar {
+    animation: none !important;
+    left: 0;
+    width: 100% !important;
+    opacity: 0.5;
+  }
+}

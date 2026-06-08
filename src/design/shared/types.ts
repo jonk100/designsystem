@@ -24,7 +24,6 @@ export type DisplayVariant = typeof DISPLAY_VARIANTS[number];
 export type LayoutAlign = typeof LAYOUT_ALIGNS[number];
 export type DisplayEffect = typeof DISPLAY_EFFECTS[number];
 
-export type BlockType = "p" | "div" | "span" | "em" | "strong" | "mark" | "del" | "ins" | "sup" | "sub";
 export type InlineStyle = Record<string, string | number>;
 
 /** Shared interface for components using flexbox properties */

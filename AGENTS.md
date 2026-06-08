@@ -76,6 +76,12 @@ Additional relevant files:
 - `../{category}.types.ts` - Category-level types and interfaces
 - `../{category}.maps.ts` - Category-level mapping functions (e.g. generator maps)
 
+### Showcase / Helper Components
+
+For custom helper components, page layout blocks, and showcase sections used to demonstrate the design system outside of the core `src/design/` directory, place them under `src/components/`:
+- `src/components/`: Root directory for custom presentation-only, layout, or utility components.
+- `src/components/sections/`: Modular section components that represent page sections (e.g. layout, control showcases), keeping main page files like `src/pages/index.astro` clean and maintainable.
+
 ## 3. Token Organization
 
 - **tokens.css**: Contains CSS custom properties (design tokens) under `:root` selector. No class selectors allowed.

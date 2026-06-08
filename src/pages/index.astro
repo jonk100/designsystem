@@ -1,44 +1,25 @@
 ---
+/**
+ * src/pages/index.astro
+ * Main entry page for The System design system showcase.
+ * Integrates modular showcase sections to keep the index page maintainable and lightweight.
+ */
 import Text from "../design/typography/text/Text.astro";
-import Code from "../design/typography/code/Code.astro";
-import Link from "../design/typography/link/Link.astro";
-import Caption from "../design/typography/caption/Caption.astro";
-import Label from "../design/typography/label/Label.astro";
-import Kbd from "../design/typography/kbd/Kbd.astro";
-import Inline from "../design/layout/inline/Inline.astro";
 import Stack from "../design/layout/stack/Stack.astro";
-import Grid from "../design/layout/grid/Grid.astro";
 import Container from "../design/layout/container/Container.astro";
-import Center from "../design/layout/center/Center.astro";
 import Spacer from "../design/layout/spacer/Spacer.astro";
-import Card from "../design/surfaces/card/Card.astro";
-import Paper from "../design/surfaces/paper/Paper.astro";
-import Collapsible from "../design/controls/collapsible/Collapsible.astro";
-import Badge from "../design/display/badge/Badge.astro";
-import Tag from "../design/display/tag/Tag.astro";
-import Avatar from "../design/display/avatar/Avatar.astro";
-import Icon from "../design/display/icon/Icon.astro";
-import Indicator from "../design/display/indicator/Indicator.astro";
-import Dot from "../design/display/dot/Dot.astro";
-import Chip from "../design/display/chip/Chip.astro";
-import Counter from "../design/display/counter/Counter.astro";
-import Switch from "../design/controls/switch/Switch.astro";
-import Button from "../design/controls/button/Button.astro";
-import Slider from "../design/controls/slider/Slider.astro";
-import RangeSlider from "../design/controls/range-slider/RangeSlider.astro";
-import Multiselect from "../design/controls/multiselect/Multiselect.astro";
-import ButtonGroup from "../design/controls/button-group/ButtonGroup.astro";
-import Input from "../design/controls/input/Input.astro";
-import InputGroup from "../design/controls/input-group/InputGroup.astro";
-import Select from "../design/controls/select/Select.astro";
-import Checkbox from "../design/controls/checkbox/Checkbox.astro";
-import Radio from "../design/controls/radio/Radio.astro";
-import RadioGroup from "../design/controls/radio-group/RadioGroup.astro";
-import DatePicker from "../design/controls/date-picker/DatePicker.astro";
-import Search from "../design/controls/search/Search.astro";
-import Combobox from "../design/controls/combobox/Combobox.astro";
-import Quote from "../design/semantics/quote/Quote.astro";
 import Layout from "../layouts/Layout.astro";
+import Collapsible from "../design/controls/collapsible/Collapsible.astro";
+
+// Import modular showcase sections
+import ThemeCustomizer from "../components/sections/ThemeCustomizer.astro";
+import ControlsShowcase from "../components/sections/ControlsShowcase.astro";
+import DisplayShowcase from "../components/sections/DisplayShowcase.astro";
+import TypographyShowcase from "../components/sections/TypographyShowcase.astro";
+import LayoutShowcase from "../components/sections/LayoutShowcase.astro";
+import SurfacesShowcase from "../components/sections/SurfacesShowcase.astro";
+import FeedbackShowcase from "../components/sections/FeedbackShowcase.astro";
+import CompositionShowcase from "../components/sections/CompositionShowcase.astro";
 ---
 
 <Layout title="Home">
@@ -52,938 +33,88 @@ import Layout from "../layouts/Layout.astro";
 				</Text>
 			</Stack>
 
-			<!-- ─── THEME CONFIGURATION DASHBOARD ────────────────── -->
-			<Paper>
-				<Stack gap="md">
-					<Inline gap="xs" y="center">
-						<Text fs="xl" bold>🎨 Theme Customizer</Text>
-						<Tag variant="amber">Live Toggles</Tag>
-					</Inline>
-					<Text fs="sm" tone="muted">
-						Use the switches below to toggle back to your previously defined classic color scheme or classic typography layout.
-					</Text>
-					<Inline gap="xl" wrap>
-						<Inline gap="sm" y="center">
-							<Switch name="classic-colors" id="colors-toggle" />
-							<Label for="colors-toggle">Classic Colors (Emerald & Amber)</Label>
-						</Inline>
-						<Inline gap="sm" y="center">
-							<Switch name="classic-fonts" id="fonts-toggle" />
-							<Label for="fonts-toggle">Classic Fonts (Cabin & M PLUS 1)</Label>
-						</Inline>
-					</Inline>
-				</Stack>
-			</Paper>
+			<!-- Theme Configuration Dashboard -->
+			<ThemeCustomizer />
 
-			<!-- ─── SECTION: Dark Editorial Showcase ─────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="3xl" bold>Dark Editorial Showcase</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Showcase of the 10 components aligned with the Amber Gold styling, IBM Plex Mono, and Playfair Display fonts.
-				</Text>
-
-				<Grid columns={2} gap="lg">
-					<!-- Item 1: Spacer -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>1. Spacer</Text>
-							<Text fs="xs" tone="muted">Invisible layout utility. Visual boundaries added below for demonstration.</Text>
-							<Stack gap="none">
-								<Text fs="2xs" tone="muted">Top Element</Text>
-								<div style="position: relative;">
-									<Spacer size="2xl" style="border: 1px dashed var(--color-gold); background: var(--color-gold-subtle);" />
-									<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-										<Text fs="2xs" style="color: var(--color-gold); line-height: 1;">Spacer (2xl size: vertical)</Text>
-									</div>
-								</div>
-								<Text fs="2xs" tone="muted">Bottom Element</Text>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 2: Slider -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>2. Slider</Text>
-							<Text fs="xs" tone="muted">Single-handle range input with filled progress track.</Text>
-							<Slider label="Volume" value={72} min={0} max={100} name="volume" />
-						</Stack>
-					</Paper>
-
-					<!-- Item 3: Range Slider -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>3. Range Slider</Text>
-							<Text fs="xs" tone="muted">Dual-handle slider using overlapping range inputs.</Text>
-							<RangeSlider label="Price Range" valLo={120} valHi={480} min={0} max={1000} prefix="£" />
-						</Stack>
-					</Paper>
-
-					<!-- Item 4: Multiselect -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>4. Multiselect</Text>
-							<Text fs="xs" tone="muted">Searchable multi-value combobox with dismissible chips.</Text>
-							<Multiselect
-								label="Select Genres"
-								options={['Jazz', 'Blues', 'Rock', 'Pop', 'Classical', 'Hip Hop']}
-								selected={['Jazz']}
-								name="genres"
-							/>
-						</Stack>
-					</Paper>
-
-					<!-- Item 5: Button & Toggle Button -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>5 & 6. Button & Toggle Button</Text>
-							<Text fs="xs" tone="muted">Standard Buttons, Icon Buttons, and binary Toggle Buttons.</Text>
-							<Stack gap="xs">
-								<Text fs="2xs" tone="muted" bold>Standard Variants</Text>
-								<Inline gap="xs" wrap>
-									<Button variant="primary">Primary Gold</Button>
-									<Button variant="secondary">Secondary</Button>
-									<Button variant="ghost">Ghost</Button>
-									<Button variant="danger">Danger</Button>
-								</Inline>
-								
-								<Text fs="2xs" tone="muted" bold>Icon Buttons</Text>
-								<Inline gap="xs" y="center">
-									<Button iconOnly size="md" variant="gold" aria-label="Edit">
-										<Icon name="zap" size="xs" />
-									</Button>
-									<Button iconOnly size="md" variant="danger" aria-label="Delete">
-										<Icon name="x" size="xs" />
-									</Button>
-									<Button iconOnly size="md" variant="ghost" aria-label="Success">
-										<Icon name="check" size="xs" />
-									</Button>
-								</Inline>
-
-								<Text fs="2xs" tone="muted" bold>Toggle Buttons</Text>
-								<Inline gap="xs">
-									<Button toggle active={true}>
-										<Icon name="bold" size="2xs" /> Bold
-									</Button>
-									<Button toggle active={false}>
-										<Icon name="italic" size="2xs" /> Italic
-									</Button>
-								</Inline>
-
-								<Text fs="2xs" tone="muted" bold>Button Groups</Text>
-								<Stack gap="xs">
-									<Inline gap="xs" y="center" wrap>
-										<!-- 2-button group -->
-										<ButtonGroup size="md">
-											<Button variant="secondary">Yes</Button>
-											<Button variant="secondary">No</Button>
-										</ButtonGroup>
-
-										<!-- 3-button group -->
-										<ButtonGroup size="md">
-											<Button variant="secondary">Left</Button>
-											<Button variant="secondary">Center</Button>
-											<Button variant="secondary">Right</Button>
-										</ButtonGroup>
-									</Inline>
-
-									<!-- 4-iconbutton group (toggle buttons) -->
-									<div>
-										<ButtonGroup size="sm">
-											<Button toggle iconOnly active={true} aria-label="Format Bold">
-												<Icon name="bold" />
-											</Button>
-											<Button toggle iconOnly active={false} aria-label="Format Italic">
-												<Icon name="italic" />
-											</Button>
-											<Button toggle iconOnly active={false} aria-label="Format Underline">
-												<Icon name="underline" />
-											</Button>
-											<Button toggle iconOnly active={false} aria-label="Format Strike">
-												<Icon name="zap" />
-											</Button>
-										</ButtonGroup>
-									</div>
-								</Stack>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 7: Label & Input Group & InputGroup -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>7. Label & Input Group</Text>
-							<Text fs="xs" tone="muted">Descriptive labels, required/optional hints, helper texts, and input groups.</Text>
-							<Stack gap="md">
-								<div class="label-group">
-									<Label for="episode-title" required>Episode title</Label>
-									<Input id="episode-title" placeholder="e.g. The Awakening" />
-									<p class="label__helper">Used in credits and series bible.</p>
-								</div>
-								<div class="label-group">
-									<Label for="episode-desc" optional>Episode description</Label>
-									<Input id="episode-desc" placeholder="e.g. A brief summary" />
-								</div>
-								<div class="label-group">
-									<Label for="draft-num">Draft number</Label>
-									<Input id="draft-num" invalid value="Three" aria-describedby="draft-err" />
-									<p class="label__error" id="draft-err" role="alert">
-										<Icon name="alert-circle" size="2xs" /> Must be a number (e.g. 3)
-									</p>
-								</div>
-								<div class="label-group">
-									<Label>Price with Addon (InputGroup)</Label>
-									<InputGroup>
-										<span class="input-group__addon">$</span>
-										<Input placeholder="0.00" />
-										<span class="input-group__addon">USD</span>
-									</InputGroup>
-								</div>
-								<div class="label-group">
-									<Label>Search & Button (InputGroup)</Label>
-									<InputGroup>
-										<Search placeholder="Find episodes..." />
-										<Button variant="primary">Search</Button>
-									</InputGroup>
-								</div>
-							</Stack>
-						</Stack>
-					</Paper>
-				<!-- </Grid> -->
-
-				<!-- <Grid columns={3} gap="2xs"> -->
-					<!-- Item 8: Badge -->
-					<!-- Item 8: Badge -->
-					<Paper padding="xs">
-						<Stack gap="sm">
-							<Text fs="lg" bold>8. Badge</Text>
-							<Text fs="xs" tone="muted">Non-interactive metadata indicators with vibrant statuses.</Text>
-							<Stack gap="sm">
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Badge Sizes (sm, md, lg, xl)</Text>
-									<Inline gap="xs" wrap y="center">
-										<Badge variant="primary" size="sm">New Feature</Badge>
-										<Badge variant="success" size="md">Active</Badge>
-										<Badge variant="warning" size="lg">Warning</Badge>
-										<Badge variant="danger" size="xl">Critical Error</Badge>
-									</Inline>
-								</Stack>
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Badge with Icons (sm, md, lg, xl)</Text>
-									<Inline gap="xs" wrap y="center">
-										<Badge variant="primary" size="sm" icon="zap">Live Update</Badge>
-										<Badge variant="success" size="md" icon="check">Verified</Badge>
-										<Badge variant="warning" size="lg" icon="alert-triangle">Beta Release</Badge>
-										<Badge variant="danger" size="xl" icon="alert-circle">Blocked</Badge>
-									</Inline>
-								</Stack>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 9: Tag -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>9. Tag</Text>
-							<Text fs="xs" tone="muted">Non-interactive semantic indicator with status dot or leading icons.</Text>
-							<Stack gap="sm">
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Status Dot (sm, md, lg, xl)</Text>
-									<Inline gap="xs" wrap y="center">
-										<Tag variant="amber" size="sm" dot>In Progress</Tag>
-										<Tag variant="teal" size="md" dot>Complete</Tag>
-										<Tag variant="coral" size="lg" dot>Blocked</Tag>
-										<Tag variant="purple" size="xl" dot>In Review</Tag>
-									</Inline>
-								</Stack>
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Leading Icon (sm, md, lg, xl)</Text>
-									<Inline gap="xs" wrap y="center">
-										<Tag variant="amber" size="sm" icon="zap">In Progress</Tag>
-										<Tag variant="teal" size="md" icon="check">Complete</Tag>
-										<Tag variant="coral" size="lg" icon="alert-circle">Blocked</Tag>
-										<Tag variant="purple" size="xl" icon="search">In Review</Tag>
-									</Inline>
-								</Stack>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 10: Chip -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>10. Chip</Text>
-							<Text fs="xs" tone="muted">Interactive selection filters with active states and leading/dismiss elements.</Text>
-							<Stack gap="sm">
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Chip Sizes (sm, md, lg)</Text>
-									<Inline gap="xs" wrap y="center">
-										<Chip size="sm">Drama</Chip>
-										<Chip size="md">Comedy</Chip>
-										<Chip size="lg">Action</Chip>
-									</Inline>
-								</Stack>
-								<Stack gap="3xs">
-									<Text fs="2xs" tone="muted" bold>Chip States & Options</Text>
-									<Inline gap="xs" wrap y="center">
-										<Chip variant="primary" active>Selected (Active)</Chip>
-										<Chip variant="default" dismissible>Dismissible</Chip>
-										<Chip variant="primary" icon="zap">With Icon</Chip>
-										<Chip variant="default" active dismissible icon="check">Combined</Chip>
-									</Inline>
-								</Stack>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 11: Quote -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>11. Quote</Text>
-							<Text fs="xs" tone="muted">Inline quote, blockquote, and full-width centered pull-quote.</Text>
-							<Stack gap="xs">
-								<Text fs="2xs" tone="muted" bold>Inline Quote</Text>
-								<Text fs="sm">
-									He famously stated that <Quote variant="inline" cite="http://example.com">the medium is the message</Quote> in his book.
-								</Text>
-								<Text fs="2xs" tone="muted" bold>Block Quote</Text>
-								<Quote variant="block" author="Marshall McLuhan" source="Understanding Media, 1964">
-									The medium is the message.
-								</Quote>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 12: Link -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>12. Link</Text>
-							<Text fs="xs" tone="muted">Typography wrapper with active states and external indicator icons.</Text>
-							<Stack gap="xs">
-								<Text fs="2xs" tone="muted" bold>Internal Link</Text>
-								<Link href="#">Browse the documentation</Link>
-								<Text fs="2xs" tone="muted" bold>External Link</Text>
-								<Link href="https://astro.build" external>Visit Astro Website</Link>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 13: Code & Keyboard -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>13. Code & Keyboard</Text>
-							<Text fs="xs" tone="muted">Monospace inline code display and keyboard shortcut blocks.</Text>
-							<Stack gap="xs">
-								<Text fs="2xs" tone="muted" bold>Code Snippet</Text>
-								<div>
-									<Code fs="sm">npm run dev</Code>
-								</div>
-								<Text fs="2xs" tone="muted" bold>Keyboard Shortcuts</Text>
-								<Inline gap="2xs" y="center">
-									<Kbd>Ctrl</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>Shift</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>P</Kbd>
-								</Inline>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Item 14: Selection & Pickers -->
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="lg" bold>14. Selection & Pickers</Text>
-							<Text fs="xs" tone="muted">Select, Checkbox, Radio, DatePicker, and Combobox controls.</Text>
-							<Stack gap="md">
-								<!-- Select -->
-								<div class="label-group">
-									<Label>Select Dropdown</Label>
-									<Select placeholder="Choose a genre...">
-										<option value="jazz">Jazz</option>
-										<option value="blues">Blues</option>
-										<option value="rock">Rock</option>
-									</Select>
-								</div>
-
-								<!-- DatePicker -->
-								<div class="label-group">
-									<Label>Date Picker</Label>
-									<DatePicker name="release-date" />
-								</div>
-
-								<!-- Combobox -->
-								<div class="label-group">
-									<Label>Searchable Single-Select (Combobox)</Label>
-									<Combobox
-										placeholder="Search countries..."
-										options={["United States", "United Kingdom", "Canada", "Germany", "France", "Japan"]}
-										selected="United Kingdom"
-										name="country"
-									/>
-								</div>
-
-								<!-- Checkbox -->
-								<div class="label-group">
-									<Label>Checkboxes</Label>
-									<Stack gap="2xs">
-										<Checkbox checked>Subscribe to newsletter</Checkbox>
-										<Checkbox>Accept terms of service</Checkbox>
-										<Checkbox disabled>Disabled checkbox</Checkbox>
-									</Stack>
-								</div>
-
-								<!-- Radio & RadioGroup -->
-								<div class="label-group">
-									<Label>Radio Group</Label>
-									<RadioGroup name="layout-choice" orientation="horizontal" gap="sm">
-										<Radio checked name="layout-choice" value="grid">Grid View</Radio>
-										<Radio name="layout-choice" value="list">List View</Radio>
-										<Radio disabled name="layout-choice" value="compact">Compact View</Radio>
-									</RadioGroup>
-								</div>
-							</Stack>
-						</Stack>
-					</Paper>
-				</Grid>
-			</Stack>
-
-			<!-- ─── SECTION: Stack ─────────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Stack</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Vertical flex column. Children stack top to bottom with a consistent
-					gap.
-				</Text>
-				<Text as="p" italic fs="2xs">Nested inside a grid:</Text>
-
-				<Grid columns={2} gap="lg">
-					<!-- Example: gap sizes -->
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>gap="xs"</Text>
-							<Stack gap="xs" style="padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">Item 1</Text></Card>
-								<Card padding="sm"><Text fs="sm">Item 2</Text></Card>
-								<Card padding="sm"><Text fs="sm">Item 3</Text></Card>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>gap="xl"</Text>
-							<Stack gap="xl" style="padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">Item 1</Text></Card>
-								<Card padding="sm"><Text fs="sm">Item 2</Text></Card>
-								<Card padding="sm"><Text fs="sm">Item 3</Text></Card>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<!-- Example: alignment -->
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>x="center"</Text>
-							<Stack gap="sm" x="center" style="min-height: 120px; padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">Centered child</Text></Card>
-								<Card padding="sm"><Text fs="sm">Also centered</Text></Card>
-							</Stack>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>x="end"</Text>
-							<Stack gap="sm" x="end" style="min-height: 120px; padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">Pushed right</Text></Card>
-								<Card padding="sm"><Text fs="sm">Also right</Text></Card>
-							</Stack>
-						</Stack>
-					</Paper>
-				</Grid>
-			</Stack>
-
-			<!-- ─── SECTION: Inline ────────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Inline</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Horizontal flex row. Children flow left to right, wrapping by default.
-				</Text>
-
-				<Grid columns={2} gap="lg">
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>gap="md" (default wrap)</Text>
-							<Inline gap="md" style="padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">Alpha</Text></Card>
-								<Card padding="sm"><Text fs="sm">Beta</Text></Card>
-								<Card padding="sm"><Text fs="sm">Gamma</Text></Card>
-								<Card padding="sm"><Text fs="sm">Delta</Text></Card>
-								<Card padding="sm"><Text fs="sm">Epsilon</Text></Card>
-							</Inline>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>x="between" y="center"</Text>
-							<Inline
-								gap="md"
-								x="between"
-								y="center"
-								style="padding: 0.5rem;"
-							>
-								<Card padding="sm"><Text fs="sm">Left</Text></Card>
-								<Card padding="sm"><Text fs="lg">Tall</Text></Card>
-								<Card padding="sm"><Text fs="sm">Right</Text></Card>
-							</Inline>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>x="center"</Text>
-							<Inline gap="sm" x="center" style="padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">A</Text></Card>
-								<Card padding="sm"><Text fs="sm">B</Text></Card>
-								<Card padding="sm"><Text fs="sm">C</Text></Card>
-							</Inline>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>x="end"</Text>
-							<Inline gap="sm" x="end" style="padding: 0.5rem;">
-								<Card padding="sm"><Text fs="sm">X</Text></Card>
-								<Card padding="sm"><Text fs="sm">Y</Text></Card>
-								<Card padding="sm"><Text fs="sm">Z</Text></Card>
-							</Inline>
-						</Stack>
-					</Paper>
-				</Grid>
-			</Stack>
-
-			<!-- ─── SECTION: Container ─────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Container</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Constrains max-width and centers content. Provides safe side padding.
-				</Text>
-
-				<Stack gap="md">
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="sm" tone="muted" bold>size="sm" (640px)</Text>
-							<Container size="sm">
-								<Card padding="md">
-									<Text fs="sm"
-										>Content constrained to 640px max-width, centered with auto
-										margins.</Text
-									>
-								</Card>
-							</Container>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="sm" tone="muted" bold>size="md" (768px)</Text>
-							<Container size="md">
-								<Card padding="md">
-									<Text fs="sm"
-										>Medium container — 768px max. Good for article content.</Text
-									>
-								</Card>
-							</Container>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="sm">
-							<Text fs="sm" tone="muted" bold>size="fluid" (no max)</Text>
-							<Container size="fluid">
-								<Card padding="md">
-									<Text fs="sm"
-										>Fluid — fills available width. The default.</Text
-									>
-								</Card>
-							</Container>
-						</Stack>
-					</Paper>
-				</Stack>
-			</Stack>
-
-			<!-- ─── SECTION: Grid ──────────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Grid</Text>
-				<Text as="p" fs="sm" tone="muted">
-					CSS Grid layout. Set explicit columns or auto-fit with a min width.
-				</Text>
-
-				<Paper>
-					<Stack gap="sm">
-						<Text fs="sm" tone="muted" bold>columns={3} gap="md"</Text>
-						<Grid columns={3} gap="md">
-							<Card padding="md"><Text fs="sm">Column 1</Text></Card>
-							<Card padding="md"><Text fs="sm">Column 2</Text></Card>
-							<Card padding="md"><Text fs="sm">Column 3</Text></Card>
-							<Card padding="md"><Text fs="sm">Column 4</Text></Card>
-							<Card padding="md"><Text fs="sm">Column 5</Text></Card>
-							<Card padding="md"><Text fs="sm">Column 6</Text></Card>
-						</Grid>
-					</Stack>
-				</Paper>
-
-				<Paper>
-					<Stack gap="sm">
-						<Text fs="sm" tone="muted" bold>Auto-fit (minWidth="200px")</Text>
-						<Grid minWidth="200px" gap="md">
-							<Card padding="md"><Text fs="sm">Auto A</Text></Card>
-							<Card padding="md"><Text fs="sm">Auto B</Text></Card>
-							<Card padding="md"><Text fs="sm">Auto C</Text></Card>
-							<Card padding="md"><Text fs="sm">Auto D</Text></Card>
-							<Card padding="md"><Text fs="sm">Auto E</Text></Card>
-						</Grid>
-					</Stack>
-				</Paper>
-			</Stack>
-
-			<!-- ─── SECTION: Center ────────────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Center</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Flexbox centering utility — both axes by default.
-				</Text>
-
-				<Grid columns={2} gap="lg">
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>Default (both axes)</Text>
-							<Center style="height: 150px;">
-								<Card padding="md"><Text fs="sm">Dead center</Text></Card>
-							</Center>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="xs">
-							<Text fs="sm" tone="muted" bold>text={true}</Text>
-							<Center text style="height: 150px;">
-								<Text as="p" fs="sm">Text is centered too</Text>
-								<Text as="p" fs="sm" tone="muted">Second line</Text>
-							</Center>
-						</Stack>
-					</Paper>
-				</Grid>
-			</Stack>
-
-			<!-- ─── SECTION: Paper & Card ──────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Paper & Card</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Surface components for grouping content. Cards have hover effects,
-					Papers are neutral containers.
-				</Text>
-
-				<Grid columns={3} gap="lg">
-					<Stack gap="sm">
-						<Text fs="sm" tone="muted" bold>Paper (sm padding)</Text>
-						<Paper padding="sm">
-							<Text fs="sm"
-								>A lightweight container with minimal chrome. Good for wrapping
-								small groups of related elements.</Text
-							>
-						</Paper>
-					</Stack>
-
-					<Stack gap="sm">
-						<Text fs="sm" tone="muted" bold>Paper (lg padding)</Text>
-						<Paper>
-							<Text fs="sm"
-								>More breathing room. Works well for standalone sections or as
-								inner containers within a Card.</Text
-							>
-						</Paper>
-					</Stack>
-
-					<Stack gap="sm">
-						<Text fs="sm" tone="muted" bold>Card (default)</Text>
-						<Card padding="lg">
-							<Stack gap="sm">
-								<Text fs="lg" bold>Card Title</Text>
-								<Text fs="sm" tone="muted"
-									>Cards get a hover lift and glow. Try hovering.</Text
-								>
-							</Stack>
-						</Card>
-					</Stack>
-				</Grid>
-			</Stack>
-
-			<!-- ─── SECTION: Text ──────────────────────────────── -->
-			<Collapsible gap="xl">
-				<Stack as="span" gap="xs" slot="summary">
-					<Text as="span" fs="2xl" bold>Text</Text>
-					<Text as="span" fs="sm" tone="muted">
-						Typography primitive. Controls size, weight, tone, letter-spacing,
-						and decoration.
+			<!-- Controls & Pickers Showcase -->
+			<Collapsible gap="xl" open>
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Controls & Inputs</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Interactive components: sliders, select pickers, inputs, checkable controls, and buttons.
 					</Text>
 				</Stack>
-
-				<Stack gap="md">
-
-					<Paper>
-						<Stack gap="md">
-							<!-- Size scale -->
-							<Stack gap="xs">
-								<Text fs="sm" tone="muted" bold>Size scale</Text>
-								<Inline gap="md" y="baseline">
-									<Text fs="xs">xs</Text>
-									<Text fs="sm">sm</Text>
-									<Text fs="md">md</Text>
-									<Text fs="lg">lg</Text>
-									<Text fs="xl">xl</Text>
-									<Text fs="2xl">2xl</Text>
-									<Text fs="3xl">3xl</Text>
-								</Inline>
-							</Stack>
-
-							<!-- Tones -->
-							<Stack gap="xs">
-								<Text fs="sm" tone="muted" bold>Tones</Text>
-								<Inline gap="md">
-									<Text tone="default">default</Text>
-									<Text tone="muted">muted</Text>
-									<Text tone="subtle">subtle</Text>
-									<Text tone="primary">primary</Text>
-									<Text tone="secondary">secondary</Text>
-									<Text tone="accent">accent</Text>
-									<Text tone="success">success</Text>
-									<Text tone="danger">danger</Text>
-								</Inline>
-							</Stack>
-
-							<!-- Weight -->
-							<Stack gap="xs">
-								<Text fs="sm" tone="muted" bold>Weights</Text>
-								<Inline gap="md">
-									<Text fs="sm" fw="light">light</Text>
-									<Text fs="sm" fw="normal">normal</Text>
-									<Text fs="sm" fw="medium">medium</Text>
-									<Text fs="sm" fw="semibold">semibold</Text>
-									<Text fs="sm" bold>bold</Text>
-									<Text fs="sm" fw="extrabold">extrabold</Text>
-								</Inline>
-							</Stack>
-
-							<!-- Decorations -->
-							<Stack gap="xs">
-								<Text fs="sm" tone="muted" bold>Decorations</Text>
-								<Inline gap="md">
-									<Text italic>italic</Text>
-									<Text underline>underline</Text>
-									<Text strikethrough>strikethrough</Text>
-									<Text uppercase fs="sm">uppercase</Text>
-									<Text lowercase fs="sm">LOWERCASE</Text>
-								</Inline>
-							</Stack>
-						</Stack>
-					</Paper>
-				</Stack>
+				<ControlsShowcase />
 			</Collapsible>
 
-			<!-- ─── SECTION: Typography Components ────────────────── -->
-			<Collapsible gap="xl">
-				<Stack as="span" gap="xs" slot="summary">
-					<Text as="span" fs="2xl" bold>Typography Components</Text>
-					<Text as="span" fs="sm" tone="muted">
-						Role-based text wrappers built on the Typography primitive (Code, Link, Caption, Label, Kbd).
-					</Text>
-				</Stack>
-
-				<Stack gap="md">
-					<Grid columns={2} gap="lg">
-						<Paper>
-							<Stack gap="sm">
-								<Text fs="sm" tone="muted" bold>Caption</Text>
-								<Caption fs="sm" tone="subtle" xa="center">
-									This is a caption, often used below media or figures.
-								</Caption>
-							</Stack>
-						</Paper>
-
-						<Paper>
-							<Stack gap="sm">
-								<Text fs="sm" tone="muted" bold>Label</Text>
-								<Label for="example" required fs="sm" fw="medium">Email Address</Label>
-								<Label for="example-disabled" disabled fs="sm" fw="medium">Password</Label>
-							</Stack>
-						</Paper>
-
-						<Paper>
-							<Stack gap="sm">
-								<Text fs="sm" tone="muted" bold>Code & Kbd</Text>
-								<Inline gap="sm" y="center">
-									<Code fs="sm">npm install</Code>
-									<Text fs="sm" tone="muted">or press</Text>
-									<Inline gap="2xs" y="center">
-										<Kbd>Ctrl</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>C</Kbd>
-									</Inline>
-								</Inline>
-							</Stack>
-						</Paper>
-
-						<Paper>
-							<Stack gap="sm">
-								<Text fs="sm" tone="muted" bold>Link</Text>
-								<Inline gap="md" wrap>
-									<Link href="#">Internal Link</Link>
-									<Link href="https://example.com" external>External Link</Link>
-								</Inline>
-							</Stack>
-						</Paper>
-					</Grid>
-				</Stack>
-			</Collapsible>
-
-			<!-- ─── SECTION: Display ─────────────────────────── -->
+			<!-- Display Elements Showcase -->
 			<Collapsible gap="xl">
 				<Stack gap="xs" slot="summary">
 					<Text as="p" fs="2xl" bold>Display</Text>
 					<Text as="p" fs="sm" tone="muted">
-						Visual elements for communicating status, counts, and metadata.
+						Visual elements for communicating status, counts, tags, metadata, and user avatars.
 					</Text>
 				</Stack>
-
-				<Stack gap="md">
-					<Paper>
-						<Stack gap="md">
-							<Text fs="sm" tone="muted" bold>Badge & Tag</Text>
-							<Inline gap="sm" y="center">
-								<Badge variant="primary">New Feature</Badge>
-								<Badge variant="success">Active</Badge>
-								<Badge variant="danger">Error</Badge>
-								<Tag size="sm">v2.4.0</Tag>
-								<Tag variant="warning" size="md">Beta</Tag>
-							</Inline>
-						</Stack>
-					</Paper>
-
-					<Paper>
-						<Stack gap="md">
-							<Text fs="sm" tone="muted" bold>Avatar, Counter, & Indicators</Text>
-							<Inline gap="md" y="center">
-								<Avatar size="lg" src="https://i.pravatar.cc/150?u=1" alt="User 1" />
-								<Avatar size="md" src="https://i.pravatar.cc/150?u=2" alt="User 2" />
-								<Inline gap="xs" y="center">
-									<Dot variant="success" />
-									<Text fs="sm" tone="muted">Online</Text>
-								</Inline>
-								<Counter variant="primary">42</Counter>
-								<Counter variant="danger">99+</Counter>
-								<Chip>Clickable Chip</Chip>
-							</Inline>
-						</Stack>
-					</Paper>
-				</Stack>
+				<DisplayShowcase />
 			</Collapsible>
 
-			<!-- ─── SECTION: Composition ───────────────────────── -->
-			<Stack gap="md">
-				<Text as="p" fs="2xl" bold>Composition</Text>
-				<Text as="p" fs="sm" tone="muted">
-					Primitives compose together. Here's a realistic card layout built from
-					Stack, Inline, Text, and Card.
-				</Text>
+			<!-- Typography Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Typography & Semantics</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Text styling, sizing scales, weight modifiers, links, semantic quotes, code wrappers, and labels.
+					</Text>
+				</Stack>
+				<TypographyShowcase />
+			</Collapsible>
 
-				<Grid columns={3} gap="lg">
-					<Card padding="lg">
-						<Stack gap="md">
-							<Inline gap="sm" y="center">
-								<Text fs="2xl">📊</Text>
-								<Text fs="lg" bold>Analytics</Text>
-							</Inline>
-							<Stack gap="xs">
-								<Inline gap="sm" x="between">
-									<Text fs="sm" tone="muted">Users</Text>
-									<Text fs="sm" bold>42,819</Text>
-								</Inline>
-								<Inline gap="sm" x="between">
-									<Text fs="sm" tone="muted">Sessions</Text>
-									<Text fs="sm" bold>128,403</Text>
-								</Inline>
-								<Inline gap="sm" x="between">
-									<Text fs="sm" tone="muted">Bounce Rate</Text>
-									<Text fs="sm" bold>24.3%</Text>
-								</Inline>
-							</Stack>
-						</Stack>
-					</Card>
+			<!-- Layout Primitives Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Layout Primitives</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Structural components for building page grids, vertical stacks, horizontal lines, containers, and centered blocks.
+					</Text>
+				</Stack>
+				<LayoutShowcase />
+			</Collapsible>
 
-					<Card padding="lg">
-						<Stack gap="md">
-							<Inline gap="sm" y="center">
-								<Text fs="2xl">🚀</Text>
-								<Text fs="lg" bold>Deployment</Text>
-							</Inline>
-							<Stack gap="xs">
-								<Text fs="sm" tone="success">● Production — Healthy</Text>
-								<Text fs="sm" tone="muted">● Staging — Idle</Text>
-								<Text fs="sm" tone="muted">● Preview — Building</Text>
-							</Stack>
-							<Text fs="xs" tone="subtle">Last deployed 3 minutes ago</Text>
-						</Stack>
-					</Card>
+			<!-- Surfaces & Containers Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Surfaces</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Structural containers that group, elevate, and outline content layout sections.
+					</Text>
+				</Stack>
+				<SurfacesShowcase />
+			</Collapsible>
 
-					<Card padding="lg">
-						<Stack gap="md">
-							<Inline gap="sm" y="center">
-								<Text fs="2xl">🎨</Text>
-								<Text fs="lg" bold>Design Tokens</Text>
-							</Inline>
-							<Inline gap="xs">
-								<Tag size="sm">--sp-xs</Tag>
-								<Tag size="sm">--sp-sm</Tag>
-								<Tag size="sm">--sp-md</Tag>
-								<Tag size="sm">--sp-lg</Tag>
-								<Tag size="sm">--sp-xl</Tag>
-							</Inline>
-							<Text fs="xs" tone="subtle">5 spacing tokens in active use</Text>
-						</Stack>
-					</Card>
-				</Grid>
-			</Stack>
+			<!-- Feedback (Alerts & Toasts) Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Feedback</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Inline messages and floating notifications to communicate status, errors, warning alerts, and success events.
+					</Text>
+				</Stack>
+				<FeedbackShowcase />
+			</Collapsible>
 
-			<!-- Footer spacer -->
+			<!-- Realistic Layout Composition Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Composition</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Demonstrations of how layout primitives and surface components nest to form realistic UI patterns.
+					</Text>
+				</Stack>
+				<CompositionShowcase />
+			</Collapsible>
+
+			<!-- Footer Spacer -->
 			<Spacer size="xl" />
 		</Stack>
 	</Container>
 </Layout>
-
-<script>
-	const setupThemeToggles = () => {
-		const colorsSwitch = document.querySelector('[data-name="classic-colors"]') as HTMLButtonElement;
-		const fontsSwitch = document.querySelector('[data-name="classic-fonts"]') as HTMLButtonElement;
-
-		if (colorsSwitch) {
-			colorsSwitch.addEventListener("click", () => {
-				const checked = colorsSwitch.getAttribute("aria-checked") === "true";
-				const nextChecked = !checked;
-				colorsSwitch.setAttribute("aria-checked", nextChecked.toString());
-				colorsSwitch.classList.toggle("is-checked", nextChecked);
-				document.documentElement.classList.toggle("classic-colors", nextChecked);
-			});
-		}
-
-		if (fontsSwitch) {
-			fontsSwitch.addEventListener("click", () => {
-				const checked = fontsSwitch.getAttribute("aria-checked") === "true";
-				const nextChecked = !checked;
-				fontsSwitch.setAttribute("aria-checked", nextChecked.toString());
-				fontsSwitch.classList.toggle("is-checked", nextChecked);
-				document.documentElement.classList.toggle("classic-fonts", nextChecked);
-			});
-		}
-	};
-
-	setupThemeToggles();
-	document.addEventListener("astro:page-load", setupThemeToggles);
-</script>

@@ -1,0 +1,219 @@
+---
+/**
+ * src/components/sections/ControlsShowcase.astro
+ * Showcase component for controls: buttons, inputs, sliders, and pickers.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Slider from "../../design/controls/slider/Slider.astro";
+import RangeSlider from "../../design/controls/range-slider/RangeSlider.astro";
+import Multiselect from "../../design/controls/multiselect/Multiselect.astro";
+import Button from "../../design/controls/button/Button.astro";
+import Icon from "../../design/display/icon/Icon.astro";
+import ButtonGroup from "../../design/controls/button-group/ButtonGroup.astro";
+import Label from "../../design/typography/label/Label.astro";
+import Input from "../../design/controls/input/Input.astro";
+import InputGroup from "../../design/controls/input-group/InputGroup.astro";
+import Search from "../../design/controls/search/Search.astro";
+import Select from "../../design/controls/select/Select.astro";
+import DatePicker from "../../design/controls/date-picker/DatePicker.astro";
+import Combobox from "../../design/controls/combobox/Combobox.astro";
+import Checkbox from "../../design/controls/checkbox/Checkbox.astro";
+import Radio from "../../design/controls/radio/Radio.astro";
+import RadioGroup from "../../design/controls/radio-group/RadioGroup.astro";
+---
+
+<Stack gap="md">
+
+  <Grid columns={2} gap="lg">
+    <!-- Slider -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Slider</Text>
+        <Text fs="xs" tone="muted">Single-handle range input with filled progress track.</Text>
+        <Slider label="Volume" value={72} min={0} max={100} name="volume" />
+      </Stack>
+    </Paper>
+
+    <!-- Range Slider -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Range Slider</Text>
+        <Text fs="xs" tone="muted">Dual-handle slider using overlapping range inputs.</Text>
+        <RangeSlider label="Price Range" valLo={120} valHi={480} min={0} max={1000} prefix="£" />
+      </Stack>
+    </Paper>
+
+    <!-- Multiselect -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Multiselect</Text>
+        <Text fs="xs" tone="muted">Searchable multi-value combobox with dismissible chips.</Text>
+        <Multiselect
+          label="Select Genres"
+          options={['Jazz', 'Blues', 'Rock', 'Pop', 'Classical', 'Hip Hop']}
+          selected={['Jazz']}
+          name="genres"
+        />
+      </Stack>
+    </Paper>
+
+    <!-- Buttons & Toggle Buttons -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Button & Toggle Button</Text>
+        <Text fs="xs" tone="muted">Standard Buttons, Icon Buttons, and binary Toggle Buttons.</Text>
+        <Stack gap="xs">
+          <Text fs="2xs" tone="muted" bold>Standard Variants</Text>
+          <Inline gap="xs" wrap>
+            <Button variant="primary">Primary Gold</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="danger">Danger</Button>
+          </Inline>
+          
+          <Text fs="2xs" tone="muted" bold>Icon Buttons</Text>
+          <Inline gap="xs" y="center">
+            <Button iconOnly size="md" variant="gold" aria-label="Edit">
+              <Icon name="zap" size="xs" />
+            </Button>
+            <Button iconOnly size="md" variant="danger" aria-label="Delete">
+              <Icon name="x" size="xs" />
+            </Button>
+            <Button iconOnly size="md" variant="ghost" aria-label="Success">
+              <Icon name="check" size="xs" />
+            </Button>
+          </Inline>
+
+          <Text fs="2xs" tone="muted" bold>Toggle Buttons</Text>
+          <Inline gap="xs">
+            <Button toggle active={true}>
+              <Icon name="bold" size="2xs" /> Bold
+            </Button>
+            <Button toggle active={false}>
+              <Icon name="italic" size="2xs" /> Italic
+            </Button>
+          </Inline>
+
+          <Text fs="2xs" tone="muted" bold>Button Groups</Text>
+          <Stack gap="xs">
+            <Inline gap="xs" y="center" wrap>
+              <!-- 2-button group -->
+              <ButtonGroup size="md">
+                <Button variant="secondary">Yes</Button>
+                <Button variant="secondary">No</Button>
+              </ButtonGroup>
+
+              <!-- 3-button group -->
+              <ButtonGroup size="md">
+                <Button variant="secondary">Left</Button>
+                <Button variant="secondary">Center</Button>
+                <Button variant="secondary">Right</Button>
+              </ButtonGroup>
+            </Inline>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <!-- Labels & Input Groups -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Label & Input Group</Text>
+        <Text fs="xs" tone="muted">Descriptive labels, required/optional hints, helper texts, and input groups.</Text>
+        <Stack gap="md">
+          <div class="label-group">
+            <Label for="episode-title" required>Episode title</Label>
+            <Input id="episode-title" placeholder="e.g. The Awakening" />
+            <p class="label__helper">Used in credits and series bible.</p>
+          </div>
+          <div class="label-group">
+            <Label for="episode-desc" optional>Episode description</Label>
+            <Input id="episode-desc" placeholder="e.g. A brief summary" />
+          </div>
+          <div class="label-group">
+            <Label for="draft-num">Draft number</Label>
+            <Input id="draft-num" invalid value="Three" aria-describedby="draft-err" />
+            <p class="label__error" id="draft-err" role="alert">
+              <Icon name="alert-circle" size="2xs" /> Must be a number (e.g. 3)
+            </p>
+          </div>
+          <div class="label-group">
+            <Label>Price with Addon (InputGroup)</Label>
+            <InputGroup>
+              <span class="input-group__addon">$</span>
+              <Input placeholder="0.00" />
+              <span class="input-group__addon">USD</span>
+            </InputGroup>
+          </div>
+          <div class="label-group">
+            <Label>Search & Button (InputGroup)</Label>
+            <InputGroup>
+              <Search placeholder="Find episodes..." />
+              <Button variant="primary">Search</Button>
+            </InputGroup>
+          </div>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <!-- Selection & Pickers -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Selection & Pickers</Text>
+        <Text fs="xs" tone="muted">Select, Checkbox, Radio, DatePicker, and Combobox controls.</Text>
+        <Stack gap="md">
+          <!-- Select -->
+          <div class="label-group">
+            <Label>Select Dropdown</Label>
+            <Select placeholder="Choose a genre...">
+              <option value="jazz">Jazz</option>
+              <option value="blues">Blues</option>
+              <option value="rock">Rock</option>
+            </Select>
+          </div>
+
+          <!-- DatePicker -->
+          <div class="label-group">
+            <Label>Date Picker</Label>
+            <DatePicker name="release-date" />
+          </div>
+
+          <!-- Combobox -->
+          <div class="label-group">
+            <Label>Searchable Single-Select (Combobox)</Label>
+            <Combobox
+              placeholder="Search countries..."
+              options={["United States", "United Kingdom", "Canada", "Germany", "France", "Japan"]}
+              selected="United Kingdom"
+              name="country"
+            />
+          </div>
+
+          <!-- Checkbox -->
+          <div class="label-group">
+            <Label>Checkboxes</Label>
+            <Stack gap="2xs">
+              <Checkbox checked>Subscribe to newsletter</Checkbox>
+              <Checkbox>Accept terms of service</Checkbox>
+              <Checkbox disabled>Disabled checkbox</Checkbox>
+            </Stack>
+          </div>
+
+          <!-- Radio & RadioGroup -->
+          <div class="label-group">
+            <Label>Radio Group</Label>
+            <RadioGroup name="layout-choice" orientation="horizontal" gap="sm">
+              <Radio checked name="layout-choice" value="grid">Grid View</Radio>
+              <Radio name="layout-choice" value="list">List View</Radio>
+              <Radio disabled name="layout-choice" value="compact">Compact View</Radio>
+            </RadioGroup>
+          </div>
+        </Stack>
+      </Stack>
+    </Paper>
+  </Grid>
+</Stack>

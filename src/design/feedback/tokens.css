@@ -1,0 +1,21 @@
+@import './vars.css';
+
+:root {
+  /* ─── FEEDBACK COMPONENT TOKENS ───────────────────────── */
+  --feedback-rad-sm: var(--radius--sm, 4px);
+  --feedback-rad-md: var(--radius--md, 6px);
+  --feedback-rad-lg: var(--radius--lg, 10px);
+
+  /* Compact explicit paddings for Alerts to avoid fluid viewport bloating */
+  --alert-padding-sm: 6px 12px;
+  --alert-padding-md: 10px 16px;
+  --alert-padding-lg: 14px 20px;
+
+  /* Compact explicit paddings and dimensions for Toasts */
+  --toast-width: 320px;
+  --toast-max-width: 100%;
+  --toast-padding-sm: 8px 12px;
+  --toast-padding-md: 12px 16px;
+  --toast-padding-lg: 16px 20px;
+  --toast-shadow: var(--sh-l, 0 10px 15px -3px rgba(0, 0, 0, 0.2));
+}

@@ -1,0 +1,72 @@
+/* src/design/feedback/spinner/Spinner.css */
+@import '../vars.css';
+
+.spinner-component {
+  display: inline-block;
+  border-radius: var(--rad-full, 9999px);
+  border-style: solid;
+  border-color: currentColor;
+  border-right-color: transparent;
+  animation: spinner-spin 0.75s linear infinite;
+  box-sizing: border-box;
+  vertical-align: text-bottom;
+  flex-shrink: 0;
+}
+
+/* Size modifiers */
+.spinner-size--xs {
+  width: 12px;
+  height: 12px;
+  border-width: 1.5px;
+}
+.spinner-size--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+.spinner-size--md {
+  width: 24px;
+  height: 24px;
+  border-width: 2.5px;
+}
+.spinner-size--lg {
+  width: 36px;
+  height: 36px;
+  border-width: 3.5px;
+}
+
+/* Variant color overrides */
+.spinner-variant--neutral {
+  color: var(--color-feedback-neutral);
+}
+.spinner-variant--info {
+  color: var(--color-feedback-info);
+}
+.spinner-variant--success {
+  color: var(--color-feedback-success);
+}
+.spinner-variant--warning {
+  color: var(--color-feedback-warning);
+}
+.spinner-variant--error {
+  color: var(--color-feedback-error);
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Visually hidden accessibility helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

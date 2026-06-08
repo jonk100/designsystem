@@ -1,0 +1,75 @@
+---
+/**
+ * src/components/sections/ThemeCustomizer.astro
+ * Showcase utility page component for toggling themes and fonts.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Tag from "../../design/display/tag/Tag.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Switch from "../../design/controls/switch/Switch.astro";
+import Label from "../../design/typography/label/Label.astro";
+---
+
+<Paper>
+  <Stack gap="md">
+    <Inline gap="xs" y="center">
+      <Text fs="xl" bold>🎨 Theme Customizer</Text>
+      <Tag variant="amber">Live Toggles</Tag>
+    </Inline>
+    <Text fs="sm" tone="muted">
+      Use the switches below to toggle back to your previously defined classic color scheme or classic typography layout.
+    </Text>
+    <Inline gap="xl" wrap>
+      <Inline gap="sm" y="center">
+        <Switch name="classic-colors" id="colors-toggle" />
+        <Label for="colors-toggle">Classic Colors (Emerald & Amber)</Label>
+      </Inline>
+      <Inline gap="sm" y="center">
+        <Switch name="classic-fonts" id="fonts-toggle" />
+        <Label for="fonts-toggle">Classic Fonts (Cabin & M PLUS 1)</Label>
+      </Inline>
+    </Inline>
+  </Stack>
+</Paper>
+
+<script>
+  const setupThemeToggles = () => {
+    const colorsSwitch = document.querySelector('[data-name="classic-colors"]') as HTMLButtonElement;
+    const fontsSwitch = document.querySelector('[data-name="classic-fonts"]') as HTMLButtonElement;
+
+    if (colorsSwitch) {
+      // Initialize state from document element
+      const isClassicColors = document.documentElement.classList.contains("classic-colors");
+      colorsSwitch.setAttribute("aria-checked", isClassicColors.toString());
+      colorsSwitch.classList.toggle("is-checked", isClassicColors);
+
+      colorsSwitch.addEventListener("click", () => {
+        const checked = colorsSwitch.getAttribute("aria-checked") === "true";
+        const nextChecked = !checked;
+        colorsSwitch.setAttribute("aria-checked", nextChecked.toString());
+        colorsSwitch.classList.toggle("is-checked", nextChecked);
+        document.documentElement.classList.toggle("classic-colors", nextChecked);
+      });
+    }
+
+    if (fontsSwitch) {
+      // Initialize state from document element
+      const isClassicFonts = document.documentElement.classList.contains("classic-fonts");
+      fontsSwitch.setAttribute("aria-checked", isClassicFonts.toString());
+      fontsSwitch.classList.toggle("is-checked", isClassicFonts);
+
+      fontsSwitch.addEventListener("click", () => {
+        const checked = fontsSwitch.getAttribute("aria-checked") === "true";
+        const nextChecked = !checked;
+        fontsSwitch.setAttribute("aria-checked", nextChecked.toString());
+        fontsSwitch.classList.toggle("is-checked", nextChecked);
+        document.documentElement.classList.toggle("classic-fonts", nextChecked);
+      });
+    }
+  };
+
+  setupThemeToggles();
+  document.addEventListener("astro:page-load", setupThemeToggles);
+</script>

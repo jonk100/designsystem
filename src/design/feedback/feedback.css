@@ -1,0 +1,84 @@
+@import './tokens.css';
+
+/* ============================================================================
+   SHARED SEVERITY CLASSES
+   Sets the CSS custom property --feedback-color which is consumed by variants
+   ============================================================================ */
+
+.feedback-info {
+  --feedback-color: var(--color-feedback-info);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-info) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-0, #08090c); /* Dark text on bright cyan */
+}
+
+.feedback-success {
+  --feedback-color: var(--color-feedback-success);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-success) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on green */
+}
+
+.feedback-warning {
+  --feedback-color: var(--color-feedback-warning);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-warning) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-0, #08090c); /* Dark text on bright yellow */
+}
+
+.feedback-error {
+  --feedback-color: var(--color-feedback-error);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-error) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on red */
+}
+
+.feedback-neutral {
+  --feedback-color: var(--color-feedback-neutral);
+  --feedback-color-light: color-mix(in srgb, var(--color-feedback-neutral) 60%, #ffffff);
+  --feedback-solid-text: var(--neutral-15, #f7f8fa); /* Light text on grey */
+}
+
+/* ============================================================================
+   SHARED VARIANT CLASSES
+   Consumes the --feedback-color variable for background, border, and text styling
+   ============================================================================ */
+
+.feedback-solid {
+  background: var(--feedback-color);
+  border: 1px solid var(--feedback-color);
+  color: var(--feedback-solid-text);
+}
+
+.feedback-outline {
+  background: transparent;
+  border: 1px solid var(--feedback-color);
+  color: var(--feedback-color);
+}
+
+.feedback-soft {
+  background: color-mix(in srgb, var(--feedback-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--feedback-color) 25%, transparent);
+  color: var(--feedback-color-light);
+}
+
+.feedback-subtle {
+  background: color-mix(in srgb, var(--feedback-color) 6%, transparent);
+  border: 1px solid transparent;
+  color: var(--feedback-color-light);
+}
+
+/* ============================================================================
+   SHARED SIZE CLASSES
+   ============================================================================ */
+
+.feedback-sm {
+  font-size: var(--fs--xs);
+  border-radius: var(--feedback-rad-sm);
+}
+
+.feedback-md {
+  font-size: var(--fs--sm);
+  border-radius: var(--feedback-rad-md);
+}
+
+.feedback-lg {
+  font-size: var(--fs--md);
+  border-radius: var(--feedback-rad-lg);
+}

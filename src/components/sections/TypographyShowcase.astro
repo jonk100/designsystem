@@ -1,0 +1,156 @@
+---
+/**
+ * src/components/sections/TypographyShowcase.astro
+ * Showcase component for typography: Text scales, Quote, Link, Code, Kbd, Caption, Label.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Quote from "../../design/semantics/quote/Quote.astro";
+import Link from "../../design/typography/link/Link.astro";
+import Code from "../../design/typography/code/Code.astro";
+import Kbd from "../../design/typography/kbd/Kbd.astro";
+import Caption from "../../design/typography/caption/Caption.astro";
+import Label from "../../design/typography/label/Label.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+---
+
+<Stack gap="md">
+    <!-- Text Scale Showcase -->
+    <Paper>
+      <Stack gap="md">
+        <Text fs="lg" bold>Text Primitive Scales</Text>
+        <Text fs="xs" tone="muted">Highly modular vertical and horizontal styling modifiers.</Text>
+        
+        <!-- Size scale -->
+        <Stack gap="xs">
+          <Text fs="sm" tone="muted" bold>Size scale</Text>
+          <Inline gap="md" y="baseline">
+            <Text fs="xs">xs</Text>
+            <Text fs="sm">sm</Text>
+            <Text fs="md">md</Text>
+            <Text fs="lg">lg</Text>
+            <Text fs="xl">xl</Text>
+            <Text fs="2xl">2xl</Text>
+            <Text fs="3xl">3xl</Text>
+          </Inline>
+        </Stack>
+
+        <!-- Tones -->
+        <Stack gap="xs">
+          <Text fs="sm" tone="muted" bold>Tones</Text>
+          <Inline gap="md" wrap>
+            <Text tone="default">default</Text>
+            <Text tone="muted">muted</Text>
+            <Text tone="subtle">subtle</Text>
+            <Text tone="primary">primary</Text>
+            <Text tone="secondary">secondary</Text>
+            <Text tone="accent">accent</Text>
+            <Text tone="success">success</Text>
+            <Text tone="danger">danger</Text>
+          </Inline>
+        </Stack>
+
+        <!-- Weight -->
+        <Stack gap="xs">
+          <Text fs="sm" tone="muted" bold>Weights</Text>
+          <Inline gap="md" wrap>
+            <Text fs="sm" fw="light">light</Text>
+            <Text fs="sm" fw="normal">normal</Text>
+            <Text fs="sm" fw="medium">medium</Text>
+            <Text fs="sm" fw="semibold">semibold</Text>
+            <Text fs="sm" bold>bold</Text>
+            <Text fs="sm" fw="extrabold">extrabold</Text>
+          </Inline>
+        </Stack>
+
+        <!-- Decorations -->
+        <Stack gap="xs">
+          <Text fs="sm" tone="muted" bold>Decorations</Text>
+          <Inline gap="md" wrap>
+            <Text italic>italic</Text>
+            <Text underline>underline</Text>
+            <Text strikethrough>strikethrough</Text>
+            <Text uppercase fs="sm">uppercase</Text>
+            <Text lowercase fs="sm">LOWERCASE</Text>
+          </Inline>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <Grid columns={2} gap="lg">
+      <!-- Item 11: Quote -->
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="lg" bold>Quote</Text>
+          <Text fs="xs" tone="muted">Inline quote, blockquote, and full-width formatted source quotes.</Text>
+          <Stack gap="xs">
+            <Text fs="2xs" tone="muted" bold>Inline Quote</Text>
+            <Text fs="sm">
+              He famously stated that <Quote variant="inline" cite="http://example.com">the medium is the message</Quote> in his book.
+            </Text>
+            <Text fs="2xs" tone="muted" bold>Block Quote</Text>
+            <Quote variant="block" author="Marshall McLuhan" source="Understanding Media, 1964">
+              The medium is the message.
+            </Quote>
+          </Stack>
+        </Stack>
+      </Paper>
+
+      <!-- Item 12: Link -->
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="lg" bold>Link</Text>
+          <Text fs="xs" tone="muted">Typography wrapper with active states and external indicator icons.</Text>
+          <Stack gap="xs">
+            <Text fs="2xs" tone="muted" bold>Internal Link</Text>
+            <Link href="#">Browse the documentation</Link>
+            <Text fs="2xs" tone="muted" bold>External Link</Text>
+            <Link href="https://astro.build" external>Visit Astro Website</Link>
+          </Stack>
+        </Stack>
+      </Paper>
+
+      <!-- Item 13: Code & Keyboard -->
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="lg" bold>Code & Keyboard</Text>
+          <Text fs="xs" tone="muted">Monospace inline code display and keyboard shortcut blocks.</Text>
+          <Stack gap="xs">
+            <Text fs="2xs" tone="muted" bold>Code Snippet</Text>
+            <div>
+              <Code fs="sm">npm run dev</Code>
+            </div>
+            <Text fs="2xs" tone="muted" bold>Keyboard Shortcuts</Text>
+            <Inline gap="2xs" y="center">
+              <Kbd>Ctrl</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>Shift</Kbd> <Text fs="sm" tone="muted">+</Text> <Kbd>P</Kbd>
+            </Inline>
+          </Stack>
+        </Stack>
+      </Paper>
+
+      <!-- Typography Helpers -->
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="lg" bold>Typography Components</Text>
+          <Text fs="xs" tone="muted">Role-based wrappers: Caption and Label.</Text>
+          <Stack gap="md">
+            <div>
+              <Text fs="2xs" tone="muted" bold>Caption</Text>
+              <Caption fs="sm" tone="subtle" xa="center">
+                This is a caption, often used below media or figures.
+              </Caption>
+            </div>
+            <div>
+              <Text fs="2xs" tone="muted" bold>Labels</Text>
+              <Stack gap="2xs">
+                <Label for="example" required fs="sm" fw="medium">Email Address</Label>
+                <Label for="example-disabled" disabled fs="sm" fw="medium">Password</Label>
+              </Stack>
+            </div>
+          </Stack>
+        </Stack>
+      </Paper>
+    </Grid>
+</Stack>

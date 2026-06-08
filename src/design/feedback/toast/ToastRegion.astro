@@ -1,0 +1,106 @@
+---
+/**
+ * src/design/feedback/toast/ToastRegion.astro
+ * The container mount point and client-side manager for Toast notifications.
+ * Renders the container where toasts appear and handles toast:show custom events.
+ */
+import "./Toast.css";
+---
+
+<div class="toast-container" role="status" aria-live="polite"></div>
+
+<script>
+  // SVG icons mapped to severity
+  const toastIcons = {
+    success: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+    error: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+    info: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
+    warning: `<svg class="icon-component icon-size--md" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`
+  };
+
+  const showToast = (severity: 'success' | 'error' | 'info' | 'warning', title?: string, description?: string, duration = 4000) => {
+    const container = document.querySelector(".toast-container");
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = `toast-component feedback-${severity} feedback-solid feedback-md`;
+
+    toast.innerHTML = `
+      <div class="toast__icon-container">
+        ${toastIcons[severity]}
+      </div>
+      <div class="toast__content">
+        <div class="toast__title"></div>
+        <div class="toast__description"></div>
+      </div>
+      <button type="button" class="toast__close-btn" aria-label="Close notification">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    `;
+
+    // Set text elements safely (prevent XSS)
+    const titleEl = toast.querySelector(".toast__title");
+    if (titleEl) {
+      if (title) {
+        titleEl.textContent = title;
+      } else {
+        titleEl.remove();
+      }
+    }
+
+    const descEl = toast.querySelector(".toast__description");
+    if (descEl) {
+      descEl.textContent = description || "";
+    }
+
+    const closeBtn = toast.querySelector(".toast__close-btn");
+    const dismiss = () => {
+      if (toast.classList.contains("is-leaving") || toast.classList.contains("is-dismissing")) return;
+      toast.classList.add("is-leaving");
+      
+      const removeToast = () => {
+        toast.remove();
+      };
+      
+      toast.addEventListener("animationend", removeToast, { once: true });
+      setTimeout(removeToast, 400); // safety fallback
+    };
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", dismiss);
+    }
+
+    // Dismissal timing with hover-to-pause
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+
+    const startTimer = (delay: number) => {
+      timerId = setTimeout(dismiss, delay);
+    };
+
+    toast.addEventListener("mouseenter", () => {
+      if (timerId) clearTimeout(timerId);
+    });
+
+    toast.addEventListener("mouseleave", () => {
+      startTimer(1500); // restart timer at 1.5s
+    });
+
+    if (duration > 0) {
+      startTimer(duration);
+    }
+
+    container.appendChild(toast);
+  };
+
+  const setupToastListener = () => {
+    if ((window as any).__toast_listener_active) return;
+    (window as any).__toast_listener_active = true;
+
+    window.addEventListener("toast:show", (event: any) => {
+      const { severity, title, description, duration } = event.detail || {};
+      showToast(severity, title, description, duration);
+    });
+  };
+
+  setupToastListener();
+</script>

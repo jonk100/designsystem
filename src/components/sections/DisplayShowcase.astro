@@ -1,0 +1,118 @@
+---
+/**
+ * src/components/sections/DisplayShowcase.astro
+ * Showcase component for display metadata: badge, tag, chip, avatar, counters, dots.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Badge from "../../design/display/badge/Badge.astro";
+import Tag from "../../design/display/tag/Tag.astro";
+import Chip from "../../design/display/chip/Chip.astro";
+import Avatar from "../../design/display/avatar/Avatar.astro";
+import Dot from "../../design/display/dot/Dot.astro";
+import Counter from "../../design/display/counter/Counter.astro";
+---
+
+<Stack gap="md">
+    <!-- Item 8: Badge -->
+    <Paper padding="xs">
+      <Stack gap="sm">
+        <Text fs="lg" bold>Badge</Text>
+        <Text fs="xs" tone="muted">Non-interactive status labels with vibrant variant fills.</Text>
+        <Stack gap="sm">
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Badge Sizes (sm, md, lg, xl)</Text>
+            <Inline gap="xs" wrap y="center">
+              <Badge variant="primary" size="sm">New Feature</Badge>
+              <Badge variant="success" size="md">Active</Badge>
+              <Badge variant="warning" size="lg">Warning</Badge>
+              <Badge variant="danger" size="xl">Critical Error</Badge>
+            </Inline>
+          </Stack>
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Badge with Icons (sm, md, lg, xl)</Text>
+            <Inline gap="xs" wrap y="center">
+              <Badge variant="primary" size="sm" icon="zap">Live Update</Badge>
+              <Badge variant="success" size="md" icon="check">Verified</Badge>
+              <Badge variant="warning" size="lg" icon="alert-triangle">Beta Release</Badge>
+              <Badge variant="danger" size="xl" icon="alert-circle">Blocked</Badge>
+            </Inline>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <!-- Item 9: Tag -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Tag</Text>
+        <Text fs="xs" tone="muted">Non-interactive semantic labels with status dot or leading icons.</Text>
+        <Stack gap="sm">
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Status Dot (sm, md, lg, xl)</Text>
+            <Inline gap="xs" wrap y="center">
+              <Tag variant="amber" size="sm" dot>In Progress</Tag>
+              <Tag variant="teal" size="md" dot>Complete</Tag>
+              <Tag variant="coral" size="lg" dot>Blocked</Tag>
+              <Tag variant="purple" size="xl" dot>In Review</Tag>
+            </Inline>
+          </Stack>
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Leading Icon (sm, md, lg, xl)</Text>
+            <Inline gap="xs" wrap y="center">
+              <Tag variant="amber" size="sm" icon="zap">In Progress</Tag>
+              <Tag variant="teal" size="md" icon="check">Complete</Tag>
+              <Tag variant="coral" size="lg" icon="alert-circle">Blocked</Tag>
+              <Tag variant="purple" size="xl" icon="search">In Review</Tag>
+            </Inline>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <!-- Item 10: Chip -->
+    <Paper>
+      <Stack gap="sm">
+        <Text fs="lg" bold>Chip</Text>
+        <Text fs="xs" tone="muted">Interactive selection tokens supporting hover states and dismiss buttons.</Text>
+        <Stack gap="sm">
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Chip Sizes (sm, md, lg)</Text>
+            <Inline gap="xs" wrap y="center">
+              <Chip size="sm">Drama</Chip>
+              <Chip size="md">Comedy</Chip>
+              <Chip size="lg">Action</Chip>
+            </Inline>
+          </Stack>
+          <Stack gap="3xs">
+            <Text fs="2xs" tone="muted" bold>Chip States & Options</Text>
+            <Inline gap="xs" wrap y="center">
+              <Chip variant="primary" active>Selected (Active)</Chip>
+              <Chip variant="default" dismissible>Dismissible</Chip>
+              <Chip variant="primary" icon="zap">With Icon</Chip>
+              <Chip variant="default" active dismissible icon="check">Combined</Chip>
+            </Inline>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Paper>
+
+    <!-- Shared Display Utilities (Avatar, Counter, indicators) -->
+    <Paper>
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Avatar, Counter, & Indicators</Text>
+        <Inline gap="md" y="center">
+          <Avatar size="lg" src="https://i.pravatar.cc/150?u=1" alt="User 1" />
+          <Avatar size="md" src="https://i.pravatar.cc/150?u=2" alt="User 2" />
+          <Inline gap="xs" y="center">
+            <Dot variant="success" />
+            <Text fs="sm" tone="muted">Online</Text>
+          </Inline>
+          <Counter variant="primary">42</Counter>
+          <Counter variant="danger">99+</Counter>
+        </Inline>
+      </Stack>
+    </Paper>
+</Stack>

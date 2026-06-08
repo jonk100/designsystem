@@ -1,0 +1,120 @@
+---
+/**
+ * src/design/feedback/banner/Banner.astro
+ * A full-width messaging banner positioned at the top of pages or content sections.
+ * - Supports five severity levels: info, success, warning, error, neutral.
+ * - Supports four variants: solid, outline, soft, subtle.
+ * - Can be dismissible, with custom exit animation.
+ * @props (local): severity, variant, title, dismissible
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { FeedbackSeverity, FeedbackVariant } from "../feedback.types";
+import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP, FEEDBACK_SEVERITY_ARIA_ROLE_MAP } from "../feedback.maps";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import Icon from "../../display/icon/Icon.astro";
+import Text from "../../typography/text/Text.astro";
+import Button from "../../controls/button/Button.astro";
+import type { SvgName } from "../../shared/icons/index";
+import "./Banner.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The severity tone of the banner */
+  severity?: FeedbackSeverity;
+  /** Visual variant style */
+  variant?: FeedbackVariant;
+  /** Optional header title for the banner */
+  title?: string;
+  /** Whether the banner can be closed by the user */
+  dismissible?: boolean;
+}
+
+const {
+  severity = "info",
+  variant = "soft",
+  dismissible = false,
+  title,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Get severity icon name
+const iconName = FEEDBACK_SEVERITY_ICON_MAP[severity] as SvgName;
+
+const classes = [
+  "banner-component",
+  FEEDBACK_SEVERITY_CLASS_MAP[severity],
+  FEEDBACK_VARIANT_CLASS_MAP[variant],
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div
+  class:list={finalClasses}
+  style={finalStyles}
+  role={FEEDBACK_SEVERITY_ARIA_ROLE_MAP[severity] as any}
+  {...rest}
+>
+  <div class="banner__container">
+    <div class="banner__icon-container">
+      <slot name="icon">
+        <Icon name={iconName} size="md" />
+      </slot>
+    </div>
+    
+    <div class="banner__content">
+      {title && (
+        <Text as="div" class="banner__title" bold>{title}</Text>
+      )}
+      <Text as="div" class="banner__description">
+        <slot />
+      </Text>
+    </div>
+    
+    {dismissible && (
+      <Button
+        variant="ghost"
+        iconOnly
+        size="sm"
+        class="banner__close-btn"
+        aria-label="Dismiss banner"
+      >
+        <Icon name="x" size="sm" />
+      </Button>
+    )}
+  </div>
+</div>
+
+<script>
+  const setupBannerDismiss = () => {
+    document.querySelectorAll(".banner-component").forEach((banner) => {
+      const closeBtn = banner.querySelector(".banner__close-btn");
+      if (!closeBtn || closeBtn.getAttribute("data-has-listener")) return;
+      
+      closeBtn.setAttribute("data-has-listener", "true");
+      closeBtn.addEventListener("click", () => {
+        banner.classList.add("is-dismissing");
+        
+        const removeBanner = () => {
+          banner.remove();
+        };
+        
+        banner.addEventListener("animationend", removeBanner, { once: true });
+        
+        // Fallback safety
+        setTimeout(() => {
+          if (banner.parentNode) {
+            banner.remove();
+          }
+        }, 300);
+      });
+    });
+  };
+
+  setupBannerDismiss();
+  document.addEventListener("astro:page-load", setupBannerDismiss);
+</script>

@@ -1,0 +1,49 @@
+---
+/**
+ * src/components/sections/SurfacesShowcase.astro
+ * Showcase component for surfaces: Paper and Card.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Card from "../../design/surfaces/card/Card.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+---
+
+<Stack gap="md">
+
+  <Grid columns={3} gap="lg">
+    <!-- Paper sm padding -->
+    <Stack gap="sm">
+      <Text fs="sm" tone="muted" bold>Paper (sm padding)</Text>
+      <Paper padding="sm">
+        <Text fs="sm">
+          A lightweight container with minimal borders and default flat background. Good for wrapping small groups of related elements.
+        </Text>
+      </Paper>
+    </Stack>
+
+    <!-- Paper lg padding -->
+    <Stack gap="sm">
+      <Text fs="sm" tone="muted" bold>Paper (lg padding)</Text>
+      <Paper>
+        <Text fs="sm">
+          More breathing room padding. Works well for standalone sections, text blocks, or as inner containers within card boundaries.
+        </Text>
+      </Paper>
+    </Stack>
+
+    <!-- Card default -->
+    <Stack gap="sm">
+      <Text fs="sm" tone="muted" bold>Card (default)</Text>
+      <Card padding="lg">
+        <Stack gap="sm">
+          <Text fs="lg" bold>Card Title</Text>
+          <Text fs="sm" tone="muted">
+            Cards feature a subtle background tint, border shadow, and a golden border/glow on hover. Try hovering!
+          </Text>
+        </Stack>
+      </Card>
+    </Stack>
+  </Grid>
+</Stack>

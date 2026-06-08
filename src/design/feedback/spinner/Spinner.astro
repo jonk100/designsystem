@@ -1,0 +1,51 @@
+---
+/**
+ * src/design/feedback/spinner/Spinner.astro
+ * An animated circular loader representing ongoing activity.
+ * - Supports sizes: xs, sm, md, lg.
+ * - Renders a visually hidden text element for screen readers.
+ * @props (local): size, variant, label
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { FeedbackSeverity, SpinnerSize } from "../feedback.types";
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Spinner.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {
+  /** Size scale of loading spinner */
+  size?: SpinnerSize;
+  /** Visual severity tone color */
+  variant?: FeedbackSeverity;
+  /** Screen reader accessible description label */
+  label?: string;
+}
+
+const {
+  size = "md",
+  variant = "neutral",
+  label = "Loading...",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "spinner-component",
+  `spinner-size--${size}`,
+  `spinner-variant--${variant}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<span
+  class:list={finalClasses}
+  style={finalStyles}
+  role="status"
+  {...rest}
+>
+  <span class="sr-only">{label}</span>
+</span>

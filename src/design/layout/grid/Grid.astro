@@ -32,7 +32,7 @@ const {
 
 const classes = [
   'grid-component',
-  columns && 'grid-component--explicit',
+  columns ? 'grid-component--explicit' : undefined,
   gap && `gap-${gap}`
 ];
 

@@ -1,0 +1,184 @@
+/**
+ * src/design/feedback/toast/Toast.css
+ * Component-specific styles for Toast
+ */
+@import '../tokens.css';
+@import '../feedback.css';
+
+.toast-component {
+  display: flex;
+  align-items: flex-start;
+  width: var(--toast-width);
+  max-width: var(--toast-max-width);
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: var(--toast-shadow);
+  box-sizing: border-box;
+  z-index: var(--z-toast, 500);
+  
+  /* Animated entrance by default */
+  animation: toast-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Size modifications for paddings */
+.toast-component.feedback-sm {
+  padding: var(--toast-padding-sm);
+  gap: var(--sp-xs);
+}
+
+.toast-component.feedback-md {
+  padding: var(--toast-padding-md);
+  gap: var(--sp-sm);
+}
+
+.toast-component.feedback-lg {
+  padding: var(--toast-padding-lg);
+  gap: var(--sp-md);
+}
+
+/* Toast Layout Elements */
+.toast__icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xs, 4px);
+}
+
+.toast__title {
+  font-weight: 600;
+  line-height: var(--lh-sm, 1.4);
+}
+
+.toast__description {
+  font-weight: 400;
+  line-height: var(--lh-md, 1.5);
+  opacity: 0.9;
+}
+
+.toast__actions {
+  display: flex;
+  gap: var(--sp-xs);
+  margin-top: var(--sp-xs);
+}
+
+.toast__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs) var(--sp-xs);
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875em;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--rad-xs, 2px);
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.toast__action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.toast__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3xs);
+  margin: -4px -4px 0 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: var(--rad-xs, 2px);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.toast__close-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dismissing state animation */
+.toast-component.is-dismissing,
+.toast-component.is-leaving {
+  animation: toast-leave 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* Animation Keyframes */
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-leave {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    max-height: 120px;
+    margin-bottom: 12px;
+    padding-top: var(--toast-padding-y, 12px);
+    padding-bottom: var(--toast-padding-y, 12px);
+  }
+  50% {
+    transform: translateX(120%);
+    opacity: 0;
+    max-height: 120px;
+    margin-bottom: 12px;
+    padding-top: var(--toast-padding-y, 12px);
+    padding-bottom: var(--toast-padding-y, 12px);
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-component,
+  .toast-component.is-dismissing,
+  .toast-component.is-leaving {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Toast Container for fixed stacking on screen */
+.toast-container {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  left: auto !important;
+  top: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  pointer-events: none !important; /* let clicks pass through container spacing */
+  z-index: 9999 !important;
+}
+
+.toast-container .toast-component {
+  pointer-events: auto !important; /* restore pointer events for toasts */
+}

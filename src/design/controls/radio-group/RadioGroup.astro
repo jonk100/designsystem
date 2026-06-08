@@ -8,11 +8,11 @@
  * @props (global): class, class:list, animate, style
  */
 
-import type { ControlComponentProps } from "../controls.types";
+import type { BaseComponentProps } from "../../shared";
 import { mergeClasses, mergeStyles } from "../../shared";
 import "./RadioGroup.css";
 
-export interface Props extends Omit<ControlComponentProps, 'variant' | 'size'>, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
   /** Alignment orientation of the radio group */
   orientation?: "horizontal" | "vertical";
   /** Gap spacing spacing token suffix (e.g. 'xs', 'sm', 'md') */

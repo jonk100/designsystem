@@ -9,6 +9,7 @@
  * @props (global): class, class:list, animate, onScroll, fs, tone, align, valign, weight, transform, leading, tracking, bold, italic, underline, strikethrough
  */
 import type { TextTag } from './Text.types';
+import { TEXT_TAGS_MAP } from './Text.maps';
 import type { BaseComponentProps } from "../../shared/props";
 import type { TypographyProps } from "../types";
 import {
@@ -55,12 +56,14 @@ const {
     wrap = false,
     truncate = false,
     clamp,
-    as: Tag = "span",
+    as = "span",
     class: className,
     'class:list': classList,
     style,
     ...rest
 } = Astro.props;
+
+const Tag = TEXT_TAGS_MAP[as] || "span";
 
 // Define component-specific classes and styles
 const classes = [

@@ -1,0 +1,216 @@
+---
+/**
+ * src/components/sections/LayoutShowcase.astro
+ * Showcase component for layout: Stack, Inline, Container, Grid, Center.
+ */
+import Text from "../../design/typography/text/Text.astro";
+import Card from "../../design/surfaces/card/Card.astro";
+import Paper from "../../design/surfaces/paper/Paper.astro";
+import Stack from "../../design/layout/stack/Stack.astro";
+import Inline from "../../design/layout/inline/Inline.astro";
+import Grid from "../../design/layout/grid/Grid.astro";
+import Container from "../../design/layout/container/Container.astro";
+import Center from "../../design/layout/center/Center.astro";
+---
+
+<Stack gap="xl">
+    <!-- Stack -->
+    <Stack gap="md">
+      <Text as="p" fs="xl" bold>Stack</Text>
+      <Text as="p" fs="sm" tone="muted">
+        Vertical flex column. Children stack top to bottom with a consistent gap.
+      </Text>
+      <Grid columns={2} gap="lg">
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>gap="xs"</Text>
+            <Stack gap="xs" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Item 1</Text></Card>
+              <Card padding="sm"><Text fs="sm">Item 2</Text></Card>
+              <Card padding="sm"><Text fs="sm">Item 3</Text></Card>
+            </Stack>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>gap="xl"</Text>
+            <Stack gap="xl" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Item 1</Text></Card>
+              <Card padding="sm"><Text fs="sm">Item 2</Text></Card>
+              <Card padding="sm"><Text fs="sm">Item 3</Text></Card>
+            </Stack>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>x="center"</Text>
+            <Stack gap="sm" x="center" style="min-height: 120px; padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Centered child</Text></Card>
+              <Card padding="sm"><Text fs="sm">Also centered</Text></Card>
+            </Stack>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>x="end"</Text>
+            <Stack gap="sm" x="end" style="min-height: 120px; padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Pushed right</Text></Card>
+              <Card padding="sm"><Text fs="sm">Also right</Text></Card>
+            </Stack>
+          </Stack>
+        </Paper>
+      </Grid>
+    </Stack>
+
+    <!-- Inline -->
+    <Stack gap="md">
+      <Text as="p" fs="xl" bold>Inline</Text>
+      <Text as="p" fs="sm" tone="muted">
+        Horizontal flex row. Children flow left to right, wrapping by default.
+      </Text>
+      <Grid columns={2} gap="lg">
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>gap="md" (default wrap)</Text>
+            <Inline gap="md" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Alpha</Text></Card>
+              <Card padding="sm"><Text fs="sm">Beta</Text></Card>
+              <Card padding="sm"><Text fs="sm">Gamma</Text></Card>
+              <Card padding="sm"><Text fs="sm">Delta</Text></Card>
+              <Card padding="sm"><Text fs="sm">Epsilon</Text></Card>
+            </Inline>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>x="between" y="center"</Text>
+            <Inline gap="md" x="between" y="center" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">Left</Text></Card>
+              <Card padding="lg">Tall</Card>
+              <Card padding="sm"><Text fs="sm">Right</Text></Card>
+            </Inline>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>x="center"</Text>
+            <Inline gap="sm" x="center" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">A</Text></Card>
+              <Card padding="sm"><Text fs="sm">B</Text></Card>
+              <Card padding="sm"><Text fs="sm">C</Text></Card>
+            </Inline>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>x="end"</Text>
+            <Inline gap="sm" x="end" style="padding: 0.5rem;">
+              <Card padding="sm"><Text fs="sm">X</Text></Card>
+              <Card padding="sm"><Text fs="sm">Y</Text></Card>
+              <Card padding="sm"><Text fs="sm">Z</Text></Card>
+            </Inline>
+          </Stack>
+        </Paper>
+      </Grid>
+    </Stack>
+
+    <!-- Container -->
+    <Stack gap="md">
+      <Text as="p" fs="xl" bold>Container</Text>
+      <Text as="p" fs="sm" tone="muted">
+        Constrains max-width and centers content. Provides safe side padding.
+      </Text>
+      <Stack gap="md">
+        <Paper>
+          <Stack gap="sm">
+            <Text fs="sm" tone="muted" bold>size="sm" (640px)</Text>
+            <Container size="sm">
+              <Card padding="md">
+                <Text fs="sm">Content constrained to 640px max-width, centered with auto margins.</Text>
+              </Card>
+            </Container>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="sm">
+            <Text fs="sm" tone="muted" bold>size="md" (768px)</Text>
+            <Container size="md">
+              <Card padding="md">
+                <Text fs="sm">Medium container — 768px max. Good for article content.</Text>
+              </Card>
+            </Container>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="sm">
+            <Text fs="sm" tone="muted" bold>size="fluid" (no max)</Text>
+            <Container size="fluid">
+              <Card padding="md">
+                <Text fs="sm">Fluid — fills available width. The default.</Text>
+              </Card>
+            </Container>
+          </Stack>
+        </Paper>
+      </Stack>
+    </Stack>
+
+    <!-- Grid -->
+    <Stack gap="md">
+      <Text as="p" fs="xl" bold>Grid</Text>
+      <Text as="p" fs="sm" tone="muted">
+        CSS Grid layout. Set explicit columns or auto-fit with a min width.
+      </Text>
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="sm" tone="muted" bold>columns={3} gap="md"</Text>
+          <Grid columns={3} gap="md">
+            <Card padding="md"><Text fs="sm">Column 1</Text></Card>
+            <Card padding="md"><Text fs="sm">Column 2</Text></Card>
+            <Card padding="md"><Text fs="sm">Column 3</Text></Card>
+            <Card padding="md"><Text fs="sm">Column 4</Text></Card>
+            <Card padding="md"><Text fs="sm">Column 5</Text></Card>
+            <Card padding="md"><Text fs="sm">Column 6</Text></Card>
+          </Grid>
+        </Stack>
+      </Paper>
+      <Paper>
+        <Stack gap="sm">
+          <Text fs="sm" tone="muted" bold>Auto-fit (minWidth="200px")</Text>
+          <Grid minWidth="200px" gap="md">
+            <Card padding="md"><Text fs="sm">Auto A</Text></Card>
+            <Card padding="md"><Text fs="sm">Auto B</Text></Card>
+            <Card padding="md"><Text fs="sm">Auto C</Text></Card>
+            <Card padding="md"><Text fs="sm">Auto D</Text></Card>
+            <Card padding="md"><Text fs="sm">Auto E</Text></Card>
+          </Grid>
+        </Stack>
+      </Paper>
+    </Stack>
+
+    <!-- Center -->
+    <Stack gap="md">
+      <Text as="p" fs="xl" bold>Center</Text>
+      <Text as="p" fs="sm" tone="muted">
+        Flexbox centering utility — both axes by default.
+      </Text>
+      <Grid columns={2} gap="lg">
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>Default (both axes)</Text>
+            <Center style="height: 150px;">
+              <Card padding="md"><Text fs="sm">Dead center</Text></Card>
+            </Center>
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack gap="xs">
+            <Text fs="sm" tone="muted" bold>text={true}</Text>
+            <Center text style="height: 150px;">
+              <Text as="p" fs="sm">Text is centered too</Text>
+              <Text as="p" fs="sm" tone="muted">Second line</Text>
+            </Center>
+          </Stack>
+        </Paper>
+      </Grid>
+    </Stack>
+</Stack>

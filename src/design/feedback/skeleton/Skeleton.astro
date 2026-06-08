@@ -1,0 +1,68 @@
+---
+/**
+ * src/design/feedback/skeleton/Skeleton.astro
+ * Placeholder elements representing loading structures.
+ * - Supports shapes: line, circle, rect.
+ * - Supports multi-line line layouts via the lines prop.
+ * @props (local): width, height, shape, lines
+ * @props (global): class, class:list, animate, effects, bg, style
+ */
+import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "../../shared/functions";
+import "./Skeleton.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Width style constraint (e.g. '120px', '100%') */
+  width?: string;
+  /** Height style constraint */
+  height?: string;
+  /** Visual shape of loading block */
+  shape?: 'line' | 'circle' | 'rect';
+  /** Number of text placeholder lines to generate */
+  lines?: number;
+}
+
+const {
+  width,
+  height,
+  shape = "rect",
+  lines = 1,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "skeleton-component",
+  `skeleton-shape--${shape}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+
+// Build style parameters
+const customStyles = [
+  width && `width: ${width}`,
+  height && `height: ${height}`,
+].filter(Boolean).join(';');
+
+const finalStyles = mergeStyles(customStyles, Astro.props);
+const items = Array.from({ length: lines });
+---
+
+{lines > 1 ? (
+  <div class="skeleton-group" {...rest}>
+    {items.map((_, i) => (
+      <div
+        class:list={finalClasses}
+        style={i === lines - 1 ? `${finalStyles}; width: 80%` : finalStyles}
+      />
+    ))}
+  </div>
+) : (
+  <div
+    class:list={finalClasses}
+    style={finalStyles}
+    {...rest}
+  />
+)}
