@@ -1,0 +1,199 @@
+---
+/**
+ * src/design/media/audio/Audio.astro
+ * A flexible audio primitive supporting native browser controls or a custom minimal overlay player.
+ * - Native variant uses browser controls for maximum accessibility
+ * - Minimal variant renders a custom overlay with play/pause, scrubber, and timestamp
+ * - Boolean attributes (loop, autoplay, muted) are coerced to `undefined` when false to prevent HTML attribute leakage
+ * - Optional title and label provide semantic context for screen readers
+ * @props (local): title, label, variant, type, loop, autoplay, muted
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `variant` — 'native' uses browser controls; 'minimal' renders a custom overlay
+ * - `title`   — descriptive title displayed above the audio player
+ * - `label`   — additional label text for context or metadata
+ */
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '../../shared';
+import type { AudioVariant, AudioMimeType } from './Audio.types';
+import { resolveVariantClass } from './Audio.maps';
+import './Audio.css';
+
+export interface Props extends MediaComponentProps {
+  title?: string;
+  label?: string;
+  variant?: AudioVariant;
+  type?: AudioMimeType;
+  loop?: boolean;
+  autoplay?: boolean;
+  muted?: boolean;
+}
+
+const {
+  src,
+  caption,
+  title,
+  label,
+  variant = 'native',
+  type,
+  loop = false,
+  autoplay = false,
+  muted = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'audio',
+  resolveVariantClass(variant),
+];
+
+/**
+ * No component-specific CSS custom properties for Audio —
+ * layout is not token-driven in the same way as Image.
+ * mergeStyles still handles animation styles and the style prop.
+ */
+const styles = '';
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {title && <p class="audio__title">{title}</p>}
+  {label && <p class="audio__label">{label}</p>}
+
+  {variant === 'native' && (
+    <audio
+      controls
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+    >
+      <source src={src} type={type} />
+    </audio>
+  )}
+
+  {variant === 'minimal' && (
+    <div
+      class="audio__player"
+      data-audio-player
+      data-src={src}
+      data-loop={loop}
+      data-autoplay={autoplay}
+      data-muted={muted}
+    >
+      <button class="audio__play" aria-label="Play">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+          <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+        </svg>
+      </button>
+      <div class="audio__scrubber" data-scrubber>
+        <div class="audio__progress" data-progress></div>
+      </div>
+      <span class="audio__time" data-time>0:00</span>
+    </div>
+  )}
+
+  {caption && <figcaption class="audio__caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  /**
+   * Wires up all minimal audio players on the page.
+   * Runs once on load; uses data attributes to avoid coupling to the
+   * component's internal class names.
+   */
+  function initAudioPlayers(): void {
+    const players = document.querySelectorAll<HTMLElement>('[data-audio-player]');
+
+    players.forEach((player) => {
+      const src       = player.dataset.src ?? '';
+      const loop      = player.dataset.loop === 'true';
+      const autoplay  = player.dataset.autoplay === 'true';
+      const muted     = player.dataset.muted === 'true';
+
+      const playBtn   = player.querySelector<HTMLButtonElement>('.audio__play');
+      const scrubber  = player.querySelector<HTMLElement>('[data-scrubber]');
+      const progress  = player.querySelector<HTMLElement>('[data-progress]');
+      const timeEl    = player.querySelector<HTMLElement>('[data-time]');
+
+      // Guard against malformed or partially-rendered markup.
+      // The non-null assertions below are safe because this return ensures
+      // we only proceed when all four elements are present.
+      if (!playBtn || !scrubber || !progress || !timeEl) return;
+
+      const btn  = playBtn!;
+      const scr  = scrubber!;
+      const prog = progress!;
+      const time = timeEl!;
+
+      const audio = new Audio(src);
+      audio.loop    = loop;
+      audio.muted   = muted;
+
+      /** Formats seconds into `m:ss` display string. */
+      function formatTime(seconds: number): string {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      }
+
+      /** Updates the play button icon to reflect current playback state. */
+      function syncPlayIcon(playing: boolean): void {
+        btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        btn.innerHTML = playing
+          ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <rect x="2" y="1" width="3.5" height="12" rx="1" />
+               <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
+             </svg>`
+          : `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+             </svg>`;
+      }
+
+      /** Updates the scrubber fill and time display on each timeupdate tick. */
+      function onTimeUpdate(): void {
+        if (!audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        prog.style.width = `${pct}%`;
+        time.textContent = formatTime(audio.currentTime);
+      }
+
+      /** Seeks the audio to the position clicked on the scrubber. */
+      function onScrubberClick(e: MouseEvent): void {
+        if (!audio.duration) return;
+        const rect = scr.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pct * audio.duration;
+      }
+
+      btn.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      });
+
+      audio.addEventListener('play',       () => syncPlayIcon(true));
+      audio.addEventListener('pause',      () => syncPlayIcon(false));
+      audio.addEventListener('ended',      () => syncPlayIcon(false));
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      scr.addEventListener('click',        onScrubberClick);
+
+      if (autoplay) audio.play();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initAudioPlayers);
+</script>

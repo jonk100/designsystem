@@ -8,26 +8,39 @@
  * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
  */
 
-import type { BaseComponentProps } from "@/design/shared/props";
-import type { DisplaySize, TextTone } from "@/design/shared/types";
+import type { BaseComponentProps, SpacingProps } from "@/design/shared/props";
+import type { DisplaySize, TextTone, SpacingScale, ComponentRadius } from "@/design/shared/types";
 import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { SPACING_MAP, RADIUS_MAP } from "@/design/shared/maps";
 import { DISPLAY_VAR_MAP } from "@/design/display/maps";
 import { icons, type SvgName } from "@/design/shared/icons/index";
 import './Icon.css';
 
-export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"svg">, keyof BaseComponentProps> {
+export interface Props extends BaseComponentProps, SpacingProps, Omit<import("astro/types").HTMLAttributes<"svg">, keyof BaseComponentProps> {
   /** The icon identifier */
   name: SvgName;
   /** Size of the icon */
   size?: DisplaySize;
   /** Color tone of the icon */
   tone?: TextTone;
+  padding?: SpacingScale;
+  rad?: ComponentRadius;
+  border?: boolean;
 }
 
 const {
   name,
   size = "md",
   tone = "inherit",
+  animate = "fadeIn",
+  padding = "3xs",
+  px,
+  py,
+  margin,
+  mx,
+  my,
+  border = false,
+  rad = 'xs',
   class: className,
   'class:list': classList,
   style,
@@ -43,7 +56,15 @@ const classes = [
 ];
 
 const styles = [
-  size && DISPLAY_VAR_MAP.size(size)
+  size && DISPLAY_VAR_MAP.size(size),
+  padding && SPACING_MAP.padding(padding),
+  px      && SPACING_MAP.px(px),
+  py      && SPACING_MAP.py(py),
+  margin  && SPACING_MAP.margin(margin),
+  mx      && SPACING_MAP.mx(mx),
+  my      && SPACING_MAP.my(my),
+  rad     && RADIUS_MAP.rad(rad),
+  border  && "border: 1px solid var(--border-layer--1)",
 ].filter(Boolean).join(';');
 
 const finalClasses = mergeClasses(classes, Astro.props);

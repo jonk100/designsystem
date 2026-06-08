@@ -27,11 +27,11 @@
   --primary-2: hsl(38 55% 18%);
   --primary-3: hsl(38 55% 24%);
   --primary-4: hsl(38 55% 30%);
-  --primary-5: hsl(38 55% 36%);
-  --primary-6: hsl(38 55% 42%);
-  --primary-7: hsl(38 55% 46%);
-  --primary-8: hsl(38 50% 50%); /* Gold #C09040 */
-  --primary-9: hsl(38 55% 58%);
+  --primary-5: hsl(38, 55%, 36%);
+  --primary-6: hsl(38, 55%, 42%);
+  --primary-7: hsl(38, 55%, 46%);
+  --primary-8: hsl(38, 50%, 50%); /* Gold #C09040 */
+  --primary-9: hsl(38, 55%, 58%);
   --primary-10: hsl(38 55% 66%);
   --primary-11: hsl(38 55% 72%);
   --primary-12: hsl(38 55% 78%);
@@ -138,6 +138,12 @@
   --neutral-rgb-13: 210, 213, 225;
   --neutral-rgb-14: 235, 237, 243;
   --neutral-rgb-15: 247, 248, 250;
+
+  --primary-rgb-5: 142, 105, 41;
+  --primary-rgb-6: 166, 123, 48;
+  --primary-rgb-7: 182, 135, 53;
+  --primary-rgb-8: 191, 145, 64;
+  --primary-rgb-9: 207, 164, 89;
 }
 
 /* Classic Colors Fallback Toggle */

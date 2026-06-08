@@ -1,0 +1,117 @@
+.video {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--local-ratio);
+  background: var(--color-background-tertiary);
+}
+
+.video__el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--local-fit, contain);
+}
+
+.video__caption {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* When no ratio is set, let the video define its own height */
+.video:not([style*="--local-ratio"]) .video__el {
+  height: auto;
+}
+
+/* ── Minimal variant ─────────────────────────────────────────────────────── */
+
+.video__controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.video:hover .video__controls,
+.video:focus-within .video__controls,
+.video--playing .video__controls {
+  opacity: 1;
+}
+
+.video__play {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.video__play:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.video__play:active {
+  transform: scale(0.96);
+}
+
+.video__scrubber {
+  flex: 1;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.3);
+  position: relative;
+  cursor: pointer;
+}
+
+.video__progress {
+  height: 100%;
+  border-radius: 9999px;
+  background: #fff;
+  width: 0%;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+.video__time {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.85);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+.video__fullscreen {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.video__fullscreen:hover {
+  color: #fff;
+}

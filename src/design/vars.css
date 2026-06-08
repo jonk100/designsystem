@@ -8,6 +8,7 @@
 
   /* ─── SPACING ───────────────────────────────────────── */
 
+  --sp-none: 0;
   --sp-3xs: clamp(2px, 2px + 0.25vi, 6px);
   --sp-2xs: clamp(0.125rem, 0.25rem + 0.5vi, 0.5rem);
   --sp-xs: clamp(0.25rem, 0.4rem + 0.4vi, 0.75rem);
@@ -22,14 +23,14 @@
 
   /* ─── BORDER RADIUS ─────────────────────────────────── */
   --rad-none: 0;
-  --rad-2xs: 0.125rem;
-  --rad-xs: 0.25rem;
-  --rad-sm: 0.375rem;
-  --rad-md: 0.5rem;
-  --rad-lg: 0.75rem;
-  --rad-xl: 1rem;
-  --rad-2xl: 1.5rem;
-  --rad-3xl: 2rem;
+  --rad-2xs: 2px;
+  --rad-xs: 4px;
+  --rad-sm: 8px;
+  --rad-md: 12px;
+  --rad-lg: 16px;
+  --rad-xl: 20px;
+  --rad-2xl: 24px;
+  --rad-3xl: 32px;
   --rad-full: 9999px;
 
   /* ─── BORDER WIDTH ──────────────────────────────────── */

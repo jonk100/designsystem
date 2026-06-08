@@ -42,9 +42,17 @@ const classes = ["collapsible"];
 const finalClasses = mergeClasses(classes, Astro.props);
 const customGapStyle = gap ? `--collapsible-gap: var(--sp-${gap});` : "";
 const finalStyles = mergeStyles(customGapStyle, Astro.props);
+
+const isOpen = open;
 ---
 
-<Paper padding="sm" class="collapsible__summary-paper">
+<Paper
+  padding="sm"
+  class:list={[
+    "collapsible__summary-paper",
+    isOpen && "is-open"
+  ]}
+>
   <details class:list={finalClasses} style={finalStyles} open={open} {...rest}>
     <summary class="collapsible__summary">
       <Inline
@@ -62,7 +70,7 @@ const finalStyles = mergeStyles(customGapStyle, Astro.props);
           )
         }
         <slot name="summary" />
-        <Icon name="chevron-down" size="lg" class="collapsible__icon" />
+        <Icon name="chevron-down" size="5xl" class="collapsible__icon" border />
       </Inline>
     </summary>
     <div class="collapsible__content">

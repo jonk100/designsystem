@@ -1,4 +1,4 @@
-import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign, SpacingScale } from '@/design/shared/types';
+import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign, SpacingScale, ComponentRadius } from '@/design/shared/types';
 
 /**
  * Maps numeric font sizes to their named equivalents
@@ -155,3 +155,17 @@ export const STYLE_VAR_MAP = {
   tracking: (val: string) => `--local-ls: var(--ls-${val})`,
   tone: (val: string) => `--local-color: var(--text-${val})`, // Adjust variable name if some use --fg-*
 };
+
+export const SPACING_MAP = {
+  margin: (val: SpacingScale) => `--local-margin: var(--sp-${val})`,
+  mx: (val: SpacingScale) => `--local-mx: var(--sp-${val})`,
+  my: (val: SpacingScale) => `--local-my: var(--sp-${val})`,
+  padding: (val: SpacingScale) => `--local-padding: var(--sp-${val})`,
+  px: (val: SpacingScale) => `--local-px: var(--sp-${val})`,
+  py: (val: SpacingScale) => `--local-py: var(--sp-${val})`,
+  gap: (val: SpacingScale) => `--local-gap: var(--sp-${val})`,
+} as const;
+
+export const RADIUS_MAP = {
+  rad: (val: ComponentRadius) => `--local-rad: var(--rad-${val})`,
+} as const;

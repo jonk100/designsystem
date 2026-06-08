@@ -1,0 +1,256 @@
+---
+/**
+ * src/design/media/video/Video.astro
+ * A flexible video primitive supporting native browser controls or a custom minimal overlay player.
+ * - Aspect ratio and object-fit are token-driven via CSS custom properties
+ * - Minimal variant renders a custom overlay with play/pause, scrubber, timestamp, and fullscreen
+ * - Boolean attributes (loop, autoplay, muted) are coerced to `undefined` when false to prevent HTML attribute leakage
+ * - Controls fade in on hover or focus, keeping ambient/none variants visually clean
+ * @props (local): src, poster, variant, ratio, fit, type, loop, autoplay, muted, disablePip, caption
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `variant`    — 'native' uses browser controls; 'minimal' renders a custom overlay; 'none' hides all controls
+ * - `ratio`      — aspect ratio preset applied to the wrapper; defaults to 'video' (16:9)
+ * - `fit`        — CSS object-fit on the <video> element; defaults to 'contain'
+ * - `disablePip` — prevents the browser from offering picture-in-picture mode
+ */
+
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '@/design/shared';
+import type { VideoVariant, VideoRatio, VideoFit, VideoMimeType } from './Video.types';
+import { VIDEO_VAR_MAP, resolveVariantClass } from './Video.maps';
+import './Video.css';
+
+export interface Props extends MediaComponentProps {
+  poster?: string;
+  variant?: VideoVariant;
+  ratio?: VideoRatio;
+  fit?: VideoFit;
+  type?: VideoMimeType;
+  loop?: boolean;
+  autoplay?: boolean;
+  muted?: boolean;
+  disablePip?: boolean;
+}
+
+const {
+  src,
+  caption,
+  poster,
+  variant = 'native',
+  ratio = 'video',
+  fit = 'contain',
+  type,
+  loop = false,
+  autoplay = false,
+  muted = false,
+  disablePip = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'video',
+  resolveVariantClass(variant),
+];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join the array before passing to mergeStyles, which expects a string.
+ * Animation styles and the style prop are handled automatically by mergeStyles.
+ */
+const styles = [
+  VIDEO_VAR_MAP.ratio(ratio),
+  VIDEO_VAR_MAP.fit(fit),
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {variant === 'native' && (
+    <video
+      class="video__el"
+      src={src}
+      poster={poster}
+      controls
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+      disablepictureinpicture={disablePip || undefined}
+    >
+      <source src={src} type={type} />
+    </video>
+  )}
+
+  {variant === 'minimal' && (
+    <div
+      class="video__wrapper"
+      data-video-player
+      data-src={src}
+      data-loop={loop}
+      data-autoplay={autoplay}
+      data-muted={muted}
+    >
+      <video
+        class="video__el"
+        poster={poster}
+        loop={loop || undefined}
+        autoplay={autoplay || undefined}
+        muted={muted || undefined}
+        disablepictureinpicture={disablePip || undefined}
+        playsinline
+      >
+        <source src={src} type={type} />
+      </video>
+      <div class="video__controls" data-controls>
+        <button class="video__play" aria-label="Play">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+            <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+          </svg>
+        </button>
+        <div class="video__scrubber" data-scrubber>
+          <div class="video__progress" data-progress></div>
+        </div>
+        <span class="video__time" data-time>0:00</span>
+        <button class="video__fullscreen" aria-label="Enter fullscreen">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 5V1h4M10 1h4v4M15 10v4h-4M6 15H1v-4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )}
+
+  {variant === 'none' && (
+    <video
+      class="video__el"
+      src={src}
+      poster={poster}
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+      disablepictureinpicture={disablePip || undefined}
+      playsinline
+    >
+      <source src={src} type={type} />
+    </video>
+  )}
+
+  {caption && <figcaption class="video__caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  /**
+   * Wires up all minimal video players on the page.
+   * Runs once on load; uses data attributes to avoid coupling to the
+   * component's internal class names.
+   */
+  function initVideoPlayers(): void {
+    const players = document.querySelectorAll<HTMLElement>('[data-video-player]');
+
+    players.forEach((player) => {
+      const loop     = player.dataset.loop === 'true';
+      const autoplay = player.dataset.autoplay === 'true';
+      const muted    = player.dataset.muted === 'true';
+
+      const videoEl   = player.querySelector<HTMLVideoElement>('.video__el');
+      const playBtn   = player.querySelector<HTMLButtonElement>('.video__play');
+      const scrubber  = player.querySelector<HTMLElement>('[data-scrubber]');
+      const progress  = player.querySelector<HTMLElement>('[data-progress]');
+      const timeEl    = player.querySelector<HTMLElement>('[data-time]');
+      const fullscBtn = player.querySelector<HTMLButtonElement>('.video__fullscreen');
+
+      // Guard against malformed or partially-rendered markup.
+      // The non-null assertions below are safe because this return ensures
+      // we only proceed when all elements are present.
+      if (!videoEl || !playBtn || !scrubber || !progress || !timeEl || !fullscBtn) return;
+
+      const vid    = videoEl!;
+      const btn    = playBtn!;
+      const scr    = scrubber!;
+      const prog   = progress!;
+      const time   = timeEl!;
+      const fullsc = fullscBtn!;
+
+      vid.loop  = loop;
+      vid.muted = muted;
+
+      /** Formats seconds into `m:ss` display string. */
+      function formatTime(seconds: number): string {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      }
+
+      /** Updates the play button icon to reflect current playback state. */
+      function syncPlayIcon(playing: boolean): void {
+        btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        btn.innerHTML = playing
+          ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <rect x="2" y="1" width="3.5" height="12" rx="1" />
+               <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
+             </svg>`
+          : `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+             </svg>`;
+      }
+
+      /** Updates the scrubber fill and time display on each timeupdate tick. */
+      function onTimeUpdate(): void {
+        if (!vid.duration) return;
+        const pct = (vid.currentTime / vid.duration) * 100;
+        prog.style.width = `${pct}%`;
+        time.textContent = formatTime(vid.currentTime);
+      }
+
+      /** Seeks the video to the position clicked on the scrubber. */
+      function onScrubberClick(e: MouseEvent): void {
+        if (!vid.duration) return;
+        const rect = scr.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        vid.currentTime = pct * vid.duration;
+      }
+
+      /** Toggles fullscreen on the player wrapper element. */
+      function onFullscreen(): void {
+        if (!document.fullscreenElement) {
+          player.requestFullscreen();
+          fullsc.setAttribute('aria-label', 'Exit fullscreen');
+        } else {
+          document.exitFullscreen();
+          fullsc.setAttribute('aria-label', 'Enter fullscreen');
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        if (vid.paused) {
+          vid.play();
+        } else {
+          vid.pause();
+        }
+      });
+
+      vid.addEventListener('play',       () => syncPlayIcon(true));
+      vid.addEventListener('pause',      () => syncPlayIcon(false));
+      vid.addEventListener('ended',      () => syncPlayIcon(false));
+      vid.addEventListener('timeupdate', onTimeUpdate);
+      scr.addEventListener('click',      onScrubberClick);
+      fullsc.addEventListener('click',   onFullscreen);
+
+      if (autoplay) vid.play();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initVideoPlayers);
+</script>

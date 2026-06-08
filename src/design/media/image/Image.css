@@ -1,0 +1,32 @@
+.image {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--local-ratio);
+  width: 100%;
+}
+
+.image__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--local-fit, cover);
+}
+
+.image__caption {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* When no ratio is set, let the image define its own height */
+.image:not([style*="--local-ratio"]) .image__img {
+  height: auto;
+}
+
+/* ── Rounded modifiers ───────────────────────────────────────────────────── */
+
+.image--rounded-sm   { border-radius: var(--border-radius-sm); }
+.image--rounded-md   { border-radius: var(--border-radius-md); }
+.image--rounded-lg   { border-radius: var(--border-radius-lg); }
+.image--rounded-full { border-radius: 9999px; }

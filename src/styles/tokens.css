@@ -75,4 +75,6 @@
   /* ─── CARD HOVER BORDERS ────────────────────────────── */
   --card-border-hover: var(--color-gold-border);
   --card-border-hover-thick: var(--color-gold);
+
+  --border-primary-subtle: rgba(var(--primary-rgb-8), .35);
 }

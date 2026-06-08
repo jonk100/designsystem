@@ -12,6 +12,12 @@
 .collapsible__summary-paper {
   display: block;
   width: 100%;
+  border: 1px solid var(--border-layer--1);
+  transition: all .3s fade-in;
+}
+
+.collapsible__summary-paper:has(.collapsible[open]) {
+  border-color: var(--border-primary-subtle);
 }
 
 .collapsible__summary-inner {
@@ -24,12 +30,18 @@
 
 .collapsible__icon {
   display: inline-flex;
-  transition: transform var(--td-normal, 0.2s) var(--te-out, ease-out);
+  transition: transform var(--td-normal, 0.6s) var(--te-out, ease-out);
   flex-shrink: 0;
 }
 
 .collapsible[open] .collapsible__icon {
-  transform: rotate(180deg);
+  transform: rotate(540deg);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+collapsible[open] {
+  border-color: var(--text-primary);
 }
 
 .collapsible__content {

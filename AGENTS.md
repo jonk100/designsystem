@@ -2,51 +2,9 @@
 
 Welcome to the DesignSystem project! As an AI agent working on this codebase, please adhere to the following rules to maintain consistency, performance, and code quality.
 
-## 1. Shared Display Component Pattern
+## 1. Additional Context
 
-### Display Folder Components
-All components within the `src/design/display/` folder (Badge, Chip, Tag, Dot, Avatar, Counter, Indicator, Icon, etc.) that have:
-- Background colors that change based on variant
-- Border colors that change based on variant
-- Hover states with background changes
-- Shadow effects on hover
-
-**MUST** use the shared variant classes defined in `src/design/display/tokens.css`:
-
-- **Size classes**: `.display-size--sm`, `.display-size--md`, `.display-size--lg`
-- **Variant classes**: `.display-variant--default`, `.display-variant--primary`, `.display-variant--secondary`, `.display-variant--success`, `.display-variant--warning`, `.display-variant--danger`, `.display-variant--info`
-
-### Implementation Rules
-
-1. **Component CSS files** (e.g., `Badge.css`, `Chip.css`) should ONLY contain component-specific styles (layout, element-specific styling, component-unique behaviors). Size and variant styles MUST use the shared classes from `tokens.css`.
-
-2. **Component Astro files** should apply the shared classes via `class:list`:
-   ```astro
-   const classes = [
-     'component-name',
-     `display-size--${size}`,
-     `display-variant--${variant}`
-   ];
-   ```
-
-3. **NEVER create component-specific tokens** for shared display properties. Always use the shared tokens from `tokens.css`:
-   - Use `--display-radius` instead of `--badge-radius`, `--chip-radius`, etc.
-   - Use `--display-size-*` instead of component-specific size tokens
-   - Use `--display-padding-*` instead of component-specific padding tokens
-
-4. **Import tokens.css** in component CSS files if needed:
-   ```css
-   @import '../tokens.css';
-   ```
-
-### Future Migration to Global Variants
-
-If components outside the display folder (e.g., buttons in `src/design/controls/`) later require the same variant pattern (background, border, hover, shadow), the shared variant classes should be:
-1. Moved from `src/design/display/tokens.css` to a more global location (e.g., `src/styles/variants/`)
-2. Renamed from `.display-variant--*` to `.global-variant--*`
-3. Updated across all consuming components
-
-This migration should only happen when there is a clear need for cross-folder usage, not preemptively.
+Read and understand `src/design/COMPONENT_TEMPLATE.md` and `src/design/AGENTS.md` at the start of each conversation.
 
 ## 2. Component File Structure
 
@@ -120,6 +78,7 @@ When creating or modifying components, strictly adhere to the following establis
 Instead of manually concatenating string templates for classes or styles, gather internal component rules into arrays. Filter out falsy values and pass them through `mergeClasses(classes, Astro.props)` and `mergeStyles(styles, Astro.props)`. This ensures user-provided `class`, `class:list`, and `style` props are seamlessly and safely applied.
 **Important:** `mergeStyles` expects a `string` as its first argument. Join any array of styles into a string before passing.
 **Example:**
+
 ```astro
 const classes = ['button', `button--size-${size}`];
 const styles = [bold && 'font-weight: bold'].filter(Boolean).join(';');

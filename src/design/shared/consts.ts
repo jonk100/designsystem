@@ -34,7 +34,7 @@ export const DISPLAY_SIZES = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl',
 
 export const SPACING_SCALES = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', 'none'] as const;
 
-export const COMPONENT_RADII = ['none', 'sm', 'md', 'lg', 'xl', 'full'] as const;
+export const COMPONENT_RADII = ['none', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'full'] as const;
 
 export const DISPLAY_VARIANTS = ['default', 'primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
 

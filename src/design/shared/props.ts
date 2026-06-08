@@ -1,3 +1,5 @@
+import type { SpacingScale } from "@/design/shared/types";
+
 /**
  * src/design/design.props.ts
  * Global prop definitions that can be used across all components
@@ -56,5 +58,27 @@ export interface BaseComponentProps extends AnimationProps, CommonHTMLProps {
   bg?: BackgroundTone;
 }
 
+
+/**
+ * Shared spacing props available on any component that consumes the spacing
+ * token system. Each prop maps to a CSS custom property on the element.
+ *
+ * Axis props take precedence over uniform props in CSS via the fallback chain:
+ * `--local-padding-x` → `--local-padding` → `0`
+ *
+ * @example
+ * <Icon name="star" padding="sm" />
+ * <Icon name="star" py="none" px="md" />
+ * <Box padding="md" py="xl" />  // py overrides the block axis
+ */
+export interface SpacingProps {
+  padding?: SpacingScale;
+  px?: SpacingScale;
+  py?: SpacingScale;
+  margin?: SpacingScale;
+  mx?: SpacingScale;
+  my?: SpacingScale;
+  gap?: SpacingScale;
+}
 
 // Made with Bob

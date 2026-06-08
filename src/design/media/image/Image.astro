@@ -1,0 +1,83 @@
+---
+/**
+ * src/design/media/image/Image.astro
+ * A flexible image primitive with token-driven aspect ratio and object-fit controls.
+ * - Aspect ratio and object-fit are token-driven via CSS custom properties
+ * - Supports optional rounded corners for softer visual presentation
+ * - Loading and decoding attributes optimize performance for lazy-loaded images
+ * - Optional caption renders as a semantic figcaption element
+ * @props (local): alt, ratio, fit, rounded, loading, decoding
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `ratio`     — aspect ratio preset applied to the wrapper; defaults to 'auto' (intrinsic)
+ * - `fit`       — CSS object-fit on the <img> element; defaults to 'cover'
+ * - `rounded`   — applies border-radius to the image; accepts boolean or size preset
+ * - `loading`   — native lazy loading strategy; defaults to 'lazy'
+ * - `decoding`  — image decoding strategy; defaults to 'async'
+ */
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '../../shared';
+import type { ImageRatio, ImageFit, ImageRounded, ImageLoading, ImageDecoding } from './Image.types';
+import { IMAGE_VAR_MAP, resolveRoundedClass } from './Image.maps';
+import './Image.css';
+
+export interface Props extends MediaComponentProps {
+  alt: string;
+  ratio?: ImageRatio;
+  fit?: ImageFit;
+  rounded?: ImageRounded;
+  loading?: ImageLoading;
+  decoding?: ImageDecoding;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  ratio = 'auto',
+  fit = 'cover',
+  rounded = false,
+  loading = 'lazy',
+  decoding = 'async',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'image',
+  resolveRoundedClass(rounded),
+];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join the array before passing to mergeStyles, which expects a string.
+ * Animation styles and the style prop are handled automatically by mergeStyles.
+ */
+const styles = [
+  IMAGE_VAR_MAP.ratio(ratio),
+  IMAGE_VAR_MAP.fit(fit),
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  <img
+    class="image__img"
+    src={src}
+    alt={alt}
+    loading={loading}
+    decoding={decoding}
+  />
+  {caption && <figcaption class="image__caption">{caption}</figcaption>}
+</figure>
