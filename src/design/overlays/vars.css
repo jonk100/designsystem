@@ -1,0 +1,19 @@
+:root {
+  /* ─── OVERLAYS TRANSITION TIMINGS ────────────────────── */
+  --overlay-transition-fast: 150ms;
+  --overlay-transition-normal: 300ms;
+  --overlay-transition-slow: 500ms;
+
+  /* ─── DRAWER & SHEET DIMENSIONS ──────────────────────── */
+  --overlay-drawer-width: min(400px, 90vw);
+  --overlay-drawer-height: 320px;
+  --overlay-sheet-width: min(500px, 95vw);
+
+  /* ─── COMMAND PALETTE DIMENSIONS ─────────────────────── */
+  --overlay-cmd-width: min(640px, 95vw);
+  --overlay-cmd-max-height: min(450px, 75vh);
+
+  /* ─── POPUP OVERLAYS RADII ───────────────────────────── */
+  --overlay-radius: var(--rad-lg);
+  --overlay-radius-inner: var(--rad-md);
+}

@@ -1,0 +1,458 @@
+---
+/**
+ * src/components/ComponentPreview.astro
+ * Interactive prop explorer for design system components.
+ * - Renders a live component in a tabbed Preview / Code interface.
+ * - Provides toggle button groups for cycling through prop values.
+ * - Supports class-driven, style-variable, boolean, and text prop types.
+ * - Auto-detects common props when no explicit config is provided.
+ * @props (local): name, description, props, codeTemplate, slotText
+ */
+
+import './ComponentPreview.css';
+
+export interface PropGroupConfig {
+  /** The prop name as it appears in component usage, e.g. "variant", "fs" */
+  prop: string;
+  /** Display label for the toggle group (defaults to prop name) */
+  label?: string;
+  /** Available values to cycle through */
+  values: string[];
+  /** Which value is active initially (defaults to values[0]) */
+  default?: string;
+  /** How to apply the prop change to the DOM */
+  type?: 'class' | 'style' | 'bool' | 'text';
+  /** For type='class': the CSS class prefix to swap, e.g. "display-variant--" */
+  classPrefix?: string;
+  /** For type='style': the CSS custom property name, e.g. "--local-fs" */
+  styleProperty?: string;
+  /** For type='style': a template for the value, e.g. "var(--fs-{value})" */
+  styleTemplate?: string;
+  /** For type='bool': CSS selector of the child element to show/hide */
+  selector?: string;
+  /** For type='bool': modifier class to add/remove on the root element */
+  modifierClass?: string;
+  /** For type='text': CSS selector of the element whose textContent to update */
+  textSelector?: string;
+  /** For type='bool': value to render for the attribute in generated code, e.g. "zap" for icon="zap" */
+  attrValue?: string;
+}
+
+export interface Props {
+  /** Display name of the component (also used for smart code generation) */
+  name: string;
+  /** Short description shown below the name */
+  description?: string;
+  /** Prop toggle groups — if omitted, auto-detect from the slot element */
+  props?: PropGroupConfig[];
+  /** Code template with {propName} placeholders; {?propName} for booleans */
+  codeTemplate?: string;
+  /** Text content to use as the component's children in generated code */
+  slotText?: string;
+}
+
+const {
+  name,
+  description,
+  props: propGroups,
+  codeTemplate,
+  slotText,
+} = Astro.props;
+---
+
+<div
+  class="cp"
+  data-cp-name={name}
+  data-cp-config={propGroups ? JSON.stringify(propGroups) : undefined}
+  data-cp-template={codeTemplate || undefined}
+  data-cp-slot-text={slotText || undefined}
+>
+  <div class="cp__header">
+    <span class="cp__name">&lt;{name} /&gt;</span>
+    {description && <span class="cp__desc">{description}</span>}
+  </div>
+
+  <div class="cp__tabs" role="tablist">
+    <button
+      class="cp__tab cp__tab--active"
+      data-tab="preview"
+      role="tab"
+      aria-selected="true"
+      type="button"
+    >Preview</button>
+    <button
+      class="cp__tab"
+      data-tab="code"
+      role="tab"
+      aria-selected="false"
+      type="button"
+    >Code</button>
+  </div>
+
+  <div class="cp__panel cp__panel--preview cp__panel--active" data-panel="preview" role="tabpanel">
+    <div class="cp__preview">
+      <slot />
+    </div>
+  </div>
+
+  <div class="cp__panel cp__panel--code" data-panel="code" role="tabpanel">
+    <button class="cp__copy" type="button" aria-label="Copy code">Copy</button>
+    <pre class="cp__code-block"><code class="cp__code"></code></pre>
+  </div>
+
+  <div class="cp__controls"></div>
+</div>
+
+<script>
+  /* ══════════════════════════════════════════════════════════
+   * ComponentPreview — Client-side interactivity
+   * Handles tab switching, toggle groups, DOM patching,
+   * smart code generation, syntax tokenization, and copy.
+   * ══════════════════════════════════════════════════════════ */
+
+  /* ── Auto-detection presets ────────────────────────────── */
+  const CLASS_PRESETS = [
+    {
+      prop: 'variant', classPrefix: 'display-variant--', label: 'Variant', type: 'class' as const,
+      values: ['default','primary','secondary','success','warning','danger','info'],
+    },
+    {
+      prop: 'size', classPrefix: 'display-size--', label: 'Size', type: 'class' as const,
+      values: ['2xs','xs','sm','md','lg','xl','2xl'],
+    },
+  ];
+
+  const STYLE_PRESETS = [
+    {
+      prop: 'fs', styleProperty: '--local-fs', styleTemplate: 'var(--fs-{value})', label: 'Font Size', type: 'style' as const,
+      values: ['2xs','xs','sm','md','lg','xl','2xl','3xl'],
+    },
+    {
+      prop: 'tone', styleProperty: '--local-color', styleTemplate: 'var(--text-{value})', label: 'Tone', type: 'style' as const,
+      values: ['default','muted','subtle','primary','secondary','danger','success'],
+    },
+  ];
+
+  /* ── Helpers ───────────────────────────────────────────── */
+  function escHtml(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function extractSlotText(el: Element): string {
+    const named = el.querySelector('.badge--text, .chip__label, .tag__label');
+    return (named ? named.textContent : el.textContent)?.trim() || '';
+  }
+
+  /* ── Auto-detect props from rendered element ───────────── */
+  interface DetectedGroup {
+    prop: string;
+    label: string;
+    values: string[];
+    default: string;
+    type: string;
+    classPrefix?: string;
+    styleProperty?: string;
+    styleTemplate?: string;
+    [key: string]: any;
+  }
+
+  function autoDetect(el: Element): DetectedGroup[] {
+    const groups: DetectedGroup[] = [];
+
+    for (const preset of CLASS_PRESETS) {
+      for (const cls of el.classList) {
+        if (cls.startsWith(preset.classPrefix)) {
+          const cur = cls.slice(preset.classPrefix.length);
+          if (preset.values.includes(cur)) {
+            groups.push({ ...preset, default: cur });
+            break;
+          }
+        }
+      }
+    }
+
+    for (const preset of STYLE_PRESETS) {
+      const raw = (el as HTMLElement).style.getPropertyValue(preset.styleProperty)?.trim();
+      if (raw) {
+        const m = raw.match(/var\(--\w+-(.+?)\)/);
+        const cur = m ? m[1] : preset.values[0];
+        groups.push({ ...preset, default: cur });
+      }
+    }
+
+    return groups;
+  }
+
+  /* ── Build toggle control UI ───────────────────────────── */
+  function renderControls(
+    container: Element,
+    groups: any[],
+    state: Record<string, string>,
+    onChange: (prop: string, value: string) => void,
+  ) {
+    container.innerHTML = '';
+    if (!groups.length) {
+      (container as HTMLElement).style.display = 'none';
+      return;
+    }
+
+    for (const g of groups) {
+      const row = document.createElement('div');
+      row.className = 'cp__control-group';
+
+      const lbl = document.createElement('span');
+      lbl.className = 'cp__control-label';
+      lbl.textContent = g.label || g.prop;
+      row.appendChild(lbl);
+
+      const opts = document.createElement('div');
+      opts.className = 'cp__control-options';
+
+      for (const v of g.values) {
+        const btn = document.createElement('button');
+        btn.className = 'cp__option';
+        btn.type = 'button';
+        btn.textContent = v;
+        if (v === state[g.prop]) btn.classList.add('cp__option--active');
+
+        btn.addEventListener('click', () => {
+          opts.querySelectorAll('.cp__option').forEach(b => b.classList.remove('cp__option--active'));
+          btn.classList.add('cp__option--active');
+          onChange(g.prop, v);
+        });
+
+        opts.appendChild(btn);
+      }
+
+      row.appendChild(opts);
+      container.appendChild(row);
+    }
+  }
+
+  /* ── DOM patching by prop type ─────────────────────────── */
+  function patch(el: Element, groups: any[], prop: string, value: string) {
+    const g = groups.find((x: any) => x.prop === prop);
+    if (!g) return;
+
+    const type = g.type || 'class';
+
+    if (type === 'class') {
+      const pfx = g.classPrefix || `display-${prop}--`;
+      for (const v of g.values) el.classList.remove(pfx + v);
+      el.classList.add(pfx + value);
+    }
+    else if (type === 'style') {
+      const tpl = g.styleTemplate || `var(--${prop}-{value})`;
+      (el as HTMLElement).style.setProperty(g.styleProperty, tpl.replace('{value}', value));
+    }
+    else if (type === 'bool') {
+      const on = value === 'on' || value === 'true';
+      if (g.selector) {
+        const child = el.querySelector(g.selector) as HTMLElement | null;
+        if (child) child.style.display = on ? '' : 'none';
+      }
+      if (g.modifierClass) {
+        el.classList.toggle(g.modifierClass, on);
+      }
+    }
+    else if (type === 'text') {
+      const target = g.textSelector ? el.querySelector(g.textSelector) : el;
+      if (target) target.textContent = value;
+    }
+  }
+
+  /* ── Code generation ───────────────────────────────────── */
+  function buildRawCode(
+    name: string,
+    groups: any[],
+    state: Record<string, string>,
+    template: string,
+    slotText: string,
+  ): string {
+    if (template) {
+      let code = template;
+      for (const [p, v] of Object.entries(state)) {
+        const g = groups.find((x: any) => x.prop === p);
+        if (g?.type === 'bool') {
+          const on = v === 'on' || v === 'true';
+          code = code.replace(new RegExp(`\\{\\?${p}\\}`, 'g'), on ? p : '');
+        } else {
+          code = code.replace(new RegExp(`\\{${p}\\}`, 'g'), v);
+        }
+      }
+      return code.replace(/\s{2,}/g, ' ').replace(/\s+>/g, '>').replace(/\s+\/>/g, ' />').trim();
+    }
+
+    // Smart generation: build <Name attr="val" boolAttr>slotText</Name>
+    const attrs: string[] = [];
+    for (const g of groups) {
+      const v = state[g.prop];
+      const type = g.type || 'class';
+
+      if (type === 'bool') {
+        if (v === 'on' || v === 'true') {
+          attrs.push(g.attrValue ? `${g.prop}="${g.attrValue}"` : g.prop);
+        }
+        continue;
+      }
+      if (type === 'text') continue;
+      attrs.push(`${g.prop}="${v}"`);
+    }
+
+    const a = attrs.length ? ' ' + attrs.join(' ') : '';
+    if (!slotText) return `<${name}${a} />`;
+    return `<${name}${a}>${slotText}</${name}>`;
+  }
+
+  function renderCode(
+    codeEl: Element,
+    name: string,
+    groups: any[],
+    state: Record<string, string>,
+    template: string,
+    slotText: string,
+  ) {
+    if (!codeEl) return;
+    const raw = buildRawCode(name, groups, state, template, slotText);
+    codeEl.innerHTML = tokenize(raw);
+  }
+
+  /* ── Lightweight syntax tokenizer for HTML/JSX ─────────── */
+  function tokenize(code: string): string {
+    let out = '';
+    let i = 0;
+    const len = code.length;
+
+    while (i < len) {
+      if (code[i] === '<') {
+        i++;
+        let brk = '&lt;';
+        if (i < len && code[i] === '/') { brk += '/'; i++; }
+
+        // Tag name
+        let tag = '';
+        while (i < len && /[\w-]/.test(code[i])) tag += code[i++];
+        out += `<span class="token-punct">${brk}</span>`;
+        if (tag) out += `<span class="token-tag">${tag}</span>`;
+
+        // Attributes
+        while (i < len && code[i] !== '>') {
+          if (/\s/.test(code[i])) { out += code[i++]; continue; }
+          if (code[i] === '/') { out += '<span class="token-punct">/</span>'; i++; continue; }
+
+          // Attribute name
+          let attr = '';
+          while (i < len && /[\w-]/.test(code[i])) attr += code[i++];
+          if (attr) out += `<span class="token-attr">${attr}</span>`;
+
+          // = and quoted value
+          if (i < len && code[i] === '=') {
+            out += '<span class="token-punct">=</span>';
+            i++;
+            if (i < len && code[i] === '"') {
+              i++;
+              let val = '';
+              while (i < len && code[i] !== '"') val += code[i++];
+              if (i < len) i++;
+              out += `<span class="token-string">"${escHtml(val)}"</span>`;
+            }
+          }
+        }
+
+        // Closing bracket
+        if (i < len && code[i] === '>') {
+          out += '<span class="token-punct">&gt;</span>';
+          i++;
+        }
+      } else {
+        // Text content
+        let txt = '';
+        while (i < len && code[i] !== '<') txt += code[i++];
+        if (txt) out += escHtml(txt);
+      }
+    }
+    return out;
+  }
+
+  /* ── Initializer ───────────────────────────────────────── */
+  function initComponentPreview(container: Element) {
+    if ((container as HTMLElement).dataset.cpInit) return;
+    (container as HTMLElement).dataset.cpInit = '1';
+
+    const ds = (container as HTMLElement).dataset;
+    const name = ds.cpName || 'Component';
+    const configRaw = ds.cpConfig;
+    const template = ds.cpTemplate || '';
+    const slotTextProp = ds.cpSlotText || '';
+
+    const previewArea = container.querySelector('.cp__preview');
+    const controlsArea = container.querySelector('.cp__controls');
+    const codeEl = container.querySelector('.cp__code');
+    const copyBtn = container.querySelector('.cp__copy');
+
+    if (!previewArea) return;
+    const previewEl = previewArea.firstElementChild;
+    if (!previewEl) return;
+
+    // Resolve prop config: explicit or auto-detected
+    const propGroups: any[] = configRaw ? JSON.parse(configRaw) : autoDetect(previewEl);
+
+    // Build state from defaults
+    const state: Record<string, string> = {};
+    for (const g of propGroups) state[g.prop] = g.default || g.values[0];
+
+    // Capture slot text once
+    const resolvedSlotText = slotTextProp || extractSlotText(previewEl);
+
+    // Build controls
+    if (controlsArea) {
+      renderControls(controlsArea, propGroups, state, (prop, value) => {
+        state[prop] = value;
+        patch(previewEl, propGroups, prop, value);
+        if (codeEl) renderCode(codeEl, name, propGroups, state, template, resolvedSlotText);
+      });
+    }
+
+    // Initial code render
+    if (codeEl) renderCode(codeEl, name, propGroups, state, template, resolvedSlotText);
+
+    // Tab switching
+    const tabs = container.querySelectorAll('.cp__tab');
+    const panels = container.querySelectorAll('.cp__panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('cp__tab--active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        panels.forEach(p => p.classList.remove('cp__panel--active'));
+        tab.classList.add('cp__tab--active');
+        tab.setAttribute('aria-selected', 'true');
+        const target = container.querySelector(`[data-panel="${(tab as HTMLElement).dataset.tab}"]`);
+        if (target) target.classList.add('cp__panel--active');
+      });
+    });
+
+    // Copy to clipboard
+    if (copyBtn && codeEl) {
+      copyBtn.addEventListener('click', () => {
+        const raw = buildRawCode(name, propGroups, state, template, resolvedSlotText);
+        navigator.clipboard.writeText(raw).then(() => {
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('cp__copy--ok');
+          setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('cp__copy--ok');
+          }, 1500);
+        });
+      });
+    }
+  }
+
+  /* ── Bootstrap ─────────────────────────────────────────── */
+  function initAll() {
+    document.querySelectorAll('.cp').forEach(initComponentPreview);
+  }
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

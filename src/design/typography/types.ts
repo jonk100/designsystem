@@ -1,9 +1,9 @@
-import type { CommonHTMLProps } from "../shared/props";
-import type { AnimationName } from "../animation/motion.types.ts";
+import type { CommonHTMLProps } from "@/design/shared/props";
+import type { AnimationName } from "@/design/animation/motion.types.ts";
 import type { 
     FontSize, TextTone, XAlign, YAlign, FontWeight, 
     LineHeight, LetterSpacing, FontFamily, WhiteSpace, FontStyleProps
-} from "../shared/types";
+} from "@/design/shared/types";
 
 export interface TypographyProps extends FontStyleProps {
   fs?: FontSize;

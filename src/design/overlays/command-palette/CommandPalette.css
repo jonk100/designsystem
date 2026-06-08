@@ -1,0 +1,179 @@
+/* src/design/overlays/command-palette/CommandPalette.css */
+
+.command-palette-region {
+  border: 1px solid var(--overlay-border);
+  border-radius: var(--overlay-radius);
+  background-color: var(--overlay-bg);
+  color: var(--overlay-text-primary);
+  font-size: var(--fs-sm);
+  padding: 0;
+  box-shadow: var(--overlay-shadow);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity var(--overlay-transition-normal) var(--te-out),
+    transform var(--overlay-transition-normal) var(--te-out),
+    display var(--overlay-transition-normal) var(--te-out) allow-discrete;
+  
+}
+
+.command-palette-region[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.command-palette-region::backdrop {
+  background: var(--overlay-backdrop-bg);
+  backdrop-filter: var(--overlay-backdrop-blur);
+  opacity: 0;
+  transition:
+    opacity var(--overlay-transition-normal) var(--te-out),
+    display var(--overlay-transition-normal) var(--te-out) allow-discrete;
+}
+
+.command-palette-region[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .command-palette-region[open] {
+    opacity: 0;
+    transform: scale(0.95);
+
+    /* transform: translate(-50%, -20px); */
+  }
+  .command-palette-region[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.command-palette__card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 90vh;
+}
+
+.command-palette__search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-md) var(--sp-lg);
+  border-bottom: 1px solid var(--border-layer--3);
+}
+
+.command-palette__search-icon {
+  color: var(--overlay-text-muted);
+}
+
+.command-palette__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--overlay-text-primary);
+  font-family: var(--ff-body);
+  font-size: var(--fs-xs);
+  outline: none;
+}
+
+.command-palette__input::placeholder {
+  color: var(--overlay-text-muted);
+  font-size: var(--fs-xs);
+  opacity: 0.7;
+}
+
+.command-palette__esc-badge {
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-2xs);
+  font-family: var(--ff-mono);
+  background-color: var(--overlay-bg-hover);
+  border: 1px solid var(--text--d);
+  padding: 2px 6px;
+  border-radius: var(--rad-xs);
+  color: var(--text-primary);
+}
+
+.command-palette__results {
+  /* max-height: var(--overlay-cmd-max-height, 330px); */
+  /* overflow-y: auto; */
+  padding: var(--sp-xs);
+}
+
+.command-palette__group-header {
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: calc(var(--ls-2xs) + 0.05em);
+  line-height: var(--lh-2xs);
+  color: var(--overlay-text-muted);
+  padding: var(--sp-3xs) var(--sp-sm);
+  margin-top: var(--sp-3xs);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--overlay-text-subtle);
+  text-decoration-style: wavy;
+}
+
+.command-palette__group-header:first-child {
+  margin-top: 0;
+}
+
+.command-palette__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2xs);
+  padding: var(--sp-2xs);
+  font-size: var(--fs-xs);
+  border-radius: var(--overlay-radius-inner);
+  cursor: pointer;
+  transition: all var(--overlay-transition-fast) var(--te-out);
+}
+
+.command-palette__item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--overlay-text-muted);
+}
+
+.command-palette__item-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.command-palette__item-label {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-2xs);
+  line-height: var(--lh-2xs);
+  font-weight: 500;
+  color: var(--overlay-text-primary);
+}
+
+.command-palette__item-desc {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-2xs);
+  line-height: var(--lh-2xs);
+  color: var(--overlay-text-subtle);
+}
+
+/* Selected item styling */
+.command-palette__item.is-selected {
+  background-color: var(--overlay-bg-hover);
+}
+
+.command-palette__item.is-selected .command-palette__item-icon,
+.command-palette__item.is-selected .command-palette__item-label {
+  color: var(--color-gold);
+}
+
+.command-palette__empty-state {
+  padding: var(--sp-lg);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--overlay-text-muted);
+}

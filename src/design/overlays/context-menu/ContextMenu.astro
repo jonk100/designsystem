@@ -1,0 +1,163 @@
+---
+/**
+ * src/design/overlays/context-menu/ContextMenu.astro
+ * A declarative wrapper component for Context Menus.
+ * - Wraps any component or element to enable custom right-click actions.
+ * - Positions menu at cursor coordinates and clamps it to keep it within the viewport.
+ * @props (local): menuId
+ * @props (global): class, class:list, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./ContextMenu.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Uniquely identifies this context menu context */
+  menuId: string;
+}
+
+const {
+  menuId,
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["context-menu-wrapper"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div
+  class:list={finalClasses}
+  style={finalStyles}
+  data-context-menu={menuId}
+  {...rest}
+>
+  <slot />
+  <div
+    id={`context-menu-${menuId}`}
+    class="context-menu-region"
+    role="menu"
+    aria-hidden="true"
+  >
+    <!-- Generated dynamically in script -->
+  </div>
+</div>
+
+<script>
+  import { adjustPositionForViewport } from "@/design/overlays/overlays.functions";
+
+  type ContextMenuItem =
+    | { label: string; icon?: string; action: () => void; divider?: false }
+    | { divider: true };
+
+  const setupContextMenus = () => {
+    const wrappers = document.querySelectorAll(".context-menu-wrapper") as NodeListOf<HTMLElement>;
+    
+    wrappers.forEach((wrapper) => {
+      if ((wrapper as any).__context_menu_initialized) return;
+      (wrapper as any).__context_menu_initialized = true;
+
+      const menuId = wrapper.getAttribute("data-context-menu");
+      if (!menuId) return;
+
+      const menu = wrapper.querySelector(".context-menu-region") as HTMLElement;
+      if (!menu) return;
+
+      const win = window as any;
+
+      const getItems = (): ContextMenuItem[] => {
+        return (win.__context_menus && win.__context_menus[menuId]) || [];
+      };
+
+      const closeMenu = () => {
+        menu.style.display = "none";
+        menu.setAttribute("aria-hidden", "true");
+      };
+
+      // Handle contextmenu event on the wrapper
+      wrapper.addEventListener("contextmenu", (e) => {
+        const items = getItems();
+        if (items.length === 0) return;
+
+        // Prevent browser context menu as soon as we know we have items
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Populate items
+        menu.innerHTML = "";
+        items.forEach((item) => {
+          if (item.divider) {
+            const dividerEl = document.createElement("div");
+            dividerEl.className = "context-menu__divider";
+            menu.appendChild(dividerEl);
+            return;
+          }
+
+          const itemEl = document.createElement("button");
+          itemEl.type = "button";
+          itemEl.className = "context-menu__item";
+          itemEl.setAttribute("role", "menuitem");
+
+          const iconHtml = item.icon || "";
+          itemEl.innerHTML = `
+            ${iconHtml ? `<span class="context-menu__item-icon">${iconHtml}</span>` : ""}
+            <span class="context-menu__item-label">${item.label}</span>
+          `;
+
+          itemEl.addEventListener("click", (clickEvent) => {
+            clickEvent.stopPropagation();
+            closeMenu();
+            item.action();
+          });
+
+          menu.appendChild(itemEl);
+        });
+
+        // Position the menu
+        menu.style.top = "0px";
+        menu.style.left = "0px";
+        menu.style.display = "block";
+        menu.style.visibility = "hidden";
+        menu.setAttribute("aria-hidden", "false");
+
+        // Measure dimensions
+        const menuWidth = menu.offsetWidth;
+        const menuHeight = menu.offsetHeight;
+
+        // Adjust position (since position is fixed relative to viewport, we use clientX/clientY)
+        const targetPos = { top: e.clientY, left: e.clientX };
+        const adjustedPos = adjustPositionForViewport(targetPos, { width: menuWidth, height: menuHeight }, 8);
+
+        menu.style.top = `${adjustedPos.top}px`;
+        menu.style.left = `${adjustedPos.left}px`;
+        menu.style.visibility = "visible";
+      });
+
+      // Close menu on clicks outside the menu
+      document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target as Node)) {
+          closeMenu();
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeMenu();
+        }
+      });
+
+      // Close on scroll
+      document.addEventListener("scroll", closeMenu, { passive: true });
+    });
+  };
+
+  setupContextMenus();
+  document.addEventListener("astro:page-load", setupContextMenus);
+</script>

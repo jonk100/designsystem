@@ -8,14 +8,14 @@
  * @props (local): severity, variant, title, dismissible
  * @props (global): class, class:list, animate, effects, bg, style
  */
-import type { FeedbackSeverity, FeedbackVariant } from "../feedback.types";
-import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP, FEEDBACK_SEVERITY_ARIA_ROLE_MAP } from "../feedback.maps";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import Icon from "../../display/icon/Icon.astro";
-import Text from "../../typography/text/Text.astro";
-import Button from "../../controls/button/Button.astro";
-import type { SvgName } from "../../shared/icons/index";
+import type { FeedbackSeverity, FeedbackVariant } from "@/design/feedback/feedback.types";
+import { FEEDBACK_SEVERITY_CLASS_MAP, FEEDBACK_VARIANT_CLASS_MAP, FEEDBACK_SEVERITY_ICON_MAP, FEEDBACK_SEVERITY_ARIA_ROLE_MAP } from "@/design/feedback/feedback.maps";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Icon from "@/design/display/icon/Icon.astro";
+import Text from "@/design/typography/text/Text.astro";
+import Button from "@/design/controls/button/Button.astro";
+import type { SvgName } from "@/design/shared/icons/index";
 import "./Banner.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

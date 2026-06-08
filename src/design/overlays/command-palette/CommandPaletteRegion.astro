@@ -1,0 +1,264 @@
+---
+/**
+ * src/design/overlays/command-palette/CommandPaletteRegion.astro
+ * Programmatic Command Palette region component.
+ * - Opens globally via ⌘K or Ctrl+K keydown trigger.
+ * - Supports keyboard navigation (ArrowUp, ArrowDown, Enter, Escape).
+ * - Implements dynamic search filtering across registered commands.
+ * - Executes callback action when a command is selected.
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./CommandPalette.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"dialog">, keyof BaseComponentProps> {}
+
+const classes = ["command-palette-region", "overlay-sm"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<dialog
+  id="global-command-palette"
+  class:list={finalClasses}
+  style={finalStyles}
+  role="dialog"
+  aria-label="Command Palette"
+>
+  <div class="command-palette__card">
+    <div class="command-palette__search-wrapper">
+      <svg class="command-palette__search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        class="command-palette__input"
+        placeholder="Type a command or search..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span class="command-palette__esc-badge">ESC</span>
+    </div>
+
+    <div class="command-palette__results" role="listbox">
+      <!-- Generated dynamically in script -->
+    </div>
+  </div>
+</dialog>
+
+<script>
+  interface CommandItem {
+    label: string;
+    description?: string;
+    icon?: string;
+    group?: string;
+    action: () => void;
+  }
+
+  const setupCommandPalette = () => {
+    if ((window as any).__command_palette_active) return;
+    (window as any).__command_palette_active = true;
+
+    const getDialog = () => document.getElementById("global-command-palette") as HTMLDialogElement;
+    const getInput = () => getDialog()?.querySelector(".command-palette__input") as HTMLInputElement;
+    const getResultsContainer = () => getDialog()?.querySelector(".command-palette__results") as HTMLElement;
+
+    // Registry of command items
+    let registry: CommandItem[] = [];
+    const win = window as any;
+    if (Array.isArray(win.__command_palette_registry)) {
+      registry = [...win.__command_palette_registry];
+    }
+    let filteredItems: CommandItem[] = [];
+    let selectedIndex = 0;
+
+    // Default built-in commands
+    const builtInCommands: CommandItem[] = [
+      { label: "Close palette", description: "Close the command palette", group: "System", action: () => getDialog()?.close() },
+      { label: "Scroll to top", description: "Go to the top of the page", group: "Navigation", action: () => window.scrollTo({ top: 0, behavior: "smooth" }) },
+      { label: "Scroll to bottom", description: "Go to the bottom of the page", group: "Navigation", action: () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }) }
+    ];
+
+    const getFullCommands = () => [...builtInCommands, ...registry];
+
+    // Helper to render commands
+    const renderCommands = () => {
+      const input = getInput();
+      const resultsContainer = getResultsContainer();
+      if (!input || !resultsContainer) return;
+
+      const query = input.value.trim().toLowerCase();
+      const allCommands = getFullCommands();
+
+      if (query === "") {
+        filteredItems = allCommands;
+      } else {
+        filteredItems = allCommands.filter(
+          (item) =>
+            item.label.toLowerCase().includes(query) ||
+            (item.description && item.description.toLowerCase().includes(query)) ||
+            (item.group && item.group.toLowerCase().includes(query))
+        );
+      }
+
+      // Group items
+      const groups: Record<string, CommandItem[]> = {};
+      filteredItems.forEach((item) => {
+        const groupName = item.group || "General";
+        if (!groups[groupName]) groups[groupName] = [];
+        groups[groupName].push(item);
+      });
+
+      resultsContainer.innerHTML = "";
+      selectedIndex = Math.min(selectedIndex, Math.max(0, filteredItems.length - 1));
+
+      let absoluteIndex = 0;
+
+      Object.entries(groups).forEach(([groupName, items]) => {
+        // Render group header
+        const headerEl = document.createElement("div");
+        headerEl.className = "command-palette__group-header";
+        headerEl.textContent = groupName;
+        resultsContainer.appendChild(headerEl);
+
+        // Render group items
+        items.forEach((item) => {
+          const isSelected = absoluteIndex === selectedIndex;
+          const currentItemIndex = absoluteIndex;
+
+          const itemEl = document.createElement("div");
+          itemEl.className = `command-palette__item ${isSelected ? "is-selected" : ""}`;
+          itemEl.setAttribute("role", "option");
+          itemEl.setAttribute("aria-selected", isSelected ? "true" : "false");
+
+          const itemIcon = item.icon || `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+
+          itemEl.innerHTML = `
+            <div class="command-palette__item-icon">${itemIcon}</div>
+            <div class="command-palette__item-meta">
+              <span class="command-palette__item-label">${item.label}</span>
+              ${item.description ? `<span class="command-palette__item-desc">${item.description}</span>` : ""}
+            </div>
+          `;
+
+          itemEl.addEventListener("click", () => {
+            getDialog()?.close();
+            item.action();
+          });
+
+          // Allow hover to change selection
+          itemEl.addEventListener("mouseenter", () => {
+            selectedIndex = currentItemIndex;
+            renderCommands();
+          });
+
+          resultsContainer.appendChild(itemEl);
+          absoluteIndex++;
+        });
+      });
+
+      if (filteredItems.length === 0) {
+        const emptyEl = document.createElement("div");
+        emptyEl.className = "command-palette__empty-state";
+        emptyEl.textContent = "No results found.";
+        resultsContainer.appendChild(emptyEl);
+      }
+    };
+
+    // Listen for register events
+    window.addEventListener("command-palette:register", (event: any) => {
+      const { items } = event.detail || {};
+      if (Array.isArray(items)) {
+        registry = [...registry, ...items];
+        renderCommands();
+      }
+    });
+
+    // Event listener for opening
+    window.addEventListener("command-palette:open", () => {
+      const dialog = getDialog();
+      const input = getInput();
+      if (!dialog || !input) return;
+
+      input.value = "";
+      selectedIndex = 0;
+      renderCommands();
+
+      // Temporarily override scroll behavior before showModal
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+
+      dialog.showModal();
+
+      // Restore scroll position immediately after
+      window.scrollTo(scrollX, scrollY);
+
+      input.focus({ preventScroll: true });
+    });
+
+    // Global shortcut listener ⌘K / Ctrl+K
+    window.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("command-palette:open"));
+      }
+    });
+
+    // Close on clicking backdrop
+    window.addEventListener("click", (e) => {
+      const dialog = getDialog();
+      if (!dialog || !dialog.open) return;
+      if (e.target === dialog) {
+        dialog.close();
+      }
+    });
+
+    // Listen to input searches
+    window.addEventListener("input", (e) => {
+      const input = getInput();
+      if (e.target === input) {
+        selectedIndex = 0;
+        renderCommands();
+      }
+    });
+
+    // Arrow keys and enter navigation
+    window.addEventListener("keydown", (e) => {
+      const dialog = getDialog();
+      if (!dialog || !dialog.open) return;
+
+      const resultsContainer = getResultsContainer();
+      if (!resultsContainer) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        selectedIndex = (selectedIndex + 1) % Math.max(1, filteredItems.length);
+        renderCommands();
+        // Scroll active element into view
+        const activeOption = resultsContainer.querySelector(".is-selected");
+        if (activeOption) activeOption.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        selectedIndex = (selectedIndex - 1 + filteredItems.length) % Math.max(1, filteredItems.length);
+        renderCommands();
+        const activeOption = resultsContainer.querySelector(".is-selected");
+        if (activeOption) activeOption.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const selected = filteredItems[selectedIndex];
+        if (selected) {
+          dialog.close();
+          selected.action();
+        }
+      }
+    });
+  };
+
+  setupCommandPalette();
+  document.addEventListener("astro:page-load", setupCommandPalette);
+</script>

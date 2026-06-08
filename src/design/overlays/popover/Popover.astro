@@ -1,0 +1,150 @@
+---
+/**
+ * src/design/overlays/popover/Popover.astro
+ * A declarative Popover component using the native HTML popover API.
+ * - Uses popover="auto" for non-blocking content (dismisses on click-outside/Escape natively).
+ * - Wires up seamlessly with trigger buttons using popovertarget="[id]".
+ * - Provides rich-content slot support for custom menus, forms, or detail card previews.
+ * @props (local): id, position, width
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./Popover.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The unique ID that matches the trigger's popovertarget attribute */
+  id: string;
+  /** Positioning behavior relative to the trigger */
+  position?: "top" | "bottom" | "left" | "right";
+  /** Width override of the popover card (e.g. '240px') */
+  width?: string;
+}
+
+const {
+  id,
+  position = "bottom",
+  width,
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "popover-component",
+  `popover--${position}`,
+];
+
+const customStyles = [
+  width && `width: ${width}`,
+].filter(Boolean).join(";");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyles, Astro.props);
+---
+
+<div
+  id={id}
+  popover="auto"
+  class:list={finalClasses}
+  style={finalStyles}
+  data-position={position}
+  {...rest}
+>
+  <div class="popover__card">
+    <slot />
+  </div>
+</div>
+
+<script>
+  import { 
+    calculateOverlayPosition, 
+    adjustPositionForViewport,
+    fitsInViewport,
+    getOppositePlacement
+  } from "@/design/overlays/overlays.functions";
+
+  const setupPopovers = () => {
+    const popovers = document.querySelectorAll(".popover-component") as NodeListOf<HTMLElement>;
+    popovers.forEach((popover) => {
+      if ((popover as any).__popover_initialized) return;
+      (popover as any).__popover_initialized = true;
+
+      let scrollResizeCleanup: (() => void) | null = null;
+
+      popover.addEventListener("toggle", (event: any) => {
+        if (event.newState === "open") {
+          const trigger = document.querySelector(`[popovertarget="${popover.id}"]`);
+          if (trigger) {
+            const position = (popover.getAttribute("data-position") || "bottom") as any;
+
+            const updatePosition = () => {
+              const triggerRect = trigger.getBoundingClientRect();
+              const width = popover.offsetWidth;
+              const height = popover.offsetHeight;
+              const mockOverlayRect = { width, height } as DOMRect;
+              
+              // Try the preferred position
+              let coords = calculateOverlayPosition(triggerRect, mockOverlayRect, position);
+              
+              // If preferred position doesn't fit, try flipping it
+              if (!fitsInViewport(coords, { width, height })) {
+                const oppositePosition = getOppositePlacement(position) as any;
+                const oppositeCoords = calculateOverlayPosition(triggerRect, mockOverlayRect, oppositePosition);
+                
+                if (fitsInViewport(oppositeCoords, { width, height })) {
+                  coords = oppositeCoords;
+                } else {
+                  // Fallback: choose the one with more space
+                  const spacePreferred = position === "bottom"
+                    ? window.innerHeight - triggerRect.bottom
+                    : triggerRect.top;
+                  const spaceOpposite = oppositePosition === "bottom"
+                    ? window.innerHeight - triggerRect.bottom
+                    : triggerRect.top;
+                  
+                  if (spaceOpposite > spacePreferred) {
+                    coords = oppositeCoords;
+                  }
+                }
+              }
+              
+              const adjusted = adjustPositionForViewport(coords, { width, height }, 8);
+
+              popover.style.top = `${adjusted.top}px`;
+              popover.style.left = `${adjusted.left}px`;
+            };
+
+            // Run immediately
+            updatePosition();
+
+            // Listen to scroll and resize
+            const handleScrollResize = () => {
+              updatePosition();
+            };
+            window.addEventListener("scroll", handleScrollResize, { capture: true, passive: true });
+            window.addEventListener("resize", handleScrollResize, { capture: true, passive: true });
+
+            scrollResizeCleanup = () => {
+              window.removeEventListener("scroll", handleScrollResize, { capture: true });
+              window.removeEventListener("resize", handleScrollResize, { capture: true });
+            };
+          }
+        } else {
+          // Closed
+          if (scrollResizeCleanup) {
+            scrollResizeCleanup();
+            scrollResizeCleanup = null;
+          }
+        }
+      });
+    });
+  };
+
+  setupPopovers();
+  document.addEventListener("astro:page-load", setupPopovers);
+</script>

@@ -1,0 +1,81 @@
+@import './tokens.css';
+
+/* ============================================================================
+   KEYFRAMES FOR ENTRY/EXIT TRANSITIONS
+   ============================================================================ */
+
+/* Fade Animations */
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes overlay-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Scale Animations */
+@keyframes overlay-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes overlay-scale-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+/* Slide Animations */
+@keyframes overlay-slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes overlay-slide-out-right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes overlay-slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes overlay-slide-out-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes overlay-slide-in-top {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+@keyframes overlay-slide-out-top {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+
+@keyframes overlay-slide-in-bottom {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes overlay-slide-out-bottom {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* ============================================================================
+   SHARED BACKDROP STYLES
+   ============================================================================ */
+.overlay-backdrop-base {
+  background: var(--overlay-backdrop-bg);
+  backdrop-filter: var(--overlay-backdrop-blur);
+  transition: all var(--overlay-transition-normal) var(--te-out);
+}
+
+/* ============================================================================
+   Z-INDEX LAYERING CLASSES
+   ============================================================================ */
+.z-dropdown { z-index: var(--overlay-z-dropdown); }
+.z-sticky   { z-index: var(--overlay-z-sticky); }
+.z-fixed    { z-index: var(--overlay-z-fixed); }
+.z-modal    { z-index: var(--overlay-z-modal); }
+.z-popover  { z-index: var(--overlay-z-popover); }
+.z-tooltip  { z-index: var(--overlay-z-tooltip); }

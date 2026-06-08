@@ -4,22 +4,23 @@
  * Main entry page for The System design system showcase.
  * Integrates modular showcase sections to keep the index page maintainable and lightweight.
  */
-import Text from "../design/typography/text/Text.astro";
-import Stack from "../design/layout/stack/Stack.astro";
-import Container from "../design/layout/container/Container.astro";
-import Spacer from "../design/layout/spacer/Spacer.astro";
-import Layout from "../layouts/Layout.astro";
-import Collapsible from "../design/controls/collapsible/Collapsible.astro";
+import Text from "@/design/typography/text/Text.astro";
+import Stack from "@/design/layout/stack/Stack.astro";
+import Container from "@/design/layout/container/Container.astro";
+import Spacer from "@/design/layout/spacer/Spacer.astro";
+import Layout from "@/layouts/Layout.astro";
+import Collapsible from "@/design/controls/collapsible/Collapsible.astro";
 
 // Import modular showcase sections
-import ThemeCustomizer from "../components/sections/ThemeCustomizer.astro";
-import ControlsShowcase from "../components/sections/ControlsShowcase.astro";
-import DisplayShowcase from "../components/sections/DisplayShowcase.astro";
-import TypographyShowcase from "../components/sections/TypographyShowcase.astro";
-import LayoutShowcase from "../components/sections/LayoutShowcase.astro";
-import SurfacesShowcase from "../components/sections/SurfacesShowcase.astro";
-import FeedbackShowcase from "../components/sections/FeedbackShowcase.astro";
-import CompositionShowcase from "../components/sections/CompositionShowcase.astro";
+import ThemeCustomizer from "@/components/sections/ThemeCustomizer.astro";
+import ControlsShowcase from "@/components/sections/ControlsShowcase.astro";
+import DisplayShowcase from "@/components/sections/DisplayShowcase.astro";
+import TypographyShowcase from "@/components/sections/TypographyShowcase.astro";
+import LayoutShowcase from "@/components/sections/LayoutShowcase.astro";
+import SurfacesShowcase from "@/components/sections/SurfacesShowcase.astro";
+import FeedbackShowcase from "@/components/sections/FeedbackShowcase.astro";
+import OverlaysShowcase from "@/components/sections/OverlaysShowcase.astro";
+import CompositionShowcase from "@/components/sections/CompositionShowcase.astro";
 ---
 
 <Layout title="Home">
@@ -100,6 +101,17 @@ import CompositionShowcase from "../components/sections/CompositionShowcase.astr
 					</Text>
 				</Stack>
 				<FeedbackShowcase />
+			</Collapsible>
+
+			<!-- Overlays (Modals, Drawers, Sheets, Palettes, Context Menus) Showcase -->
+			<Collapsible gap="xl">
+				<Stack gap="xs" slot="summary">
+					<Text as="p" fs="2xl" bold>Overlays</Text>
+					<Text as="p" fs="sm" tone="muted">
+						Positioned popups, centered dialogs, edge drawers, command palettes, context menus, tooltips, and popovers.
+					</Text>
+				</Stack>
+				<OverlaysShowcase />
 			</Collapsible>
 
 			<!-- Realistic Layout Composition Showcase -->

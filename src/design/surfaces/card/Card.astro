@@ -11,11 +11,11 @@
  * - The exterior space (the margin) is handled by the parent. Card doesn't concern itself with space outside.
  */
 
-import type { SurfaceComponentProps } from "../surfaces.types";
-import { SURFACE_PADDING_CLASS_MAP } from "../surfaces.maps";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
 
-import "../surfaces.css";
+import "@/design/surfaces/surfaces.css";
 import "./Card.css";
 
 export interface Props extends SurfaceComponentProps {

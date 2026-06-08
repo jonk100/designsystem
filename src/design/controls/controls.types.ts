@@ -1,4 +1,4 @@
-import type { BaseComponentProps } from "../shared";
+import type { BaseComponentProps } from "@/design/shared";
 
 /**
  * Size variants for control components

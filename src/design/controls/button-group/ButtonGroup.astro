@@ -8,8 +8,8 @@
  * @props (global): class, class:list, animate, style
  */
 
-import type { ControlComponentProps } from "../controls.types";
-import { mergeClasses, mergeStyles } from "../../shared";
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
 import "./ButtonGroup.css";
 
 export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {

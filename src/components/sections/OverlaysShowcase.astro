@@ -1,0 +1,288 @@
+---
+/**
+ * src/components/sections/OverlaysShowcase.astro
+ * Showcase component for all overlays category components.
+ * Integrates Modals, Drawers/Sheets, Command Palette, Context Menus, Tooltips, Popovers, and Dropdowns.
+ */
+import Text from "@/design/typography/text/Text.astro";
+import Paper from "@/design/surfaces/paper/Paper.astro";
+import Stack from "@/design/layout/stack/Stack.astro";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Grid from "@/design/layout/grid/Grid.astro";
+import Button from "@/design/controls/button/Button.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+
+// Import overlay components
+import Modal from "@/design/overlays/modal/Modal.astro";
+import Drawer from "@/design/overlays/drawer/Drawer.astro";
+import Tooltip from "@/design/overlays/tooltip/Tooltip.astro";
+import Popover from "@/design/overlays/popover/Popover.astro";
+import DropdownMenu from "@/design/overlays/dropdown-menu/DropdownMenu.astro";
+import ContextMenu from "@/design/overlays/context-menu/ContextMenu.astro";
+---
+
+<Stack gap="md">
+  <!-- 1. Programmatic Modals & Drawers -->
+  <Paper>
+    <Stack gap="md">
+      <Text fs="sm" tone="muted" bold>Programmatic Modals & Drawers (Slot-driven Dialogs)</Text>
+      <Text fs="xs" tone="muted">
+        These components use native &lt;dialog&gt; focus trapping and support full Astro slots, preventing XSS and allowing component composition.
+      </Text>
+      
+      <Inline gap="md" wrap>
+        <!-- Modal Trigger -->
+        <Button variant="primary" id="trigger-modal-btn">
+          <span class="btn__icon-wrapper"><Icon name="zap" size="xs" /></span>
+          <span class="btn__text">Open Centered Modal</span>
+        </Button>
+
+        <!-- Drawer Trigger -->
+        <Button variant="secondary" id="trigger-drawer-btn">
+          <span class="btn__icon-wrapper"><Icon name="astro" size="xs" /></span>
+          <span class="btn__text">Slide Drawer (Right)</span>
+        </Button>
+
+        <!-- Sheet Trigger -->
+        <Button variant="ghost" id="trigger-sheet-btn">
+          <span class="btn__icon-wrapper"><Icon name="zap" size="xs" /></span>
+          <span class="btn__text">Open Sheet (Left, No Backdrop)</span>
+        </Button>
+      </Inline>
+    </Stack>
+  </Paper>
+
+  <!-- 2. Command Palette & Context Menus -->
+  <Paper>
+    <Grid columns={2} gap="md">
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Global Command Palette</Text>
+        <Text fs="xs" tone="muted">Press ⌘K / Ctrl+K anywhere on the page, or click the button below to filter registered items.</Text>
+        <Button variant="secondary" id="trigger-palette-btn" style="width: 100%;">
+          <span class="btn__icon-wrapper"><Icon name="zap" size="xs" /></span>
+          <span class="btn__text">Open Command Palette (⌘K)</span>
+          <!-- <CommandPalette /> -->
+        </Button>
+      </Stack>
+
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Custom Context Menu</Text>
+        <Text fs="xs" tone="muted">Right-click inside the card below to trigger a custom positioned menu clamped inside the viewport.</Text>
+        <ContextMenu menuId="showcase-context-menu">
+          <div class="context-menu-demo-card">
+            <Text fs="xs" tone="muted" align="center">Right Click Here</Text>
+          </div>
+        </ContextMenu>
+      </Stack>
+    </Grid>
+  </Paper>
+
+  <!-- 3. Tooltips, Popovers & Dropdown Menus -->
+  <Paper>
+    <Grid columns={3} gap="lg">
+      <!-- Tooltips -->
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Hover Tooltips</Text>
+        <Text fs="xs" tone="muted">Pure CSS tooltips with configurable direction and delay transitions.</Text>
+        <Inline gap="sm" wrap>
+          <Tooltip content="Tooltip on Top" position="top" delay="short">
+            <span class="showcase-badge">Top / Fast</span>
+          </Tooltip>
+          <Tooltip content="Tooltip on Bottom" position="bottom" delay="medium">
+            <span class="showcase-badge">Bottom / Normal</span>
+          </Tooltip>
+          <Tooltip content="Tooltip on Right" position="right" delay="long">
+            <span class="showcase-badge">Right / Slow</span>
+          </Tooltip>
+        </Inline>
+      </Stack>
+
+      <!-- Popovers -->
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Native HTML Popover</Text>
+        <Text fs="xs" tone="muted">Uses native popover="auto" for zero-JS click-outside dismissals.</Text>
+        <Button variant="secondary" size="sm" popovertarget="showcase-popover" style="align-self: flex-start;">
+          Toggle Popover Card
+        </Button>
+      </Stack>
+
+      <!-- Dropdown Menus -->
+      <Stack gap="md">
+        <Text fs="sm" tone="muted" bold>Details Summary Dropdown</Text>
+        <Text fs="xs" tone="muted">Uses details/summary with clean outside-click and option auto-close triggers.</Text>
+        <div style="align-self: flex-start;">
+          <DropdownMenu label="Choose Action" position="bottom-start">
+            <button type="button" data-close-on-click data-action-toast="Toast from dropdown">
+              Trigger Success Toast
+            </button>
+            <button type="button" data-close-on-click data-action-palette>
+              Open Command Palette
+            </button>
+            <div class="dropdown-divider"></div>
+            <button type="button" data-close-on-click>Close Menu</button>
+          </DropdownMenu>
+        </div>
+      </Stack>
+    </Grid>
+  </Paper>
+</Stack>
+
+<!-- DECLARATIVE INLINE MODALS / DRAWERS -->
+<Modal id="showcase-modal" title="Edit Settings Workspace" size="sm" variant="centered">
+  <Stack gap="sm">
+    <Text fs="xs" tone="muted">Manage sandbox properties and environment tokens below.</Text>
+    <Paper style="padding: var(--sp-xs);">
+      <Text fs="xs" bold>Environment: Development</Text>
+      <Text fs="xs" tone="muted">API Key: ****-****-****</Text>
+    </Paper>
+  </Stack>
+  <Inline gap="xs" slot="actions">
+    <Button variant="ghost" size="sm" data-modal-close="showcase-modal">Cancel</Button>
+    <Button variant="primary" size="sm" data-modal-close="showcase-modal" id="modal-save-toast">Save Changes</Button>
+  </Inline>
+</Modal>
+
+<Drawer id="showcase-drawer" title="Workspace Details" side="right" size="md">
+  <Stack gap="md">
+    <Text fs="xs" tone="muted">Inspect files, structure categories, and configuration mappings.</Text>
+    <Paper style="padding: var(--sp-md);">
+      <Stack gap="xs">
+        <Text fs="xs" bold>Build Path: src/design/overlays</Text>
+        <Text fs="xs" tone="muted">Category: Overlays</Text>
+        <Text fs="xs" tone="muted">Files: 8 components created</Text>
+      </Stack>
+    </Paper>
+  </Stack>
+  <Inline gap="xs" slot="actions">
+    <Button variant="primary" size="sm" data-drawer-close="showcase-drawer">Close Details</Button>
+  </Inline>
+</Drawer>
+
+<Drawer id="showcase-sheet" title="Persistent Panel (No Backdrop)" side="left" size="sm" backdrop={false}>
+  <Stack gap="md">
+    <Text fs="xs" tone="muted">This sheet slides in without blocking page clicks or dimming background content.</Text>
+    <Paper style="padding: var(--sp-md);">
+      <Text fs="xs" bold>Settings Panel</Text>
+      <Text fs="xs" tone="muted">Theme: Gold Editorial</Text>
+      <Text fs="xs" tone="muted">Z-Index: Sticky Level</Text>
+    </Paper>
+  </Stack>
+  <Inline gap="xs" slot="actions">
+    <Button variant="ghost" size="sm" data-drawer-close="showcase-sheet">Hide Panel</Button>
+  </Inline>
+</Drawer>
+
+<!-- DECLARATIVE INLINE POPOVER -->
+<Popover id="showcase-popover" position="bottom" width="280px">
+  <Stack gap="xs">
+    <Text fs="xs" bold>Account Preview</Text>
+    <Text fs="2xs" tone="muted">Logged in as admin@designsystem.com</Text>
+    <div style="border-top: 1px solid var(--border-layer-3); margin: var(--sp-xs) 0;"></div>
+    <Button variant="ghost" size="sm" style="width: 100%; justify-content: flex-start;">
+      Manage Account
+    </Button>
+  </Stack>
+</Popover>
+
+<style>
+  .context-menu-demo-card {
+    height: 90px;
+    border: 1px dashed var(--border-layer--2);
+    border-radius: var(--rad-md);
+    background-color: var(--layer--1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    cursor: context-menu;
+    transition: all var(--overlay-transition-fast) var(--te-out);
+  }
+  
+  .context-menu-demo-card:hover {
+    background-color: var(--layer--2);
+    border-color: var(--border-layer--1);
+  }
+
+  .showcase-badge {
+    background-color: var(--layer--2);
+    border: 1px solid var(--border-layer--2);
+    border-radius: var(--rad-xs);
+    padding: var(--sp-2xs) var(--sp-xs);
+    font-size: var(--fs-xs);
+    font-family: var(--ff-body);
+    color: var(--text--3);
+    user-select: none;
+  }
+</style>
+
+<script>
+  import { modal } from "@/design/overlays/modal/modal";
+  import { drawer } from "@/design/overlays/drawer/drawer";
+  import { commandPalette } from "@/design/overlays/command-palette/commandPalette";
+  import { contextMenu } from "@/design/overlays/context-menu/contextMenu";
+  import { toast } from "@/design/feedback/toast/toast";
+  import { contextMenuActions as actions } from "@/design/overlays/context-menu/actions";
+
+  const initShowcaseDemos = () => {
+    // 1. Modal triggers
+    const triggerModalBtn = document.getElementById("trigger-modal-btn");
+    triggerModalBtn?.addEventListener("click", () => modal.open("showcase-modal"));
+
+    const modalSaveBtn = document.getElementById("modal-save-toast");
+    modalSaveBtn?.addEventListener("click", () => toast.success("Workspace settings updated!"));
+
+    // 2. Drawer triggers
+    const triggerDrawerBtn = document.getElementById("trigger-drawer-btn");
+    triggerDrawerBtn?.addEventListener("click", () => drawer.open("showcase-drawer"));
+
+    const triggerSheetBtn = document.getElementById("trigger-sheet-btn");
+    triggerSheetBtn?.addEventListener("click", () => drawer.open("showcase-sheet"));
+
+    // 3. Command Palette triggers
+    const triggerPaletteBtn = document.getElementById("trigger-palette-btn");
+    triggerPaletteBtn?.addEventListener("click", () => commandPalette.open());
+
+    // Register command palette commands
+    commandPalette.register([
+      { label: "Alert Success Notification", description: "Trigger success feedback toast", group: "Toasts", action: () => toast.success("Success command fired!") },
+      { label: "Alert Warning Notification", description: "Trigger warning feedback toast", group: "Toasts", action: () => toast.warning("Warning command fired!") },
+      { label: "Trigger Drawer", description: "Slides in right detail sheet", group: "Drawers", action: () => drawer.open("showcase-drawer") },
+      { label: "Trigger Left Sheet", description: "Slides in left persistent panel", group: "Drawers", action: () => drawer.open("showcase-sheet") },
+      { label: "Edit Settings Modal", description: "Trigger centered editor dialog", group: "Modals", action: () => modal.open("showcase-modal") },
+    ]);
+
+    // 4. Context Menu register
+    contextMenu.register("showcase-context-menu", [
+
+      // define custom actions in @/design/overlays/context-menu/actions.ts
+      actions.renameCard,
+      actions.toggleFavorite,
+      actions.deleteCard,
+      { divider: true },
+
+      // or define inline actions
+      { label: "Rename Card", action: () => toast.info("Rename option clicked") },
+      { label: "Toggle Favorites", action: () => toast.success("Added to favorites!") },
+      { divider: true },
+      { label: "Delete Item", action: () => toast.error("Action not permitted") },
+
+    ]);
+
+    // 5. Dropdown toast action demo listeners
+    document.querySelectorAll("[data-action-toast]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const text = (e.currentTarget as HTMLElement).getAttribute("data-action-toast") || "";
+        toast.success(text);
+      });
+    });
+
+    document.querySelectorAll("[data-action-palette]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        commandPalette.open();
+      });
+    });
+  };
+
+  initShowcaseDemos();
+  document.addEventListener("astro:page-load", initShowcaseDemos);
+</script>

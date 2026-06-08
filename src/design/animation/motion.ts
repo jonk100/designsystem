@@ -3,7 +3,7 @@
  * Centralized animation system for all components
  */
 import type { AnimationName } from './motion.types';
-import type { AnimationConfig } from '../shared/types';
+import type { AnimationConfig } from '@/design/shared/types';
 
 /**
  * Parse animation string into configuration

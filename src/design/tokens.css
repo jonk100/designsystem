@@ -3,6 +3,7 @@
 @import 'typography/tokens.css';
 @import 'display/tokens.css';
 @import 'feedback/tokens.css';
+@import 'overlays/tokens.css';
 @import 'shared/effects.css';
 @import 'shared/background.css';
 

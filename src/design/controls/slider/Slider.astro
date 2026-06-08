@@ -9,8 +9,8 @@
  * @props (global): class, class:list, animate, onScroll, style
  */
 
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
 import "./Slider.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

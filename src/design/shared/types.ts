@@ -1,4 +1,4 @@
-import type { AnimationName } from '../animation/motion.types';
+import type { AnimationName } from '@/design/animation/motion.types';
 import type { 
   FONT_SIZES, TEXT_TONES, BACKGROUND_TONES, X_ALIGNS, Y_ALIGNS,
   FONT_WEIGHTS, LINE_HEIGHTS, LETTER_SPACINGS, FONT_FAMILIES, WHITE_SPACES,

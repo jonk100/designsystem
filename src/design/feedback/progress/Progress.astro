@@ -7,10 +7,10 @@
  * @props (local): value, max, size, variant, label, showValue
  * @props (global): class, class:list, animate, effects, bg, style
  */
-import type { FeedbackSeverity, FeedbackSize } from "../feedback.types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import Text from "../../typography/text/Text.astro";
+import type { FeedbackSeverity, FeedbackSize } from "@/design/feedback/feedback.types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Text from "@/design/typography/text/Text.astro";
 import "./Progress.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

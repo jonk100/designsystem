@@ -10,20 +10,20 @@
  */
 import type { TextTag } from './Text.types';
 import { TEXT_TAGS_MAP } from './Text.maps';
-import type { BaseComponentProps } from "../../shared/props";
-import type { TypographyProps } from "../types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { TypographyProps } from "@/design/typography/types";
 import {
     X_ALIGN_CLASS_MAP,
     Y_ALIGN_CLASS_MAP,
     STYLE_VAR_MAP,
-} from "../../shared/maps";
+} from "@/design/shared/maps";
 import {
     mergeClasses,
     mergeStyles,
     combineFontStyleProps,
-} from "../../shared/functions";
+} from "@/design/shared/functions";
 import type { HTMLAttributes } from "astro/types";
-import "../typography.css";
+import "@/design/typography/typography.css";
 import "./Text.css";
 
 export interface Props

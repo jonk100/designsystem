@@ -1,0 +1,24 @@
+@import './vars.css';
+
+:root {
+  /* ─── BACKDROP TOKENS ────────────────────────────────── */
+  --overlay-backdrop-bg: rgba(8, 9, 12, 0.7);
+  --overlay-backdrop-blur: blur(12px) saturate(190%);
+
+  /* ─── VISUAL DESIGN TOKENS ───────────────────────────── */
+  --overlay-shadow: var(--sh-xl);
+  --overlay-bg: var(--layer--2);
+  --overlay-bg-hover: var(--layer--3);
+  --overlay-border: var(--border-layer--2);
+  --overlay-text-primary: var(--text--5);
+  --overlay-text-muted: var(--text--d);
+  --overlay-text-subtle: var(--text--m);
+
+  /* ─── LAYERING / Z-INDEX TOKENS ──────────────────────── */
+  --overlay-z-dropdown: var(--z-dropdown);
+  --overlay-z-sticky: var(--z-sticky);
+  --overlay-z-fixed: var(--z-overlay);
+  --overlay-z-modal: var(--z-modal);
+  --overlay-z-popover: var(--z-modal);
+  --overlay-z-tooltip: var(--z-tooltip);
+}

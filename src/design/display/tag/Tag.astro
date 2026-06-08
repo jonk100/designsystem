@@ -8,13 +8,13 @@
  * @props (global): class, class:list, animate, onScroll, HTML attributes
  */
 
-import type { DisplayVariant, DisplaySize } from "../../shared/types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import Inline from "../../layout/inline/Inline.astro";
-import Dot from "../dot/Dot.astro";
-import Icon from "../icon/Icon.astro";
-import { icons, type SvgName } from "../../shared/icons/index";
+import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Dot from "@/design/display/dot/Dot.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+import { icons, type SvgName } from "@/design/shared/icons/index";
 import "./Tag.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

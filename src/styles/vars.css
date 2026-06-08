@@ -98,6 +98,10 @@
   --border--0: var(--neutral-8);
   --border--1: var(--neutral-9);
   --border--subtle: color-mix(in srgb, var(--border--0) 15%, transparent);
+  --border---1: color-mix(in srgb, var(--border--0) 15%, transparent);
+  --border---2: color-mix(in srgb, var(--border--0) 40%, transparent);
+  --border---3: color-mix(in srgb, var(--border--0) 70%, transparent);
+
 
   /* Layer Borders (more transparent as we go up) */
   --border-layer--1: rgba(var(--neutral-rgb-8), 0.45);

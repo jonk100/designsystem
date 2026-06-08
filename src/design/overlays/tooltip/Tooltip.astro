@@ -1,0 +1,55 @@
+---
+/**
+ * src/design/overlays/tooltip/Tooltip.astro
+ * A declarative anchor-bound Tooltip component.
+ * - Displays a small popup content when hovering or focusing the child trigger.
+ * - Zero JS required for basic cases; uses CSS transitions and delay variables.
+ * @props (local): content, position, delay
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { TOOLTIP_DELAY_VALUE_MAP } from "@/design/overlays/overlays.maps";
+import type { TooltipDelay } from "@/design/overlays/overlays.types";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./Tooltip.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"span">, keyof BaseComponentProps> {
+  /** The text content to display inside the tooltip */
+  content: string;
+  /** Placement location relative to the trigger */
+  position?: "top" | "bottom" | "left" | "right";
+  /** Hover transition delay option */
+  delay?: TooltipDelay;
+}
+
+const {
+  content,
+  position = "top",
+  delay = "medium",
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "tooltip-container",
+  `tooltip--${position}`,
+];
+
+const delayMs = TOOLTIP_DELAY_VALUE_MAP[delay];
+const customDelayStyle = `--tooltip-delay: ${delayMs}ms;`;
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customDelayStyle, Astro.props);
+---
+
+<span class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+  <span class="tooltip-bubble" role="tooltip" aria-label={content}>
+    {content}
+  </span>
+</span>

@@ -8,9 +8,9 @@
  * @props (global): class, class:list, animate, onScroll, style
  */
 
-import type { ControlComponentProps } from "../controls.types";
-import { mergeClasses, mergeStyles } from "../../shared";
-import Icon from "../../display/icon/Icon.astro";
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
 import "./Combobox.css";
 
 export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {

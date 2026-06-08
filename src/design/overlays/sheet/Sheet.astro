@@ -1,0 +1,24 @@
+---
+/**
+ * src/design/overlays/sheet/Sheet.astro
+ * A declarative Sheet component.
+ * - A wrapper around the Drawer component that forces backdrop={false}.
+ * - Slides in from any side (left, right, top, bottom) without blocking page interactions.
+ * @props (local): id, title, side, size, closeOnBackdrop
+ * @props (global): class, class:list, style, animate
+ */
+
+import Drawer from "../drawer/Drawer.astro";
+import type { Props as DrawerProps } from "../drawer/Drawer.astro";
+
+export interface Props extends Omit<DrawerProps, "backdrop"> {}
+
+const { id, ...rest } = Astro.props;
+---
+
+<Drawer id={id} {...rest} backdrop={false}>
+  <slot />
+  {Astro.slots.has("actions") && (
+    <slot name="actions" slot="actions" />
+  )}
+</Drawer>

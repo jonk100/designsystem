@@ -1,0 +1,128 @@
+---
+/**
+ * src/design/overlays/dropdown-menu/DropdownMenu.astro
+ * A declarative Dropdown Menu component utilizing native <details> and <summary>.
+ * - Summary element acts as the trigger button; dropdown content slots into details.
+ * - Listens globally to close the details element on outside click.
+ * - Supports automatic menu closing when options are selected via data-close-on-click attribute.
+ * @props (local): label, position
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./DropdownMenu.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"details">, keyof BaseComponentProps> {
+  /** The text label displayed inside the summary toggle trigger */
+  label: string;
+  /** Positioning align behavior relative to the trigger */
+  position?: "bottom-start" | "bottom-end" | "top-start" | "top-end";
+}
+
+const {
+  label,
+  position = "bottom-start",
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "dropdown-menu-component",
+  `dropdown--${position}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<details class:list={finalClasses} style={finalStyles} data-position={position} {...rest}>
+  <summary class="dropdown-menu__trigger" aria-haspopup="menu">
+    <span>{label}</span>
+    <svg class="dropdown-menu__caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </summary>
+  
+  <div class="dropdown-menu__content" role="menu">
+    <slot />
+  </div>
+</details>
+
+<script>
+  const setupDropdowns = () => {
+    if ((window as any).__dropdowns_active) return;
+    (window as any).__dropdowns_active = true;
+
+    // Document-level listener to handle closing on outside click
+    document.addEventListener("click", (e) => {
+      const openDropdowns = document.querySelectorAll(".dropdown-menu-component[open]") as NodeListOf<HTMLDetailsElement>;
+      
+      openDropdowns.forEach((dropdown) => {
+        if (!dropdown.contains(e.target as Node)) {
+          dropdown.removeAttribute("open");
+        }
+      });
+    });
+
+    // Close on action option clicks via delegation on document
+    document.addEventListener("click", (e) => {
+      const target = (e.target as HTMLElement).closest("[data-close-on-click]");
+      if (target) {
+        const dropdown = target.closest(".dropdown-menu-component") as HTMLDetailsElement;
+        if (dropdown) {
+          dropdown.removeAttribute("open");
+        }
+      }
+    });
+
+    // Handle collision flipping dynamically using a delegated capture-phase toggle listener
+    document.addEventListener("toggle", (e) => {
+      const dropdown = (e.target as HTMLElement).closest(".dropdown-menu-component") as HTMLDetailsElement;
+      if (!dropdown) return;
+
+      const defaultPosition = dropdown.getAttribute("data-position") || "bottom-start";
+      const flippedPosition = defaultPosition.startsWith("bottom")
+        ? defaultPosition.replace("bottom", "top")
+        : defaultPosition.replace("top", "bottom");
+
+      const defaultClass = `dropdown--${defaultPosition}`;
+      const flippedClass = `dropdown--${flippedPosition}`;
+
+      if (dropdown.open) {
+        // Reset to default class first to measure layout correctly
+        dropdown.classList.remove(flippedClass);
+        dropdown.classList.add(defaultClass);
+
+        const menu = dropdown.querySelector(".dropdown-menu__content") as HTMLElement;
+        if (!menu) return;
+
+        const rect = menu.getBoundingClientRect();
+
+        // Check overflow boundaries
+        if (defaultPosition.startsWith("bottom")) {
+          if (rect.bottom > window.innerHeight) {
+            dropdown.classList.remove(defaultClass);
+            dropdown.classList.add(flippedClass);
+          }
+        } else if (defaultPosition.startsWith("top")) {
+          if (rect.top < 0) {
+            dropdown.classList.remove(defaultClass);
+            dropdown.classList.add(flippedClass);
+          }
+        }
+      } else {
+        // Revert classes back to original state on close
+        dropdown.classList.remove(flippedClass);
+        dropdown.classList.add(defaultClass);
+      }
+    }, true); // capturing phase is mandatory for non-bubbling events like toggle
+  };
+
+  setupDropdowns();
+  document.addEventListener("astro:page-load", setupDropdowns);
+</script>

@@ -4,7 +4,7 @@
  * DO NOT put global shared tokens here.
  */
 
-import type { DisplaySize } from "../shared/types";
+import type { DisplaySize } from "@/design/shared/types";
 
 export const DISPLAY_VAR_MAP = {
   size: (val: DisplaySize) => `--local-size: var(--display-size-${val})`,

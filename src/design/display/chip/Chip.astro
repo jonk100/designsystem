@@ -8,11 +8,11 @@
  * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
  */
 
-import type { DisplayVariant, DisplaySize } from "../../shared/types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import Icon from "../icon/Icon.astro";
-import type { SvgName } from "../../shared/icons/index";
+import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Icon from "@/design/display/icon/Icon.astro";
+import type { SvgName } from "@/design/shared/icons/index";
 import "./Chip.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {

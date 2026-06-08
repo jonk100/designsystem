@@ -1,4 +1,4 @@
-import type { CommonHTMLProps, SpacingScale } from "../shared";
+import type { CommonHTMLProps, SpacingScale } from "@/design/shared";
 
 /** Shared interface for components using flexbox properties */
 export interface FlexboxProps extends CommonHTMLProps {

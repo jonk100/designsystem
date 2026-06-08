@@ -1,8 +1,9 @@
 ---
 import Head from "./Head.astro";
-import ToastRegion from "../design/feedback/toast/ToastRegion.astro";
-import AlertDialogRegion from "../design/feedback/alert-dialog/AlertDialogRegion.astro";
-import "../styles/global.css";
+import ToastRegion from "@/design/feedback/toast/ToastRegion.astro";
+import AlertDialogRegion from "@/design/feedback/alert-dialog/AlertDialogRegion.astro";
+import CommandPaletteRegion from "@/design/overlays/command-palette/CommandPaletteRegion.astro";
+import "@/styles/global.css";
 
 interface Props {
   title: string;
@@ -24,6 +25,8 @@ const siteTitle = "Design System";
     <slot name="head" />
   </head>
   <body class="noise-base">
+    <ToastRegion />
+    <AlertDialogRegion />
     <header>
       <slot name="header" />
     </header>
@@ -38,6 +41,8 @@ const siteTitle = "Design System";
       </div>
 
       <div class="main-content">
+        <CommandPaletteRegion />
+
         <slot />
       </div>
 
@@ -54,8 +59,7 @@ const siteTitle = "Design System";
       <slot name="footer" />
     </footer>
 
-    <ToastRegion />
-    <AlertDialogRegion />
+
 
     <script>
       // Global observer for elements that should animate on scroll

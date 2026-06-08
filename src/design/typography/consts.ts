@@ -1,4 +1,4 @@
-import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign } from '../shared/types';
+import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign } from '@/design/shared/types';
 
 export const FONT_SIZES: FontSize[] = [
   '0', '2xs',

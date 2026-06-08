@@ -1,0 +1,155 @@
+---
+/**
+ * src/design/overlays/drawer/Drawer.astro
+ * A polymorphic Drawer component that acts as both a Drawer and a Sheet.
+ * - Supports sliding in from any side (left, right, top, bottom).
+ * - Optional backdrop overlay; can be configured as a non-blocking persistent side panel.
+ * - Manages accessibility and focus trapping using the native <dialog> element.
+ * @props (local): id, title, side, backdrop, size, closeOnBackdrop
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { DRAWER_POSITION_CLASS_MAP, OVERLAY_SIZE_CLASS_MAP } from "@/design/overlays/overlays.maps";
+import type { DrawerPosition, OverlaySize } from "@/design/overlays/overlays.types";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/overlays/overlays.css";
+import "./Drawer.css";
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<"dialog">, keyof BaseComponentProps> {
+  /** Uniquely identifies this drawer */
+  id: string;
+  /** Drawer header title text */
+  title?: string;
+  /** Side from which the drawer slides in */
+  side?: DrawerPosition;
+  /** Whether to show a blocking backdrop overlay */
+  backdrop?: boolean;
+  /** Width/height size modifier of the drawer */
+  size?: OverlaySize;
+  /** Whether clicking the backdrop closes the drawer */
+  closeOnBackdrop?: boolean;
+}
+
+const {
+  id,
+  title,
+  side = "right",
+  backdrop = true,
+  size = "md",
+  closeOnBackdrop = true,
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "drawer-component",
+  side && DRAWER_POSITION_CLASS_MAP[side],
+  size && OVERLAY_SIZE_CLASS_MAP[size],
+  !backdrop && "drawer--no-backdrop",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<dialog
+  id={id}
+  class:list={finalClasses}
+  style={finalStyles}
+  data-backdrop={backdrop ? "true" : "false"}
+  data-close-on-backdrop={closeOnBackdrop ? "true" : "false"}
+  {...rest}
+>
+  <div class="drawer__card" role="document">
+    <div class="drawer__header">
+      {title && <h3 class="drawer__title">{title}</h3>}
+      <button
+        type="button"
+        class="drawer__close-btn"
+        aria-label="Close drawer"
+        data-drawer-close={id}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawer__body">
+      <slot />
+    </div>
+
+    {Astro.slots.has("actions") && (
+      <div class="drawer__actions">
+        <slot name="actions" />
+      </div>
+    )}
+  </div>
+</dialog>
+
+<script>
+  const setupDrawers = () => {
+    const dialogs = document.querySelectorAll(".drawer-component") as NodeListOf<HTMLDialogElement>;
+
+    dialogs.forEach((dialog) => {
+      const id = dialog.id;
+      if (!id) return;
+
+      const backdrop = dialog.getAttribute("data-backdrop") === "true";
+      const closeOnBackdrop = dialog.getAttribute("data-close-on-backdrop") === "true";
+
+      // Listen to close buttons inside
+      const closeButtons = dialog.querySelectorAll(`[data-drawer-close="${id}"]`);
+      closeButtons.forEach((btn) => {
+        btn.addEventListener("click", () => dialog.close());
+      });
+
+      // Handle backdrop clicking
+      if (backdrop && closeOnBackdrop) {
+        dialog.addEventListener("click", (e) => {
+          const rect = dialog.getBoundingClientRect();
+          const isInDialog = (
+            rect.top <= e.clientY &&
+            e.clientY <= rect.top + rect.height &&
+            rect.left <= e.clientX &&
+            e.clientX <= rect.left + rect.width
+          );
+          if (!isInDialog) {
+            dialog.close();
+          }
+        });
+      }
+    });
+
+    // Listen for custom trigger events on window
+    window.addEventListener("drawer:open", (event: any) => {
+      const { id } = event.detail || {};
+      const dialog = document.getElementById(id) as HTMLDialogElement;
+      if (!dialog) return;
+
+      const backdrop = dialog.getAttribute("data-backdrop") === "true";
+      if (backdrop) {
+        if (typeof dialog.showModal === "function") dialog.showModal();
+      } else {
+        if (typeof dialog.show === "function") dialog.show();
+      }
+    });
+
+    window.addEventListener("drawer:close", (event: any) => {
+      const { id } = event.detail || {};
+      const dialog = document.getElementById(id) as HTMLDialogElement;
+      if (dialog && typeof dialog.close === "function") {
+        dialog.close();
+      }
+    });
+  };
+
+  // Setup listeners on DOM load and Astro view transitions
+  setupDrawers();
+  document.addEventListener("astro:page-load", setupDrawers);
+</script>

@@ -1,0 +1,119 @@
+/* src/design/overlays/tooltip/Tooltip.css */
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-bubble {
+  position: absolute;
+  background-color: var(--layer--4); /* Sleek light bubble against dark theme */
+  border: 1px solid var(--border---3);
+  color: var(--text--2);
+  font-family: var(--ff-display);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-2xs);
+  line-height: var(--lh-2xs);
+  padding: var(--sp-3xs) var(--sp-xs);
+  margin: var(--sp-2xs) 0;
+  border-radius: var(--rad-xs);
+  white-space: nowrap;
+  box-shadow: var(--sh-s);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: var(--overlay-z-tooltip);
+  transition:
+    opacity var(--overlay-transition-fast) var(--te-out),
+    visibility var(--overlay-transition-fast) var(--te-out),
+    transform var(--overlay-transition-fast) var(--te-out);
+  transition-delay: var(--tooltip-delay, 300ms);
+}
+
+/* Tooltip Arrow */
+.tooltip-bubble::after {
+  content: "";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+/* Trigger actions */
+.tooltip-container:hover .tooltip-bubble,
+.tooltip-container:focus-within .tooltip-bubble {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================================
+   POSITIONING MODIFIERS
+   ============================================================================ */
+
+/* Top Position */
+.tooltip--top .tooltip-bubble {
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -8px);
+}
+.tooltip--top .tooltip-bubble::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: var(--neutral-15) transparent transparent transparent;
+}
+.tooltip--top:hover .tooltip-bubble,
+.tooltip--top:focus-within .tooltip-bubble {
+  transform: translate(-50%, -12px);
+}
+
+/* Bottom Position */
+.tooltip--bottom .tooltip-bubble {
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 8px);
+}
+.tooltip--bottom .tooltip-bubble::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent var(--neutral-15) transparent;
+}
+.tooltip--bottom:hover .tooltip-bubble,
+.tooltip--bottom:focus-within .tooltip-bubble {
+  transform: translate(-50%, 12px);
+}
+
+/* Left Position */
+.tooltip--left .tooltip-bubble {
+  right: 100%;
+  top: 50%;
+  transform: translate(-8px, -50%);
+}
+.tooltip--left .tooltip-bubble::after {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent var(--neutral-15);
+}
+.tooltip--left:hover .tooltip-bubble,
+.tooltip--left:focus-within .tooltip-bubble {
+  transform: translate(-12px, -50%);
+}
+
+/* Right Position */
+.tooltip--right .tooltip-bubble {
+  left: 100%;
+  top: 50%;
+  transform: translate(8px, -50%);
+}
+.tooltip--right .tooltip-bubble::after {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent var(--neutral-15) transparent transparent;
+}
+.tooltip--right:hover .tooltip-bubble,
+.tooltip--right:focus-within .tooltip-bubble {
+  transform: translate(12px, -50%);
+}

@@ -8,11 +8,11 @@
  * @props (global): class, class:list, animate, onScroll
  */
 import type { HTMLAttributes } from 'astro/types';
-import type { BaseComponentProps } from '../../shared/props';
-import type { TypographyProps } from '../types';
-import { mergeClasses, mergeStyles, combineFontStyleProps } from '../../shared/functions';
-import { STYLE_VAR_MAP } from '../../shared/maps';
-import '../typography.css';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
 import './Label.css';
 
 export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'label'>, keyof BaseComponentProps | keyof TypographyProps> {

@@ -1,4 +1,4 @@
-import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign, SpacingScale } from '../shared/types';
+import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign, SpacingScale } from '@/design/shared/types';
 
 /**
  * Maps numeric font sizes to their named equivalents

@@ -8,8 +8,8 @@
  * @props (global): class, class:list, animate, style
  */
 
-import type { BaseComponentProps } from "../../shared";
-import { mergeClasses, mergeStyles } from "../../shared";
+import type { BaseComponentProps } from "@/design/shared";
+import { mergeClasses, mergeStyles } from "@/design/shared";
 import "./RadioGroup.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

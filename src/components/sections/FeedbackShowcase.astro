@@ -3,21 +3,21 @@
  * src/components/sections/FeedbackShowcase.astro
  * Showcase component for feedback: Alerts, Banners, progress tracks, loading spinners, and interactive dialogs.
  */
-import Text from "../../design/typography/text/Text.astro";
-import Paper from "../../design/surfaces/paper/Paper.astro";
-import Stack from "../../design/layout/stack/Stack.astro";
-import Inline from "../../design/layout/inline/Inline.astro";
-import Grid from "../../design/layout/grid/Grid.astro";
-import Button from "../../design/controls/button/Button.astro";
-import Input from "../../design/controls/input/Input.astro";
-import Alert from "../../design/feedback/alert/Alert.astro";
-import Tag from "../../design/display/tag/Tag.astro";
-import Banner from "../../design/feedback/banner/Banner.astro";
-import Progress from "../../design/feedback/progress/Progress.astro";
-import Skeleton from "../../design/feedback/skeleton/Skeleton.astro";
-import Spinner from "../../design/feedback/spinner/Spinner.astro";
-import Icon from "../../design/display/icon/Icon.astro";
-import "../../design/feedback/toast/Toast.css";
+import Text from "@/design/typography/text/Text.astro";
+import Paper from "@/design/surfaces/paper/Paper.astro";
+import Stack from "@/design/layout/stack/Stack.astro";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Grid from "@/design/layout/grid/Grid.astro";
+import Button from "@/design/controls/button/Button.astro";
+import Input from "@/design/controls/input/Input.astro";
+import Alert from "@/design/feedback/alert/Alert.astro";
+import Tag from "@/design/display/tag/Tag.astro";
+import Banner from "@/design/feedback/banner/Banner.astro";
+import Progress from "@/design/feedback/progress/Progress.astro";
+import Skeleton from "@/design/feedback/skeleton/Skeleton.astro";
+import Spinner from "@/design/feedback/spinner/Spinner.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+import "@/design/feedback/toast/Toast.css";
 ---
 
 <Stack gap="md">
@@ -174,8 +174,8 @@ import "../../design/feedback/toast/Toast.css";
 </Stack>
 
 <script>
-  import { toast } from "../../design/feedback/toast/toast";
-  import { alertDialog } from "../../design/feedback/alert-dialog/alertDialog";
+  import { toast } from "@/design/feedback/toast/toast";
+  import { alertDialog } from "@/design/feedback/alert-dialog/alertDialog";
 
   const setupToastFormDemo = () => {
     const form = document.getElementById("toast-demo-form") as HTMLFormElement;

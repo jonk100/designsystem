@@ -9,8 +9,8 @@
  * - span: How many columns this cell should span (e.g. 1, 2, 3, or 'full').
  * - padding: Internal padding of the cell.
  */
-import { mergeClasses, mergeStyles } from "../../shared/functions";
-import type { BaseComponentProps } from "../../shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
 import './BentoCell.css';
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

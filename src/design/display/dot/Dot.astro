@@ -8,9 +8,9 @@
  * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
  */
 
-import type { DisplayVariant, DisplaySize } from "../../shared/types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
 import "./Dot.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {

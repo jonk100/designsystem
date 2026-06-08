@@ -1,0 +1,54 @@
+/* src/design/overlays/popover/Popover.css */
+
+.popover-component {
+  border: 1px solid var(--overlay-border);
+  border-radius: var(--overlay-radius);
+  background-color: var(--overlay-bg);
+  color: var(--overlay-text-primary);
+  padding: 0;
+  box-shadow: var(--overlay-shadow);
+  box-sizing: border-box;
+  margin: auto; /* center viewport fallback */
+  outline: none;
+  
+  /* Entry transitions */
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity var(--overlay-transition-normal) var(--te-out),
+    transform var(--overlay-transition-normal) var(--te-out),
+    display var(--overlay-transition-normal) var(--te-out) allow-discrete;
+}
+
+.popover-component:popover-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  margin: 0;
+}
+
+@starting-style {
+  .popover-component:popover-open {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+.popover__card {
+  padding: var(--sp-md);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-md);
+}
+
+/* Position modifiers (when manual placement is overridden on container) */
+.popover--top {
+  margin-bottom: auto;
+}
+.popover--bottom {
+  margin-top: auto;
+}
+.popover--left {
+  margin-right: auto;
+}
+.popover--right {
+  margin-left: auto;
+}

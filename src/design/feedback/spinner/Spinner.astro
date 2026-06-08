@@ -7,9 +7,9 @@
  * @props (local): size, variant, label
  * @props (global): class, class:list, animate, effects, bg, style
  */
-import type { FeedbackSeverity, SpinnerSize } from "../feedback.types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { FeedbackSeverity, SpinnerSize } from "@/design/feedback/feedback.types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
 import "./Spinner.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {

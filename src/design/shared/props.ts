@@ -3,7 +3,7 @@
  * Global prop definitions that can be used across all components
  */
 
-import type { AnimationName } from '../animation/motion.types';
+import type { AnimationName } from '@/design/animation/motion.types';
 import type { DisplayEffect, BackgroundTone } from './types';
 
 /**

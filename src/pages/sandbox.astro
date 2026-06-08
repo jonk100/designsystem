@@ -1,0 +1,150 @@
+---
+/**
+ * src/pages/sandbox.astro
+ * Interactive component sandbox — demonstrates ComponentPreview
+ * with five design system components exercising all four prop types:
+ *   1. Badge  — class-driven variant/size + boolean icon
+ *   2. Text   — style-variable fs/tone
+ *   3. Chip   — mixed class + boolean active/dismissible
+ *   4. Button — different class prefix pattern (btn--)
+ *   5. Dot    — auto-detected props (no explicit config)
+ */
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/design/layout/container/Container.astro";
+import Stack from "@/design/layout/stack/Stack.astro";
+import Spacer from "@/design/layout/spacer/Spacer.astro";
+import Text from "@/design/typography/text/Text.astro";
+
+import Badge from "@/design/display/badge/Badge.astro";
+import Chip from "@/design/display/chip/Chip.astro";
+import Dot from "@/design/display/dot/Dot.astro";
+import Button from "@/design/controls/button/Button.astro";
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+---
+
+<Layout title="Sandbox">
+  <Container size="xl">
+    <Stack gap="2xl">
+
+      {/* ── Page header ──────────────────────────────────── */}
+      <Stack gap="sm">
+        <Text as="p" fs="5xl" bold>Component Sandbox</Text>
+        <Text as="p" fs="lg" tone="muted">
+          Interactive prop explorer — toggle values and watch the preview and code update in real time.
+        </Text>
+      </Stack>
+
+      {/* ── 1. Badge — class-driven + boolean icon ───────── */}
+      <ComponentPreview
+        name="Badge"
+        description="Non-interactive status labels with vibrant variant fills and optional leading icon."
+        slotText="Feature"
+        props={[
+          {
+            prop: 'variant', type: 'class', classPrefix: 'display-variant--',
+            values: ['default','primary','secondary','success','warning','danger','info'],
+            default: 'primary', label: 'Variant',
+          },
+          {
+            prop: 'size', type: 'class', classPrefix: 'display-size--',
+            values: ['sm','md','lg','xl'],
+            default: 'md', label: 'Size',
+          },
+          {
+            prop: 'icon', type: 'bool', values: ['on','off'],
+            default: 'on', selector: '.badge--icon',
+            label: 'Icon', attrValue: 'zap',
+          },
+        ]}
+      >
+        <Badge variant="primary" size="md" icon="zap">Feature</Badge>
+      </ComponentPreview>
+
+      {/* ── 2. Text — style-variable fs + tone ────────────── */}
+      <ComponentPreview
+        name="Text"
+        description="Versatile inline text with typography token controls. Props patch CSS custom properties."
+        slotText="The quick brown fox jumps over the lazy dog"
+        props={[
+          {
+            prop: 'fs', type: 'style', styleProperty: '--local-fs',
+            styleTemplate: 'var(--fs-{value})',
+            values: ['2xs','xs','sm','md','lg','xl','2xl'],
+            default: 'md', label: 'Font Size',
+          },
+          {
+            prop: 'tone', type: 'style', styleProperty: '--local-color',
+            styleTemplate: 'var(--text-{value})',
+            values: ['default','muted','subtle','primary','secondary','danger','success'],
+            default: 'default', label: 'Tone',
+          },
+        ]}
+      >
+        <Text fs="md" tone="default">The quick brown fox jumps over the lazy dog</Text>
+      </ComponentPreview>
+
+      {/* ── 3. Chip — mixed class + boolean ───────────────── */}
+      <ComponentPreview
+        name="Chip"
+        description="Interactive selection tokens. Demonstrates class swapping combined with boolean visibility toggles."
+        slotText="Comedy"
+        props={[
+          {
+            prop: 'variant', type: 'class', classPrefix: 'display-variant--',
+            values: ['default','primary','secondary','success','warning','danger','info'],
+            default: 'primary', label: 'Variant',
+          },
+          {
+            prop: 'size', type: 'class', classPrefix: 'display-size--',
+            values: ['sm','md','lg'],
+            default: 'md', label: 'Size',
+          },
+          {
+            prop: 'active', type: 'bool', values: ['on','off'],
+            default: 'on', modifierClass: 'chip--active',
+            label: 'Active',
+          },
+          {
+            prop: 'dismissible', type: 'bool', values: ['on','off'],
+            default: 'on', selector: '.chip__dismiss',
+            modifierClass: 'chip--dismissible', label: 'Dismissible',
+          },
+        ]}
+      >
+        <Chip variant="primary" size="md" active dismissible>Comedy</Chip>
+      </ComponentPreview>
+
+      {/* ── 4. Button — different class prefix pattern ───── */}
+      <ComponentPreview
+        name="Button"
+        description="Standard button control. Uses btn-- class prefix instead of display-variant--, showing the explicit config flexibility."
+        slotText="Click me"
+        props={[
+          {
+            prop: 'variant', type: 'class', classPrefix: 'btn--',
+            values: ['primary','secondary','ghost','gold','danger'],
+            default: 'primary', label: 'Variant',
+          },
+          {
+            prop: 'size', type: 'class', classPrefix: 'btn--',
+            values: ['sm','md','lg'],
+            default: 'md', label: 'Size',
+          },
+        ]}
+      >
+        <Button variant="primary" size="md">Click me</Button>
+      </ComponentPreview>
+
+      {/* ── 5. Dot — auto-detected (no explicit props) ──── */}
+      <ComponentPreview
+        name="Dot"
+        description="Minimal status indicator. Props are auto-detected from the rendered element's CSS classes — no explicit config passed."
+      >
+        <Dot variant="success" size="md" />
+      </ComponentPreview>
+
+      <Spacer size="xl" />
+    </Stack>
+  </Container>
+</Layout>

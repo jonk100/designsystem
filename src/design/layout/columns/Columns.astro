@@ -8,10 +8,10 @@
  * @props (global): class, class:list, animate, onScroll, effects, frame
  */
 
-import type { SpacingScale } from "../../shared/types";
-import type { ColumnsRule } from "../types";
-import type { BaseComponentProps } from "../../shared/props";
-import { mergeClasses, mergeStyles } from "../../shared/functions";
+import type { SpacingScale } from "@/design/shared/types";
+import type { ColumnsRule } from "@/design/layout/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
 import "./Columns.css";
 
 export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {

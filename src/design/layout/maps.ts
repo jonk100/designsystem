@@ -1,4 +1,4 @@
-import type { LayoutAlign } from "../shared/types";
+import type { LayoutAlign } from "@/design/shared/types";
 
 /** Maps logical layout alignments to standard CSS flexbox/grid property values */
 export const LAYOUT_ALIGN_MAP: Record<LayoutAlign, string> = {
