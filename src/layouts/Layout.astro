@@ -3,6 +3,8 @@ import Head from "./Head.astro";
 import ToastRegion from "@/design/feedback/toast/ToastRegion.astro";
 import AlertDialogRegion from "@/design/feedback/alert-dialog/AlertDialogRegion.astro";
 import CommandPaletteRegion from "@/design/overlays/command-palette/CommandPaletteRegion.astro";
+import Menu from "@/design/nav/menu/Menu.astro";
+import Link from "@/design/typography/link/Link.astro";
 import "@/styles/global.css";
 
 interface Props {
@@ -28,6 +30,12 @@ const siteTitle = "Design System";
     <ToastRegion />
     <AlertDialogRegion />
     <header>
+      <Menu orientation="horizontal" align="center" gap="md">
+        <Link href="/">Home</Link>
+        <Link href="/debug">Debug</Link>
+
+        <Link href="/sandbox">Playground</Link>
+      </Menu>
       <slot name="header" />
     </header>
 

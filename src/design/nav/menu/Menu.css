@@ -1,0 +1,42 @@
+/**
+ * src/design/nav/menu/Menu.css
+ */
+.menu-component {
+  display: flex;
+  gap: var(--local-gap, 0);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu--vertical {
+  flex-direction: column;
+}
+
+.menu--horizontal {
+  flex-direction: row;
+}
+
+/* Horizontal Alignments (Main Axis) */
+.menu--horizontal.menu--align-start {
+  justify-content: flex-start;
+}
+.menu--horizontal.menu--align-center {
+  justify-content: center;
+}
+.menu--horizontal.menu--align-end {
+  justify-content: flex-end;
+}
+.menu--horizontal.menu--align-justify {
+  justify-content: space-between;
+}
+.menu--horizontal {
+  align-items: center; /* Default cross-axis alignment */
+}
+
+/* Vertical Alignments (Cross Axis) */
+.menu--vertical.menu--align-start { align-items: flex-start; }
+.menu--vertical.menu--align-center { align-items: center; }
+.menu--vertical.menu--align-end { align-items: flex-end; }
+.menu--vertical.menu--align-justify { align-items: stretch; }
+.menu--vertical { justify-content: flex-start; }

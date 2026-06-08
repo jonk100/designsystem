@@ -1,0 +1,47 @@
+---
+/**
+ * src/design/nav/menu/Menu.astro
+ * A semantic navigation menu component for grouping links or actions.
+ * - Supports horizontal and vertical orientations
+ * - Configurable gap and flex alignment
+ * @props (local): orientation, align, gap
+ * @props (global): class, class:list, style, animate
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { NavProps } from '@/design/nav/nav.types';
+import { mergeClasses, mergeStyles } from '@/design/shared/functions';
+import { NAV_VAR_MAP } from '@/design/nav/nav.maps';
+import '@/design/nav/nav.css';
+import './Menu.css';
+
+export interface Props extends BaseComponentProps, NavProps, Omit<HTMLAttributes<'menu'>, keyof BaseComponentProps | keyof NavProps> {}
+
+const {
+  as: Tag = 'menu',
+  orientation = 'vertical',
+  align = 'start',
+  gap = 'md',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'menu-component',
+  `menu--${orientation}`,
+  `menu--align-${align}`
+];
+
+const styles = [
+  gap && NAV_VAR_MAP.gap(gap)
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
