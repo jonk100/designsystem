@@ -1,0 +1,783 @@
+--- File: heading/Heading.css ---
+.heading {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-default);
+}
+
+/* Default sizes by level */
+.heading--level-h1 { font-size: var(--text-4xl); }
+.heading--level-h2 { font-size: var(--text-3xl); }
+.heading--level-h3 { font-size: var(--text-2xl); }
+.heading--level-h4 { font-size: var(--text-xl); }
+.heading--level-h5 { font-size: var(--text-lg); }
+.heading--level-h6 { font-size: var(--text-md); }
+
+.heading--size-xxs { font-size: var(--text-2xs); }
+.heading--size-xs { font-size: var(--text-xs); }
+.heading--size-sm { font-size: var(--text-sm); }
+.heading--size-md { font-size: var(--text-md); }
+.heading--size-base { font-size: var(--text-md); }
+.heading--size-lg { font-size: var(--text-lg); }
+.heading--size-xl { font-size: var(--text-xl); }
+.heading--size-2xl { font-size: var(--text-2xl); }
+.heading--size-3xl { font-size: var(--text-3xl); }
+.heading--size-4xl { font-size: var(--text-4xl); }
+.heading--size-5xl { font-size: var(--text-5xl); }
+.heading--size-6xl { font-size: var(--text-6xl); }
+
+/* Tone variants */
+.heading--tone-0 { color: var(--color-text-0); }
+.heading--tone-1 { color: var(--color-text-1); }
+.heading--tone-2 { color: var(--color-text-2); }
+.heading--tone-3 { color: var(--color-text-3); }
+.heading--tone-4 { color: var(--color-text-4); }
+.heading--tone-5 { color: var(--color-text-5); }
+.heading--tone-primary { color: var(--color-primary); }
+.heading--tone-secondary { color: var(--color-secondary); }
+.heading--tone-accent { color: var(--color-accent); }
+.heading--tone-white { color: var(--color-white); }
+.heading--tone-black { color: var(--color-black); }
+.heading--tone-default { color: var(--color-text-default); }
+.heading--tone-muted { color: var(--color-text-muted); }
+.heading--tone-subtle { color: var(--color-text-subtle); }
+.heading--tone-danger { color: var(--color-danger); }
+.heading--tone-success { color: var(--color-success); }
+.heading--tone-currentColor { color: currentColor; }
+.heading--tone-inherit { color: inherit; }
+
+/* Alignment */
+.heading--align-left { text-align: left; }
+.heading--align-center { text-align: center; }
+.heading--align-right { text-align: right; }
+.heading--align-justify { text-align: justify; }
+.heading--align-start { text-align: start; }
+.heading--align-end { text-align: end; }
+
+/* Weight */
+.heading--weight-thin { font-weight: 100; }
+.heading--weight-extralight { font-weight: 200; }
+.heading--weight-light { font-weight: 300; }
+.heading--weight-normal { font-weight: 400; }
+.heading--weight-medium { font-weight: 500; }
+.heading--weight-semibold { font-weight: 600; }
+.heading--weight-bold { font-weight: 700; }
+.heading--weight-extrabold { font-weight: 800; }
+.heading--weight-black { font-weight: 900; }
+
+/* Truncate */
+.heading--truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tracking (letter-spacing) */
+.heading--tracking-tighter { letter-spacing: -0.05em; }
+.heading--tracking-tight { letter-spacing: -0.025em; }
+.heading--tracking-normal { letter-spacing: 0; }
+.heading--tracking-wide { letter-spacing: 0.025em; }
+.heading--tracking-wider { letter-spacing: 0.05em; }
+.heading--tracking-widest { letter-spacing: 0.1em; }
+
+/* Leading (line-height) */
+.heading--leading-none { line-height: 1; }
+.heading--leading-tight { line-height: 1.25; }
+.heading--leading-snug { line-height: 1.375; }
+.heading--leading-normal { line-height: 1.5; }
+.heading--leading-relaxed { line-height: 1.625; }
+.heading--leading-loose { line-height: 2; }
+
+/* Made with Bob */
+
+
+--- File: heading/heading.svg ---
+
+
+--- File: heading/Heading.astro ---
+---
+/**
+ * src/design/semantics/heading/Heading.astro
+ * A flexible heading component for h1-h6 elements.
+ * - Allows dynamic heading levels with semantic HTML tags.
+ * - Supports granular control over spacing, typography, and truncation.
+ * @props (local): as, fs, ws, ff, wrap, tone, xa, fw, truncate, ls, lh, bold, italic, underline, strikethrough, uppercase, lowercase
+ * @props (global): class, class:list, animate, effects
+ */
+import type { FontSize, TextTone, XAlign, LetterSpacing, LineHeight, FontFamily, WhiteSpace, FontStyleProps, FontWeight } from "@/design/shared/types";
+import type { HeadingLevel } from '@/design/semantics/types';
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import '@/design/typography/typography.css';
+import './Heading.css';
+
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'h1'>, keyof BaseComponentProps> {
+
+  as?: HeadingLevel;
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
+  tone?: TextTone;
+  xa?: XAlign;
+  fw?: FontWeight;
+  truncate?: boolean;
+  ls?: LetterSpacing;
+  lh?: LineHeight;
+
+}
+
+const {
+  as: Element = 'h2',
+  fs,
+  tone,
+  xa,
+  fw,
+  truncate = false,
+  ls,
+  lh,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'heading',
+  `heading--level-${Element}`,
+  fs && `heading--size-${fs}`,
+  tone && `heading--tone-${tone}`,
+  xa && `heading--align-${xa}`,
+  fw && `heading--weight-${fw}`,
+  truncate && 'heading--truncate',
+  ls && `heading--tracking-${ls}`,
+  lh && `heading--leading-${lh}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Element class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Element>
+
+--- File: prose/Prose.css ---
+.prose {
+  font-size: var(--text-md);
+  line-height: 1.75;
+  color: var(--color-text-default);
+}
+
+/* Typography elements */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-default);
+}
+
+.prose h1 { font-size: 2.25em; }
+.prose h2 { font-size: 1.875em; }
+.prose h3 { font-size: 1.5em; }
+.prose h4 { font-size: 1.25em; }
+.prose h5 { font-size: 1.125em; }
+.prose h6 { font-size: 1em; }
+
+.prose p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  color: var(--color-primary-hover, var(--color-primary));
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--color-text-default);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose code {
+  font-family: var(--font-family-mono, 'Courier New', monospace);
+  font-size: 0.875em;
+  padding: 0.125em 0.375em;
+  background-color: var(--color-bg-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.prose pre {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding: 1em;
+  background-color: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.prose pre code {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.prose blockquote {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+  border-left: 4px solid var(--color-border-default);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose ul > li {
+  list-style-type: disc;
+}
+
+.prose ol > li {
+  list-style-type: decimal;
+}
+
+.prose hr {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border: 0;
+  border-top: 1px solid var(--color-border-default);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  border-radius: var(--radius-md);
+}
+
+.prose table {
+  width: 100%;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  padding: 0.75em;
+  border: 1px solid var(--color-border-default);
+  text-align: left;
+}
+
+.prose th {
+  font-weight: 600;
+  background-color: var(--color-bg-subtle);
+}
+
+/* Size variants */
+.prose--size-0,
+.prose--size-xxs { font-size: var(--text-2xs); }
+.prose--size-1,
+.prose--size-xs { font-size: var(--text-xs); }
+.prose--size-2,
+.prose--size-sm { font-size: var(--text-sm); }
+.prose--size-3,
+.prose--size-md { font-size: var(--text-md); }
+.prose--size-4,
+.prose--size-base { font-size: var(--text-md); }
+.prose--size-5,
+.prose--size-lg { font-size: var(--text-lg); }
+.prose--size-6,
+.prose--size-xl { font-size: var(--text-xl); }
+.prose--size-7,
+.prose--size-2xl { font-size: var(--text-2xl); }
+.prose--size-8,
+.prose--size-3xl { font-size: var(--text-3xl); }
+.prose--size-9,
+.prose--size-4xl { font-size: var(--text-4xl); }
+.prose--size-10,
+.prose--size-5xl { font-size: var(--text-5xl); }
+.prose--size-11,
+.prose--size-6xl { font-size: var(--text-6xl); }
+
+/* Tone variants */
+.prose--tone-0 { color: var(--color-text-0); }
+.prose--tone-1 { color: var(--color-text-1); }
+.prose--tone-2 { color: var(--color-text-2); }
+.prose--tone-3 { color: var(--color-text-3); }
+.prose--tone-4 { color: var(--color-text-4); }
+.prose--tone-5 { color: var(--color-text-5); }
+.prose--tone-primary { color: var(--color-primary); }
+.prose--tone-secondary { color: var(--color-secondary); }
+.prose--tone-accent { color: var(--color-accent); }
+.prose--tone-white { color: var(--color-white); }
+.prose--tone-black { color: var(--color-black); }
+.prose--tone-default { color: var(--color-text-default); }
+.prose--tone-muted { color: var(--color-text-muted); }
+.prose--tone-subtle { color: var(--color-text-subtle); }
+.prose--tone-danger { color: var(--color-danger); }
+.prose--tone-success { color: var(--color-success); }
+.prose--tone-currentColor { color: currentColor; }
+.prose--tone-inherit { color: inherit; }
+
+/* Max width variants */
+.prose--max-width-sm { max-width: 40rem; }
+.prose--max-width-md { max-width: 48rem; }
+.prose--max-width-lg { max-width: 56rem; }
+.prose--max-width-xl { max-width: 64rem; }
+.prose--max-width-2xl { max-width: 72rem; }
+
+/* Made with Bob */
+
+
+--- File: prose/prose.svg ---
+
+
+--- File: prose/Prose.astro ---
+---
+/**
+ * src/design/semantics/prose/Prose.astro
+ * A container for formatting rich text content (like markdown).
+ * - Applies consistent spacing and typography styles to children elements.
+ * - Configurable max-width for readability.
+ * @props (local): as, fs, ws, ff, wrap, tone, maxWidth, bold, italic, underline, strikethrough, uppercase, lowercase
+ * @props (global): class, class:list, animate, effects
+ */
+import type { FontSize, TextTone, FontFamily, WhiteSpace, FontStyleProps } from "@/design/shared/types";
+import type { ProseMaxWidth } from '@/design/semantics/types';
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import '@/design/typography/typography.css';
+import './Prose.css';
+
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /**
+   * The HTML element to render
+   * @default 'div'
+   */
+  as?: 'div' | 'article' | 'section';
+  
+  /**
+   * Font size of the prose content
+   */
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
+  
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+  
+  /**
+   * Maximum width constraint
+   */
+  maxWidth?: ProseMaxWidth;
+  
+  /**
+   * Standard boolean typography styles
+   */
+}
+
+const {
+  as: Element = 'div',
+  fs,
+  tone,
+  maxWidth = 'lg',
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'prose',
+  fs && `prose--size-${fs}`,
+  tone && `prose--tone-${tone}`,
+  maxWidth && maxWidth !== 'none' && `prose--max-width-${maxWidth}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Element class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Element>
+
+--- File: quote/quote.svg ---
+
+
+--- File: quote/Quote.astro ---
+---
+/**
+ * src/design/semantics/quote/Quote.astro
+ * A semantic quotation component.
+ * - Supports block, inline, and pull quote styles via the `variant` prop.
+ * - Semantically wraps text in `<q>` or `<blockquote>` depending on the variant.
+ * @props (local): variant, fs, ws, ff, wrap, tone, xa, fw, cite, author, bold, italic, underline, strikethrough, uppercase, lowercase
+ * @props (global): class, class:list, animate, effects
+ */
+import type { FontSize, TextTone, XAlign, FontFamily, WhiteSpace, FontStyleProps, FontWeight } from "@/design/shared/types";
+import type { HTMLAttributes } from "astro/types";
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import type { QuoteVariant } from '@/design/semantics/types';
+
+import '@/design/typography/typography.css';
+import './Quote.css';
+
+interface Props extends BaseComponentProps, FontStyleProps, Omit<HTMLAttributes<'blockquote'>, keyof BaseComponentProps> {
+  /**
+   * Quote variant type
+   */
+  variant?: QuoteVariant;
+
+  /**
+   * Font size of the quote
+   */
+  fs?: FontSize;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+  wrap?: boolean;
+
+  /**
+   * Color tone of the text
+   */
+  tone?: TextTone;
+
+  /**
+   * Horizontal text alignment
+   */
+  xa?: XAlign;
+
+  /**
+   * Font weight
+   */
+  fw?: FontWeight;
+
+  /**
+   * Standard boolean typography styles
+   */
+
+  /**
+   * Citation URL
+   */
+  cite?: string;
+
+  /**
+   * Author of the quote (only shown for block/pull variants)
+   */
+  author?: string;
+
+  /**
+   * Source work of the quote (only shown alongside author)
+   */
+  source?: string;
+}
+
+const {
+  variant = "inline",
+  fs,
+  tone,
+  xa,
+  fw,
+  bold = false,
+  italic = true, // Default to italic for quotes
+  underline = false,
+  strikethrough = false,
+  cite,
+  author,
+  source,
+  ws,
+  ff,
+  wrap = false,
+  uppercase = false,
+  lowercase = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "quote-component",
+  `quote--${variant}`,
+  fs && `quote--size-${fs}`,
+  tone && `quote--tone-${tone}`,
+  xa && `quote--align-${xa}`,
+  fw && `quote--weight-${fw}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const styles = combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase });
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+
+const Element = variant === "inline" ? "q" : "blockquote";
+---
+
+<Element class:list={finalClasses} style={finalStyles} cite={cite} {...rest}>
+  {variant === "inline" ? (
+    <slot />
+  ) : (
+    <p class="quote__text"><slot /></p>
+  )}
+  {author && variant !== 'inline' && (
+    <footer class="quote__attribution">
+      <span class="quote__dash" aria-hidden="true">—</span>
+      <cite class="quote__author">{author}</cite>
+      {source && <span class="quote__source">· {source}</span>}
+    </footer>
+  )}
+</Element>
+
+
+--- File: quote/Quote.css ---
+/* src/design/semantics/quote/Quote.css */
+
+.quote-component {
+  display: inline;
+  font-style: italic;
+  font-family: var(--ff-serif);
+  color: var(--text--3);
+}
+
+.quote-component::before {
+  content: open-quote;
+}
+
+.quote-component::after {
+  content: close-quote;
+}
+
+/* ─── BLOCK QUOTE VARIANT ─────────────────────────────── */
+.quote--block {
+  display: block;
+  border-left: 2px solid var(--color-gold);
+  padding: var(--sp-sm) var(--sp-md);
+  background: color-mix(in srgb, var(--color-gold) 5%, transparent);
+  border-radius: 0 var(--rad-md) var(--rad-md) 0;
+  margin: 0 0 var(--sp-md) 0;
+}
+
+.quote--block::before,
+.quote--block::after {
+  content: none;
+}
+
+/* ─── PULL QUOTE VARIANT ──────────────────────────────── */
+.quote--pull {
+  display: block;
+  border-left: none;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  padding: var(--sp-lg) var(--sp-xl);
+  border-top: 0.5px solid var(--border--0);
+  border-bottom: 0.5px solid var(--border--0);
+  margin: var(--sp-md) 0;
+}
+
+.quote--pull::before,
+.quote--pull::after {
+  content: none;
+}
+
+/* ─── INTERNAL COMPONENTS ─────────────────────────────── */
+.quote__text {
+  font-family: var(--ff-serif);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text--5);
+  font-style: italic;
+  margin: 0;
+}
+
+.quote--pull .quote__text {
+  font-size: 17px;
+}
+
+.quote__attribution {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2xs);
+  margin-top: var(--sp-xs);
+}
+
+.quote--pull .quote__attribution {
+  justify-content: center;
+}
+
+.quote__dash {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--color-gold-dim);
+}
+
+.quote__author {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text--2);
+}
+
+.quote__source {
+  font-size: 12px;
+  color: var(--text--m);
+}
+
+
+--- File: types.ts ---
+export type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type ProseMaxWidth = "sm" | "md" | "lg" | "xl" | "2xl" | "none";
+export type QuoteVariant = 'block' | 'inline' | 'pull';
+
+
+--- File: semantics.md ---
+# Semantics
+
+Semantics is the foundational system for long-form reading, document flow, and structural outlines within the design system. Unlike Typography (which focuses on Functional UI Text), Semantics components care deeply about vertical rhythm, measure, semantic HTML document outlines, and editorial reading experiences.
+
+This document serves as a guide for developers and designers building articles, landing pages, and content blocks. It establishes the hard mental boundary between UI primitives and Document primitives.
+
+**Major Areas Documented:**
+- **Primitives vs. Role-based Components**: Distinguishing between foundational containers that manage text flow and specific semantic wrappers.
+- **The UI vs. Editorial Boundary**: Ensuring developers use Semantic elements for document outlines rather than UI Text.
+- **Boolean Styling Pattern**: The standardized application of common text styles (`bold`, `italic`, `underline`, `strikethrough`) via inline CSS rather than class pollution.
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+|---|---|---|---|
+| **Prose** | Primitive | `size`, `tone`, `bold`, `italic`,... | `as`, `maxWidth` |
+| **Heading** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `as`, `align`, `truncate`, `tracking`, `leading` |
+| **Quote** | Role-based | `size`, `tone`, `weight`, `bold`, `italic`,... | `variant`, `align`, `cite`, `author` |
+
+*(Note: "Shared Props" includes `bold`, `italic`, `underline`, and `strikethrough` across all components.)*
+
+---
+
+### Prose
+
+`src/design/semantics/prose/Prose.astro`
+
+#### Text Block Layout Primitive
+
+`Prose` acts as a layout primitive. Typeface, size, and line height are meaningless if lines run 200 characters wide. `Prose` enforces the "measure" (maximum line length, usually 60–75ch) to ensure body copy remains highly readable.
+
+#### Typographic ScrollContainer Equivalent
+
+It functions as a typographic `ScrollContainer`—a layout wrapper that makes everything inside it flow correctly and maintains vertical rhythm.
+
+#### Measure Enforcement via Max Width
+
+Accepts a `maxWidth` prop mapped to specific character counts (`ProseMaxWidth`) to ensure optimal reading length.
+
+---
+
+### Heading
+
+`src/design/semantics/heading/Heading.astro`
+
+#### Semantic Hierarchy & Visual Decoupling
+
+A semantic role wrapper that outputs correct `<h1-h6>` elements while allowing visual decoupling (e.g., rendering an `<h1>` that looks like an `h3` using the `size` prop). This ensures that developers can build a strict document outline for SEO and screen readers without compromising the visual design.
+
+#### Core Document Section Titling
+
+A core Role Component. Used primarily for section titling, structural outlines, and hierarchy.
+
+#### Granular Tracking and Leading Control
+
+Exposes `tracking` and `leading` props explicitly, as these are often overridden on large display text.
+
+---
+
+### Quote
+
+`src/design/semantics/quote/Quote.astro`
+
+#### Semantic External Citation Wrapping
+
+`Quote` semantically wraps cited text and solves the UI pattern of attributing quotes. By consolidating block, inline, and pull quotes into a single component, it eliminates cognitive overhead for developers.
+
+#### Dynamic Block vs. Inline Rendering
+
+Dynamically handles rendering the correct HTML element (`<blockquote>` for block/pull variants, `<q>` for inline variants) based on the `variant` prop. For block and pull variants, it automatically structures the `author` and `<cite>` tags correctly in a footer.
+
+
+--- File: callout/Callout.astro ---
+
+
+--- File: callout/Callout.css ---
+
+
+--- File: callout/callout.svg ---
+
+

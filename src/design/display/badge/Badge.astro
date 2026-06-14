@@ -1,65 +1,43 @@
 ---
-/**
- * src/design/display/badge/Badge.astro
- * An atomic status indicator.
- * - Uses shared variant classes for background and borders.
- * - Supports an optional icon.
- * @props (local): icon, variant, size, as
- * @props (global): class, class:list, animate, onScroll, HTML attributes
- */
-
-import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
-import type { BaseComponentProps } from "@/design/shared/props";
-import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BadgeProps } from './Badge.props';
+import { buildStyles, mergeClasses, mergeStyles } from "@/design/shared/functions";
 import Inline from "@/design/layout/inline/Inline.astro";
 import Icon from "@/design/display/icon/Icon.astro";
 import { icons, type SvgName } from "@/design/shared/icons/index";
+import { DISPLAY_VAR_MAP } from '../maps';
 import "./Badge.css";
 
-export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  /** Icon name (from shared icons) or raw emoji/string to display before the text */
-  icon?: SvgName | string;
-  /** Variant style of the badge */
-  variant?: DisplayVariant;
-  /** Size of the badge */
-  size?: DisplaySize;
-  /** HTML element to render */
-}
-
-const {
-  icon,
-  variant = "default",
-  size = "md",
-  as: Tag = "span",
-  class: className,
-  'class:list': classList,
-  style,
-  ...rest
+type Props = BadgeProps;
+const { 
+  icon, 
+  variant = "default", 
+  size = "md", 
+  as: Tag = "span", 
+  class: className, 
+  'class:list': classList, 
+  style, 
+  ...rest 
 } = Astro.props;
 
-// Check if the icon is a registered design system SVG
 const isSvgIcon = icon && icon in icons;
 
-// Define component-specific classes
-// Uses shared display-size--* and display-variant--* classes
 const classes = [
-  "badge-component",
-  `display-size--${size}`,
-  `display-variant--${variant}`,
+  "badge-component"
 ];
 
-const styles = "";
+const styles = buildStyles([
+  size && DISPLAY_VAR_MAP.size(size),
+  variant && DISPLAY_VAR_MAP.variant(variant)
+]);
 
-// Merge with animation and received props
 const finalClasses = mergeClasses(classes, Astro.props);
 const finalStyles = mergeStyles(styles, Astro.props);
 ---
-
 <Inline
-  as={Tag}
-  gap="sm"
-  class:list={finalClasses}
-  style={finalStyles}
+  as={Tag} 
+  gap="sm" 
+  class:list={finalClasses} 
+  style={finalStyles} 
   {...rest}
 >
   {icon && (

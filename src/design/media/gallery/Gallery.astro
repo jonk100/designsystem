@@ -1,0 +1,157 @@
+---
+/**
+ * src/design/media/gallery/Gallery.astro
+ *
+ * A layout wrapper for displaying a collection of images.
+ * Composes with GalleryItem and optionally connects to Lightbox.
+ *
+ * Three layout variants:
+ * - `grid`    — Uniform CSS Grid. Best for homogeneous thumbnails.
+ * - `masonry` — Variable-height grid. Best for mixed-ratio photography.
+ * - `strip`   — Horizontal scroll row. Best for timelines or film strips.
+ *
+ * When `lightbox` is true, each GalleryItem dispatches a `lightbox:open`
+ * custom event on click. The Lightbox component listens for this event
+ * independently — Gallery and Lightbox are decoupled.
+ *
+ * Two usage modes:
+ * 1. Data-driven: pass an `images` array; Gallery renders GalleryItems internally.
+ * 2. Slot-driven: omit `images` and place <GalleryItem> components in the default slot.
+ *
+ * @example — data-driven with lightbox
+ * <Gallery
+ *   images={myImages}
+ *   variant="grid"
+ *   columns={3}
+ *   gap="md"
+ *   lightbox
+ * />
+ *
+ * @example — slot-driven
+ * <Gallery variant="masonry" columns={3} gap="sm">
+ *   <GalleryItem src="/img/a.jpg" alt="A" />
+ *   <GalleryItem src="/img/b.jpg" alt="B" />
+ * </Gallery>
+ *
+ * @props (local): variant, columns, gap, images, lightbox, id
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles } from '@/design/shared/functions';
+import type { GalleryVariant, GalleryColumns, GalleryGap, GalleryImage } from './Gallery.types';
+import { buildGalleryStyles } from './Gallery.maps';
+import GalleryItem from './GalleryItem.astro';
+import './Gallery.css';
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+export interface Props
+  extends BaseComponentProps,
+    Omit<import('astro/types').HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /**
+   * Layout variant controlling how items are arranged.
+   * @default 'grid'
+   */
+  variant?: GalleryVariant;
+
+  /**
+   * Number of columns. Applies to `grid` and `masonry` variants.
+   * Ignored in `strip` variant (which is always a single row).
+   * @default 3
+   */
+  columns?: GalleryColumns;
+
+  /**
+   * Gap size between gallery items.
+   * @default 'sm'
+   */
+  gap?: GalleryGap;
+
+  /**
+   * Image data array for data-driven usage.
+   * When provided, Gallery renders GalleryItems internally.
+   * When omitted, use the default slot to place GalleryItem components.
+   */
+  images?: GalleryImage[];
+
+  /**
+   * When true, each GalleryItem dispatches a `lightbox:open` event on click,
+   * enabling integration with the Lightbox component.
+   * @default false
+   */
+  lightbox?: boolean;
+
+  /**
+   * Unique ID for this gallery instance.
+   * Required when using lightbox — allows multiple galleries on the same page
+   * to each have their own Lightbox without cross-talk.
+   * Auto-generated from a timestamp if not provided.
+   */
+  id?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Destructure props
+// ---------------------------------------------------------------------------
+
+const {
+  variant = 'grid',
+  columns = 3,
+  gap = 'sm',
+  images,
+  lightbox = false,
+  id,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Stable gallery ID. Used to scope lightbox events when multiple galleries
+ * exist on the same page.
+ */
+const galleryId = id ?? `gallery-${Date.now()}`;
+
+// ---------------------------------------------------------------------------
+// Build classes and styles
+// ---------------------------------------------------------------------------
+
+const classes = [
+  'gallery',
+  `gallery--${variant}`,
+];
+
+const localStyles = buildGalleryStyles(columns, gap);
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(localStyles, Astro.props);
+---
+
+<div
+  id={galleryId}
+  class:list={finalClasses}
+  style={finalStyles}
+  data-gallery-variant={variant}
+  data-gallery-lightbox={lightbox ? 'true' : undefined}
+  {...rest}
+>
+  {images
+    ? images.map((img, index) => (
+        <GalleryItem
+          src={img.src}
+          alt={img.alt}
+          caption={img.caption}
+          index={index}
+          total={images.length}
+          galleryId={galleryId}
+          lightbox={lightbox}
+          allImages={images}
+        />
+      ))
+    : <slot />
+  }
+</div>

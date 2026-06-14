@@ -65,12 +65,14 @@ import IconColumns from './columns.svg';
 import IconCombobox from './combobox.svg';
 import IconContainer from './container.svg';
 import IconDatePicker from './date-picker.svg';
+import IconDebug from './debug.svg';
 import IconDescriptionList from './description-list.svg';
 import IconDivider from './divider.svg';
 import IconEvent from './event.svg';
 import IconFrame from './frame.svg';
 import IconGrid from './grid.svg';
 import IconHelperText from './helper-text.svg';
+import IconHome from './home.svg';
 import IconIcon from './icon.svg';
 import IconImage from './image.svg';
 import IconInfo from './info.svg';
@@ -85,6 +87,7 @@ import IconList from './list.svg';
 import IconModal from './modal.svg';
 import IconNodeJs from './node-js.svg';
 import IconPaper from './paper.svg';
+import IconPlayground from './playground.svg';
 import IconPopover from './popover.svg';
 import IconRadioGroup from './radio-group.svg';
 import IconRadio from './radio.svg';
@@ -146,12 +149,14 @@ export const icons = {
   'combobox': IconCombobox,
   'container': IconContainer,
   'date-picker': IconDatePicker,
+  'debug': IconDebug,
   'description-list': IconDescriptionList,
   'divider': IconDivider,
   'event': IconEvent,
   'frame': IconFrame,
   'grid': IconGrid,
   'helper-text': IconHelperText,
+  'home': IconHome,
   'icon': IconIcon,
   'image': IconImage,
   'info': IconInfo,
@@ -166,6 +171,7 @@ export const icons = {
   'modal': IconModal,
   'node-js': IconNodeJs,
   'paper': IconPaper,
+  'playground': IconPlayground,
   'popover': IconPopover,
   'radio-group': IconRadioGroup,
   'radio': IconRadio,

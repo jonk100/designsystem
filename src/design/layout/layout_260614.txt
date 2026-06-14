@@ -1,0 +1,1183 @@
+--- File: separator/Separator.css ---
+.separator-component {
+  border: none;
+  background-color: var(--color-border, rgba(148, 163, 184, 0.15));
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.separator--horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.separator--vertical {
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+}
+
+
+--- File: separator/separator.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <line x1="4" y1="12" x2="20" y2="12" />
+</svg>
+
+
+--- File: separator/Separator.astro ---
+---
+/**
+ * src/design/layout/separator/Separator.astro
+ * A layout primitive used to visually separate content.
+ * - Supports horizontal and vertical orientations.
+ * - Handles ARIA accessibility roles automatically based on whether it is decorative.
+ * @props (local): orientation, decorative
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { SeparatorOrientation } from "@/design/layout/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Separator.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"hr">, keyof BaseComponentProps> {
+  orientation?: SeparatorOrientation;
+  decorative?: boolean;
+}
+
+const {
+  orientation = "horizontal",
+  decorative = true,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "separator-component",
+  `separator--${orientation}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+// Accessibility attributes
+const attrs = decorative
+  ? { role: "none" as const }
+  : { role: "separator" as const, "aria-orientation": orientation };
+---
+
+<hr class:list={finalClasses} style={finalStyles} {...attrs} {...rest} />
+
+
+--- File: spacer/Spacer.css ---
+.spacer {
+  display: block;
+  flex-shrink: 0;
+}
+
+.spacer--horizontal {
+  display: inline-block;
+}
+
+
+--- File: spacer/spacer.svg ---
+
+
+--- File: spacer/Spacer.astro ---
+---
+/**
+ * src/design/layout/spacer/Spacer.astro
+ * A layout primitive used to create empty space between components.
+ * - Used to push content apart or add precise vertical/horizontal margins within Flex or Grid containers.
+ * - Supports responsive sizing utilizing `--sp-*` variables.
+ * @props (local): size, direction, as
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { SpacingScale } from '@/design/shared/types';
+import { mergeClasses, mergeStyles } from '@/design/shared/functions';
+import './Spacer.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Spacing size */
+  size?: SpacingScale;
+  /** Direction of spacing */
+  direction?: 'horizontal' | 'vertical' | 'both';
+  /** HTML element to render */
+  as?: 'div' | 'span';
+}
+
+const {
+  size = 'lg',
+  direction = 'vertical',
+  as: Tag = 'div',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Define component-specific classes
+const classes = [
+  'spacer',
+  direction === 'horizontal' && 'spacer--horizontal',
+];
+
+// Dynamically compute width and height using central --sp- custom spacing variables
+const spacingVal = `var(--sp-${size}, 1rem)`;
+const inlineStyle = direction === 'vertical'
+  ? `width: 100%; height: ${spacingVal};`
+  : direction === 'horizontal'
+    ? `height: 100%; width: ${spacingVal};`
+    : `width: ${spacingVal}; height: ${spacingVal};`;
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(inlineStyle, Astro.props);
+---
+
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  aria-hidden="true"
+  {...rest}
+/>
+
+--- File: grid/grid.svg ---
+
+
+--- File: grid/Grid.astro ---
+---
+/**
+ * src/design/layout/grid/Grid.astro
+ * A layout primitive that arranges its children in a multi-column CSS grid.
+ * - Used for building responsive, two-dimensional layouts where elements align across rows and columns.
+ * - Supports configurable column counts, responsive wrapping, and standardized gaps.
+ * @props (local): as, columns, gap, minWidth
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { SpacingScale } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import './Grid.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  columns?: string | number;
+  gap?: SpacingScale;
+  minWidth?: string;
+}
+
+const {
+  as: Tag = 'div',
+  columns,
+  gap = 'xl',
+  minWidth = '280px',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'grid-component',
+  columns ? 'grid-component--explicit' : undefined,
+  gap && `gap-${gap}`
+];
+
+const customStyle = columns 
+  ? `--grid-cols: ${columns};` 
+  : `grid-template-columns: repeat(auto-fit, minmax(${minWidth}, 1fr));`;
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: grid/Grid.css ---
+.grid-component {
+  display: grid;
+  width: 100%;
+}
+
+.grid-component--explicit {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-component--explicit {
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+  }
+}
+
+
+
+--- File: columns/Columns.css ---
+.columns-component {
+  width: 100%;
+  /* Avoid columns splitting items or headers inappropriately inside columns */
+}
+
+.columns-component > * {
+  break-inside: avoid-column;
+}
+
+
+--- File: columns/columns.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <line x1="10" y1="3" x2="10" y2="21" />
+  <line x1="14" y1="3" x2="14" y2="21" />
+</svg>
+
+
+--- File: columns/Columns.astro ---
+---
+/**
+ * src/design/layout/columns/Columns.astro
+ * A layout primitive that formats text and children into multi-column CSS layouts.
+ * - Utilizes CSS Multi-column layout properties (column-count, column-gap, column-width).
+ * - Ideal for article text flows, newspaper-style layout lists, or flexible Masonry-like structures.
+ * @props (local): as, count, gap, width, rule
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { SpacingScale } from "@/design/shared/types";
+import type { ColumnsRule } from "@/design/layout/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Columns.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Number of columns */
+  count?: number | string;
+  /** Gap spacing between columns */
+  gap?: SpacingScale;
+  /** Minimum width for columns */
+  width?: string;
+  /** Column rule / divider line configuration */
+  rule?: ColumnsRule;
+}
+
+const {
+  as: Tag = "div",
+  count,
+  gap = "lg",
+  width,
+  rule = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["columns-component"];
+
+// Build dynamic inline style values using modern multi-column properties
+const colCount = count ? `column-count: ${count};` : "";
+const colWidth = width ? `column-width: ${width};` : "";
+const colGap = gap ? `column-gap: var(--sp-${gap}, 1rem);` : "";
+const colRule = rule === true
+  ? "column-rule: 1px solid var(--color-border, rgba(148, 163, 184, 0.15));"
+  : typeof rule === "string"
+    ? `column-rule: ${rule};`
+    : "";
+
+const customStyle = [colCount, colWidth, colGap, colRule].filter(Boolean).join(" ");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: stack/stack.svg ---
+
+
+--- File: stack/Stack.astro ---
+---
+/**
+ * src/design/layout/stack/Stack.astro
+ * A vertical flexbox container (column).
+ * - Enforces vertical stacking of child elements.
+ * - Supports responsive gaps and dynamic X/Y alignment.
+ * @props (local): as, gap, x, y
+ * @props (global): class, class:list, animate, onScroll, and other HTML attributes
+ */
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { LayoutAlign, SpacingScale } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { LAYOUT_ALIGN_MAP } from "@/design/layout/maps";
+import type { HTMLAttributes } from "astro/types";
+import './Stack.css';
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  gap?: SpacingScale;
+  /** Horizontal alignment (maps to align-items in column flex) */
+  x?: LayoutAlign;
+  /** Vertical alignment (maps to justify-content in column flex) */
+  y?: LayoutAlign;
+}
+
+const {
+  as: Tag = 'div',
+  gap = 'md',
+  x = 'stretch',
+  y = 'start',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'stack-component',
+  gap && `gap-${gap}`
+];
+
+// For Stack (flex-direction: column), x is align-items and y is justify-content
+const flexStyles = [
+  x && `align-items: ${LAYOUT_ALIGN_MAP[x]}`,
+  y && `justify-content: ${LAYOUT_ALIGN_MAP[y]}`
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(flexStyles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: stack/Stack.css ---
+.stack-component {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 var(--sp-2xs);
+}
+
+@media (max-width: 480px) {
+  .stack-component {
+    padding-left: var(--sp-3xs);
+    padding-right: var(--sp-3xs);
+  }
+}
+
+--- File: inline/Inline.css ---
+.inline-component {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+--- File: inline/inline.svg ---
+
+
+--- File: inline/Inline.ts ---
+
+
+--- File: inline/Inline.astro ---
+---
+/**
+ * src/design/layout/inline/Inline.astro
+ * A horizontal flexbox container (row).
+ * - Enforces horizontal stacking / gap of its child elements.
+ * - Supports responsive gaps, wrapping, and dynamic X/Y alignment.
+ * - NEVER responsible for layout, margin, padding, etc. The space around Inline belongs to its parent.
+ * @props (local): as, gap, x, y, wrap
+ * @props (global): class, class:list, animate, onScroll, and other HTML attributes
+ */
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { LayoutAlign, SpacingScale } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { LAYOUT_ALIGN_MAP } from "@/design/layout/maps";
+import type { HTMLAttributes } from "astro/types";
+import "./Inline.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    Omit<HTMLAttributes<"div">, keyof BaseComponentProps> {
+  gap?: SpacingScale;
+  /** Horizontal alignment (maps to justify-content in row flex) */
+  x?: LayoutAlign;
+  /** Vertical alignment (maps to align-items in row flex) */
+  y?: LayoutAlign;
+  /** Whether items should wrap */
+  wrap?: boolean | "reverse";
+}
+
+const {
+  as: Tag = "span",
+  gap = "md",
+  x = "start",
+  y = "center",
+  wrap = true,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Define component-specific classes and styles
+const classes = [
+  "inline-component",
+  gap && `gap-${gap}`,
+  wrap === true
+    ? "flex-wrap"
+    : wrap === "reverse"
+      ? "flex-wrap-reverse"
+      : "flex-nowrap",
+];
+
+// For Inline (flex-direction: row), x is justify-content and y is align-items
+const flexStyles = [
+  x && `justify-content: ${LAYOUT_ALIGN_MAP[x]}`,
+  y && `align-items: ${LAYOUT_ALIGN_MAP[y]}`,
+]
+  .filter(Boolean)
+  .join(";");
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(flexStyles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: center/Center.css ---
+.center-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center--inline {
+  display: inline-flex;
+}
+
+.center--text {
+  text-align: center;
+}
+
+
+--- File: center/center.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <circle cx="12" cy="12" r="2" fill="currentColor" />
+  <line x1="12" y1="3" x2="12" y2="7" />
+  <line x1="12" y1="17" x2="12" y2="21" />
+  <line x1="3" y1="12" x2="7" y2="12" />
+  <line x1="17" y1="12" x2="21" y2="12" />
+</svg>
+
+
+--- File: center/Center.astro ---
+---
+/**
+ * src/design/layout/center/Center.astro
+ * A layout utility that centers its children horizontally and vertically.
+ * - Utilizes flexbox alignment (`align-items: center; justify-content: center;`).
+ * - Supports block or inline behavior, and optional text alignment centering.
+ * @props (local): as, inline, height, width, text
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Center.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Whether to use inline-flex container */
+  inline?: boolean;
+  /** Custom height constraint */
+  height?: string;
+  /** Custom width constraint */
+  width?: string;
+  /** Whether to apply text-align: center style */
+  text?: boolean;
+}
+
+const {
+  as: Tag = "div",
+  inline = false,
+  height,
+  width,
+  text = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "center-component",
+  inline && "center--inline",
+  text && "center--text"
+];
+
+const customStyle = [
+  height && `height: ${height};`,
+  width && `width: ${width};`
+].filter(Boolean).join(" ");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: container/container.svg ---
+
+
+--- File: container/Container.astro ---
+---
+/**
+ * src/design/layout/container/Container.astro
+ * A layout primitive used to constrain the maximum width of page content.
+ * - Centers content horizontally and provides safe minimum side padding.
+ * - Supports multiple maximum width sizes.
+ * @props (local): as, size
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { ContainerSize } from "@/design/layout/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Container.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    Omit<
+      import("astro/types").HTMLAttributes<"div">,
+      keyof BaseComponentProps
+    > {
+  size?: ContainerSize;
+}
+
+const { 
+  as: Tag = "div", 
+  size = "fluid", 
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest 
+} = Astro.props;
+
+const classes = ["container-component", size && `container-size--${size}`];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: container/Container.css ---
+.container-component {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* Use a consistent responsive padding or fallback */
+  padding-left: var(--sp-md, 1rem);
+  padding-right: var(--sp-md, 1rem);
+}
+
+@media (max-width: 480px) {
+  .container-component {
+    padding-left: var(--sp-2xs);
+    padding-right: var(--sp-2xs);
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .container-component {
+    padding-left: var(--sp-3xs);
+    padding-right: var(--sp-3xs);
+  }
+}
+.container-size--sm {
+  max-width: 640px;
+}
+
+.container-size--md {
+  max-width: 768px;
+}
+
+.container-size--lg {
+  max-width: 1024px;
+}
+
+.container-size--xl {
+  max-width: 1280px;
+}
+
+.container-size--2xl {
+  max-width: 1536px;
+}
+
+.container-size--fluid {
+  max-width: none;
+}
+
+--- File: aspect-ratio/AspectRatio.css ---
+.aspect-ratio-component {
+  display: block;
+  width: 100%;
+}
+
+/* Ensure images, videos, and frames fill the container correctly */
+.aspect-ratio-component > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+--- File: aspect-ratio/aspect-ratio.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3,9 7,5 11,5" />
+  <polyline points="13,19 17,19 21,15" />
+</svg>
+
+
+--- File: aspect-ratio/AspectRatio.astro ---
+---
+/**
+ * src/design/layout/aspect-ratio/AspectRatio.astro
+ * A layout primitive that forces child elements to maintain a strict aspect ratio.
+ * - Utilizes native CSS `aspect-ratio` property.
+ * - Perfect for media embeds (16:9 videos, 1:1 avatars, 4:3 images) to prevent layout shifts.
+ * @props (local): as, ratio
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./AspectRatio.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Aspect ratio value. E.g., '16/9', '4:3', '1:1', or a number like 1.77 */
+  ratio?: string | number;
+}
+
+const {
+  as: Tag = "div",
+  ratio = "1/1",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["aspect-ratio-component"];
+
+// Handle colon format (e.g. '16:9') and numbers
+const normalizedRatio = typeof ratio === "number" ? ratio : ratio.replace(":", "/");
+const customStyle = `aspect-ratio: ${normalizedRatio};`;
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: scroll-area/ScrollArea.css ---
+.scroll-area-component {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scrollbar styling for Webkit engines (Chrome, Safari, Edge) */
+.scrollbar--thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar--thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar--thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar, rgba(148, 163, 184, 0.3));
+  border-radius: 9999px;
+}
+
+.scrollbar--thin::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-scrollbar-hover, rgba(148, 163, 184, 0.5));
+}
+
+.scrollbar--hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar--hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Standard scrollbars support for Firefox */
+.scrollbar--thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar, rgba(148, 163, 184, 0.3)) transparent;
+}
+
+
+--- File: scroll-area/scroll-area.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <line x1="21" y1="8" x2="21" y2="16" />
+  <line x1="8" y1="21" x2="16" y2="21" />
+</svg>
+
+
+--- File: scroll-area/ScrollArea.astro ---
+---
+/**
+ * src/design/layout/scroll-area/ScrollArea.astro
+ * A layout primitive that wraps content and controls scrollbars and overflow behavior.
+ * - Supports customized scrolling (auto, scroll, hidden, visible) along X/Y axes independently.
+ * - Restyles native scrollbars to a subtle "thin" design or completely hides them while preserving scrolling.
+ * @props (local): as, x, y, scrollbar
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { ScrollAreaOverflow, ScrollAreaScrollbar } from "@/design/layout/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./ScrollArea.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Horizontal overflow behavior */
+  x?: ScrollAreaOverflow;
+  /** Vertical overflow behavior */
+  y?: ScrollAreaOverflow;
+  /** Scrollbar styling */
+  scrollbar?: ScrollAreaScrollbar;
+}
+
+const {
+  as: Tag = "div",
+  x = "auto",
+  y = "auto",
+  scrollbar = "thin",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "scroll-area-component",
+  scrollbar && `scrollbar--${scrollbar}`
+];
+
+const customStyle = [
+  `overflow-x: ${x};`,
+  `overflow-y: ${y};`
+].join(" ");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyle, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: vars.css ---
+/* 
+ * Layout variables.
+ * Empty placeholder for layout-specific CSS variables.
+ */
+
+
+--- File: box/Box.css ---
+.box-display--block {
+  display: block;
+}
+.box-display--inline {
+  display: inline;
+}
+.box-display--inline-block {
+  display: inline-block;
+}
+.box-display--contents {
+  display: contents;
+}
+
+
+--- File: box/Box.astro ---
+---
+/**
+ * src/design/layout/box/Box.astro
+ * A foundational layout primitive that acts as a generic wrapper or container.
+ * - Used to apply standard display properties and global attributes safely.
+ * - By default renders as a `div`, but can be morphed via the `as` prop.
+ * @props (local): display, as
+ * @props (global): class, class:list, animate, onScroll, effects, frame
+ */
+
+import type { BoxDisplay } from "@/design/layout/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { HTMLAttributes } from "astro/types";
+import './Box.css';
+
+export interface Props extends BaseComponentProps, Omit<HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  display?: BoxDisplay;
+}
+
+const { 
+  as: Tag = "div", 
+  display, 
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest 
+} = Astro.props;
+
+const classes = ["box-component", display && `box-display--${display}`];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: consts.ts ---
+/**
+ * src/design/layout/consts.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+
+
+--- File: functions.ts ---
+/**
+ * src/design/layout/functions.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+
+
+--- File: layout.md ---
+# Layout
+
+Layout components are the invisible backbone of the design system. They are responsible for the structural arrangement of elements on the page, handling everything from responsive grid systems and macro page containers down to micro-level spacing and flexbox alignments.
+
+This document serves as a guide for developers working with layout primitives. It outlines how layout is treated systematically, abstracting away complex CSS (like CSS Grid or flexbox axis-flipping) into intuitive, composable Astro components.
+
+**Major Areas Documented:**
+- **Primitives vs. Utility Components**: Distinguishing between structural containers (like Grid/Stack) and visual spacing utilities (like Spacer/Separator).
+- **The X/Y Alignment API**: The standardized approach to layout alignment that replaces confusing `justify-content` and `align-items` axes with intuitive `x` (horizontal) and `y` (vertical) properties.
+- **Responsive Foundations**: How containers handle responsive scaling, wrapping, and gaps automatically via shared tokens.
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+|---|---|---|---|
+| **Box** | Primitive | `as` | `display` |
+| **Stack** | Primitive | `as`, `gap` | `x`, `y` |
+| **Inline** | Primitive | `as`, `gap` | `x`, `y`, `wrap` |
+| **Grid** | Primitive | `as`, `gap` | `columns`, `minWidth` |
+| **Spacer** | Primitive | `as` | `size`, `direction` |
+| **Container** | Primitive | `as` | `size` |
+| **Separator** | Primitive | (none) | `orientation`, `decorative` |
+| **Columns** | Primitive | `as`, `gap` | `count`, `width`, `rule` |
+| **Center** | Primitive | `as` | `inline`, `height`, `width`, `text` |
+| **AspectRatio**| Primitive | `as` | `ratio` |
+| **ScrollArea** | Primitive | `as` | `x`, `y`, `scrollbar` |
+
+*(Note: All layout components implicitly inherit `BaseComponentProps` which includes standard properties like `class`, `animate`, and `onScroll`.)*
+
+---
+
+### Stack
+
+`src/design/layout/stack/Stack.astro`
+
+#### Vertical Flexbox Container
+
+`Stack` is the primary layout primitive for arranging elements vertically in a column. It enforces a strict `flex-direction: column` and leverages the design system's spacing scale for consistent gaps between elements.
+
+#### Intuitive X/Y Alignment
+
+`Stack` utilizes the standardized `x` and `y` alignment API. Under the hood, it intelligently maps `x` to `align-items` (horizontal cross-axis) and `y` to `justify-content` (vertical main-axis). This completely removes the cognitive overhead of flexbox axis-flipping.
+
+---
+
+### Inline
+
+`src/design/layout/inline/Inline.astro`
+
+#### Horizontal Flexbox Container
+
+`Inline` is the counterpart to `Stack`, used for arranging elements horizontally in a row. It is ideal for button groups, tag lists, or horizontal navigation menus. 
+
+#### Wrapping and Alignment
+
+Like `Stack`, `Inline` uses the `x` and `y` alignment API, mapping `x` to `justify-content` (horizontal main-axis) and `y` to `align-items` (vertical cross-axis). It also supports a `wrap` boolean to seamlessly handle overflowing child elements.
+
+---
+
+### Grid
+
+`src/design/layout/grid/Grid.astro`
+
+#### CSS Grid Abstraction
+
+`Grid` provides a simplified API over CSS Grid. It is designed to create highly responsive, multi-column layouts without writing custom media queries.
+
+#### Auto-fit vs. Explicit Columns
+
+By default, `Grid` uses a fluid `auto-fit` strategy based on the `minWidth` property, automatically wrapping elements to new rows as the viewport shrinks. Alternatively, passing an explicit integer to the `columns` prop will enforce a rigid grid structure.
+
+---
+
+### Box
+
+`src/design/layout/box/Box.astro`
+
+#### Polymorphic Base Container
+
+`Box` is the most fundamental layout primitive. It renders a simple semantic tag (defaulting to `<div>`) and is generally used when standard layout components (`Stack`, `Grid`) are too opinionated, or when custom CSS layout logic needs to be applied.
+
+#### Display Control
+
+Exposes a straightforward `display` prop (block, inline, inline-block, contents) to override default block-level behaviors while retaining access to `BaseComponentProps`.
+
+---
+
+### Spacer
+
+`src/design/layout/spacer/Spacer.astro`
+
+#### Declarative Visual Spacing
+
+`Spacer` is a utility primitive used to inject specific amounts of whitespace between components without relying on ad-hoc margins or padding. It directly consumes the global `SpacingScale` tokens.
+
+#### Directional Awareness
+
+Supports explicit sizing in `horizontal`, `vertical`, or `both` directions, ensuring that spacing remains rigid and isn't collapsed by parent flex/grid containers (`flex-shrink: 0`).
+
+---
+
+### Container
+
+`src/design/layout/container/Container.astro`
+
+#### Max-Width Content Constraining
+
+`Container` is a macro-layout component designed to limit the maximum horizontal width of page layouts, preventing text lines from becoming too wide to read comfortably on large monitors.
+
+#### Safe Margins and Horizontal Centering
+
+It automatically centers itself within the viewport using auto-margins and enforces standard responsive side padding to ensure content never touches the screen edges on mobile devices.
+
+---
+
+### Separator
+
+`src/design/layout/separator/Separator.astro`
+
+#### Visual and Accessible Content Dividers
+The `Separator` component visually divides sections of content horizontally or vertically. It is built as a semantic extension over `<hr>` and encapsulates visual styling from custom border design tokens.
+
+#### Dynamic ARIA Integration
+To guarantee accessibility conformance out-of-the-box, the component automatically determines the correct ARIA semantics. If `decorative` is true, it renders with `role="none"` so assistive technologies ignore the structural break. If not decorative, it applies `role="separator"` and bindings for `aria-orientation`.
+
+---
+
+### Columns
+
+`src/design/layout/columns/Columns.astro`
+
+#### Multi-Column Fluid Grid Formatting
+The `Columns` component arranges children and long-form prose across multiple columns using native CSS Multi-column layout model. It allows multi-column newspapers, masonry grids, or textual streams.
+
+#### Configurable Rules and Responsive Widths
+Supports custom minimum columns widths to allow fluid grid wrapping and dynamic vertical separating rule lines via the `rule` prop (mapping to `column-rule`).
+
+---
+
+### Center
+
+`src/design/layout/center/Center.astro`
+
+#### Absolute Content Centering Utility
+The `Center` component centers its children along both the horizontal cross-axis and vertical main-axis using standard flexbox alignments (`align-items: center; justify-content: center;`).
+
+#### Custom Layout Constraint Settings
+Exposes `inline` for inline-flex rendering, custom `height`/`width` bounds, and a `text` boolean setting to easily center text alignment inside child components.
+
+---
+
+### AspectRatio
+
+`src/design/layout/aspect-ratio/AspectRatio.astro`
+
+#### Strict Dimension Constraints
+The `AspectRatio` component restricts child visual structures (videos, images, icons, card cards, frames) to a strict dimension ratio using modern CSS `aspect-ratio` properties.
+
+#### Prevent Layout Shift (CLS)
+Protects against Cumulative Layout Shifts by reserving correct container space before images or iframes load, automatically normalising ratio formats like numbers, fractions (`16/9`), or colon notation (`4:3`).
+
+---
+
+### ScrollArea
+
+`src/design/layout/scroll-area/ScrollArea.astro`
+
+#### Overflow Content Container
+The `ScrollArea` component wraps overflow layout content and exposes clean props to handle horizontal and vertical scrolling behavior independently (`overflow-x`, `overflow-y`).
+
+#### Custom Thin Scrollbar Themes
+Replaces browser-default thick scrollbars with custom, low-opacity scrollbar styling (thin scrollbar models or completely hidden scrollbars) to maintain sleek design system aesthetics on desktop environments.
+
+
+
+--- File: layout.css ---
+@import './tokens.css';
+@import './vars.css';
+
+/** LEARNING LAYOUT */
+/*
+Layout primitives are the building blocks of all layouts. 
+They are a set of wrappers that allow you to control the layout of your components.
+
+STACK
+Inline
+Grid
+Center
+Box
+Spacer
+Container
+*/
+
+.stack-component {
+}
+
+.inline-component {
+}
+
+.grid-component {
+}
+
+.center-component {
+}
+
+.box-component {
+}
+
+.spacer-component {
+}
+
+.container-component {
+}
+
+--- File: maps.ts ---
+import type { LayoutAlign } from "@/design/shared/types";
+
+/** Maps logical layout alignments to standard CSS flexbox/grid property values */
+export const LAYOUT_ALIGN_MAP: Record<LayoutAlign, string> = {
+  start: "flex-start",
+  center: "center",
+  end: "flex-end",
+  stretch: "stretch",
+  between: "space-between",
+  around: "space-around",
+  evenly: "space-evenly",
+  baseline: "baseline"
+};
+
+
+--- File: tokens.css ---
+/* Gap Utilities - Global spacing utilities for flexbox/grid gaps */
+.gap-none { gap: 0; }
+.gap-3xs { gap: var(--sp-3xs, 0.125rem); }
+.gap-2xs { gap: var(--sp-2xs, 0.25rem); }
+.gap-xs { gap: var(--sp-xs, 0.5rem); }
+.gap-sm { gap: var(--sp-sm); }
+.gap-md { gap: var(--sp-md, 1rem); }
+.gap-lg { gap: var(--sp-lg, 1.5rem); }
+.gap-xl { gap: var(--sp-xl, 2rem); }
+.gap-2xl { gap: var(--sp-2xl, 3rem); }
+.gap-3xl { gap: var(--sp-3xl, 4rem); }
+.gap-4xl { gap: var(--sp-4xl, 6rem); }
+.gap-5xl { gap: var(--sp-5xl, 8rem); }
+
+
+--- File: types.ts ---
+import type { CommonHTMLProps, SpacingScale } from "@/design/shared";
+
+/** Shared interface for components using flexbox properties */
+export interface FlexboxProps extends CommonHTMLProps {
+  gap?: SpacingScale;
+  align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around';
+  wrap?: boolean;
+}
+
+/** Allowed display values for the Box component */
+export type BoxDisplay = "block" | "inline" | "inline-block" | "contents";
+
+/** Allowed max-width sizes for the Container component */
+export type ContainerSize = "sm" | "md" | "lg" | "xl" | "2xl" | "fluid";
+
+/** Orientation of the Separator component */
+export type SeparatorOrientation = "horizontal" | "vertical";
+
+/** Configuration or custom rule CSS for Columns component dividers */
+export type ColumnsRule = boolean | string;
+
+/** Scrollbar visibility configuration for ScrollArea component */
+export type ScrollAreaScrollbar = "visible" | "hidden" | "thin";
+
+/** Overflow behavior settings for ScrollArea component */
+export type ScrollAreaOverflow = "auto" | "scroll" | "hidden" | "visible";
+

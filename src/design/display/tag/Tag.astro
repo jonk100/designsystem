@@ -1,68 +1,31 @@
 ---
-/**
- * src/design/display/tag/Tag.astro
- * An interactive data categorization indicator.
- * - Uses shared variant classes for background and borders.
- * - Visually similar to a badge but intended for selection or filtering.
- * @props (local): variant, size, as
- * @props (global): class, class:list, animate, onScroll, HTML attributes
- */
-
-import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
-import type { BaseComponentProps } from "@/design/shared/props";
-import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { TagProps } from './Tag.props';
+import { buildStyles, mergeClasses, mergeStyles } from "@/design/shared/functions";
 import Inline from "@/design/layout/inline/Inline.astro";
 import Dot from "@/design/display/dot/Dot.astro";
 import Icon from "@/design/display/icon/Icon.astro";
 import { icons, type SvgName } from "@/design/shared/icons/index";
+import { DISPLAY_VAR_MAP } from '../maps';
 import "./Tag.css";
 
-export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
-  /** Optional leading icon name (from shared icons) or raw emoji/string */
-  icon?: SvgName | string;
-  /** Visual variant */
-  variant?: DisplayVariant | 'amber' | 'teal' | 'coral' | 'purple';
-  /** Size token */
-  size?: DisplaySize;
-  /** Show status dot indicator */
-  dot?: boolean;
-}
+type Props = TagProps;
+const { icon, variant = "default", size = "md", dot = false, as: TagElement = "span", class: className, 'class:list': classList, style, ...rest } = Astro.props;
 
-const {
-  icon,
-  variant = "default",
-  size = "md",
-  dot = false,
-  as: Tag = "span",
-  class: className,
-  'class:list': classList,
-  style,
-  ...rest
-} = Astro.props;
-
-// Check if the icon is a registered design system SVG
 const isSvgIcon = icon && icon in icons;
 
-// Build class list using shared utilities
 const classes = [
-  "tag-component",
-  `display-size--${size}`,
-  `display-variant--${variant}`,
+  "tag-component"
 ];
 
-const styles = "";
+const customStyles = buildStyles([
+  size && DISPLAY_VAR_MAP.size(size),
+  variant && DISPLAY_VAR_MAP.variant(variant as any)
+]);
 
 const finalClasses = mergeClasses(classes, Astro.props);
-const finalStyles = mergeStyles(styles, Astro.props);
+const finalStyles = mergeStyles(customStyles, Astro.props);
 ---
-
-<Inline
-  as={Tag}
-  gap="xs"
-  class:list={finalClasses}
-  style={finalStyles}
-  {...rest}
->
+<Inline as={TagElement} gap="xs" class:list={finalClasses} style={finalStyles} {...rest}>
   {dot && <Dot variant={variant as any} size="2xs" class="tag__dot" />}
   {icon && (
     <span class="tag--icon">

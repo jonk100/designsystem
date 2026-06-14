@@ -1,0 +1,2282 @@
+--- File: text/Text.css ---
+/* Text Component Styles */
+
+.text-component {
+  display: inline;
+  font-family: inherit;
+  font-size: var(--local-fs, inherit);
+  font-weight: var(--local-fw, inherit);
+  line-height: var(--local-lh, inherit);
+  letter-spacing: var(--local-ls, inherit);
+  color: var(--local-color, inherit);
+}
+
+/* Font Sizes */
+.fs--0,
+.text--size-2xs {
+  font-size: var(--fs--2xs);
+  /* 10px */
+}
+
+.fs--1,
+.text--size-xs {
+  font-size: 0.75rem;
+  /* 12px */
+}
+
+.text--size-2,
+.text--size-sm {
+  font-size: 0.875rem;
+  /* 14px */
+}
+
+.text--size-3,
+.text--size-md {
+  font-size: 1rem;
+  /* 16px */
+}
+
+.text--size-4,
+.text--size-base {
+  font-size: 1.125rem;
+  /* 18px */
+}
+
+.text--size-5,
+.text--size-lg {
+  font-size: 1.25rem;
+  /* 20px */
+}
+
+.text--size-6,
+.text--size-xl {
+  font-size: 1.5rem;
+  /* 24px */
+}
+
+.text--size-7,
+.text--size-2xl {
+  font-size: 1.875rem;
+  /* 30px */
+}
+
+.text--size-8,
+.text--size-3xl {
+  font-size: 2.25rem;
+  /* 36px */
+}
+
+.text--size-9,
+.text--size-4xl {
+  font-size: 3rem;
+  /* 48px */
+}
+
+.text--size-10,
+.text--size-5xl {
+  font-size: 3.75rem;
+  /* 60px */
+}
+
+.text--size-11,
+.text--size-6xl {
+  font-size: 4.5rem;
+  /* 72px */
+}
+
+/* Text Tones */
+.text--tone-0 {
+  color: var(--color-text-0, hsl(0 0% 0%));
+}
+
+.text--tone-1 {
+  color: var(--color-text-1, hsl(0 0% 20%));
+}
+
+.text--tone-2 {
+  color: var(--color-text-2, hsl(0 0% 40%));
+}
+
+.text--tone-3 {
+  color: var(--color-text-3, hsl(0 0% 60%));
+}
+
+.text--tone-4 {
+  color: var(--color-text-4, hsl(0 0% 80%));
+}
+
+.text--tone-5 {
+  color: var(--color-text-5, hsl(0 0% 100%));
+}
+
+.text--tone-primary {
+  color: var(--color-primary, hsl(220 90% 56%));
+}
+
+.text--tone-secondary {
+  color: var(--color-secondary, hsl(280 70% 60%));
+}
+
+.text--tone-accent {
+  color: var(--color-accent, hsl(340 80% 58%));
+}
+
+.text--tone-white {
+  color: white;
+}
+
+.text--tone-black {
+  color: black;
+}
+
+.text--tone-default {
+  color: var(--color-text-default, currentColor);
+}
+
+.text--tone-muted {
+  color: var(--color-text-muted, hsl(0 0% 50%));
+}
+
+.text--tone-subtle {
+  color: var(--color-text-subtle, hsl(0 0% 70%));
+}
+
+.text--tone-danger {
+  color: var(--color-danger, hsl(0 84% 60%));
+}
+
+.text--tone-success {
+  color: var(--color-success, hsl(142 76% 36%));
+}
+
+.text--tone-currentColor {
+  color: currentColor;
+}
+
+.text--tone-inherit {
+  color: inherit;
+}
+
+/* Horizontal Alignment */
+.text--align-left {
+  text-align: left;
+}
+
+.text--align-center {
+  text-align: center;
+}
+
+.text--align-right {
+  text-align: right;
+}
+
+.text--align-justify {
+  text-align: justify;
+}
+
+.text--align-start {
+  text-align: start;
+}
+
+.text--align-end {
+  text-align: end;
+}
+
+/* Vertical Alignment */
+.text--valign-super {
+  vertical-align: super;
+}
+
+.text--valign-top {
+  vertical-align: top;
+}
+
+.text--valign-text-top {
+  vertical-align: text-top;
+}
+
+.text--valign-baseline {
+  vertical-align: baseline;
+}
+
+.text--valign-middle {
+  vertical-align: middle;
+}
+
+.text--valign-bottom {
+  vertical-align: bottom;
+}
+
+.text--valign-text-bottom {
+  vertical-align: text-bottom;
+}
+
+.text--valign-sub {
+  vertical-align: sub;
+}
+
+/* Font Weights */
+.text--weight-thin {
+  font-weight: 100;
+}
+
+.text--weight-extralight {
+  font-weight: 200;
+}
+
+.text--weight-light {
+  font-weight: 300;
+}
+
+.text--weight-normal {
+  font-weight: 400;
+}
+
+.text--weight-medium {
+  font-weight: 500;
+}
+
+.text--weight-semibold {
+  font-weight: 600;
+}
+
+.text--weight-bold {
+  font-weight: 700;
+}
+
+.text--weight-extrabold {
+  font-weight: 800;
+}
+
+.text--weight-black {
+  font-weight: 900;
+}
+
+/* Font Style */
+.text--italic {
+  font-style: italic;
+}
+
+/* Text Decoration */
+.text--underline {
+  text-decoration: underline;
+}
+
+.text--line-through {
+  text-decoration: line-through;
+}
+
+/* Text Transform */
+.text--uppercase {
+  text-transform: uppercase;
+}
+
+.text--lowercase {
+  text-transform: lowercase;
+}
+
+.text--capitalize {
+  text-transform: capitalize;
+}
+
+/* Truncation */
+.text--truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Line Clamp */
+.text--line-clamp-1,
+.text--line-clamp-2,
+.text--line-clamp-3,
+.text--line-clamp-4,
+.text--line-clamp-5,
+.text--line-clamp-6 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: attr(data-line-clamp);
+}
+
+.text--line-clamp-1 {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.text--line-clamp-2 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.text--line-clamp-3 {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.text--line-clamp-4 {
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.text--line-clamp-5 {
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+}
+
+.text--line-clamp-6 {
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+}
+
+/* Whitespace */
+.text--nowrap {
+  white-space: nowrap;
+}
+
+/* Letter Spacing (Tracking) */
+.text--tracking-tighter {
+  letter-spacing: -0.05em;
+}
+
+.text--tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+.text--tracking-normal {
+  letter-spacing: 0;
+}
+
+.text--tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.text--tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.text--tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+/* Line Height (Leading) */
+.text--leading-none {
+  line-height: 1;
+}
+
+.text--leading-tight {
+  line-height: 1.25;
+}
+
+.text--leading-snug {
+  line-height: 1.375;
+}
+
+.text--leading-normal {
+  line-height: 1.5;
+}
+
+.text--leading-relaxed {
+  line-height: 1.625;
+}
+
+.text--leading-loose {
+  line-height: 2;
+}
+
+/* Made with Bob */
+
+--- File: text/text.svg ---
+
+
+--- File: text/README.md ---
+# Text Component
+
+A flexible and type-safe text primitive component that wraps any content with comprehensive typography controls.
+
+## Features
+
+- **Type-safe props** based on typography types
+- **Flexible rendering** - can render as different HTML elements
+- **Comprehensive styling** - font size, color, alignment, weight, and more
+- **Text utilities** - truncation, line clamping, transforms
+- **Accessibility** - semantic HTML elements
+
+## Basic Usage
+
+```astro
+---
+import Text from '@/design/typography/text/Text.astro';
+---
+
+<!-- Simple text -->
+<Text>Hello World</Text>
+
+<!-- With size and tone -->
+<Text fs="lg" tone="primary">
+  Important message
+</Text>
+
+<!-- As a paragraph -->
+<Text as="p" fs="md" tone="muted">
+  This is a paragraph with muted text.
+</Text>
+```
+
+## Props
+
+### Element Type
+
+- `as` - HTML element to render (default: `'span'`)
+  - Options: `'span'`, `'p'`, `'div'`, `'label'`, `'strong'`, `'em'`, `'small'`, `'mark'`, `'del'`, `'ins'`, `'sub'`, `'sup'`
+
+### Typography
+
+- `fs` - Font size
+  - Numeric: `'0'` to `'11'`
+  - Named: `'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`, `'3xl'`, `'4xl'`, `'5xl'`, `'6xl'`
+
+- `tone` - Text color
+  - Numeric: `'0'` to `'5'`
+  - Semantic: `'primary'`, `'secondary'`, `'accent'`, `'danger'`, `'warning'`, `'success'`, `'info'`
+  - Neutral: `'default'`, `'muted'`, `'subtle'`, `'white'`, `'black'`
+  - Special: `'currentColor'`, `'inherit'`
+
+- `fw` - Font weight
+  - Options: `'thin'`, `'extralight'`, `'light'`, `'normal'`, `'medium'`, `'semibold'`, `'bold'`, `'extrabold'`, `'black'`
+
+### Alignment
+
+- `xa` - Horizontal text alignment (X-Align)
+  - Options: `'left'`, `'center'`, `'right'`, `'justify'`, `'start'`, `'end'`
+
+- `ya` - Vertical text alignment (Y-Align)
+  - Options: `'super'`, `'top'`, `'text-top'`, `'baseline'`, `'middle'`, `'bottom'`, `'text-bottom'`, `'sub'`
+
+### Styling
+
+- `italic` - Italic text (boolean)
+- `underline` - Underlined text (boolean)
+- `strikethrough` - Strike-through text (boolean)
+
+### Text Transform
+
+- `uppercase` - Transform to uppercase (boolean)
+- `lowercase` - Transform to lowercase (boolean)
+
+### Text Overflow & Wrapping
+
+- `truncate` - Truncate with ellipsis (boolean)
+- `clamp` - Limit to specific number of lines (number)
+- `wrap` - Allow word breaking/wrapping (boolean)
+- `ws` - White space handling (`'normal'`, `'nowrap'`, `'pre'`, `'pre-line'`, `'pre-wrap'`, `'break-spaces'`)
+
+### Spacing
+
+- `ls` - Letter spacing (tracking)
+  - Options: `'tighter'`, `'tight'`, `'normal'`, `'wide'`, `'wider'`, `'widest'`
+
+- `lh` - Line height (leading)
+  - Options: `'none'`, `'tight'`, `'snug'`, `'normal'`, `'relaxed'`, `'loose'`
+
+## Examples
+
+### Headings
+
+```astro
+<Text as="h1" fs="6xl" fw="bold" tone="primary">
+  Main Heading
+</Text>
+
+<Text as="h2" fs="4xl" fw="semibold" tone="secondary">
+  Subheading
+</Text>
+```
+
+### Body Text
+
+```astro
+<Text as="p" fs="md" lh="relaxed">
+  This is a paragraph with relaxed line height for better readability.
+</Text>
+
+<Text as="p" fs="sm" tone="muted">
+  Secondary information in smaller, muted text.
+</Text>
+```
+
+### Inline Text
+
+```astro
+<Text as="span" bold>Bold text</Text>
+<Text as="em" italic>Italic text</Text>
+<Text as="strong" bold tone="danger">Important warning</Text>
+```
+
+### Text Utilities
+
+```astro
+<!-- Truncated text -->
+<Text truncate style="max-width: 200px;">
+  This is a very long text that will be truncated with an ellipsis
+</Text>
+
+<!-- Line clamping -->
+<Text as="p" clamp={3}>
+  This text will be limited to 3 lines and then truncated with an ellipsis.
+  Any additional content beyond three lines will be hidden.
+</Text>
+
+<!-- Text transforms -->
+<Text uppercase>uppercase text</Text>
+```
+
+### Alignment
+
+```astro
+<Text as="p" xa="center" fs="lg">
+  Centered text
+</Text>
+
+<Text as="p" xa="right" tone="muted">
+  Right-aligned text
+</Text>
+
+<Text as="p" xa="justify">
+  Justified text that will stretch to fill the full width of its container.
+</Text>
+```
+
+### Combining Props
+
+```astro
+<Text
+  as="p"
+  fs="lg"
+  fw="semibold"
+  tone="primary"
+  xa="center"
+  lh="relaxed"
+  ls="wide"
+>
+  Fully styled text with multiple properties
+</Text>
+```
+
+### With Custom Classes
+
+```astro
+<Text class="custom-class" fs="md" tone="primary">
+  Text with custom classes
+</Text>
+```
+
+### Semantic Elements
+
+```astro
+<!-- Labels -->
+<Text as="label" fs="sm" fw="medium">
+  Form Label
+</Text>
+
+<!-- Code -->
+<Text as="code" fs="sm" tone="accent">
+  const value = 42;
+</Text>
+
+<!-- Keyboard shortcuts -->
+<Text as="kbd" fs="2xs">
+  Ctrl+C
+</Text>
+
+<!-- Marked text -->
+<Text as="mark" tone="accent">
+  Highlighted text
+</Text>
+
+<!-- Deleted/Inserted -->
+<Text as="del" strikethrough>
+  Old text
+</Text>
+<Text as="ins" underline>
+  New text
+</Text>
+
+<!-- Subscript/Superscript -->
+<Text as="sub">subscript</Text>
+<Text as="sup">superscript</Text>
+```
+
+## Accessibility
+
+The Text component supports all standard HTML attributes, including ARIA attributes:
+
+```astro
+<Text
+  as="p"
+  role="status"
+  aria-live="polite"
+  fs="md"
+  tone="success"
+>
+  Operation completed successfully
+</Text>
+```
+
+## CSS Custom Properties
+
+The component uses local CSS custom properties for styling. These are set dynamically based on the component's props, providing high performance and PurgeCSS safety.
+
+```css
+.text-component {
+  font-size: var(--local-fs, inherit);
+  font-weight: var(--local-fw, inherit);
+  line-height: var(--local-lh, inherit);
+  letter-spacing: var(--local-ls, inherit);
+  color: var(--local-color, inherit);
+}
+```
+
+## TypeScript Support
+
+The component is fully typed with TypeScript, providing autocomplete and type checking for all props:
+
+```astro
+---
+import Text from '@/design/typography/text/Text.astro';
+import type { FontSize, TextTone } from '@/design/shared/types';
+
+const size: FontSize = 'lg';
+const tone: TextTone = 'primary';
+---
+
+<Text fs={size} tone={tone}>
+  Type-safe text
+</Text>
+```
+
+--- File: text/Text.types.ts ---
+import { TEXT_TAGS } from "./Text.consts";
+
+export type TextTag = typeof TEXT_TAGS[number];
+
+--- File: text/Text.astro ---
+---
+/**
+ * src/design/typography/text/Text.astro
+ * A versatile inline text component.
+ * - Provides low-level control over various typography tokens.
+ * - Dynamically changes its underlying HTML element based on the `as` prop.
+ * - NEVER responsible for layout, margin, padding, etc. The space around Text belongs to its parent.
+ * @props (local): truncate, clamp, wrap, as
+ * @props (global): class, class:list, animate, onScroll, fs, tone, align, valign, weight, transform, leading, tracking, bold, italic, underline, strikethrough
+ */
+import type { TextTag } from './Text.types';
+import { TEXT_TAGS_MAP } from './Text.maps';
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { TypographyProps } from "@/design/typography/types";
+import {
+    X_ALIGN_CLASS_MAP,
+    Y_ALIGN_CLASS_MAP,
+    STYLE_VAR_MAP,
+} from "@/design/shared/maps";
+import {
+    mergeClasses,
+    mergeStyles,
+    combineFontStyleProps,
+} from "@/design/shared/functions";
+import type { HTMLAttributes } from "astro/types";
+import "@/design/typography/typography.css";
+import "./Text.css";
+
+export interface Props
+    extends
+        BaseComponentProps,
+        TypographyProps,
+        Omit<HTMLAttributes<"span">, keyof BaseComponentProps | keyof TypographyProps> {
+    wrap?: boolean;
+    truncate?: boolean;
+    clamp?: number;
+    as?: TextTag;
+}
+
+const {
+    fs = "3",
+    tone,
+    xa,
+    ya,
+    fw,
+    bold = false,
+    italic = false,
+    underline = false,
+    strikethrough = false,
+    uppercase = false,
+    lowercase = false,
+    lh = `${fs}`,
+    ls = `${fs}`,
+    ws,
+    ff,
+    wrap = false,
+    truncate = false,
+    clamp,
+    as = "span",
+    class: className,
+    'class:list': classList,
+    style,
+    ...rest
+} = Astro.props;
+
+const Tag = TEXT_TAGS_MAP[as] || "span";
+
+// Define component-specific classes and styles
+const classes = [
+    "text-component",
+    xa && X_ALIGN_CLASS_MAP[xa],
+    ya && Y_ALIGN_CLASS_MAP[ya],
+    ws && `whitespace-${ws}`,
+    ff && `font-${ff}`,
+    wrap && "break-words",
+    truncate && "truncate",
+    clamp !== undefined && `line-clamp-${clamp}`,
+];
+
+const typographyVars = [
+    fs && STYLE_VAR_MAP.fontSize(fs),
+    fw && STYLE_VAR_MAP.fontWeight(fw),
+    lh && STYLE_VAR_MAP.leading(lh),
+    ls && STYLE_VAR_MAP.tracking(ls),
+    tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+    typographyVars,
+    combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+// Merge with animation and received props
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+    <slot />
+</Tag>
+
+
+--- File: text/Text.consts.ts ---
+export const TEXT_TAGS = [
+  "p",
+  "div",
+  "span",
+  "em",
+  "strong",
+  "mark",
+  "del",
+  "ins",
+  "sup",
+  "sub",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6"
+] as const;
+
+--- File: text/Text.maps.ts ---
+import type { TextTag } from "./Text.types";
+
+export const TEXT_TAGS_MAP: Record<TextTag, TextTag> = {
+  "p": "p",
+  "div": "div",
+  "span": "span",
+  "em": "em",
+  "strong": "strong",
+  "mark": "mark",
+  "del": "del",
+  "ins": "ins",
+  "sup": "sup",
+  "sub": "sub",
+  "h1": "h1",
+  "h2": "h2",
+  "h3": "h3",
+  "h4": "h4",
+  "h5": "h5",
+  "h6": "h6"
+} as const;
+
+--- File: code/code.svg ---
+
+
+--- File: code/Code.astro ---
+---
+/**
+ * src/design/typography/code/Code.astro
+ * A component for rendering inline or block code snippets.
+ * - Supports both inline `<code>` and block `<pre><code>` structures.
+ * - Allows syntax highlighting context via the `language` prop.
+ * @props (local): size, tone, block, language, weight, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
+import './Code.css';
+
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'code'>, keyof BaseComponentProps | keyof TypographyProps> {
+  /**
+   * Display as a block (pre-formatted)
+   */
+  block?: boolean;
+  
+  /**
+   * Programming language (for syntax highlighting context)
+   */
+  language?: string;
+}
+
+const {
+  fs,
+  tone,
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  block = false,
+  language,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'code-component',
+  block && 'code--block',
+  language && `language-${language}`,
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+
+
+---
+
+{block ? (
+  <pre class:list={finalClasses} style={finalStyles} data-language={language} {...rest}>
+    <code><slot /></code>
+  </pre>
+) : (
+  <code class:list={finalClasses} style={finalStyles} data-language={language} {...rest}>
+    <slot />
+  </code>
+)}
+
+--- File: code/Code.css ---
+/* src/design/typography/code/Code.css */
+.code-component {
+  font-family: var(--ff-mono, monospace);
+  font-size: var(--local-fs, 0.875em);
+  font-weight: var(--local-fw, inherit);
+  color: var(--local-color, var(--text-accent));
+  background-color: var(--bg-2);
+  border-radius: var(--rad-sm);
+  padding: 0.125em 0.375em;
+  word-break: break-word;
+}
+
+/* Block code */
+.code-component.code--block {
+  display: block;
+  padding: var(--sp-md);
+  overflow-x: auto;
+  white-space: pre;
+  border-radius: var(--rad-md);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-1);
+}
+
+.code-component.code--block code {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+
+--- File: code/code.md ---
+# Code
+
+A component for displaying inline code snippets or blocks of pre-formatted code, supporting syntax highlighting.
+
+## Overview
+
+The Code component is designed to render programmatic code consistently within the Design System. It intelligently switches between inline `<code>` and block `<pre><code>` elements based on the `block` prop, ensuring proper semantic structure. It is responsible for applying monospaced fonts, appropriate styling, and providing a hook for syntax highlighting via the `language` prop. It is *not* responsible for the actual syntax highlighting implementation (e.g., integrating a library like Prism.js or Shiki); it merely provides the necessary structure and context for such an integration.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `block` | `boolean` | `false` | If `true`, the code will be rendered within a `<pre><code>` block; otherwise, it will be an inline `<code>` element. |
+| `language` | `string` | `undefined` | Specifies the programming language of the code, primarily used to provide context for syntax highlighting (e.g., `javascript`, `html`, `css`). |
+| `fs` | `TextSize` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl'`) | | Sets the font size using predefined design tokens. |
+| `tone` | `TextTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'`) | `primary` | Applies a semantic color tone to the text. |
+| `fw` | `FontWeight` (`'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black'`) | | Sets the font weight. |
+| `bold` | `boolean` | `false` | Applies a bold text style. |
+| `italic` | `boolean` | `false` | Applies an italic text style. |
+| `underline` | `boolean` | `false` | Applies an underline text decoration. |
+| `strikethrough` | `boolean` | `false` | Applies a strikethrough text decoration. |
+| `uppercase` | `boolean` | `false` | Transforms the text to uppercase. |
+| `lowercase` | `boolean` | `false` | Transforms the text to lowercase. |
+| `ws` | `Whitespace` (`'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces'`) | | Controls how whitespace is handled within the element. |
+| `ff` | `FontFamily` (`'sans' | 'serif' | 'mono'`) | `mono` | Sets the font family. This component defaults to a monospaced font. |
+| `wrap` | `boolean` | `false` | If `true`, enables word breaking for long words within a block of code. |
+
+In addition to the above, the `Code` component accepts all standard HTML attributes for the `<code>` and `<pre>` elements, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Code from '@/design/typography/code/Code.astro';
+---
+
+<p>To declare a variable, use <Code>const</Code> or <Code>let</Code>.</p>
+```
+
+### Common Patterns
+
+```astro
+---
+import Code from '@/design/typography/code/Code.astro';
+---
+
+<!-- Block of JavaScript code -->
+<Code block language="javascript">
+  const greeting = "Hello, World!";
+  console.log(greeting);
+</Code>
+
+<!-- Inline code with custom tone -->
+<p>The <Code tone="success">status</Code> variable indicates the operation's result.</p>
+
+<!-- Block code with word wrapping -->
+<Code block wrap language="css">
+  .some-very-long-class-name-that-might-overflow-if-not-wrapped {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+</Code>
+```
+
+## Accessibility
+
+The `Code` component leverages the semantic meaning of the native `<code>` and `<pre>` HTML elements, which are inherently understood by assistive technologies. When used for blocks of code, `<pre>` preserves whitespace and line breaks, which is crucial for code readability. The `language` prop adds a `data-language` attribute, which can be used by client-side scripts to apply syntax highlighting, making the code more readable for sighted users. The component ensures that the code content remains accessible to screen readers regardless of its visual presentation.
+
+## CSS Architecture
+
+The `Code` component uses a `code-component` class for its base styling, applying a monospaced font by default. When the `block` prop is `true`, it adds the `code--block` modifier class. The `language` prop adds a `language-{language}` class (e.g., `language-javascript`) and a `data-language` attribute to the `<code>` or `<pre>` element, providing hooks for external syntax highlighting libraries. Typography-related CSS custom properties (e.g., `--fs-md`, `--text--primary`) are sourced from `typography.css` and `tokens.css`. Font style props are handled by `combineFontStyleProps` for inline styling. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Kbd`](/docs/components/kbd)
+- [`Text`](/docs/components/text)
+- [`Prose`](/docs/components/prose) (Hypothetical, for rendering rich text content with code blocks)
+
+
+--- File: link/Link.css ---
+/* src/design/typography/link/Link.css */
+.link-component {
+  font-size: var(--local-fs, inherit);
+  font-weight: var(--local-fw, inherit);
+  color: var(--local-color, var(--text-primary));
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.link-component:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.link-component:focus-visible {
+  outline: 2px solid var(--local-color, var(--text-primary));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* External link */
+.link-component.link--external {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.link__external-icon {
+  font-size: 0.875em;
+  opacity: 0.7;
+}
+
+
+--- File: link/link.svg ---
+
+
+--- File: link/Link.astro ---
+---
+/**
+ * src/design/typography/link/Link.astro
+ * A link component for navigation.
+ * - Custom underlining behavior on hover or active states.
+ * - External link indicator support.
+ * @props (local): href, size, tone, weight, bold, italic, underline, strikethrough, external, target, rel
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
+import './Link.css';
+
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'a'>, keyof BaseComponentProps | keyof TypographyProps> {
+  /**
+   * URL to link to
+   */
+  href?: string;
+  
+  /**
+   * External link (opens in new tab)
+   */
+  external?: boolean;
+  
+  /**
+   * Target attribute
+   */
+  target?: string;
+  
+  /**
+   * Rel attribute
+   */
+  rel?: string;
+}
+
+const {
+  href,
+  fs,
+  tone = 'primary',
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  external = false,
+  target = external ? '_blank' : undefined,
+  rel = external ? 'noopener noreferrer' : undefined,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'link-component',
+  external && 'link--external',
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+---
+
+<a class:list={finalClasses} style={finalStyles} href={href} target={target} rel={rel} {...rest}>
+  <slot />
+  {external && <span class="link__external-icon" aria-hidden="true">↗</span>}
+</a>
+
+--- File: link/link.md ---
+# Link
+
+Represents a navigational link within the Design System, primarily for text-based navigation.
+
+## Overview
+
+The Link component is a fundamental building block for navigation, offering a semantic `<a>` tag with enhanced styling capabilities. It is responsible for handling both internal and external links, applying consistent typography, and providing visual cues such as an external link indicator. It is *not* responsible for complex routing logic or interactive navigation menus, delegating those concerns to higher-level components or routing libraries.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `href` | `string` | `undefined` | The URL the link points to. |
+| `external` | `boolean` | `false` | If `true`, the link will open in a new tab and display an external link icon. Sets `target="_blank"` and `rel="noopener noreferrer"`. |
+| `target` | `string` | `_blank` (if `external`) | Specifies where to open the linked document. Defaults to `_blank` for external links. |
+| `rel` | `string` | `noopener noreferrer` (if `external`) | Specifies the relationship between the current document and the linked document. Defaults for external links. |
+| `fs` | `TextSize` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl'`) | | Sets the font size using predefined design tokens. |
+| `tone` | `TextTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'`) | `primary` | Applies a semantic color tone to the text. |
+| `fw` | `FontWeight` (`'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black'`) | `medium` | Sets the font weight. |
+| `bold` | `boolean` | `false` | Applies a bold text style. |
+| `italic` | `boolean` | `false` | Applies an italic text style. |
+| `underline` | `boolean` | `false` | Applies an underline text decoration. |
+| `strikethrough` | `boolean` | `false` | Applies a strikethrough text decoration. |
+| `uppercase` | `boolean` | `false` | Transforms the text to uppercase. |
+| `lowercase` | `boolean` | `false` | Transforms the text to lowercase. |
+| `ws` | `Whitespace` (`'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces'`) | | Controls how whitespace is handled within the element. |
+| `ff` | `FontFamily` (`'sans' | 'serif' | 'mono'`) | | Sets the font family. |
+| `wrap` | `boolean` | `false` | If `true`, enables word breaking for long words. |
+
+In addition to the above, the `Link` component accepts all standard HTML attributes for the `<a>` element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Link from '@/design/typography/link/Link.astro';
+---
+
+<Link href="#">Basic Link</Link>
+```
+
+### Common Patterns
+
+```astro
+---
+import Link from '@/design/typography/link/Link.astro';
+---
+
+<!-- External Link with Custom Tone and Weight -->
+<Link href="https://www.google.com" external tone="secondary" fw="semibold">
+  Search with Google
+</Link>
+
+<!-- Link with custom font size and underline -->
+<Link href="/about" fs="lg" underline>
+  About Us
+</Link>
+
+<!-- Link with custom class for additional styling -->
+<Link href="/contact" class="my-custom-link-style">
+  Contact Support
+</Link>
+```
+
+## Accessibility
+
+The `Link` component utilizes native HTML `<a>` semantics for accessibility. When `external` is `true`, an `aria-hidden="true"` span with a visual indicator (`↗`) is included to inform screen reader users about the external nature of the link without redundant announcements, as the `target="_blank"` and `rel="noopener noreferrer"` attributes already convey this information. Keyboard navigation is inherently supported by the browser's default link behavior.
+
+## CSS Architecture
+
+The `Link` component uses a `link-component` class for its base styling. It applies utility classes for typography props (e.g., `whitespace-nowrap`, `font-sans`) and includes a `link--external` modifier class when the `external` prop is `true`. Design tokens from `typography.css` and `tokens.css` are referenced for consistent styling (e.g., `--fs-md`, `--text--primary`). Font style props are combined into a CSS string using `combineFontStyleProps` and passed as inline styles. Global props like `class` and `class:list` are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Text`](/docs/components/text)
+- [`Button`](/docs/components/button)
+- [`Icon`](/docs/components/icon)
+
+
+--- File: caption/Caption.css ---
+/* src/design/typography/caption/Caption.css */
+.caption-component {
+  display: block;
+  font-size: var(--local-fs, var(--fs-sm));
+  font-weight: var(--local-fw, inherit);
+  color: var(--local-color, var(--text-muted));
+  margin-top: var(--sp-xs);
+}
+
+
+--- File: caption/caption.svg ---
+
+
+--- File: caption/Caption.astro ---
+---
+/**
+ * src/design/typography/caption/Caption.astro
+ * A caption component used to describe or contextualize media content.
+ * - Supports different semantic elements and typography scales.
+ * - Can be styled with different tones, weights, and alignments.
+ * @props (local): as, size, tone, align, weight, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import type { CaptionElement } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP, X_ALIGN_CLASS_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
+import './Caption.css';
+
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'figcaption'>, keyof BaseComponentProps | keyof TypographyProps> {
+  /**
+   * The HTML element to render
+   * @default 'figcaption'
+   */
+  as?: CaptionElement;
+}
+
+const {
+  as: Element = 'figcaption',
+  fs = 'sm',
+  tone = 'muted',
+  xa,
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'caption-component',
+  xa && X_ALIGN_CLASS_MAP[xa],
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+---
+
+<Element class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Element>
+
+--- File: caption/caption.md ---
+# Caption
+
+A typography component specifically designed to describe, label, or contextualize media content and other supporting information.
+
+## Overview
+
+The `Caption` component's job is to provide secondary metadata or descriptive text for elements like images, videos, or blocks of data. It is NOT intended for primary body copy or headings. By default, it renders as a semantic `<figcaption>`, making it the ideal companion for the `figure` element.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| as | `'figcaption' | 'span' | 'div' | 'p'` | `'figcaption'` | The semantic HTML element to render. |
+| fs | `FontSize` | `'sm'` | The typography scale for the font size. |
+| tone | `TextTone` | `'muted'` | The color tone of the text. |
+| xa | `'start' | 'center' | 'end' | 'justify'` | – | Horizontal alignment of the text. |
+| fw | `FontWeight` | – | Manual font weight override. |
+| ff | `FontFamily` | – | Font family choice (e.g., 'sans', 'mono'). |
+| bold | `boolean` | `false` | When true, applies bold styling. |
+| italic | `boolean` | `false` | When true, applies italic styling. |
+| underline | `boolean` | `false` | When true, applies underline styling. |
+| strikethrough | `boolean` | `false` | When true, applies strikethrough styling. |
+| uppercase | `boolean` | `false` | When true, forces text to uppercase. |
+| lowercase | `boolean` | `false` | When true, forces text to lowercase. |
+| wrap | `boolean` | `false` | When true, enables word wrapping (`break-words`). |
+| ws | `WhiteSpace` | – | Controls white-space handling. |
+| class | `string` | – | Additional CSS classes. |
+| animate | `string` | – | Animation preset (e.g., `'fadeIn'`). |
+
+*Inherits all standard HTML attributes for the underlying element.*
+
+## Variants / Sizes
+
+| Variant | Visual Effect |
+|---------|---------------|
+| `fs` | Scales the text size according to the system's typography tokens. |
+| `tone` | Adjusts text color and emphasis (e.g., `primary`, `secondary`, `muted`). |
+
+## Usage
+
+### Basic
+
+The simplest usage inside a `figure` element.
+
+```astro
+---
+import Caption from '@/design/typography/caption/Caption.astro';
+---
+<figure>
+  <img src="/path/to/image.jpg" alt="A beautiful landscape" />
+  <Caption>A beautiful landscape in the mountains during sunset.</Caption>
+</figure>
+```
+
+### Common Patterns
+
+**Centered and Bolded**
+Useful for captions that need more visual weight.
+
+```astro
+---
+import Caption from '@/design/typography/caption/Caption.astro';
+---
+<Caption xa="center" bold tone="primary">
+  Figure 1.1: Annual Growth Chart
+</Caption>
+```
+
+**As a simple Span**
+When you need the styling of a caption but without the semantic `figcaption` behavior.
+
+```astro
+---
+import Caption from '@/design/typography/caption/Caption.astro';
+---
+<div class="card">
+  <h3>Card Title</h3>
+  <Caption as="span">Last updated 2 days ago</Caption>
+</div>
+```
+
+## Accessibility
+
+The `Caption` component defaults to `<figcaption>`, which is semantically linked to its parent `<figure>` element. This ensures that screen readers correctly associate the description with the media it describes. If you override the `as` prop to a non-semantic tag, ensure the parent-child relationship is still understandable via context or additional ARIA attributes if necessary.
+
+## CSS Architecture
+
+The component uses a BEM structure with the root class `.caption-component`. It leverages `STYLE_VAR_MAP` to apply typography tokens as CSS custom properties (`--local-fs`, `--local-fw`, `--local-tone`). Font style booleans are processed into CSS strings via the `combineFontStyleProps` utility.
+
+## Related Components
+
+* `Text` — The general-purpose typography primitive.
+* `Heading` — For primary and secondary titles.
+* `Image` / `Video` — Components that typically require a `Caption`.
+
+
+--- File: label/label.svg ---
+
+
+--- File: label/Label.astro ---
+---
+/**
+ * src/design/typography/label/Label.astro
+ * A label component for form elements.
+ * - Supports variable font sizes, tones, and weights.
+ * - Can display a required indicator and a disabled state.
+ * @props (local): size, tone, weight, bold, italic, underline, strikethrough, required, disabled, for
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
+import './Label.css';
+
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'label'>, keyof BaseComponentProps | keyof TypographyProps> {
+  /**
+   * Required field indicator
+   */
+  required?: boolean;
+  
+  /**
+   * Optional field indicator
+   */
+  optional?: boolean;
+  
+  /**
+   * Disabled state
+   */
+  disabled?: boolean;
+  
+  /**
+   * Associated input id
+   */
+  for?: string;
+}
+
+const {
+  fs,
+  tone,
+  fw = 'medium',
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  required = false,
+  optional = false,
+  disabled = false,
+  for: htmlFor,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'label-component',
+  required && 'label--required',
+  disabled && 'label--disabled',
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+---
+
+<label class:list={finalClasses} style={finalStyles} for={htmlFor} {...rest}>
+  <slot />
+  {required && <span class="label__required" aria-label="required">*</span>}
+  {optional && <span class="label__optional">(optional)</span>}
+</label>
+
+--- File: label/Label.css ---
+/* src/design/typography/label/Label.css */
+.label-component {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sp-3xs);
+  font-size: var(--local-fs, var(--fs-sm));
+  font-weight: var(--local-fw, var(--fw-medium));
+  color: var(--local-color, var(--text--3));
+  font-family: var(--ff-sans);
+  margin-bottom: var(--sp-xs);
+  cursor: pointer;
+}
+
+.label-component.label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.label-component .label__required {
+  color: var(--color-danger);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.label-component .label__optional {
+  font-size: 11px;
+  font-weight: 400;
+  font-family: var(--ff-mono);
+  color: var(--text--m);
+}
+
+/* Input & Form layout styles for Label Group */
+.label-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.label-input {
+  width: 100%;
+  padding: var(--sp-xs) var(--sp-sm);
+  background: var(--layer--2);
+  border: 1px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.label-input::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.label-input:hover {
+  border-color: var(--border--1);
+}
+
+.label-input:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+.label-input.label-input--error {
+  border-color: var(--color-danger-border) !important;
+}
+
+.label-input.label-input--error:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+.label__helper {
+  font-size: var(--fs-2xs);
+  color: var(--text--m);
+  margin: 0;
+  margin-top: var(--sp-3xs);
+}
+
+.label__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3xs);
+  font-size: var(--fs-2xs);
+  color: var(--color-danger);
+  margin: 0;
+  margin-top: var(--sp-3xs);
+}
+
+
+
+--- File: label/label.md ---
+# Label
+
+A component for rendering accessible and semantically correct labels for form elements.
+
+## Overview
+
+The Label component provides a flexible way to associate text with form controls, enhancing usability and accessibility. It's responsible for displaying text with various typographical styles (size, tone, weight, etc.) and indicating required or optional fields, as well as a disabled state. The Label is *not* responsible for the form control itself, nor does it handle form validation logic; it solely focuses on the labeling aspect.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `required` | `boolean` | `false` | If `true`, a `*` indicator is displayed to denote a required field. |
+| `optional` | `boolean` | `false` | If `true`, an `(optional)` indicator is displayed. |
+| `disabled` | `boolean` | `false` | If `true`, the label text will appear visually disabled. |
+| `for` | `string` | `undefined` | The `id` of the form input the label is associated with. |
+| `fs` | `TextSize` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl'`) | | Sets the font size using predefined design tokens. |
+| `tone` | `TextTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'`) | `primary` | Applies a semantic color tone to the text. |
+| `fw` | `FontWeight` (`'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black'`) | `medium` | Sets the font weight. |
+| `bold` | `boolean` | `false` | Applies a bold text style. |
+| `italic` | `boolean` | `false` | Applies an italic text style. |
+| `underline` | `boolean` | `false` | Applies an underline text decoration. |
+| `strikethrough` | `boolean` | `false` | Applies a strikethrough text decoration. |
+| `uppercase` | `boolean` | `false` | Transforms the text to uppercase. |
+| `lowercase` | `false` | `false` | Transforms the text to lowercase. |
+| `ws` | `Whitespace` (`'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces'`) | | Controls how whitespace is handled within the element. |
+| `ff` | `FontFamily` (`'sans' | 'serif' | 'mono'`) | | Sets the font family. |
+| `wrap` | `boolean` | `false` | If `true`, enables word breaking for long words. |
+
+In addition to the above, the `Label` component accepts all standard HTML attributes for the `<label>` element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Label from '@/design/typography/label/Label.astro';
+---
+
+<Label for="my-input">My Field</Label>
+<input id="my-input" type="text" />
+```
+
+### Common Patterns
+
+```astro
+---
+import Label from '@/design/typography/label/Label.astro';
+---
+
+<!-- Required Field Label -->
+<Label for="username" required>
+  Username
+</Label>
+<input id="username" type="text" />
+
+<!-- Optional Field Label with different tone -->
+<Label for="email" optional tone="secondary">
+  Email Address
+</Label>
+<input id="email" type="email" />
+
+<!-- Disabled Label -->
+<Label for="disabled-input" disabled>
+  Disabled Input
+</Label>
+<input id="disabled-input" type="text" disabled />
+```
+
+## Accessibility
+
+The `Label` component is designed with accessibility in mind, utilizing the native HTML `<label>` element. The `for` prop correctly associates the label with its corresponding form control, allowing assistive technologies like screen readers to announce the label when the control is focused. Required and optional indicators (`*` and `(optional)`) are included in `<span>` elements with appropriate `aria-label` attributes to provide clear context for screen reader users. The `label--disabled` class visually indicates a disabled state, complementing the `disabled` attribute on the associated input.
+
+## CSS Architecture
+
+The `Label` component uses a `label-component` class for its base styling. It applies utility classes for typography (e.g., `whitespace-nowrap`, `font-sans`) and includes modifier classes like `label--required` and `label--disabled` based on prop values. Design tokens from `typography.css` and `tokens.css` are referenced for consistent styling (e.g., `--fs-md`, `--text--primary`). Font style props are combined into a CSS string using `combineFontStyleProps` and passed as inline styles. Global props like `class` and `class:list` are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Input`](/docs/components/input) (Hypothetical, as this is a common association)
+- [`Text`](/docs/components/text)
+- [`Fieldset`](/docs/components/fieldset) (Hypothetical, for grouping related form controls)
+
+
+--- File: kbd/kbd.svg ---
+
+
+--- File: kbd/Kbd.astro ---
+---
+/**
+ * src/design/typography/kbd/Kbd.astro
+ * A component to denote keyboard input or shortcuts.
+ * - Displays monospaced keyboard keys.
+ * - Configurable sizes, tones, and font weights.
+ * @props (local): size, tone, weight, bold, italic, underline, strikethrough
+ * @props (global): class, class:list, animate, onScroll
+ */
+import type { HTMLAttributes } from 'astro/types';
+import type { BaseComponentProps } from '@/design/shared/props';
+import type { TypographyProps } from '@/design/typography/types';
+import { mergeClasses, mergeStyles, combineFontStyleProps } from '@/design/shared/functions';
+import { STYLE_VAR_MAP } from '@/design/shared/maps';
+import '@/design/typography/typography.css';
+import './Kbd.css';
+
+export interface Props extends BaseComponentProps, TypographyProps, Omit<HTMLAttributes<'kbd'>, keyof BaseComponentProps | keyof TypographyProps> {
+}
+
+const {
+  fs,
+  tone,
+  fw,
+  bold = false,
+  italic = false,
+  underline = false,
+  strikethrough = false,
+  uppercase = false,
+  lowercase = false,
+  ws,
+  ff,
+  wrap = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'kbd-component',
+  ws && `whitespace-${ws}`,
+  ff && `font-${ff}`,
+  wrap && "break-words",
+];
+
+const typographyVars = [
+  fs && STYLE_VAR_MAP.fontSize(fs),
+  fw && STYLE_VAR_MAP.fontWeight(fw),
+  tone && STYLE_VAR_MAP.tone(tone)
+].filter(Boolean).join(';');
+
+const styles = [
+  typographyVars,
+  combineFontStyleProps({ bold, italic, underline, strikethrough, uppercase, lowercase })
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles.filter(Boolean).join(';'), Astro.props);
+---
+
+<kbd class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</kbd>
+
+--- File: kbd/Kbd.css ---
+/* src/design/typography/kbd/Kbd.css */
+.kbd-component {
+  font-family: var(--ff-mono, monospace);
+  font-size: var(--local-fs, 0.875em);
+  font-weight: var(--local-fw, inherit);
+  color: var(--local-color, var(--text-default));
+  background-color: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rad-sm);
+  padding: 0.125em 0.375em;
+  box-shadow: 0 1px 1px var(--border-subtle);
+}
+
+
+--- File: kbd/kbd.md ---
+# Kbd
+
+A component for semantically representing keyboard input or shortcuts.
+
+## Overview
+
+The Kbd component is used to display keyboard keys or key combinations, making it easy to communicate shortcuts or command-line inputs to users. It renders its content within a `<code>` element, ensuring a consistent monospaced appearance. The component focuses on styling and semantic representation. It is *not* responsible for detecting keyboard events or executing actions based on key presses; it is purely a presentational component.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `fs` | `TextSize` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl'`) | | Sets the font size using predefined design tokens. |
+| `tone` | `TextTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'`) | `primary` | Applies a semantic color tone to the text. |
+| `fw` | `FontWeight` (`'thin' | 'extralight' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black'`) | `medium` | Sets the font weight. |
+| `bold` | `boolean` | `false` | Applies a bold text style. |
+| `italic` | `boolean` | `false` | Applies an italic text style. |
+| `underline` | `boolean` | `false` | Applies an underline text decoration. |
+| `strikethrough` | `boolean` | `false` | Applies a strikethrough text decoration. |
+| `uppercase` | `boolean` | `false` | Transforms the text to uppercase. |
+| `lowercase` | `boolean` | `false` | Transforms the text to lowercase. |
+| `ws` | `Whitespace` (`'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces'`) | | Controls how whitespace is handled within the element. |
+| `ff` | `FontFamily` (`'sans' | 'serif' | 'mono'`) | `mono` | Sets the font family. This component defaults to a monospaced font. |
+| `wrap` | `boolean` | `false` | If `true`, enables word breaking for long words. |
+
+In addition to the above, the `Kbd` component accepts all standard HTML attributes for the `<kbd>` element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Kbd from '@/design/typography/kbd/Kbd.astro';
+---
+
+<p>Press <Kbd>Ctrl</Kbd> + <Kbd>C</Kbd> to copy.</p>
+```
+
+### Common Patterns
+
+```astro
+---
+import Kbd from '@/design/typography/kbd/Kbd.astro';
+---
+
+<!-- Keyboard shortcut with a custom font size -->
+<p>To save, hit <Kbd fs="lg">⌘ S</Kbd>.</p>
+
+<!-- Multiple keys in a sequence -->
+<p>Follow the steps: <Kbd>Tab</Kbd> then <Kbd>Enter</Kbd>.</p>
+
+<!-- Command-line input -->
+<p>Run <Kbd>npm install</Kbd> to install dependencies.</p>
+```
+
+## Accessibility
+
+The `Kbd` component utilizes the native HTML `<kbd>` element, which semantically identifies text as user input, typically from a keyboard. Screen readers will announce content within `<kbd>` tags as keyboard input, providing clear context to users. The component's styling enhances visual distinction without impairing accessibility for users of assistive technologies.
+
+## CSS Architecture
+
+The `Kbd` component uses a `kbd-component` class for its base styling, applying a monospaced font by default. Typography-related CSS custom properties (e.g., `--fs-md`, `--text--primary`) are sourced from `typography.css` and `tokens.css`. Font style props are handled by `combineFontStyleProps` for inline styling. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Code`](/docs/components/code)
+- [`Text`](/docs/components/text)
+
+
+--- File: typography.md ---
+# Typography
+
+Typography is the foundational system for setting, arranging, and formatting text within the design system. It ensures readability, accessibility, and visual hierarchy across the application. 
+
+This document serves as a guide for developers and designers working with text elements. It outlines how typography is treated not just as visual styling, but as a system of layout primitives (e.g., managing measure, tracking, and leading at the block level) and semantic role wrappers.
+
+**Major Areas Documented:**
+- **Primitives vs. Role-based Components**: Distinguishing between foundational containers that manage text flow and specific semantic wrappers.
+- **Typographic Scale & Tokens**: Standardized approaches to size, tone, and weight.
+- **Boolean Styling Pattern**: The standardized application of common text styles (`bold`, `italic`, `underline`, `strikethrough`) via inline CSS rather than class pollution.
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+|---|---|---|---|
+| **Text** | Primitive | `TypographyProps` | `as`, `xa`, `ya`, `transform`, `truncate`, `clamp` |
+| **Caption** | Role-based | `TypographyProps` | `as`, `xa` |
+| **Label** | Role-based | `TypographyProps` | `required`, `disabled`, `for` |
+| **Code** | Role-based | `TypographyProps` | `block`, `language` |
+| **Link** | Role-based | `TypographyProps` | `href`, `external`, `target`, `rel` |
+| **Kbd** | Role-based | `TypographyProps` | (none) |
+
+*(Note: `TypographyProps` includes `fs`, `fw`, `tone`, `lh`, `ls`, `ws`, `ff`, `bold`, `italic`, `underline`, `strikethrough`, `uppercase`, `lowercase` across all components.)*
+
+---
+
+### Text
+
+`src/design/typography/text/Text.astro`
+
+#### Low-level Text Formatting Primitive
+
+The `Text` component is the lowest-level primitive for inline text formatting. It exposes a vast API for granular text control (transforms, clamping, varying alignments) that solves the problem of needing one-off utility classes for highly specific text adjustments.
+
+#### Foundational Inline Bedrock
+
+It acts as the bedrock for inline spans and paragraphs. It is similar to `Prose` but intended for distinct strings rather than large blocks of formatted copy.
+
+#### Dynamic HTML Tag Rendering
+
+Uses dynamic HTML tag rendering via the `as` prop. Relies heavily on the category-level `typography.maps.ts` to map its extensive props to specific utility classes.
+
+
+
+---
+
+### Caption
+
+`src/design/typography/caption/Caption.astro`
+
+#### Media Content Contextual Wrapper
+
+A contextual wrapper used to describe media content. Eliminates the need for designers/developers to remember the specific muted, smaller scale tokens required for supplementary text.
+
+#### Supplementary Aside Role
+
+Belongs to the "Aside" family of Role Components (alongside Blockquote, Label, Byline). 
+
+---
+
+### Label
+
+`src/design/typography/label/Label.astro`
+
+#### Accessible Form Input Binding
+
+Specifically designed for form accessibility. It binds to inputs via the `for` attribute and programmatically controls the rendering of required indicators (`*`) and disabled states.
+
+#### Interactive Form Control Wrapper
+
+An interactive Aside role component. Relates directly to form controls.
+
+
+
+---
+
+### Code & Kbd
+
+`src/design/typography/code/Code.astro`  
+`src/design/typography/kbd/Kbd.astro`
+
+#### Monospaced Technical Formatting
+
+These components render monospaced font stacks. `Code` handles both inline snippets and block-level pre-formatted text (with language context), while `Kbd` specifically styles user input keystrokes.
+
+#### Syntax and Keystroke Highlight Roles
+
+Technical and documentation-focused role components.
+
+---
+
+### Link
+
+`src/design/typography/link/Link.astro`
+
+#### Secure External Navigation Primitive
+
+A navigation primitive. It centralizes the logic for external links, automatically applying `_blank` targets, `noopener noreferrer` security attributes, and injecting external icon indicators when the `external` flag is thrown.
+
+#### Interactive Inline Anchors
+
+An interactive text role component, often nested inside `Text` or `Prose`.
+
+
+--- File: consts.ts ---
+import type { FontSize, TextTone, BackgroundTone, XAlign, YAlign } from '@/design/shared/types';
+
+export const FONT_SIZES: FontSize[] = [
+  '0', '2xs',
+  '1', 'xs',
+  '2', 'sm',
+  '3', 'md',
+  '4', 'base',
+  '5', 'lg',
+  '6', 'xl',
+  '7', '2xl',
+  '8', '3xl',
+  '9', '4xl',
+  '10', '5xl',
+  '11', '6xl'
+];
+
+export const TEXT_TONES: TextTone[] = [
+  '0', '1', '2', '3', '4', '5',
+  'primary', 'secondary', 'accent',
+  'white', 'black',
+  'default', 'muted', 'subtle',
+  'danger', 'success',
+  'currentColor', 'inherit'
+];
+
+export const BACKGROUND_TONES: BackgroundTone[] = [
+  '0', '1', '2', '3', '4', '5',
+  'primary', 'secondary', 'accent',
+  'white', 'black',
+  'default', 'transparent',
+  'currentColor', 'inherit'
+];
+
+export const X_ALIGNMENTS: XAlign[] = [
+  'left', 'center', 'right',
+  'justify', 'start', 'end'
+];
+
+export const Y_ALIGNMENTS: YAlign[] = [
+  'super', 'top', 'text-top',
+  'baseline', 'middle',
+  'bottom', 'text-bottom', 'sub'
+];
+
+export const DEFAULT_FONT_SIZE: FontSize = 'base';
+export const DEFAULT_TEXT_TONE: TextTone = 'default';
+export const DEFAULT_BACKGROUND_TONE: BackgroundTone = 'transparent';
+export const DEFAULT_X_ALIGN: XAlign = 'left';
+export const DEFAULT_Y_ALIGN: YAlign = 'baseline';
+
+// Made with Bob
+
+
+--- File: tokens.css ---
+@import './vars.css';
+
+:root {
+
+  /* ─── TEXT ────────────────────────────────────────────── */
+  --text--2xs: var(--fs-2xs);
+  --text--xs: var(--fs-xs);
+  --text--sm: var(--fs-sm);
+  --text--md: clamp(1rem, 1.5vi, 1.5rem);
+  --text--lg: var(--fs-lg);
+  --text--xl: var(--fs-xl);
+  --text--2xl: var(--fs-2xl);
+  --text--3xl: var(--fs-3xl);
+  --text--4xl: var(--fs-4xl);
+  --text--5xl: var(--fs-5xl);
+  --text--6xl: var(--fs-6xl);
+
+}
+
+--- File: types.ts ---
+import type { CommonHTMLProps } from "@/design/shared/props";
+import type { AnimationName } from "@/design/animation/Animation.types";
+import type { 
+    FontSize, TextTone, XAlign, YAlign, FontWeight, 
+    LineHeight, LetterSpacing, FontFamily, WhiteSpace, FontStyleProps
+} from "@/design/shared/types";
+
+export interface TypographyProps extends FontStyleProps {
+  fs?: FontSize;
+  tone?: TextTone;
+  xa?: XAlign;
+  ya?: YAlign;
+  fw?: FontWeight | string;
+  lh?: LineHeight;
+  ls?: LetterSpacing;
+  ws?: WhiteSpace;
+  ff?: FontFamily;
+}
+
+export interface TextProps extends CommonHTMLProps {
+  animation?: AnimationName;
+}
+
+export type CaptionElement = "figcaption" | "span" | "div" | "p";
+
+--- File: typography.css ---
+
+
+:root {
+
+  /* ─── SPACING ───────────────────────────────────────── */
+
+  --sp-2xs: clamp(0.25rem,  0.25rem + 0.25vi,  0.5rem);
+  --sp-xs:  clamp(0.5rem,   0.5rem  + 0.5vi,   0.75rem);
+  --sp-s:   clamp(0.75rem,  0.75rem + 0.5vi,   1rem);
+  --sp-m:   clamp(1rem,     1.5vi,              1.5rem);
+  --sp-l:   clamp(1.5rem,   2vi,                2rem);
+  --sp-xl:  clamp(2rem,     3vi,                3rem);
+  --sp-2xl: clamp(2.5rem,   4vi,                4rem);
+  --sp-3xl: clamp(3rem,     6vi,                6rem);
+  --sp-4xl: clamp(4rem,     8vi,                8rem);
+  --sp-5xl: clamp(6rem,     12vi,               12rem);
+
+
+  /* ─── FONT WEIGHT ───────────────────────────────────── */
+
+  --fw-thin:        100;
+  --fw-extralight:  200;
+  --fw-light:       300;
+  --fw-regular:     400;
+  --fw-medium:      500;
+  --fw-semibold:    600;
+  --fw-bold:        700;
+  --fw-extrabold:   800;
+  --fw-black:       900;
+
+
+  /* ─── LETTER SPACING ────────────────────────────────── */
+
+  --ls-tighter:     -0.05em;
+  --ls-tight:       -0.025em;
+  --ls-normal:      0em;
+  --ls-wide:        0.025em;
+  --ls-wider:       0.05em;
+  --ls-widest:      0.1em;
+
+
+  /* ─── FONT FAMILY ───────────────────────────────────── */
+
+  --ff-sans:        system-ui, -apple-system, sans-serif;
+  --ff-serif:       Georgia, 'Times New Roman', serif;
+  --ff-mono:        'Fira Code', 'Cascadia Code', monospace;
+
+
+  /* ─── MEASURE ───────────────────────────────────────── */
+
+  --measure-2xs:    30ch;
+  --measure-xs:     45ch;
+  --measure-s:      55ch;
+  --measure-m:      65ch;
+  --measure-l:      75ch;
+  --measure-xl:     90ch;
+  --measure-none:   none;
+
+
+  /* ─── BORDER RADIUS ─────────────────────────────────── */
+
+  --rad-none:       0;
+  --rad-2xs:        0.125rem;
+  --rad-xs:         0.25rem;
+  --rad-s:          0.375rem;
+  --rad-m:          0.5rem;
+  --rad-l:          0.75rem;
+  --rad-xl:         1rem;
+  --rad-2xl:        1.5rem;
+  --rad-3xl:        2rem;
+  --rad-full:       9999px;
+
+
+  /* ─── BORDER WIDTH ──────────────────────────────────── */
+
+  --bw-none:        0;
+  --bw-xs:          0.5px;
+  --bw-s:           1px;
+  --bw-m:           1.5px;
+  --bw-l:           2px;
+  --bw-xl:          3px;
+  --bw-2xl:         4px;
+
+
+  /* ─── OUTLINE WIDTH ─────────────────────────────────── */
+
+  --ow-s:           1px;
+  --ow-m:           2px;
+  --ow-l:           3px;
+  --ow-xl:          4px;
+
+
+  /* ─── SHADOW ────────────────────────────────────────── */
+
+  --sh-none:        none;
+  --sh-2xs:         0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sh-xs:          0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --sh-s:           0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sh-m:           0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sh-l:           0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --sh-xl:          0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --sh-inner:       inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+
+  /* ─── OPACITY ───────────────────────────────────────── */
+
+  --op-0:           0;
+  --op-5:           0.05;
+  --op-10:          0.1;
+  --op-20:          0.2;
+  --op-30:          0.3;
+  --op-40:          0.4;
+  --op-50:          0.5;
+  --op-60:          0.6;
+  --op-70:          0.7;
+  --op-80:          0.8;
+  --op-90:          0.9;
+  --op-100:         1;
+
+
+  /* ─── Z-INDEX ───────────────────────────────────────── */
+
+  --z-below:        -1;
+  --z-base:         0;
+  --z-raised:       10;
+  --z-dropdown:     100;
+  --z-sticky:       200;
+  --z-overlay:      300;
+  --z-modal:        400;
+  --z-toast:        500;
+  --z-tooltip:      600;
+
+
+  /* ─── TRANSITION DURATION ───────────────────────────── */
+
+  --td-instant:     0ms;
+  --td-fast:        100ms;
+  --td-normal:      200ms;
+  --td-slow:        300ms;
+  --td-slower:      500ms;
+
+
+  /* ─── TRANSITION EASING ─────────────────────────────── */
+
+  --te-linear:      linear;
+  --te-in:          cubic-bezier(0.4, 0, 1, 1);
+  --te-out:         cubic-bezier(0, 0, 0.2, 1);
+  --te-in-out:      cubic-bezier(0.4, 0, 0.2, 1);
+  --te-bounce:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --te-spring:      cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+}
+
+/* ─── UTILITY CLASSES ───────────────────────────────── */
+
+/* Tones
+.text-0 { color: var(--text-0); }
+.text-1 { color: var(--text-1); }
+.text-2 { color: var(--text-2); }
+.text-3 { color: var(--text-3); }
+.text-4 { color: var(--text-4); }
+.text-5 { color: var(--text-5); }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent { color: var(--text-accent); }
+.text-success { color: var(--text-success); }
+.text-danger { color: var(--text-danger); }
+.text-warning { color: var(--text-warning); }
+.text-info { color: var(--text-info); }
+.text-muted { color: var(--fg-muted); }
+.text-subtle { color: var(--fg-muted); opacity: 0.8; }
+.text-default { color: var(--fg-default); } */
+
+/* Weights */
+.font-thin { font-weight: var(--fw-thin); letter-spacing: var(--ls-looser); }
+.font-extralight { font-weight: var(--fw-extralight); }
+.font-light { font-weight: var(--fw-light); }
+.font-normal { font-weight: var(--fw-regular); letter-spacing: var(--ls-looser); }
+.font-medium { font-weight: var(--fw-medium); letter-spacing: var(--ls-loosest); }
+.font-semibold { font-weight: var(--fw-semibold); }
+.font-bold { font-weight: var(--fw-bold); }
+.font-extrabold { font-weight: var(--fw-extrabold); }
+.font-black { font-weight: var(--fw-black); }
+
+--- File: vars.css ---
+:root {
+
+  /* ─── FONT SIZE ─────────────────────────────────────── */
+
+  --fs-2xs: clamp(0.5rem, 0.6rem + 0.25vi, 0.75rem);
+  --fs-xs: clamp(0.65rem, 0.8rem + 0.35vi, 1rem);
+  --fs-sm: clamp(0.8rem, 0.875rem + 0.5vi, 1.125rem);
+  --fs-md: clamp(.875rem, .95vi + .65vi, 1.25rem);
+  --fs-lg: clamp(.95rem, 1.1rem + .8vi, 1.5rem);
+  --fs-xl: clamp(1.1rem, 1.3rem + 1vi, 2rem);
+  --fs-2xl: clamp(1.25rem, 1.5rem + 1.5vi, 3rem);
+  --fs-3xl: clamp(1.5rem, 1.75rem + 2vi, 4.5rem);
+  --fs-4xl: clamp(1.75rem, 2rem + 2.5vi, 6rem);
+  --fs-5xl: clamp(2.1rem, 2.5rem + 3vi, 8rem);
+  --fs-6xl: clamp(3.5rem, 4 + 3.5vi, 9rem);
+
+  /* ─── FONT WEIGHT ───────────────────────────────────── */
+
+  --fw-thin: 100;
+  --fw-extralight: 200;
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
+
+  /* ─── LETTER SPACING ────────────────────────────────── */
+
+  --ls-tighter: -0.05em;
+  --ls-tight: -0.025em;
+  --ls-normal: 0em;
+  --ls-wide: 0.025em;
+  --ls-wider: 0.05em;
+  --ls-widest: 0.1em;
+
+  /* ─── MEASURE ───────────────────────────────────────── */
+
+  --measure-2xs: 30ch;
+  --measure-xs: 45ch;
+  --measure-sm: 55ch;
+  --measure-md: 65ch;
+  --measure-lg: 75ch;
+  --measure-xl: 90ch;
+  --measure-none: none;
+
+
+}
+

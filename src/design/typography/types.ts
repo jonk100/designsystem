@@ -1,5 +1,5 @@
 import type { CommonHTMLProps } from "@/design/shared/props";
-import type { AnimationName } from "@/design/animation/motion.types.ts";
+import type { AnimationName } from "@/design/animation/Animation.types";
 import type { 
     FontSize, TextTone, XAlign, YAlign, FontWeight, 
     LineHeight, LetterSpacing, FontFamily, WhiteSpace, FontStyleProps

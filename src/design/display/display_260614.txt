@@ -1,0 +1,2032 @@
+--- File: badge/badge.svg ---
+
+
+--- File: badge/Badge.astro ---
+---
+import type { BadgeProps } from './Badge.props';
+import { buildStyles, mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+import { icons, type SvgName } from "@/design/shared/icons/index";
+import { DISPLAY_VAR_MAP } from '../maps';
+import "./Badge.css";
+
+type Props = BadgeProps;
+const { 
+  icon, 
+  variant = "default", 
+  size = "md", 
+  as: Tag = "span", 
+  class: className, 
+  'class:list': classList, 
+  style, 
+  ...rest 
+} = Astro.props;
+
+const isSvgIcon = icon && icon in icons;
+
+const classes = [
+  "badge-component"
+];
+
+const styles = buildStyles([
+  size && DISPLAY_VAR_MAP.size(size),
+  variant && DISPLAY_VAR_MAP.variant(variant)
+]);
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+<Inline
+  as={Tag} 
+  gap="sm" 
+  class:list={finalClasses} 
+  style={finalStyles} 
+  {...rest}
+>
+  {icon && (
+    <span class="badge--icon">
+      {isSvgIcon ? (
+        <Icon name={icon as SvgName} size={size} />
+      ) : (
+        icon
+      )}
+    </span>
+  )}
+  <span class="badge--text">
+    <slot />
+  </span>
+</Inline>
+
+--- File: badge/Badge.css ---
+@import '../tokens.css';
+
+.badge-component {
+  display: inline-flex;
+  justify-content: center;
+  border-width: 0.5px;
+  border-style: solid;
+  border-radius: var(--display-radius);
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  /* Consuming the mapped CSS variables locally */
+  font-size: var(--local-size, var(--display-size-md));
+  padding: var(--local-padding);
+  height: var(--local-height);
+  background: var(--local-bg);
+  border-color: var(--local-border);
+}
+
+.badge-component:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: var(--local-hover-bg);
+}
+
+.badge--icon,
+.badge__icon {
+  display: inline-flex;
+  font-size: 1em;
+}
+
+.badge--text {
+  display: inline-flex;
+}
+
+--- File: badge/badge.md ---
+# Badge
+
+An atomic status indicator that can display an optional icon and uses shared variant classes for background and border styling.
+
+## Overview
+
+The component renders a small inline element (default `<span>`) that visually conveys status or categorization. It is purely presentational and does not manage interaction.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| icon | SvgName \| string | – | Icon name from shared icons or raw emoji/string displayed before the text. |
+| variant | DisplayVariant | "default" | Visual variant controlling background and border colors. |
+| size | DisplaySize | "md" | Size token affecting padding and font size. |
+| as | Tag | "span" | HTML element to render (e.g., `div`, `span`). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name (inherited). |
+| effects | string[] | – | Visual effects (inherited). |
+| HTML attributes | any | – | Any standard HTML attributes. |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Variant | Visual effect |
+|---------|---------------|
+| `default` | Neutral background. |
+| other `DisplayVariant` values (e.g., `primary`, `success`, `warning`) | Apply corresponding background and border colors. |
+| `size` | Controls padding and font size via `display-size--*` classes. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Badge from '@/design/display/badge/Badge.astro';
+---
+<Badge variant="success" size="sm">Approved</Badge>
+```
+
+### With icon (SVG)
+
+```astro
+---
+import Badge from '@/design/display/badge/Badge.astro';
+---
+<Badge icon="check" variant="success">Approved</Badge>
+```
+
+### With custom element
+
+```astro
+---
+import Badge from '@/design/display/badge/Badge.astro';
+---
+<Badge as="div" variant="warning" size="lg">Warning</Badge>
+```
+
+## Logic
+
+*Omitted* – the component contains no script or external controller.
+
+## Accessibility
+
+The component renders an inline element with `aria-hidden` on the optional icon. Provide meaningful text inside the badge for screen readers. No additional ARIA roles are required.
+
+## CSS Architecture
+
+* Root class: `badge-component`.
+* Size modifier: `display-size--${size}`.
+* Variant modifier: `display-variant--${variant}`.
+* Optional icon wrapped in `.badge--icon`.
+
+## Related Components
+
+* `Tag` – similar visual style but interactive.
+* `Chip` – more interactive version with dismiss support.
+* `Dot` – minimal status indicator.
+
+--- File: badge/Badge.props.ts ---
+// src/design/display/badge/Badge.props.ts
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { DisplayVariant, DisplaySize } from "@/design/display/types";
+import type { SvgName } from "@/design/shared/icons/index";
+
+export interface BadgeProps extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {
+  icon?: SvgName | string;
+  variant?: DisplayVariant;
+  size?: DisplaySize;
+}
+
+--- File: tag/tag.svg ---
+
+
+--- File: tag/Tag.astro ---
+---
+import type { TagProps } from './Tag.props';
+import { buildStyles, mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Dot from "@/design/display/dot/Dot.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+import { icons, type SvgName } from "@/design/shared/icons/index";
+import { DISPLAY_VAR_MAP } from '../maps';
+import "./Tag.css";
+
+type Props = TagProps;
+const { icon, variant = "default", size = "md", dot = false, as: TagElement = "span", class: className, 'class:list': classList, style, ...rest } = Astro.props;
+
+const isSvgIcon = icon && icon in icons;
+
+const classes = [
+  "tag-component"
+];
+
+const customStyles = buildStyles([
+  size && DISPLAY_VAR_MAP.size(size),
+  variant && DISPLAY_VAR_MAP.variant(variant as any)
+]);
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyles, Astro.props);
+---
+<Inline as={TagElement} gap="xs" class:list={finalClasses} style={finalStyles} {...rest}>
+  {dot && <Dot variant={variant as any} size="2xs" class="tag__dot" />}
+  {icon && (
+    <span class="tag--icon">
+      {isSvgIcon ? (
+        <Icon name={icon as SvgName} size={size} />
+      ) : (
+        icon
+      )}
+    </span>
+  )}
+  <span class="tag--text"><slot /></span>
+</Inline>
+
+
+--- File: tag/Tag.css ---
+@import '../tokens.css';
+
+.tag-component {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 0.5px;
+  border-style: solid;
+  border-radius: var(--rad-md); /* Match button corner radius */
+  font-family: var(--ff-sans); /* Match button font family */
+  font-weight: 500;
+  text-transform: none; /* Showcase uses normal casing */
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  gap: var(--sp-2xs);
+  box-sizing: border-box;
+}
+
+.tag--icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+}
+
+.tag--text {
+  display: inline-flex;
+  align-items: center;
+}
+
+--- File: tag/tag.md ---
+# Tag
+
+An interactive data categorization indicator that visually groups or labels content. It is similar to a badge but intended for selection, filtering, or status indication.
+
+## Overview
+
+The component renders a small inline element (default `<span>`) that can optionally include an icon and a status dot. It uses shared variant classes for background and border styling, making it easy to apply consistent visual states across the design system.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| icon | SvgName \| string | – | Optional leading icon name from shared icons or raw emoji/string. |
+| variant | DisplayVariant \| 'amber' \| 'teal' \| 'coral' \| 'purple' | "default" | Visual variant that sets background and border colors. |
+| size | DisplaySize | "md" | Size token controlling padding and font size. |
+| dot | boolean | false | When true, renders a small status dot using the `Dot` component. |
+| as | Tag | "span" | Custom HTML element to render (e.g., `div`, `span`). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name (inherited). |
+| onScroll | string | – | Scroll handler (inherited). |
+| HTML attributes | any | – | Any standard HTML attributes (e.g., `id`, `data-*`). |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `variant` | `default`, `amber`, `teal`, `coral`, `purple` (plus any `DisplayVariant` from the shared system) | Sets background and border colors. |
+| `size` | `sm`, `md`, `lg`, `xl` | Controls padding and font size via `display-size--*` classes. |
+| `dot` | boolean | When true, shows a small status dot sized `2xs` and colored according to the variant. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Tag from '@/design/display/tag/Tag.astro';
+---
+<Tag>Primary</Tag>
+```
+
+### With icon
+
+```astro
+---
+import Tag from '@/design/display/tag/Tag.astro';
+---
+<Tag icon="check" variant="success" size="sm">Approved</Tag>
+```
+
+### With status dot
+
+```astro
+---
+import Tag from '@/design/display/tag/Tag.astro';
+---
+<Tag variant="error" size="sm" dot>Unread</Tag>
+```
+
+### Custom element
+
+```astro
+---
+import Tag from '@/design/display/tag/Tag.astro';
+---
+<Tag as="div" variant="amber" size="lg">Notification</Tag>
+```
+
+## Logic
+
+*Omitted* – the component contains no script or external controller.
+
+## Accessibility
+
+The component renders a `<span>` (or custom element) with `aria-hidden="true"` on the optional icon. Provide accessible text via the default slot. If the tag conveys meaning without visible text, add an `aria-label` attribute.
+
+## CSS Architecture
+
+* Root class: `tag-component`.
+* Size modifier: `display-size--${size}`.
+* Variant modifier: `display-variant--${variant}`.
+* Optional dot class: `tag__dot` (applied to the `Dot` component).
+
+## Related Components
+
+* `Badge` – similar visual style but non‑interactive.
+* `Chip` – more interactive, often dismissible.
+* `Dot` – standalone status indicator used by `Tag`.
+* `Icon` – can be used as the leading icon.
+* `Button` – often paired with tags for actions.
+
+--- File: tag/Tag.props.ts ---
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { DisplayVariant, DisplaySize } from "../types";
+import type { SvgName } from "@/design/shared/icons/index";
+
+export interface TagProps extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  icon?: SvgName | string;
+  variant?: DisplayVariant | 'amber' | 'teal' | 'coral' | 'purple';
+  size?: DisplaySize;
+  dot?: boolean;
+}
+
+--- File: avatar/avatar.svg ---
+
+
+--- File: avatar/Avatar.astro ---
+---
+/**
+ * src/design/display/avatar/Avatar.astro
+ * Visual identity representation for users/entities with fallback support.
+ * - Displays an image if `src` is provided.
+ * - Falls back to a colored container with `initials` if no src or image fails.
+ * @props (local): src, alt, initials, size, shape, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplaySize } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Avatar.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Image URL */
+  src?: string;
+  /** Accessibility text for the image */
+  alt?: string;
+  /** Fallback initials to display if image is missing */
+  initials?: string;
+  /** Size of the avatar */
+  size?: DisplaySize;
+  /** Shape of the avatar */
+  shape?: 'circle' | 'square' | 'rounded';
+}
+
+const {
+  src,
+  alt = "",
+  initials,
+  size = "md",
+  shape = "circle",
+  as: Tag = "div",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "avatar",
+  `display-size--${size}`,
+  `avatar-shape--${shape}`,
+  !src && "avatar--fallback"
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  {src ? (
+    <img src={src} alt={alt} class="avatar__image" loading="lazy" />
+  ) : (
+    <span class="avatar__initials">{initials?.substring(0, 2).toUpperCase()}</span>
+  )}
+</Tag>
+
+
+--- File: avatar/Avatar.css ---
+@import '../tokens.css';
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 0 !important; /* Reset any padding from shared size classes */
+  /* Use font-size to scale width/height 1:1 */
+  width: 2.5em;
+  height: 2.5em;
+  background-color: var(--layer--3);
+  color: var(--text--5);
+  border: 1.5px solid var(--border--0);
+  user-select: none;
+}
+
+.avatar-shape--circle {
+  border-radius: 50%;
+}
+
+.avatar-shape--square {
+  border-radius: 0;
+}
+
+.avatar-shape--rounded {
+  border-radius: var(--rad-md);
+}
+
+.avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar__initials {
+  font-weight: 600;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Subtle fallback styling */
+.avatar--fallback {
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
+}
+
+
+--- File: avatar/avatar.md ---
+# Avatar
+
+A visual identity representation for users or entities, with fallback to a colored container displaying initials when no image is provided.
+
+## Overview
+
+The component displays an image if a `src` prop is provided, otherwise falls back to a container showing initials. It handles sizing, shape, and basic accessibility.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| src | string | – | URL of the image. |
+| alt | string | "" | Accessibility text for the image. |
+| initials | string | – | Fallback initials to display if image is missing. |
+| size | DisplaySize | "md" | Avatar size. |
+| shape | 'circle' \| 'square' \| 'rounded' | "circle" | Shape of the avatar container. |
+| as | Tag | "div" | Custom tag to render (e.g., "span"). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name (inherited). |
+| effects | string[] | – | Visual effects (inherited). |
+| HTML attributes | any | – | Any standard HTML attributes (e.g., `id`, `data-*`). |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `size` | `sm`, `md`, `lg`, `xl` | Controls the physical dimensions of the avatar. |
+| `shape` | `circle`, `square`, `rounded` | Determines the container shape. |
+
+## Usage
+
+### Basic with image
+
+```astro
+---
+import Avatar from '@/design/display/avatar/Avatar.astro';
+---
+<Avatar src="/images/profile.jpg" alt="John Doe" size="lg" />
+```
+
+### Fallback with initials
+
+```astro
+---
+import Avatar from '@/design/display/avatar/Avatar.astro';
+---
+<Avatar initials="JD" size="md" shape="square" />
+```
+
+### Custom tag and shape
+
+```astro
+---
+import Avatar from '@/design/display/avatar/Avatar.astro';
+---
+<Avatar as="span" shape="rounded" size="xs" initials="AB" />
+```
+
+## Logic
+
+*Omitted* (no script or external controller).
+
+## Accessibility
+
+The `img` element includes the `alt` attribute for screen readers. The fallback `span` provides accessible text via its content. No additional ARIA roles are required.
+
+## CSS Architecture
+
+* Root class: `avatar`.
+* Size modifier: `display-size--${size}`.
+* Shape modifier: `avatar-shape--${shape}`.
+* Fallback modifier: `avatar--fallback` when `src` is falsy.
+
+## Related Components
+
+* `Image` – visual media component.
+* `Frame` – container with ratio and border.
+* `Dot` – status indicator.
+* `Button` – often paired with avatar for user profiles.
+
+--- File: avatar/Avatar.types.ts ---
+
+
+--- File: icon/icon.svg ---
+
+
+--- File: icon/Icon.astro ---
+---
+/**
+ * src/design/display/icon/Icon.astro
+ * A primitive wrapper to dynamically load and render Astro SVG components.
+ * - Enforces 1:1 aspect ratio.
+ * - Inlines the SVG using Astro's native component support.
+ * @props (local): name, size, tone
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { BaseComponentProps, SpacingProps } from "@/design/shared/props";
+import type { DisplaySize, TextTone, SpacingScale, ComponentRadius } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { SPACING_MAP, RADIUS_MAP } from "@/design/shared/maps";
+import { DISPLAY_VAR_MAP } from "@/design/display/maps";
+import { icons, type SvgName } from "@/design/shared/icons/index";
+import './Icon.css';
+
+export interface Props extends BaseComponentProps, SpacingProps, Omit<import("astro/types").HTMLAttributes<"svg">, keyof BaseComponentProps> {
+  /** The icon identifier */
+  name: SvgName;
+  /** Size of the icon */
+  size?: DisplaySize;
+  /** Color tone of the icon */
+  tone?: TextTone;
+  padding?: SpacingScale;
+  rad?: ComponentRadius;
+  border?: boolean;
+}
+
+const {
+  name,
+  size = "md",
+  tone = "inherit",
+  animate = "fadeIn",
+  padding = "3xs",
+  px,
+  py,
+  margin,
+  mx,
+  my,
+  border = false,
+  rad = 'xs',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Lookup the SVG component from the generated registry
+const SvgComponent = icons[name];
+
+const classes = [
+  "icon-component",
+  `text-tone--${tone}`
+];
+
+const styles = [
+  size && DISPLAY_VAR_MAP.size(size),
+  padding && SPACING_MAP.padding(padding),
+  px      && SPACING_MAP.px(px),
+  py      && SPACING_MAP.py(py),
+  margin  && SPACING_MAP.margin(margin),
+  mx      && SPACING_MAP.mx(mx),
+  my      && SPACING_MAP.my(my),
+  rad     && RADIUS_MAP.rad(rad),
+  border  && "border: 1px solid var(--border-layer--1)",
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+
+// If the icon name doesn't exist, we don't render anything (could throw an error, but fallback is safer for UI)
+---
+{SvgComponent && (
+  <SvgComponent
+    class:list={finalClasses}
+    style={finalStyles}
+    aria-hidden="true"
+    {...rest as any}
+  />
+)}
+
+
+--- File: icon/Icon.css ---
+@import '../tokens.css';
+
+.icon-component {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: content-box; /* padding adds space around the 1em core */
+
+  font-size: var(--local-size, var(--display-size-md));
+  width: 1em;
+  height: 1em;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  padding-block:  var(--local-py, var(--local-padding, 0));
+  padding-inline: var(--local-px, var(--local-padding, 0));
+  border-radius:  var(--local-rad);
+}
+
+.icon-component svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+--- File: icon/icon.md ---
+# Icon
+
+A primitive wrapper to dynamically load and render Astro SVG components. It enforces a 1:1 aspect ratio and inlines the SVG using Astro's native component support.
+
+## Overview
+
+The component's job is to render an SVG icon identified by a name, optionally applying size, tone, and spacing. It does not handle icon creation or asset loading; it simply mounts the provided SVG component with appropriate classes and styles.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | SvgName | – | The SVG component identifier (e.g., "home", "user"). |
+| size | DisplaySize | "md" | Icon size preset. |
+| tone | TextTone | "inherit" | Color tone for the icon. |
+| padding | SpacingScale | "3xs" | Padding space around the icon. |
+| rad | ComponentRadius | "xs" | Corner radius. |
+| border | boolean | false | Whether to draw a border around the icon. |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string | Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name. |
+| effects | string[] | – | Visual effects. |
+| HTML attributes | any | – | Any standard HTML attributes applied to the underlying element. |
+
+*All props from `BaseComponentProps` (animate, effects, class, class:list, style, etc.) and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Variant | Visual effect |
+|---------|---------------|
+| `size` | Controls the physical size of the icon (e.g., `sm`, `md`, `lg`). |
+| `tone` | Controls the color tone (e.g., `primary`, `secondary`). |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Icon from '@/design/display/icon/Icon.astro';
+---
+<Icon name="home" size="lg" tone="primary" />
+```
+
+### Common Patterns
+
+**Icon with custom padding and radius**
+
+```astro
+---
+import Icon from '@/design/display/icon/Icon.astro';
+---
+<Icon name="user" size="md" padding="xs" rad="sm" />
+```
+
+**Icon with border**
+
+```astro
+---
+import Icon from '@/design/display/icon/Icon.astro';
+---
+<Icon name="warning" border={true} size="xs" />
+```
+
+## Logic
+
+*Omitted* (no script or external controller).
+
+## Accessibility
+
+The component renders an SVG with `aria-hidden="true"`, making it decorative. If an accessible name is needed, provide an `aria-label` or `title` attribute via the `...rest` props.
+
+## CSS Architecture
+
+* BEM root class: `icon-component`.
+* Modifier class: `text-tone--${tone}`.
+* Additional classes for size, padding, radius, and border are generated from the component props.
+
+## Related Components
+
+* `Avatar` – visual identity representation.
+* `Frame` – container with ratio and border.
+* `Dot` – micro‑indicator.
+* `Button` – often paired with icons for visual cues.
+
+--- File: indicator/Indicator.css ---
+.indicator-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.indicator-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Base transform maps based on the offset custom property */
+.indicator-pos--top-right {
+  top: 0;
+  right: 0;
+  transform: translate(calc(50% + var(--indicator-offset)), calc(-50% - var(--indicator-offset)));
+}
+
+.indicator-pos--top-left {
+  top: 0;
+  left: 0;
+  transform: translate(calc(-50% - var(--indicator-offset)), calc(-50% - var(--indicator-offset)));
+}
+
+.indicator-pos--bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: translate(calc(50% + var(--indicator-offset)), calc(50% + var(--indicator-offset)));
+}
+
+.indicator-pos--bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translate(calc(-50% - var(--indicator-offset)), calc(50% + var(--indicator-offset)));
+}
+
+
+--- File: indicator/indicator.svg ---
+
+
+--- File: indicator/Indicator.astro ---
+---
+/**
+ * src/design/display/indicator/Indicator.astro
+ * A role-based smart wrapper to absolutely position a status token (e.g. Dot) over a base element.
+ * - Positions children at the corners.
+ * @props (local): position, offset, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { SpacingScale } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Indicator.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** The corner to position the indicator */
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  /** How far to push the indicator outside the bounding box */
+  offset?: SpacingScale | string;
+}
+
+const {
+  position = "top-right",
+  offset = "none",
+  as: Tag = "div",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "indicator-container",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+// Resolve offset. If it's a known spacing scale, use the var, else use the raw string
+const offsetValue = offset !== 'none' 
+  ? (['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(offset) ? `var(--sp-${offset})` : offset)
+  : '0px';
+
+const styles = [
+  `--indicator-offset: ${offsetValue}`
+].join(';');
+
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+  <div class={`indicator-wrapper indicator-pos--${position}`}>
+    <slot name="indicator" />
+  </div>
+</Tag>
+
+
+--- File: dot/dot.svg ---
+
+
+--- File: dot/Dot.astro ---
+---
+/**
+ * src/design/display/dot/Dot.astro
+ * A textless micro-indicator for online status or unread notifications.
+ * - Uses shared variant classes for color.
+ * - Enforces a perfect circle shape.
+ * @props (local): variant, size, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "../types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Dot.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"span">, keyof BaseComponentProps> {
+  /** Variant style of the dot (maps to background color) */
+  variant?: DisplayVariant;
+  /** Size of the dot */
+  size?: DisplaySize;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  as: Tag = "span",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "dot",
+  `display-size--${size}`,
+  `display-variant--${variant}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} aria-hidden="true" {...rest} />
+
+
+--- File: dot/Dot.css ---
+@import '../tokens.css';
+
+.dot {
+  display: inline-block;
+  border-radius: 50%; /* Perfect circle */
+  padding: 0 !important; /* Reset any padding from shared size classes to prevent stretching */
+  /* We use the display-size--* classes which set font-size. 
+     We map the dot's dimensions relative to the font-size */
+  width: 0.6em;
+  height: 0.6em;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.dot.display-variant--amber { background-color: #EF9F27; border-color: transparent; }
+.dot.display-variant--teal { background-color: #1D9E75; border-color: transparent; }
+.dot.display-variant--coral { background-color: #D85A30; border-color: transparent; }
+.dot.display-variant--purple { background-color: #7F77DD; border-color: transparent; }
+
+
+--- File: dot/dot.md ---
+# Dot
+
+A micro-indicator for online status or unread notifications; a simple circular dot.
+
+## Overview
+
+The component renders a small circular dot that can convey status via color variant and size. It is purely presentational and does not handle state management.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | DisplayVariant | "primary" | Dot color variant (maps to background color). |
+| size | DisplaySize | "md" | Dot size. |
+| as | Tag | "span" | Custom element to render (e.g., `span`, `div`). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name (inherited). |
+| effects | string[] | – | Visual effects (inherited). |
+| HTML attributes | any | – | Any standard HTML attributes. |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `variant` | `primary`, `secondary`, `success`, `warning`, `error`, `neutral` | Sets the background color of the dot. |
+| `size` | `sm`, `md`, `lg`, `xl` | Controls the physical diameter of the dot. |
+
+## Usage
+
+### Simple dot
+
+```astro
+---
+import Dot from '@/design/display/dot/Dot.astro';
+---
+<Dot variant="success" size="sm" />
+```
+
+### Status indicator in a list
+
+```astro
+---
+import Dot from '@/design/display/dot/Dot.astro';
+---
+<ul>
+  <li><Dot variant="primary" size="md" /> John Doe</li>
+  <li><Dot variant="error" size="sm" /> Alice</li>
+</ul>
+```
+
+## Logic
+
+*Omitted* (no script or external controller).
+
+## Accessibility
+
+The component renders a `<span>` with `aria-hidden="true"`, making it decorative. Provide a label via `aria-label` on the parent if needed.
+
+## CSS Architecture
+
+* Root class: `dot`.
+* Size modifier: `display-size--${size}`.
+* Variant modifier: `display-variant--${variant}`.
+
+## Related Components
+
+* `Avatar` – often paired with a `Dot` to show online status.
+* `Icon` – can be combined with `Dot` for status icons.
+* `Button` – may include a `Dot` as a visual indicator.
+
+--- File: chip/chip.svg ---
+
+
+--- File: chip/Chip.astro ---
+---
+/**
+ * src/design/display/chip/Chip.astro
+ * An interactive, compact tag for input selection, filtering, or choices.
+ * - Supports an optional icon or avatar (passed as slot or prop).
+ * - Can be dismissible (renders a small close button).
+ * @props (local): variant, size, icon, dismissible, active, as
+ * @props (global): class, class:list, animate, onScroll, effects, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "../types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Icon from "@/design/display/icon/Icon.astro";
+import type { SvgName } from "@/design/shared/icons/index";
+import "./Chip.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {
+  variant?: DisplayVariant;
+  size?: DisplaySize;
+  icon?: SvgName;
+  dismissible?: boolean;
+  active?: boolean;
+}
+
+const {
+  variant = "default",
+  size = "md",
+  icon,
+  dismissible = false,
+  active = false,
+  as: Tag = "button",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "chip",
+  `display-size--${size}`,
+  `display-variant--${variant}`,
+  active && "chip--active",
+  dismissible && "chip--dismissible",
+  // If it's a button, add interactivity styles
+  Tag === "button" && "chip--interactive"
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+// For accessibility, dismissible chips should have aria-label if not provided
+const ariaLabel = dismissible ? (Astro.props['aria-label'] || "Remove") : Astro.props['aria-label'];
+---
+
+<Tag 
+  class:list={finalClasses} 
+  style={finalStyles} 
+  type={Tag === 'button' ? "button" : (undefined as any)}
+  aria-pressed={Tag === 'button' && active ? "true" : undefined}
+  {...rest}
+>
+  {icon && <Icon name={icon} class="chip__icon" />}
+  <slot name="leading" />
+  <span class="chip__label"><slot /></span>
+  {dismissible && (
+    <span class="chip__dismiss" aria-label={ariaLabel} role="button" tabindex="0">
+      <Icon name="x" size="sm" />
+    </span>
+  )}
+</Tag>
+
+
+--- File: chip/Chip.css ---
+@import '../tokens.css';
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em; /* relative to display-size */
+  border-radius: var(--rad-full);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  border: 0.5px solid var(--border--0);
+  transition: all 0.2s ease;
+  user-select: none;
+  /* Reset button styles */
+  background: var(--layer--2);
+  color: var(--text--2);
+  font-family: var(--ff-sans);
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.chip--interactive {
+  cursor: pointer;
+}
+
+.chip--interactive:hover {
+  border-color: var(--border--1);
+  color: var(--text--5);
+  background: var(--layer--3);
+}
+
+.chip--interactive:active {
+  transform: scale(0.98);
+}
+
+.chip--active,
+.chip[aria-pressed="true"] {
+  background: var(--color-gold-subtle) !important;
+  border-color: color-mix(in srgb, var(--color-gold) 50%, transparent) !important;
+  color: var(--color-gold) !important;
+}
+
+.chip__icon {
+  display: inline-flex;
+  /* Slightly smaller than the text */
+  font-size: 1.1em;
+  margin-left: -0.2em; /* optical alignment */
+}
+
+.chip__label {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -0.4em;
+  margin-left: 0.2em;
+  border-radius: 50%;
+  padding: 0.1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.chip__dismiss:hover,
+.chip__dismiss:focus-visible {
+  background-color: rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+/* Dark mode adjustment for hover */
+@media (prefers-color-scheme: dark) {
+  .chip__dismiss:hover,
+  .chip__dismiss:focus-visible {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+
+--- File: chip/chip.md ---
+# Chip
+
+A compact, interactive tag for input selection, filtering, or choices. Supports an optional icon or avatar and can be dismissible.
+
+## Overview
+
+The component provides a small, interactive element that can be used for selection, filtering, or grouping. It can be dismissible and indicates an active state.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | DisplayVariant | "default" | Visual variant (background and border). |
+| size | DisplaySize | "md" | Size token affecting padding and font size. |
+| icon | SvgName | – | Optional icon name. |
+| dismissible | boolean | false | Whether the chip can be closed. |
+| active | boolean | false | Indicates active state. |
+| as | Tag | "button" | Custom element to render (e.g., `button`, `span`). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| HTML attributes | any | – | Any standard HTML attributes. |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `variant` | `default`, `primary`, `secondary`, `success`, `warning`, `error`, `neutral` | Sets background and border colors. |
+| `size` | `sm`, `md`, `lg`, `xl` | Controls padding and font size. |
+| `active` | boolean | Adds `chip--active` styling. |
+| `dismissible` | boolean | Adds `chip--dismissible` and a close button. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Chip from '@/design/display/chip/Chip.astro';
+---
+<Chip>Primary</Chip>
+```
+
+### Dismissible
+
+```astro
+---
+import Chip from '@/design/display/chip/Chip.astro';
+---
+<Chip dismissible>Close me</Chip>
+```
+
+### Active state
+
+```astro
+---
+import Chip from '@/design/display/chip/Chip.astro';
+---
+<Chip active>Selected</Chip>
+```
+
+## Logic
+
+*Omitted* (no script or external controller).
+
+## Accessibility
+
+The component renders a `<button>` when `as="button"` (default) with `aria-pressed` reflecting the `active` prop. Dismissible chips include a close button with `role="button"` and `tabindex="0"` for keyboard accessibility. Provide an `aria-label` if no visible text is present.
+
+## CSS Architecture
+
+* Root class: `chip`.
+* Size modifier: `display-size--${size}`.
+* Variant modifier: `display-variant--${variant}`.
+* Active modifier: `chip--active`.
+* Dismissible modifier: `chip--dismissible`.
+* Interactive modifier (when `as="button"`): `chip--interactive`.
+
+## Related Components
+
+* `Badge` – similar visual style but non‑interactive.
+* `Tag` – interactive categorization indicator.
+* `Button` – often paired with chips for actions.
+* `Avatar` – can be used as the chip’s icon.
+
+--- File: counter/counter.svg ---
+
+
+--- File: counter/Counter.astro ---
+---
+/**
+ * src/design/display/counter/Counter.astro
+ * A micro-state visualization component for numerical values.
+ * - Adheres to shared display sizes and variants.
+ * @props (local): variant, size, as
+ * @props (global): class, class:list, animate, onScroll, HTML attributes
+ */
+
+import type { DisplayVariant, DisplaySize } from "@/design/shared/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import './Counter.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  class?: string;
+  style?: string;
+  variant?: DisplayVariant;
+  size?: DisplaySize;
+}
+
+const {
+  as: Tag = 'div',
+  variant = 'primary',
+  size = 'md',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'counter-component',
+  `display-variant--${variant}`,
+  `display-size--${size}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+
+
+--- File: counter/Counter.css ---
+@import '../tokens.css';
+
+.counter-component {
+  font-weight: var(--fw-black, 900);
+  margin-bottom: var(--sp-xs);
+  line-height: var(--lh-none);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--display-radius);
+  padding: 0 var(--sp-2xs);
+  box-sizing: border-box;
+}
+
+
+--- File: frame/Frame.css ---
+.frame-component {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--rad-sm, 0.375rem);
+  width: 100%;
+}
+
+.frame-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame-ratio--1x1 { padding-bottom: 100%; }
+.frame-ratio--4x3 { padding-bottom: 75%; }
+.frame-ratio--16x9 { padding-bottom: 56.25%; }
+.frame-ratio--auto { 
+  padding-bottom: 0;
+  position: static;
+}
+.frame-ratio--auto .frame-content {
+  position: static;
+}
+
+.frame-border--thin { border: 1px solid rgba(148, 163, 184, 0.2); }
+.frame-border--thick { border: 4px solid rgba(148, 163, 184, 0.4); }
+.frame-border--none { border: none; }
+
+
+--- File: frame/frame.svg ---
+
+
+--- File: frame/Frame.astro ---
+---
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  ratio?: '1:1' | '4:3' | '16:9' | 'auto';
+  border?: 'none' | 'thin' | 'thick';
+}
+
+const {
+  as: Tag = 'div',
+  ratio = 'auto',
+  border = 'none',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'frame-component',
+  `frame-ratio--${ratio.replace(':', 'x')}`,
+  `frame-border--${border}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <div class="frame-content">
+    <slot />
+  </div>
+</Tag>
+
+<style>
+  @import './Frame.css';
+</style>
+
+
+--- File: frame/frame.md ---
+# Frame
+
+A container component that enforces aspect ratio and optional border styling for content.
+
+## Overview
+
+The component provides a wrapper that can enforce a specific ratio (e.g., 16:9) and border thickness, making it useful for layout components like cards, media frames, or responsive containers.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| ratio | '1:1' \| '4:3' \| '16:9' \| 'auto' | 'auto' | Aspect ratio preset. |
+| border | 'none' \| 'thin' \| 'thick' | 'none' | Border thickness. |
+| as | Tag | 'div' | Custom element to render (e.g., `section`, `article`). |
+| class | string | – | Additional CSS class. |
+| class:list | Record<string, boolean> | – | List of conditional classes. |
+| style | string \| Record<string,string> | – | Inline style. |
+| animate | string | – | Animation class/name (inherited). |
+| effects | string[] | – | Visual effects (inherited). |
+| HTML attributes | any | – | Any standard HTML attributes. |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `ratio` | `1:1`, `4:3`, `16:9`, `auto` | Sets the width‑height relationship of the wrapper. |
+| `border` | `none`, `thin`, `thick` | Controls the visual thickness of the border. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Frame from '@/design/display/frame/Frame.astro';
+---
+<Frame>
+  <slot />
+</Frame>
+```
+
+### Custom ratio and border
+
+```astro
+---
+import Frame from '@/design/display/frame/Frame.astro';
+---
+<Frame ratio="16:9" border="thick">
+  <slot />
+</Frame>
+```
+
+## Logic
+
+*Omitted* (no script or external controller).
+
+## Accessibility
+
+The component renders a generic `<div>` (or custom tag) with a `slot` for inner content. It inherits standard HTML semantics; no additional ARIA roles are required.
+
+## CSS Architecture
+
+* Root class: `frame-component`.
+* Ratio modifier: `frame-ratio--${ratio.replace(':', 'x')}`.
+* Border modifier: `frame-border--${border}`.
+
+## Related Components
+
+* `Card` – often built using `Frame` for consistent spacing.
+* `Panel` – similar container without ratio enforcement.
+* `Button` – can be placed inside a `Frame` for focused UI elements.
+
+--- File: consts.ts ---
+/**
+ * src/design/display/consts.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+
+export const DISPLAY = {
+  sizes: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+  ] as const,
+  variants: [
+    "default",
+    "primary",
+    "secondary",
+    "success",
+    "warning",
+    "danger",
+    "info",
+  ] as const,
+  effects: ["shimmer", "glass", "glow", "ping"] as const,
+};
+
+
+--- File: display.css ---
+/**
+ * Display Component Shared Styles
+ * This file contains shared utility classes for display components.
+ * It imports tokens.css which defines the :root variables.
+ */
+
+@import './tokens.css';
+
+/* ============================================================================
+   SHARED SIZE UTILITY CLASSES
+   Used by: Badge, Chip, Tag, Dot, and all display components
+   ============================================================================ */
+
+.display-size--2xs {
+  font-size: var(--display-size-2xs);
+  padding: var(--display-padding-2xs);
+  height: var(--display-height-2xs);
+}
+
+.display-size--xs {
+  font-size: var(--display-size-xs);
+  padding: var(--display-padding-xs);
+  height: var(--display-height-xs);
+}
+
+.display-size--sm {
+  font-size: var(--display-size-sm);
+  padding: var(--display-padding-sm);
+  height: var(--display-height-sm);
+}
+
+.display-size--md {
+  font-size: var(--display-size-md);
+  padding: var(--display-padding-md);
+  height: var(--display-height-md);
+}
+
+.display-size--lg {
+  font-size: var(--display-size-lg);
+  padding: var(--display-padding-lg);
+  height: var(--display-height-lg);
+}
+
+.display-size--xl {
+  font-size: var(--display-size-xl);
+  padding: var(--display-padding-xl);
+  height: var(--display-height-xl);
+}
+
+.display-size--2xl {
+  font-size: var(--display-size-2xl);
+  padding: var(--display-padding-2xl);
+  height: var(--display-height-2xl);
+}
+
+.display-size--3xl {
+  font-size: var(--display-size-3xl);
+  padding: var(--display-padding-3xl);
+  height: var(--display-height-3xl);
+}
+
+.display-size--4xl {
+  font-size: var(--display-size-4xl);
+  padding: var(--display-padding-4xl);
+  height: var(--display-height-4xl);
+}
+
+.display-size--5xl {
+  font-size: var(--display-size-5xl);
+  padding: var(--display-padding-5xl);
+  height: var(--display-height-5xl);
+}
+
+/* ============================================================================
+   SHARED VARIANT UTILITY CLASSES
+   Used by: Badge, Chip, Tag, Dot, and all display components
+   Applies background, border, hover states, and shadows
+   ============================================================================ */
+
+.display-variant--default {
+  background: var(--display-default-bg);
+  border-color: var(--display-default-border);
+}
+
+.display-variant--default:hover {
+  background: var(--display-default-hover-bg);
+  box-shadow: 0 10px 30px var(--display-default-shadow);
+}
+
+.display-variant--primary {
+  background: var(--display-primary-bg);
+  border-color: var(--display-primary-border);
+}
+
+.display-variant--primary:hover {
+  background: var(--display-primary-hover-bg);
+  box-shadow: 0 10px 30px var(--display-primary-shadow);
+}
+
+.display-variant--secondary {
+  background: var(--display-secondary-bg);
+  border-color: var(--display-secondary-border);
+  color: var(--text--0);
+}
+
+.display-variant--secondary:hover {
+  background: var(--display-secondary-hover-bg);
+  box-shadow: 0 10px 30px var(--display-secondary-shadow);
+}
+
+.display-variant--success {
+  background: var(--display-success-bg);
+  border-color: var(--display-success-border);
+}
+
+.display-variant--success:hover {
+  background: var(--display-success-hover-bg);
+  box-shadow: 0 10px 30px var(--display-success-shadow);
+}
+
+.display-variant--warning {
+  background: var(--display-warning-bg);
+  border-color: var(--display-warning-border);
+}
+
+.display-variant--warning:hover {
+  background: var(--display-warning-hover-bg);
+  box-shadow: 0 10px 30px var(--display-warning-shadow);
+}
+
+.display-variant--danger {
+  background: var(--display-danger-bg);
+  border-color: var(--display-danger-border);
+}
+
+.display-variant--danger:hover {
+  background: var(--display-danger-hover-bg);
+  box-shadow: 0 10px 30px var(--display-danger-shadow);
+}
+
+.display-variant--info {
+  background: var(--display-info-bg);
+  border-color: var(--display-info-border);
+}
+
+.display-variant--info:hover {
+  background: var(--display-info-hover-bg);
+  box-shadow: 0 10px 30px var(--display-info-shadow);
+}
+
+/* ─── NEW EDITORIAL DISPLAY VARIANTS ────────────────── */
+.display-variant--amber {
+  background: color-mix(in srgb, #EF9F27 12%, transparent);
+  border-color: color-mix(in srgb, #EF9F27 35%, transparent);
+  color: #FAC775;
+}
+.display-variant--amber:hover {
+  background: color-mix(in srgb, #EF9F27 25%, transparent);
+}
+
+.display-variant--teal {
+  background: color-mix(in srgb, #1D9E75 12%, transparent);
+  border-color: color-mix(in srgb, #1D9E75 35%, transparent);
+  color: #5DCAA5;
+}
+.display-variant--teal:hover {
+  background: color-mix(in srgb, #1D9E75 25%, transparent);
+}
+
+.display-variant--coral {
+  background: color-mix(in srgb, #D85A30 12%, transparent);
+  border-color: color-mix(in srgb, #D85A30 35%, transparent);
+  color: #F0997B;
+}
+.display-variant--coral:hover {
+  background: color-mix(in srgb, #D85A30 25%, transparent);
+}
+
+.display-variant--purple {
+  background: color-mix(in srgb, #7F77DD 12%, transparent);
+  border-color: color-mix(in srgb, #7F77DD 35%, transparent);
+  color: #AFA9EC;
+}
+.display-variant--purple:hover {
+  background: color-mix(in srgb, #7F77DD 25%, transparent);
+}
+
+--- File: display.md ---
+# Display
+
+The Display category encompasses all atomic, visual indicator components used to present small pieces of data, status, or identity. These components are critical for conveying state (like unread counts or online status) and categorizing information (like tags and badges) across the application.
+
+This document serves as a guide for developers and designers working with visual indicators. It outlines the shared architectural pattern that governs most display components, ensuring a cohesive aesthetic without redundant CSS.
+
+**Major Areas Documented:**
+- **The Shared Display Component Pattern**: How elements like Badge, Chip, and Tag inherit background colors, borders, and hover states systematically.
+- **Primitives vs. Role-based Components**: Distinguishing between foundational indicators (like Dot or Badge) and specific semantic wrappers (like Avatar).
+- **Global Effects System**: How display components (and the wider system) consume global visual modifiers like glassmorphism and shimmer effects.
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+|---|---|---|---|
+| **Badge** | Primitive | `size`, `variant`, `as` | `icon` |
+| **Tag** | Primitive | `size`, `variant`, `as` | `icon` |
+| **Chip** | Primitive | `size`, `variant`, `as` | `icon`, `dismissible`, `active` |
+| **Dot** | Primitive | `size`, `variant`, `as` | (none) |
+| **Counter** | Primitive | `size`, `variant`, `as` | (none) |
+| **Icon** | Primitive | `size` | `name`, `tone` |
+| **Indicator** | Role-based | `as` | `position`, `offset` |
+| **Avatar** | Role-based | `size`, `as` | `src`, `alt`, `initials`, `shape` |
+
+*(Note: All display components implicitly inherit `BaseComponentProps` which includes standard properties like `class`, `class:list`, `animate`, `onScroll`, and `effects`.)*
+
+---
+
+### Badge
+
+`src/design/display/badge/Badge.astro`
+
+#### Atomic Status Indicator
+
+The `Badge` component is the quintessential primitive for highlighting short pieces of information, such as status (e.g., "Active", "Pending") or categories. It relies heavily on the `variant` prop to visually distinguish intent.
+
+#### Shared Token Architecture
+
+`Badge` is a prime example of the Shared Display Component Pattern. Its CSS only defines component-specific structural behaviors, while its aesthetic styling (backgrounds, text colors, radii) is dynamically applied via global `.display-variant--*` and `.display-size--*` utility classes defined in `tokens.css`.
+
+---
+
+### Tag
+
+`src/design/display/tag/Tag.astro`
+
+#### Data Categorization Primitive
+
+Visually similar to Badges, `Tag` is intended for categorizing metadata and user-generated filters. It serves as a foundational categorization indicator that utilizes the same shared variant and size classes.
+
+---
+
+### Chip
+
+`src/design/display/chip/Chip.astro`
+
+#### Interactive Selection Token
+
+`Chip` extends the concept of a `Tag` with interactivity in mind. It handles complex interactive states such as being `active` or `dismissible` (which programmatically renders an X button for removal), making it ideal for filter selections or dynamic input arrays.
+
+---
+
+### Dot
+
+`src/design/display/dot/Dot.astro`
+
+#### Micro-Indicator
+
+`Dot` is a minimalistic, textless indicator used to show unread states or online availability. It enforces a perfect circle shape and scales its dimensions dynamically based on the inherited `size` token.
+
+---
+
+### Counter
+
+`src/design/display/counter/Counter.astro`
+
+#### Numerical State Visualization
+
+`Counter` is an extension of the indicator concept that explicitly renders numerical values (like "3" unread messages). It adheres strictly to the shared variant and size class system to maintain visual parity with badges and dots.
+
+---
+
+### Icon
+
+`src/design/display/icon/Icon.astro`
+
+#### Type-Safe SVG Renderer
+
+The `Icon` component acts as a primitive wrapper to dynamically load and render Astro SVG components. It enforces a strict 1:1 aspect ratio and consumes an auto-generated SVG registry for absolute type-safety regarding available system icons via the `name` prop.
+
+---
+
+### Indicator
+
+`src/design/display/indicator/Indicator.astro`
+
+#### Positional Status Wrapper
+
+The `Indicator` is a role-based wrapper component. Instead of rendering independently, it wraps around other components (typically an `Avatar` or a button) and intelligently positions a slot-injected component (like a `Dot` or `Counter`) relative to its bounds using the `position` and semantic `offset` props.
+
+---
+
+### Avatar
+
+`src/design/display/avatar/Avatar.astro`
+
+#### Identity Representation Wrapper
+
+The `Avatar` component manages the visual identity of users or entities. It abstracts away complex UI fallback systems—displaying an image if a `src` is provided, but automatically falling back to an elegant colored container rendering `initials` if the image is missing or fails to load. It supports varying shapes (`circle`, `square`, `rounded`).
+
+
+--- File: display.props.ts ---
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { SpacingScale } from "../shared";
+import type { DisplaySize } from "./types";
+
+export interface DisplayComponentProps extends BaseComponentProps {
+  mx?: SpacingScale;
+  my?: SpacingScale;
+  px?: SpacingScale;
+  py?: SpacingScale;
+  margin?: SpacingScale;
+  padding?: SpacingScale;
+  src?: string;
+  size: DisplaySize;
+}
+
+
+--- File: functions.ts ---
+/**
+ * src/design/display/functions.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+
+
+--- File: maps.ts ---
+/**
+ * src/design/display/maps.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+
+import type { DisplaySize, DisplayVariant } from "./types";
+
+/**
+ * Get the CSS variable name for a given display size.
+ * @param size - The display size to get the CSS variable name for.
+ * @param variant -  The display variant which gets mapped to background, border, and hover border CSS variables.
+ */
+export const DISPLAY_VAR_MAP = {
+  size: (val: DisplaySize): string => 
+    `--local-size: var(--display-size-${val}); --local-padding: var(--display-padding-${val}); --local-height: var(--display-height-${val})`,
+  
+  variant: (val: DisplayVariant): string => 
+    `--local-bg: var(--display-${val}-bg); --local-border: var(--display-${val}-border); --local-hover-bg: var(--display-${val}-hover-bg)`
+};
+
+
+--- File: tokens.css ---
+@import './vars.css';
+
+:root {
+  /* ─── DISPLAY COMPONENT TOKENS ──────────────────────────── */
+
+  /* Sizing scale matched to Button font sizes */
+  --display-size-2xs: 10px;
+  --display-size-xs:  11px;
+  --display-size-sm:  12px;
+  --display-size-md:  14px;
+  --display-size-lg:  16px;
+  --display-size-xl:  18px;
+  --display-size-2xl: 20px;
+  --display-size-3xl: 24px;
+  --display-size-4xl: 30px;
+  --display-size-5xl: 36px;
+
+  --display-padding-2xs: 0 var(--sp-2xs);
+  --display-padding-xs:  0 var(--sp-2xs);
+  --display-padding-sm:  0 var(--sp-xs);
+  --display-padding-md:  0 var(--sp-xs);
+  --display-padding-lg:  0 var(--sp-md);
+  --display-padding-xl:  0 var(--sp-md);
+  --display-padding-2xl: 0 var(--sp-xl);
+  --display-padding-3xl: 0 var(--sp-xl);
+  --display-padding-4xl: 0 var(--sp-2xl);
+  --display-padding-5xl: 0 var(--sp-3xl);
+
+  --display-height-2xs: 20px;
+  --display-height-xs:  24px;
+  --display-height-sm:  28px;
+  --display-height-md:  32px;
+  --display-height-lg:  38px;
+  --display-height-xl:  44px;
+  --display-height-2xl: 54px;
+  --display-height-3xl: 62px;
+  --display-height-4xl: 70px;
+  --display-height-5xl: 80px;
+
+  /* Radius */
+  --display-radius: var(--rad-full);
+
+  /* Variant colors reference display vars */
+  --display-default-bg: var(--color-display-default-bg);
+  --display-default-border: var(--color-display-default-border);
+  --display-default-hover-bg: var(--color-display-default-hover-bg);
+  --display-default-shadow: var(--color-display-default-shadow);
+
+  --display-primary-bg: var(--color-display-primary-bg);
+  --display-primary-border: var(--color-display-primary-border);
+  --display-primary-hover-bg: var(--color-display-primary-hover-bg);
+  --display-primary-shadow: var(--color-display-primary-shadow);
+
+  --display-secondary-bg: var(--color-display-secondary-bg);
+  --display-secondary-border: var(--color-display-secondary-border);
+  --display-secondary-hover-bg: var(--color-display-secondary-hover-bg);
+  --display-secondary-shadow: var(--color-display-secondary-shadow);
+
+  --display-success-bg: var(--color-display-success-bg);
+  --display-success-border: var(--color-display-success-border);
+  --display-success-hover-bg: var(--color-display-success-hover-bg);
+  --display-success-shadow: var(--color-display-success-shadow);
+
+  --display-warning-bg: var(--color-display-warning-bg);
+  --display-warning-border: var(--color-display-warning-border);
+  --display-warning-hover-bg: var(--color-display-warning-hover-bg);
+  --display-warning-shadow: var(--color-display-warning-shadow);
+
+  --display-danger-bg: var(--color-display-danger-bg);
+  --display-danger-border: var(--color-display-danger-border);
+  --display-danger-hover-bg: var(--color-display-danger-hover-bg);
+  --display-danger-shadow: var(--color-display-danger-shadow);
+
+  --display-info-bg: var(--color-display-info-bg);
+  --display-info-border: var(--color-display-info-border);
+  --display-info-hover-bg: var(--color-display-info-hover-bg);
+  --display-info-shadow: var(--color-display-info-shadow);
+}
+
+--- File: types.ts ---
+/**
+ * src/design/display/types.ts
+ * Use this file for category-level logic and types.
+ * DO NOT put global shared tokens here.
+ */
+import { DISPLAY } from "./consts";
+export type DisplaySize = (typeof DISPLAY.sizes)[number];
+export type DisplayVariant = (typeof DISPLAY.variants)[number];
+export type DisplayEffect = (typeof DISPLAY.effects)[number];
+
+
+--- File: vars.css ---
+:root {
+  /* ─── DISPLAY COMPONENT COLORS ──────────────────────────── */
+  
+  /* Default Variant */
+  --color-display-default-bg: var(--layer--2);
+  --color-display-default-border: var(--border--0);
+  --color-display-default-hover-bg: var(--layer--3);
+  --color-display-default-shadow: rgba(0, 0, 0, 0);
+  
+  /* Primary Variant */
+  --color-display-primary-bg: var(--color-gold-subtle);
+  --color-display-primary-border: var(--color-gold-border);
+  --color-display-primary-hover-bg: var(--color-gold-focus);
+  --color-display-primary-shadow: rgba(192, 144, 64, 0.2);
+  
+  /* Secondary Variant */
+  --color-display-secondary-bg: rgba(148, 163, 184, 0.2);
+  --color-display-secondary-border: rgba(148, 163, 184, 0.4);
+  --color-display-secondary-hover-bg: rgba(148, 163, 184, 0.4);
+  --color-display-secondary-shadow: rgba(148, 163, 184, 0.3);
+  
+  /* Success Variant */
+  --color-display-success-bg: rgba(34, 197, 94, 0.2);
+  --color-display-success-border: rgba(34, 197, 94, 0.4);
+  --color-display-success-hover-bg: rgba(34, 197, 94, 0.4);
+  --color-display-success-shadow: rgba(34, 197, 94, 0.3);
+  
+  /* Warning Variant */
+  --color-display-warning-bg: rgba(251, 191, 36, 0.2);
+  --color-display-warning-border: rgba(251, 191, 36, 0.4);
+  --color-display-warning-hover-bg: rgba(251, 191, 36, 0.4);
+  --color-display-warning-shadow: rgba(251, 191, 36, 0.3);
+  
+  /* Danger Variant */
+  --color-display-danger-bg: rgba(239, 68, 68, 0.2);
+  --color-display-danger-border: rgba(239, 68, 68, 0.4);
+  --color-display-danger-hover-bg: rgba(239, 68, 68, 0.4);
+  --color-display-danger-shadow: rgba(239, 68, 68, 0.3);
+  
+  /* Info Variant */
+  --color-display-info-bg: rgba(14, 165, 233, 0.2);
+  --color-display-info-border: rgba(14, 165, 233, 0.4);
+  --color-display-info-hover-bg: rgba(14, 165, 233, 0.4);
+  --color-display-info-shadow: rgba(14, 165, 233, 0.3);
+}
+
+/* Made with Bob */
+

@@ -1,0 +1,83 @@
+/**
+ * Navbar.css
+ * Fully constrained navbar layout with logo containment.
+ */
+
+.navbar-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 64px;
+
+  gap: var(--local-gap, var(--sp-md));
+  overflow: hidden;
+}
+
+/* Shared zone layout */
+.navbar__zone {
+  display: flex;
+  align-items: center;
+  gap: var(--local-gap, var(--sp-md));
+
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Start zone */
+.navbar__zone--start {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Center zone */
+.navbar__zone--center {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* End zone */
+.navbar__zone--end {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+/* =========================
+   LOGO FIX (IMPORTANT)
+   ========================= */
+
+/* Force the figure wrapper to behave like an icon box */
+.navbar__logo {
+  max-height: 48px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* IMPORTANT: override Image component's wrapper behavior */
+.navbar__logo.image {
+  max-height: 48px;
+  width: auto;
+}
+
+/* Force image to fully respect parent height */
+.navbar__logo .image__img {
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Prevent SVG/menu from forcing navbar growth */
+.navbar__zone--center,
+.navbar__zone--center * {
+  min-width: 0;
+}
+
+.navbar__zone {
+  display: flex;
+  align-items: center; /* keep internal alignment */
+}

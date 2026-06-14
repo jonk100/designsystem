@@ -2,7 +2,7 @@
  * src/design/design.animations.ts
  * Centralized animation system for all components
  */
-import type { AnimationName } from './motion.types';
+import type { AnimationName } from './Animation.types';
 import type { AnimationConfig } from '@/design/shared/types';
 
 /**

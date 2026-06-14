@@ -1,0 +1,2240 @@
+--- File: functions.ts ---
+import { BACKGROUND_TONE_CLASS_MAP } from "./maps";
+import type { BackgroundTone, SpacingScale, ComponentEffect } from "./types.ts";
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+/** Matches valid CSS time values: e.g. `0.3s`, `300ms`, `1s` */
+const TIME_VALUE_RE = /^\d+(\.\d+)?(s|ms)$/;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+/**
+ * The parsed components of an animation shorthand string.
+ * Produced by {@link parseAnimationString}.
+ */
+export type AnimationParts = {
+  /** The animation name, e.g. `fadeIn`, `slideUp` */
+  name: string;
+  /** Optional CSS duration value, e.g. `0.3s`, `300ms` */
+  duration?: string;
+  /** Optional CSS delay value, e.g. `1s`, `200ms` */
+  delay?: string;
+};
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
+/**
+ * Type guard for `Array.filter` that removes falsy values and narrows the
+ * result to `T[]` instead of `(T | false | undefined | null)[]`.
+ *
+ * @param value - The value to test
+ * @returns `true` if the value is truthy
+ *
+ * @example
+ * const result = ['foo', false, undefined, 'bar'].filter(isTruthy);
+ * // result: string[] = ['foo', 'bar']
+ */
+export const isTruthy = <T>(value: T | false | undefined | null): value is T =>
+  Boolean(value);
+
+/**
+ * Converts a camelCase CSS property name to its kebab-case equivalent.
+ * CSS custom properties (starting with `--`) are returned unchanged.
+ *
+ * @param prop - A camelCase CSS property name, e.g. `backgroundColor`
+ * @returns The kebab-case equivalent, e.g. `background-color`
+ *
+ * @example
+ * toKebabCase('backgroundColor') // 'background-color'
+ * toKebabCase('--myVar')         // '--myVar'
+ */
+const toKebabCase = (prop: string): string => {
+  if (prop.startsWith("--")) return prop;
+  return prop.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+};
+
+// ---------------------------------------------------------------------------
+// Exports
+// ---------------------------------------------------------------------------
+
+/**
+ * Parses an animation shorthand string into its component parts.
+ *
+ * The format is: `name [duration] [delay-<value>]`
+ * - `name` — required; the animation name
+ * - `duration` — optional; any valid CSS time value (`0.3s`, `300ms`)
+ * - `delay-<value>` — optional; prefixed with `delay-`, e.g. `delay-1s`
+ *
+ * @param animate - The animation shorthand string to parse
+ * @returns An {@link AnimationParts} object with `name`, and optional `duration` and `delay`
+ *
+ * @example
+ * parseAnimationString('fadeIn')
+ * // { name: 'fadeIn' }
+ *
+ * parseAnimationString('fadeIn 0.3s')
+ * // { name: 'fadeIn', duration: '0.3s' }
+ *
+ * parseAnimationString('fadeIn 0.3s delay-1s')
+ * // { name: 'fadeIn', duration: '0.3s', delay: '1s' }
+ */
+export const parseAnimationString = (animate: string): AnimationParts => {
+  const [name, ...modifiers] = animate.trim().split(/\s+/);
+  return modifiers.reduce<AnimationParts>(
+    (acc, part) => {
+      if (part.startsWith("delay-")) acc.delay = part.slice(6);
+      else if (TIME_VALUE_RE.test(part)) acc.duration = part;
+      return acc;
+    },
+    { name },
+  );
+};
+
+/**
+ * Builds a CSS custom property string.
+ *
+ * Input:
+ * - Array of conditional style values
+ *
+ * Output:
+ * - Semicolon-separated inline style string
+ */
+export function buildStyles(
+  styles: Array<string | undefined | null | false>,
+): string {
+  return styles.filter(Boolean).join(';');
+}
+
+/**
+ * Transforms a `style` prop value into a plain CSS string.
+ *
+ * Accepts either a pre-formatted CSS string (returned as-is) or a
+ * camelCase style object (converted to kebab-case key:value pairs).
+ * CSS custom properties (e.g. `--myVar`) are preserved unchanged.
+ *
+ * @param style - A CSS string, a camelCase style record, or `undefined`
+ * @returns A semicolon-separated CSS string, or an empty string if falsy
+ *
+ * @example
+ * transformReceivedStyle('color: red; font-size: 14px')
+ * // 'color: red; font-size: 14px'
+ *
+ * transformReceivedStyle({ backgroundColor: 'red', fontSize: 14 })
+ * // 'background-color:red;font-size:14'
+ *
+ * transformReceivedStyle(undefined)
+ * // ''
+ */
+export const transformReceivedStyle = (
+  style: string | Record<string, string | number> | undefined,
+): string => {
+  if (!style || typeof style === "string") return style ?? "";
+  return Object.entries(style)
+    .map(([k, v]) => `${toKebabCase(k)}:${v}`)
+    .join(";");
+};
+
+/**
+ * Merges component-level classes with animation, effect, background tone,
+ * and consumer-provided class props into a single flat array for Astro's
+ * `class:list` directive.
+ *
+ * @param componentClasses - Base classes defined by the component itself;
+ *   falsy entries (`false`, `undefined`) are filtered out automatically
+ * @param props - Subset of component props that affect class output:
+ *   - `animate` — animation shorthand string (see {@link parseAnimationString})
+ *   - `class` — a plain class string passed by the consumer
+ *   - `class:list` — an Astro-style class list passed by the consumer
+ *   - `effects` — array of {@link DisplayEffect} values mapped to `effect--*` classes
+ *   - `bg` — {@link BackgroundTone} mapped to a `bg-*` utility class
+ * @returns A filtered array of class values ready for `class:list`
+ *
+ * @example
+ * mergeClasses(['my-component', 'my-component--block'], {
+ *   animate: 'fadeIn 0.3s',
+ *   effects: ['blur'],
+ *   bg: 'surface',
+ *   class: 'extra-class',
+ * });
+ * // ['my-component', 'my-component--block', 'animate--fadeIn', 'effect--blur', 'bg-surface', 'extra-class']
+ */
+export const mergeClasses = (
+  componentClasses: (string | undefined | false)[],
+  props: {
+    animate?: string;
+    class?: string;
+    "class:list"?: any;
+    effects?: ComponentEffect[];
+    bg?: BackgroundTone;
+  },
+): (string | any)[] => {
+  const {
+    animate,
+    class: className,
+    "class:list": classList,
+    effects,
+    bg,
+  } = props;
+  const animation = animate ? parseAnimationString(animate) : null;
+  const effectClasses = effects?.map((effect) => `effect--${effect}`);
+  const bgClass = bg ? BACKGROUND_TONE_CLASS_MAP[bg] : undefined;
+
+  return [
+    ...componentClasses,
+    animation && `animate--${animation.name}`,
+    ...(effectClasses ?? []),
+    bgClass,
+    className,
+    classList,
+  ].filter(isTruthy);
+};
+
+/**
+ * Merges component-level styles with animation CSS custom properties and
+ * consumer-provided style props into a single semicolon-separated CSS string.
+ *
+ * When an `animate` string includes a `duration` or `delay`, they are written
+ * as `--animation-duration` and `--animation-delay` custom properties so the
+ * component's CSS can consume them via `var()`.
+ *
+ * @param componentStyles - Base inline styles defined by the component itself;
+ *   pass an empty string `''` if the component has no base styles
+ * @param props - Subset of component props that affect style output:
+ *   - `animate` — animation shorthand string (see {@link parseAnimationString})
+ *   - `style` — a CSS string or camelCase style object passed by the consumer
+ * @returns A semicolon-separated CSS string with all styles merged
+ *
+ * @example
+ * mergeStyles('display: block', {
+ *   animate: 'fadeIn 0.3s delay-1s',
+ *   style: { color: 'red' },
+ * });
+ * // 'display: block;--animation-duration: 0.3s;--animation-delay: 1s;color:red'
+ */
+export const mergeStyles = (
+  componentStyles: string,
+  props: {
+    animate?: string;
+    style?: string | Record<string, string | number>;
+  },
+): string => {
+  const { animate, style } = props;
+  const animation = animate ? parseAnimationString(animate) : null;
+
+  const animationStyles = animation
+    ? [
+        animation.duration && `--animation-duration: ${animation.duration}`,
+        animation.delay && `--animation-delay: ${animation.delay}`,
+      ]
+        .filter(isTruthy)
+        .join(";")
+    : "";
+
+  return [componentStyles, animationStyles, transformReceivedStyle(style)]
+    .filter(isTruthy)
+    .join(";");
+};
+
+/** One step smaller on the spacing scale — used for asymmetric card section padding */
+const PADDING_HALF_STEP: Record<SpacingScale, SpacingScale> = {
+  none: "none",
+  "3xs": "3xs",
+  "2xs": "3xs",
+  xs: "2xs",
+  sm: "xs",
+  md: "sm",
+  lg: "md",
+  xl: "lg",
+  "2xl": "xl",
+  "3xl": "2xl",
+  "4xl": "3xl",
+  "5xl": "4xl",
+};
+
+/**
+ * Sets `--surface-pad` and `--surface-pad-half` CSS variables from a spacing token.
+ * Used by compound Card sections whose CSS applies directional padding from these vars.
+ */
+export const compoundPadStyles = (padding: SpacingScale): string => {
+  if (padding === "none") return "--surface-pad: 0;--surface-pad-half: 0";
+  const half = PADDING_HALF_STEP[padding];
+  return `--surface-pad: var(--sp-${padding});--surface-pad-half: var(--sp-${half})`;
+};
+
+
+--- File: index.ts ---
+export * from './consts';
+export * from './types';
+export * from './props';
+export * from './functions';
+export * from './maps';
+
+
+--- File: icons/alert-circle.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="12" y1="8" x2="12" y2="12"></line>
+  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+</svg>
+
+
+--- File: icons/alert-dialog.svg ---
+<!-- src/assets/icons/alertdialog.svg -->
+<!-- Warning or error message. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="14" rx="2" stroke-width="1"/>
+  <path d="M12 9l3 5H9z" stroke-width="1" />
+</svg>
+
+--- File: icons/alert-triangle.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+  <line x1="12" y1="9" x2="12" y2="13"></line>
+  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+</svg>
+
+
+--- File: icons/alert.svg ---
+<!-- src/assets/icons/alert.svg -->
+<!-- Warning or error message. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <path d="M12 5l8 14H4z"/>
+  <path d="M12 9v6" stroke-width="1"/>
+  <circle cx="12" cy="16.5" r=".5" stroke-width="1"/>
+</svg>
+
+--- File: icons/arrow-left.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="19" y1="12" x2="5" y2="12"></line>
+  <polyline points="12 19 5 12 12 5"></polyline>
+</svg>
+
+
+--- File: icons/arrow-up-right.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 17L17 7"/>
+  <path d="M7 7h10v10"/>
+</svg>
+
+
+--- File: icons/astro.svg ---
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title>file_type_astro</title><path d="M5.9,18.847a7.507,7.507,0,0,0-.572,2.624,3.265,3.265,0,0,0,.551,1.553,7.427,7.427,0,0,0,2.093,1.681L13.1,28.119A7.332,7.332,0,0,0,15.2,29.287a3.239,3.239,0,0,0,1.5,0,7.381,7.381,0,0,0,2.117-1.16L24,24.711a7.512,7.512,0,0,0,2.117-1.688,3.241,3.241,0,0,0,.55-1.563,7.515,7.515,0,0,0-.587-2.643L21.547,4.551a3.973,3.973,0,0,0-.54-1.3,1.733,1.733,0,0,0-.7-.51,3.972,3.972,0,0,0-1.4-.122H13.005a3.932,3.932,0,0,0-1.4.125,1.713,1.713,0,0,0-.7.512,3.94,3.94,0,0,0-.535,1.3L5.9,18.848Zm13.24-13.2a3.329,3.329,0,0,1,.441,1.093l3.892,12.784a16.168,16.168,0,0,0-4.653-1.573L16.291,9.391a.331.331,0,0,0-.513-.169.323.323,0,0,0-.119.169l-2.5,8.557a16.14,16.14,0,0,0-4.674,1.579L12.393,6.743a3.281,3.281,0,0,1,.442-1.094,1.458,1.458,0,0,1,.582-.43,3.31,3.31,0,0,1,1.175-.1h2.793a3.314,3.314,0,0,1,1.176.1,1.454,1.454,0,0,1,.583.432ZM16.127,21.06a5.551,5.551,0,0,0,3.4-.923,2.8,2.8,0,0,1-.207,2.182A3.938,3.938,0,0,1,17.773,23.8c-.674.428-1.254.8-1.254,1.787a2.079,2.079,0,0,0,.209.914,2.49,2.49,0,0,1-1.535-2.3v-.061c0-.683,0-1.524-.962-1.524a1.028,1.028,0,0,0-.391.077,1.021,1.021,0,0,0-.552.551,1.03,1.03,0,0,0-.079.391,3.769,3.769,0,0,1-.988-2.644,4.206,4.206,0,0,1,.175-1.248c.4.757,1.92,1.32,3.731,1.32Z" style="fill:#ff5d01;fill-rule:evenodd"></path></g></svg>
+
+--- File: icons/avatar.svg ---
+<!-- src/assets/icons/avatar.svg -->
+<!-- Person/entity. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="9" r="3" />
+  <path d="M7 18c1.5-2 3-3 5-3s3.5 1 5 3" />
+</svg>
+
+--- File: icons/badge-group.svg ---
+<!-- src/assets/icons/badgegroup.svg -->
+<!-- Grouped badges. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+  <circle cx="5" cy="12" r="3"/>
+  <circle cx="12" cy="12" r="3"/>
+  <circle cx="19" cy="12" r="3"/>
+</svg>
+
+--- File: icons/badge.svg ---
+<!-- src/assets/icons/badge.svg -->
+<!-- Status marker. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="6" />
+</svg>
+
+--- File: icons/bento-cell.svg ---
+<!-- src/assets/icons/bentocell.svg -->
+<!-- Single emphasized cell. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="13" y="4" width="7" height="16" rx="1" stroke-width="1" opacity=".25" />
+  <rect x="4" y="13" width="7" height="7" rx="1" stroke-width="1" stroke="white"/>
+  <rect x="4" y="4" width="7" height="7" rx="1" stroke-width="1" opacity=".25" />
+
+</svg>
+
+--- File: icons/bento-grid.svg ---
+<!-- src/assets/icons/bentogrid.svg -->
+<!-- Asymmetrical grid. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="4" width="7" height="7" rx="1"/>
+  <rect x="13" y="4" width="7" height="16" rx="1"/>
+  <rect x="4" y="13" width="7" height="7" rx="1"/>
+</svg>
+
+--- File: icons/box.svg ---
+<!-- src/assets/icons/box.svg -->
+<!-- Atomic layout unit. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="6" y="6" width="12" height="12" rx="2" />
+</svg>
+
+--- File: icons/button-group.svg ---
+<!-- src/assets/icons/buttongroup.svg -->
+<!-- Grouped actions. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="8" width="16" height="8" rx="2"/>
+  <path d="M10 8v8"/>
+  <path d="M14 8v8"/>
+</svg>
+
+--- File: icons/button.svg ---
+<!-- src/assets/icons/button.svg -->
+<!-- Action. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="7" width="16" height="10" rx="5" stroke-width="1"/>
+  <path d="M11 10l4 2-4 2" stroke-width="1"/>
+</svg>
+
+--- File: icons/callout.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="14" rx="2"/>
+  <line x1="8" y1="8" x2="8" y2="16"/>
+  <line x1="11" y1="10" x2="17" y2="10"/>
+  <line x1="11" y1="14" x2="15" y2="14"/>
+</svg>
+
+--- File: icons/card-content.svg ---
+<!-- src/assets/icons/cardcontent.svg -->
+<!-- Content area. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M5 8h14"/>
+  <path d="M5 12h14"/>
+  <path d="M5 16h10"/>
+</svg>
+
+--- File: icons/card-footer.svg ---
+<!-- src/assets/icons/cardfooter.svg -->
+<!-- Footer content. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M5 12h10"/>
+  <path d="M5 16h14"/>
+</svg>
+
+--- File: icons/card-header.svg ---
+<!-- src/assets/icons/cardheader.svg -->
+<!-- Header content. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M5 8h14"/>
+  <path d="M5 12h8"/>
+</svg>
+
+--- File: icons/card.svg ---
+<!-- src/assets/icons/card.svg -->
+<!-- Structured content container. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="4" width="16" height="16" rx="2" />
+  <path d="M7 9h10" />
+</svg>
+
+--- File: icons/center.svg ---
+<!-- src/assets/icons/center.svg -->
+<!-- Center alignment. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+>
+  <path d="M12 4v16" />
+  <path d="M4 12h16" />
+  <circle cx="12" cy="12" r="1.5" />
+</svg>
+
+--- File: icons/check-circle.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+
+
+--- File: icons/check.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+
+
+--- File: icons/checkbox.svg ---
+<!-- src/assets/icons/checkbox.svg -->
+<!-- Boolean state. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="5" y="5" width="14" height="14" rx="2" />
+  <path d="M8.5 12l2.5 2.5L16 9.5" />
+</svg>
+
+--- File: icons/chevron-down.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+
+
+--- File: icons/code.svg ---
+<!-- src/assets/icons/code.svg -->
+<!-- Code - Technical content. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9 8l-4 4 4 4" />
+  <path d="M15 8l4 4-4 4" />
+</svg>
+
+--- File: icons/columns.svg ---
+<!-- src/assets/icons/columns.svg -->
+<!-- Multi-column layout. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="5" width="16" height="14" rx="2" />
+  <path d="M9.33 5v14" />
+  <path d="M14.66 5v14" />
+</svg>
+
+--- File: icons/combobox.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round">
+  <rect x="4" y="7" width="16" height="10" rx="2"/>
+  <path d="M13.5 11l2 2 2-2" stroke-width="1" />
+  <line x1="6.5" y1="13" x2="12" y2="13" stroke-width="1" />
+</svg>
+
+--- File: icons/container.svg ---
+<!-- src/assets/icons/container.svg -->
+<!-- Content boundary. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="3" y="6" width="18" height="12" rx="2" />
+</svg>
+
+--- File: icons/date-picker.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="15" rx="2"/>
+  <line x1="4" y1="9" x2="20" y2="9"/>
+  <rect x="10" y="12" width="4" height="4" rx="1"/>
+</svg>
+
+--- File: icons/description-list.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="5" y1="8" x2="10" y2="8"/>
+  <line x1="13" y1="8" x2="19" y2="8"/>
+
+  <line x1="5" y1="16" x2="10" y2="16"/>
+  <line x1="13" y1="16" x2="19" y2="16"/>
+</svg>
+
+--- File: icons/divider.svg ---
+<!-- src/assets/icons/divider.svg -->
+<!-- Separation. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+>
+  <path d="M4 12h16" />
+</svg>
+
+--- File: icons/event.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="7" cy="12" r="2"/>
+  <line x1="11" y1="12" x2="19" y2="12"/>
+</svg>
+
+--- File: icons/frame.svg ---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="4" width="16" height="16" rx="2" />
+  <rect x="8" y="8" width="8" height="8" rx="1.5" />
+</svg>
+
+--- File: icons/grid.svg ---
+<!-- src/assets/icons/grid.svg -->
+<!-- Equal layout regions. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="5" y="5" width="14" height="14" rx="2" />
+  <path d="M12 5v14" />
+  <path d="M5 12h14" />
+</svg>
+
+--- File: icons/helper-text.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="8"/>
+  <line x1="12" y1="10" x2="12" y2="16"/>
+  <circle cx="12" cy="7" r="0.75"/>
+</svg>
+
+--- File: icons/icon.svg ---
+<!-- src/assets/icons/icon.svg -->
+<!-- A simple starburst / radial. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <circle cx="12" cy="12" r="2"/>
+  <path d="M12 5v3"/>
+  <path d="M12 16v3"/>
+  <path d="M5 12h3"/>
+  <path d="M16 12h3"/>
+  <path d="M7.5 7.5l2 2"/>
+  <path d="M14.5 14.5l2 2"/>
+  <path d="M16.5 7.5l-2 2"/>
+  <path d="M9.5 14.5l-2 2"/>
+</svg>
+
+--- File: icons/image.svg ---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="5" width="16" height="14" rx="2" />
+  <path d="M7 15l3-3 3 2 4-4 2 2" />
+</svg>
+
+--- File: icons/index.ts ---
+/**
+ * src/design/icons/index.ts
+ * AUTO-GENERATED FILE
+ * DO NOT EDIT MANUALLY
+ *
+ * Design System Icon Registry
+ *
+ * This file defines the public icon contract for the design system.
+ *
+ * Architecture:
+ * - SVG files are stored in /src/design/shared/icons as the source of truth
+ * Each SVG is transformed into an importable Astro SVG component
+ * - Internal component names are prefixed with "Icon" to avoid collision
+ *   with UI components (e.g. CardHeader, TableRow)
+ * - Public API uses kebab-case string identifiers
+ *
+ * Layers:
+ * - UI Components:       CardHeader, TableRow, ButtonGroup
+ * - Icon Components:     IconCardHeader, IconTableRow, IconButtonGroup
+ * - Public Icon API:     'card-header', 'table-row', 'button-group'
+ *
+ * Usage:
+ * <Svg name="card-header" />
+ *
+ * Type Safety:
+ * - SvgName is derived from the registry keys
+ * - Invalid icon names fail at compile time
+ * Rules:
+ * - Do not manually edit this file
+ * - Treat this file as read-only output of the icon generation process
+ * - Add new icons only by adding SVG files to /src/design/shared/icons
+ * - Run the generator script to update this registry
+ */
+
+import type { SvgComponent } from 'astro/types';
+
+import IconAlertCircle from './alert-circle.svg';
+import IconAlertDialog from './alert-dialog.svg';
+import IconAlertTriangle from './alert-triangle.svg';
+import IconAlert from './alert.svg';
+import IconArrowLeft from './arrow-left.svg';
+import IconArrowUpRight from './arrow-up-right.svg';
+import IconAstro from './astro.svg';
+import IconAvatar from './avatar.svg';
+import IconBadgeGroup from './badge-group.svg';
+import IconBadge from './badge.svg';
+import IconBentoCell from './bento-cell.svg';
+import IconBentoGrid from './bento-grid.svg';
+import IconBold from './bold.svg';
+import IconBox from './box.svg';
+import IconButtonGroup from './button-group.svg';
+import IconButton from './button.svg';
+import IconCallout from './callout.svg';
+import IconCardContent from './card-content.svg';
+import IconCardFooter from './card-footer.svg';
+import IconCardHeader from './card-header.svg';
+import IconCard from './card.svg';
+import IconCenter from './center.svg';
+import IconCheckCircle from './check-circle.svg';
+import IconCheck from './check.svg';
+import IconCheckbox from './checkbox.svg';
+import IconChevronDown from './chevron-down.svg';
+import IconCode from './code.svg';
+import IconColumns from './columns.svg';
+import IconCombobox from './combobox.svg';
+import IconContainer from './container.svg';
+import IconDatePicker from './date-picker.svg';
+import IconDebug from './debug.svg';
+import IconDescriptionList from './description-list.svg';
+import IconDivider from './divider.svg';
+import IconEvent from './event.svg';
+import IconFrame from './frame.svg';
+import IconGrid from './grid.svg';
+import IconHelperText from './helper-text.svg';
+import IconHome from './home.svg';
+import IconIcon from './icon.svg';
+import IconImage from './image.svg';
+import IconInfo from './info.svg';
+import IconInline from './inline.svg';
+import IconInputGroup from './input-group.svg';
+import IconInput from './input.svg';
+import IconItalic from './italic.svg';
+import IconJavascript from './javascript.svg';
+import IconKeyValueList from './key-value-list.svg';
+import IconLink from './link.svg';
+import IconList from './list.svg';
+import IconModal from './modal.svg';
+import IconNodeJs from './node-js.svg';
+import IconPaper from './paper.svg';
+import IconPlayground from './playground.svg';
+import IconPopover from './popover.svg';
+import IconRadioGroup from './radio-group.svg';
+import IconRadio from './radio.svg';
+import IconSearch from './search.svg';
+import IconSectionLabel from './section-label.svg';
+import IconSelect from './select.svg';
+import IconSheet from './sheet.svg';
+import IconSkeleton from './skeleton.svg';
+import IconSpacer from './spacer.svg';
+import IconSparkline from './sparkline.svg';
+import IconSpinner from './spinner.svg';
+import IconStack from './stack.svg';
+import IconStrikethrough from './strikethrough.svg';
+import IconSwitch from './switch.svg';
+import IconTableCell from './table-cell.svg';
+import IconTableHead from './table-head.svg';
+import IconTableRow from './table-row.svg';
+import IconTable from './table.svg';
+import IconTailwind from './tailwind.svg';
+import IconTechStackList from './tech-stack-list.svg';
+import IconText from './text.svg';
+import IconTimeline from './timeline.svg';
+import IconTooltip from './tooltip.svg';
+import IconTreeView from './tree-view.svg';
+import IconTypescript from './typescript.svg';
+import IconUnderline from './underline.svg';
+import IconX from './x.svg';
+import IconZap from './zap.svg';
+
+export const icons = {
+  'alert-circle': IconAlertCircle,
+  'alert-dialog': IconAlertDialog,
+  'alert-triangle': IconAlertTriangle,
+  'alert': IconAlert,
+  'arrow-left': IconArrowLeft,
+  'arrow-up-right': IconArrowUpRight,
+  'astro': IconAstro,
+  'avatar': IconAvatar,
+  'badge-group': IconBadgeGroup,
+  'badge': IconBadge,
+  'bento-cell': IconBentoCell,
+  'bento-grid': IconBentoGrid,
+  'bold': IconBold,
+  'box': IconBox,
+  'button-group': IconButtonGroup,
+  'button': IconButton,
+  'callout': IconCallout,
+  'card-content': IconCardContent,
+  'card-footer': IconCardFooter,
+  'card-header': IconCardHeader,
+  'card': IconCard,
+  'center': IconCenter,
+  'check-circle': IconCheckCircle,
+  'check': IconCheck,
+  'checkbox': IconCheckbox,
+  'chevron-down': IconChevronDown,
+  'code': IconCode,
+  'columns': IconColumns,
+  'combobox': IconCombobox,
+  'container': IconContainer,
+  'date-picker': IconDatePicker,
+  'debug': IconDebug,
+  'description-list': IconDescriptionList,
+  'divider': IconDivider,
+  'event': IconEvent,
+  'frame': IconFrame,
+  'grid': IconGrid,
+  'helper-text': IconHelperText,
+  'home': IconHome,
+  'icon': IconIcon,
+  'image': IconImage,
+  'info': IconInfo,
+  'inline': IconInline,
+  'input-group': IconInputGroup,
+  'input': IconInput,
+  'italic': IconItalic,
+  'javascript': IconJavascript,
+  'key-value-list': IconKeyValueList,
+  'link': IconLink,
+  'list': IconList,
+  'modal': IconModal,
+  'node-js': IconNodeJs,
+  'paper': IconPaper,
+  'playground': IconPlayground,
+  'popover': IconPopover,
+  'radio-group': IconRadioGroup,
+  'radio': IconRadio,
+  'search': IconSearch,
+  'section-label': IconSectionLabel,
+  'select': IconSelect,
+  'sheet': IconSheet,
+  'skeleton': IconSkeleton,
+  'spacer': IconSpacer,
+  'sparkline': IconSparkline,
+  'spinner': IconSpinner,
+  'stack': IconStack,
+  'strikethrough': IconStrikethrough,
+  'switch': IconSwitch,
+  'table-cell': IconTableCell,
+  'table-head': IconTableHead,
+  'table-row': IconTableRow,
+  'table': IconTable,
+  'tailwind': IconTailwind,
+  'tech-stack-list': IconTechStackList,
+  'text': IconText,
+  'timeline': IconTimeline,
+  'tooltip': IconTooltip,
+  'tree-view': IconTreeView,
+  'typescript': IconTypescript,
+  'underline': IconUnderline,
+  'x': IconX,
+  'zap': IconZap
+} satisfies Record<string, SvgComponent>;
+
+export type SvgName = keyof typeof icons;
+
+
+--- File: icons/info.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="12" y1="16" x2="12" y2="12"></line>
+  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+</svg>
+
+
+--- File: icons/inline.svg ---
+<!-- src/assets/icons/inline.svg -->
+<!-- Horizontal flow. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+>
+  <path d="M5 12h3" />
+  <path d="M10.5 12h3" />
+  <path d="M16 12h3" />
+</svg>
+
+--- File: icons/input-group.svg ---
+<!-- src/assets/icons/inputgroup.svg -->
+<!-- Grouped input field. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="7" width="16" height="10" rx="2"/>
+  <path d="M12 7v10"/>
+</svg>
+
+--- File: icons/input.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round">
+  <rect x="4" y="7" width="16" height="10" rx="2"/>
+  <path d="M8 12h7.5"/>
+</svg>
+
+--- File: icons/italic.svg ---
+<svg fill="#ffffff" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect id="Icons" x="-64" y="0" width="1280" height="800" style="fill:none;"></rect> <g id="Icons1" serif:id="Icons"> <text id="Italic" x="23.228px" y="56.103px" style="font-family:'Roboto-Italic', 'Roboto';font-style:italic;font-size:66.631px;">i</text> <g id="Strike"> </g> <g id="H1"> </g> <g id="H2"> </g> <g id="H3"> </g> <g id="list-ul"> </g> <g id="hamburger-1"> </g> <g id="hamburger-2"> </g> <g id="list-ol"> </g> <g id="list-task"> </g> <g id="trash"> </g> <g id="vertical-menu"> </g> <g id="horizontal-menu"> </g> <g id="sidebar-2"> </g> <g id="Pen"> </g> <g id="Pen1" serif:id="Pen"> </g> <g id="clock"> </g> <g id="external-link"> </g> <g id="hr"> </g> <g id="info"> </g> <g id="warning"> </g> <g id="plus-circle"> </g> <g id="minus-circle"> </g> <g id="vue"> </g> <g id="cog"> </g> <g id="logo"> </g> <g id="radio-check"> </g> <g id="eye-slash"> </g> <g id="eye"> </g> <g id="toggle-off"> </g> <g id="shredder"> </g> <g id="spinner--loading--dots-" serif:id="spinner [loading, dots]"> </g> <g id="react"> </g> <g id="check-selected"> </g> <g id="turn-off"> </g> <g id="code-block"> </g> <g id="user"> </g> <g id="coffee-bean"> </g> <g id="coffee-beans"> <g id="coffee-bean1" serif:id="coffee-bean"> </g> </g> <g id="coffee-bean-filled"> </g> <g id="coffee-beans-filled"> <g id="coffee-bean2" serif:id="coffee-bean"> </g> </g> <g id="clipboard"> </g> <g id="clipboard-paste"> </g> <g id="clipboard-copy"> </g> <g id="Layer1"> </g> </g> </g></svg>
+
+--- File: icons/javascript.svg ---
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect x="2" y="2" width="28" height="28" fill="#FFCA28"></rect> <path d="M19 25.2879L21.0615 23.9237C21.2231 24.4313 22.2462 25.6368 23.5385 25.6368C24.8308 25.6368 25.4308 24.931 25.4308 24.463C25.4308 23.1878 24.1112 22.7382 23.4774 22.5223C23.374 22.4871 23.289 22.4581 23.2308 22.4328C23.2009 22.4198 23.1558 22.4025 23.0979 22.3804C22.393 22.1111 19.7923 21.1175 19.7923 18.2373C19.7923 15.065 22.8538 14.7002 23.5462 14.7002C23.9991 14.7002 26.1769 14.7557 27.2615 16.7939L25.2615 18.1898C24.8231 17.3015 24.0946 17.0081 23.6462 17.0081C22.5385 17.0081 22.3077 17.8201 22.3077 18.1898C22.3077 19.227 23.5112 19.6919 24.5273 20.0844C24.7932 20.1871 25.0462 20.2848 25.2615 20.3866C26.3692 20.91 28 21.7666 28 24.463C28 25.8136 26.8672 28.0002 24.0154 28.0002C20.1846 28.0002 19.1692 25.7003 19 25.2879Z" fill="#3E3E3E"></path> <path d="M9 25.5587L11.1487 24.1953C11.317 24.7026 11.9713 25.638 12.9205 25.638C13.8698 25.638 14.3557 24.663 14.3557 24.1953V15.0002H16.9982V24.1953C17.041 25.4636 16.3376 28.0002 13.2332 28.0002C10.379 28.0002 9.19242 26.3039 9 25.5587Z" fill="#3E3E3E"></path> </g></svg>
+
+--- File: icons/key-value-list.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="5" cy="8" r="1"/>
+  <line x1="8" y1="8" x2="18" y2="8"/>
+
+  <circle cx="5" cy="16" r="1"/>
+  <line x1="8" y1="16" x2="18" y2="16"/>
+</svg>
+
+--- File: icons/link.svg ---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="7" cy="12" r="2.5" />
+  <circle cx="17" cy="12" r="2.5" />
+  <path d="M9.5 12h5" />
+</svg>
+
+--- File: icons/list.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <circle cx="6" cy="7" r=".5"/>
+  <circle cx="6" cy="12" r=".5"/>
+  <circle cx="6" cy="17" r=".5"/>
+  <path d="M10 7h8"/>
+  <path d="M10 12h8"/>
+  <path d="M10 17h8"/>
+</svg>
+
+--- File: icons/modal.svg ---
+<!-- src/assets/icons/modal.svg -->
+<!-- Focused overlay. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <rect x="7" y="7" width="10" height="10" rx="1.5" />
+</svg>
+
+--- File: icons/node-js.svg ---
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.1725 2.29872C16.4627 1.89953 15.5373 1.90132 14.8269 2.29872C11.2689 4.26227 7.71082 6.22641 4.15216 8.18906C3.45969 8.55335 2.99264 9.29698 3.00009 10.0688V21.9328C2.99509 22.7197 3.48622 23.4705 4.19655 23.8298C5.21871 24.3736 6.2118 24.9726 7.25244 25.4802C8.45451 26.0709 9.95843 26.2015 11.1752 25.5855C12.1629 25.075 12.6016 23.9395 12.6003 22.896C12.6083 18.9806 12.6016 15.0651 12.6034 11.1496C12.6269 10.9756 12.4962 10.7896 12.3064 10.7938C11.8517 10.7866 11.3964 10.7896 10.9417 10.7926C10.7699 10.7764 10.6022 10.9191 10.6152 11.0918C10.6091 14.982 10.6164 18.8734 10.6115 22.7642C10.6214 23.3024 10.2578 23.8196 9.73913 24.0014C8.5412 24.4213 5.12198 22.2012 5.12198 22.2012C4.9965 22.1431 4.91682 22.007 4.92912 21.8718C4.92912 17.9576 4.92973 14.0433 4.92912 10.1297C4.91187 9.97191 5.00912 9.8298 5.15402 9.76538C8.70033 7.8134 12.2448 5.85654 15.7911 3.90336C15.9143 3.82115 16.086 3.8214 16.2089 3.90396C19.7552 5.85654 23.3003 7.81161 26.8472 9.76368C26.9926 9.828 27.0857 9.9725 27.0709 10.1297C27.0703 14.0433 27.0721 17.9576 27.0697 21.8713C27.0802 22.0098 27.0086 22.144 26.8793 22.2048C23.3661 24.1462 19.8129 26.025 16.3315 28.0228C16.1796 28.1099 16.0075 28.2086 15.8373 28.1126C14.9218 27.6062 14.0174 27.0801 13.1049 26.5688C13.0057 26.5069 12.8794 26.4803 12.7759 26.5496C12.3668 26.7652 11.982 26.9398 11.5122 27.1258C10.8524 27.387 10.9578 27.4938 11.5529 27.8405C12.62 28.4444 13.6889 29.0459 14.756 29.6504C15.4585 30.0888 16.4024 30.12 17.1275 29.7149C20.6861 27.7538 24.2436 25.7904 27.8029 23.8293C28.5113 23.468 29.0049 22.7202 28.9999 21.9327V10.0688C29.0068 9.31264 28.5576 8.58227 27.886 8.21259C24.3156 6.23947 20.7435 4.27064 17.1725 2.29872Z" fill="#8CC84B"></path> <path d="M22.5419 11.2062C21.1452 10.459 19.4836 10.4192 17.9315 10.5169C16.8102 10.6277 15.6309 10.9371 14.814 11.7409C13.9761 12.5489 13.7937 13.8537 14.1917 14.9085C14.4769 15.6539 15.1948 16.1386 15.9372 16.395C16.8935 16.7326 17.8979 16.837 18.9026 16.9414C19.819 17.0366 20.7357 17.1319 21.6165 17.4042C21.9763 17.5234 22.3953 17.7058 22.5055 18.0973C22.6073 18.5609 22.4957 19.0998 22.1193 19.4219C20.9237 20.3682 17.5979 20.2232 16.4166 19.4784C15.939 19.1611 15.7332 18.5994 15.6495 18.0641C15.6402 17.8973 15.5059 17.7443 15.3248 17.757C14.8713 17.7516 14.4178 17.7528 13.9643 17.7564C13.8061 17.7431 13.6416 17.8557 13.6329 18.0172C13.5397 20.4689 15.7914 21.5377 17.9039 21.773C19.1108 21.888 20.3442 21.8814 21.5327 21.6224C22.4261 21.419 23.3219 21.0444 23.9369 20.3563C24.6953 19.52 24.8444 18.2749 24.5043 17.2332C24.2443 16.4559 23.5012 15.9573 22.7416 15.7008C21.7086 15.3466 20.4844 15.1562 19.5488 15.0671C18.1889 14.9376 16.5729 14.9905 16.188 14.0969C16.0345 13.629 16.1651 13.048 16.5951 12.7602C17.7328 11.9885 20.0483 12.091 21.2265 12.6675C21.7675 12.9384 22.081 13.4948 22.2104 14.0565C22.2344 14.2215 22.3454 14.3937 22.5364 14.3865C22.9868 14.3955 23.4372 14.3889 23.8875 14.3895C24.0422 14.4003 24.2116 14.313 24.2418 14.1546C24.2227 12.9806 23.6232 11.7788 22.5419 11.2062Z" fill="#8CC84B"></path> </g></svg>
+
+--- File: icons/paper.svg ---
+<!-- src/assets/icons/paper.svg -->
+<!-- Paper - Represents a surface without implying content. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="5" y="4" width="14" height="16" rx="2" />
+</svg>
+
+--- File: icons/popover.svg ---
+<!-- src/assets/icons/popover.svg -->
+<!-- Popover - Slide-on panel. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="6" y="4" width="12" height="9" rx="1.5"/>
+  <path d="M12 13v3"/>
+  <path d="M10 16l2 3 2-3"/>
+</svg>
+
+--- File: icons/radio-group.svg ---
+<!-- src/assets/icons/radiogroup.svg -->
+<!-- Grouped selection. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+  <circle cx="7" cy="12" r="2"/>
+  <circle cx="12" cy="12" r="2"/>
+  <circle cx="17" cy="12" r="2"/>
+</svg>
+
+--- File: icons/radio.svg ---
+<!-- src/assets/icons/radio.svg -->
+<!-- Single selection. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="7" />
+  <circle cx="12" cy="12" r="2" />
+</svg>
+
+--- File: icons/search.svg ---
+<!-- src/assets/icons/search.svg -->
+<!-- Search - Scan for content. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <circle cx="10" cy="10" r="5"/>
+  <path d="M14 14l5 5"/>
+</svg>
+
+--- File: icons/section-label.svg ---
+<!-- src/assets/icons/sectionlabel.svg -->
+<!-- Section label. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M5 10h14" />
+  <circle cx="8" cy="14" r=".5"/>
+</svg>
+
+--- File: icons/select.svg ---
+<!-- src/assets/icons/select.svg -->
+<!-- Choice list. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="6" width="16" height="12" rx="2" />
+  <path d="M9 10l3 4 3-4" />
+</svg>
+
+--- File: icons/sheet.svg ---
+<!-- src/assets/icons/sheet.svg -->
+<!-- Sheet - Slide-in panel. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="4" width="16" height="16" rx="2"/>
+  <path d="M8 4v16"/>
+</svg>
+
+--- File: icons/skeleton.svg ---
+<!-- src/assets/icons/skeleton.svg -->
+<!-- Loading indicator. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M5 8h14"/>
+  <path d="M5 12h10"/>
+  <path d="M5 16h12"/>
+</svg>
+
+--- File: icons/spacer.svg ---
+<!-- src/assets/icons/spacer.svg -->
+<!-- Spacer - Pure whitespace. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M7 12h3"/>
+  <path d="M14 12h3"/>
+</svg>
+
+--- File: icons/sparkline.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="4 15 8 12 12 14 16 8 20 10"/>
+</svg>
+
+--- File: icons/spinner.svg ---
+<!-- src/assets/icons/spinner.svg -->
+<!-- Loading indicator. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+  <path d="M12 5a7 7 0 1 1-7 7"/>
+</svg>
+
+--- File: icons/stack.svg ---
+<!-- src/assets/icons/stack.svg -->
+<!-- Vertical flow. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+>
+  <path d="M7 6h10" />
+  <path d="M7 12h10" />
+  <path d="M7 18h10" />
+</svg>
+
+--- File: icons/strikethrough.svg ---
+<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 4.75C5 4.45531 5.16258 4.05336 5.69626 3.66792C6.22795 3.28392 7.03762 3 8 3C9.75028 3 10.7599 3.87319 10.9539 4.4663L13.8053 3.5337C13.0616 1.26011 10.5055 0 8 0C6.4771 0 5.03677 0.443615 3.93978 1.23588C2.84478 2.02672 2 3.24977 2 4.75C2 5.59786 2.26982 6.35719 2.70214 7H0V9H16V7H10.7035C9.87766 6.67447 8.95507 6.5 8 6.5C7.03762 6.5 6.22795 6.21608 5.69626 5.83208C5.16258 5.44664 5 5.04469 5 4.75Z" fill="#ffffff"></path> <path d="M11 11.25C11 11.1732 10.989 11.0892 10.9632 11H13.9921C13.9973 11.0824 14 11.1658 14 11.25C14 12.7502 13.1552 13.9733 12.0602 14.7641C10.9632 15.5564 9.5229 16 8 16C5.49455 16 2.93836 14.7399 2.19473 12.4663L5.0461 11.5337C5.24008 12.1268 6.24972 13 8 13C8.96238 13 9.77205 12.7161 10.3037 12.3321C10.8374 11.9466 11 11.5447 11 11.25Z" fill="#ffffff"></path> </g></svg>
+
+--- File: icons/switch.svg ---
+<!-- src/assets/icons/switch.svg -->
+<!-- Toggle state. -->
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="4" y="8" width="16" height="8" rx="4" />
+  <circle cx="16" cy="12" r="2.5" />
+</svg>
+
+--- File: icons/table-cell.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="5" stroke-width="1" width="16" height="14" rx="1.5"/>
+  <path d="M4 10h16" stroke-width="1" />
+  <path d="M9 5v14" stroke-width="1" />
+  <path d="M15 5v14" stroke-width="1" />
+  <path d="M4 14.5h16" stroke-width="1" />
+  <rect x="15.5" y="14.5" width="4" height="4" stroke-width="1" stroke-linecap="miter" fill="currentColor" opacity=".8" /> 
+</svg>
+
+--- File: icons/table-head.svg ---
+<!-- src/assets/icons/tablehead.svg -->
+<!-- Header row. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="14" rx="0" stroke-width="1"/>
+  <rect x="4" y="5" width="16" height="4" opacity=".8" stroke-linejoin="miter" fill="currentColor" stroke-width="1"/>
+  <path d="M9 9.75v9" stroke-width="1" />
+  <path d="M15 9.75v9" stroke-width="1" />
+  <path d="M4 10h16" stroke-width="1" />
+</svg>
+
+--- File: icons/table-row.svg ---
+<!-- src/assets/icons/tablerow.svg -->
+<!-- Structured data. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="14" rx="0" stroke-width="1"/>
+  <rect x="4" y="15" width="16" height="4" opacity=".8" stroke-linejoin="miter" fill="currentColor" stroke-width="1"/>
+  <path d="M9 5.5v9" stroke-width="1" />
+  <path d="M15 5.5v9" stroke-width="1" />
+  <path d="M4 10h16" stroke-width="1" />
+</svg>
+
+--- File: icons/table.svg ---
+<!-- src/assets/icons/table.svg -->
+<!-- Structured data. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+  <rect x="4" y="5" width="16" height="14" rx="1.5"/>
+  <path d="M4 10h16"/>
+  <path d="M10 5v14"/>
+  <path d="M15 5v14"/>
+</svg>
+
+--- File: icons/tailwind.svg ---
+<svg viewBox="0 -51 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <linearGradient x1="-2.77777778%" y1="32%" x2="100%" y2="67.5555556%" id="linearGradient-1"> <stop stop-color="#2298BD" offset="0%"> </stop> <stop stop-color="#0ED7B5" offset="100%"> </stop> </linearGradient> </defs> <g> <path d="M128,-1.0658141e-14 C93.8666667,-1.0658141e-14 72.5333333,17.0666667 64,51.2 C76.8,34.1333333 91.7333333,27.7333333 108.8,32 C118.537481,34.4343704 125.497363,41.4985481 133.201067,49.3184 C145.750756,62.0567704 160.275437,76.8 192,76.8 C226.133333,76.8 247.466667,59.7333333 256,25.6 C243.2,42.6666667 228.266667,49.0666667 211.2,44.8 C201.462519,42.3656296 194.502637,35.3014519 186.798933,27.4816 C174.249244,14.7432296 159.724563,-1.0658141e-14 128,-1.0658141e-14 Z M64,76.8 C29.8666667,76.8 8.53333333,93.8666667 0,128 C12.8,110.933333 27.7333333,104.533333 44.8,108.8 C54.5374815,111.23437 61.497363,118.298548 69.2010667,126.1184 C81.7507556,138.85677 96.275437,153.6 128,153.6 C162.133333,153.6 183.466667,136.533333 192,102.4 C179.2,119.466667 164.266667,125.866667 147.2,121.6 C137.462519,119.16563 130.502637,112.101452 122.798933,104.2816 C110.249244,91.5432296 95.724563,76.8 64,76.8 Z" fill="url(#linearGradient-1)"> </path> </g> </g></svg>
+
+--- File: icons/tech-stack-list.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5" y="5" width="4" height="4" rx="1"/>
+  <line x1="12" y1="7" x2="19" y2="7"/>
+
+  <rect x="5" y="10" width="4" height="4" rx="1"/>
+  <line x1="12" y1="12" x2="19" y2="12"/>
+
+  <rect x="5" y="15" width="4" height="4" rx="1"/>
+  <line x1="12" y1="17" x2="19" y2="17"/>
+</svg>
+
+--- File: icons/text.svg ---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+>
+  <path d="M5 7h14" />
+  <path d="M5 12h10" />
+  <path d="M5 17h12" />
+</svg>
+
+--- File: icons/timeline.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="6" cy="6" r="1.5"/>
+  <circle cx="6" cy="12" r="1.5"/>
+  <circle cx="6" cy="18" r="1.5"/>
+
+  <line x1="6" y1="7.5" x2="6" y2="16.5"/>
+
+  <line x1="10" y1="6" x2="18" y2="6"/>
+  <line x1="10" y1="12" x2="18" y2="12"/>
+  <line x1="10" y1="18" x2="18" y2="18"/>
+</svg>
+
+--- File: icons/tooltip.svg ---
+<!-- src/assets/icons/tooltip.svg -->
+<!-- Contextual information. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 6h12v8H13l-3 4v-4H6z" />
+</svg>
+
+--- File: icons/tree-view.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4" y="4" width="4" height="4" rx="1"/>
+  <rect x="16" y="4" width="4" height="4" rx="1"/>
+  <rect x="16" y="16" width="4" height="4" rx="1"/>
+
+  <path d="M8 6h4v10h4"/>
+</svg>
+
+--- File: icons/typescript.svg ---
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title>file_type_typescript_official</title><rect x="2" y="2" width="28" height="28" rx="1.312" style="fill:#3178c6"></rect><path d="M18.245,23.759v3.068a6.492,6.492,0,0,0,1.764.575,11.56,11.56,0,0,0,2.146.192,9.968,9.968,0,0,0,2.088-.211,5.11,5.11,0,0,0,1.735-.7,3.542,3.542,0,0,0,1.181-1.266,4.469,4.469,0,0,0,.186-3.394,3.409,3.409,0,0,0-.717-1.117,5.236,5.236,0,0,0-1.123-.877,12.027,12.027,0,0,0-1.477-.734q-.6-.249-1.08-.484a5.5,5.5,0,0,1-.813-.479,2.089,2.089,0,0,1-.516-.518,1.091,1.091,0,0,1-.181-.618,1.039,1.039,0,0,1,.162-.571,1.4,1.4,0,0,1,.459-.436,2.439,2.439,0,0,1,.726-.283,4.211,4.211,0,0,1,.956-.1,5.942,5.942,0,0,1,.808.058,6.292,6.292,0,0,1,.856.177,5.994,5.994,0,0,1,.836.3,4.657,4.657,0,0,1,.751.422V13.9a7.509,7.509,0,0,0-1.525-.4,12.426,12.426,0,0,0-1.9-.129,8.767,8.767,0,0,0-2.064.235,5.239,5.239,0,0,0-1.716.733,3.655,3.655,0,0,0-1.171,1.271,3.731,3.731,0,0,0-.431,1.845,3.588,3.588,0,0,0,.789,2.34,6,6,0,0,0,2.395,1.639q.63.26,1.175.509a6.458,6.458,0,0,1,.942.517,2.463,2.463,0,0,1,.626.585,1.2,1.2,0,0,1,.23.719,1.1,1.1,0,0,1-.144.552,1.269,1.269,0,0,1-.435.441,2.381,2.381,0,0,1-.726.292,4.377,4.377,0,0,1-1.018.105,5.773,5.773,0,0,1-1.969-.35A5.874,5.874,0,0,1,18.245,23.759Zm-5.154-7.638h4V13.594H5.938v2.527H9.92V27.375h3.171Z" style="fill:#ffffff;fill-rule:evenodd"></path></g></svg>
+
+--- File: icons/underline.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6 4h2v8a4 4 0 0 0 8 0v-8h2"/>
+  <line x1="6" y1="20" x2="18" y2="20"/>
+</svg>
+
+--- File: icons/x.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="18" y1="6" x2="6" y2="18"></line>
+  <line x1="6" y1="6" x2="18" y2="18"></line>
+</svg>
+
+
+--- File: icons/zap.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+
+
+--- File: icons/bold.svg ---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6 4h8a4 4 0 0 1 0 8h-8V4z" stroke-width="4"/>
+  <path d="M6 12h9a4 4 0 0 1 0 8h-9V12z" stroke-width="4"/>
+</svg>
+
+--- File: icons/home.svg ---
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+>
+  <path d="M4 10.5L12 4L20 10.5" />
+  <path d="M6 9.5V20H18V9.5" />
+  <path d="M10 20V14H14V20" />
+</svg>
+
+
+--- File: icons/playground.svg ---
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M10 4H14" />
+  <path d="M12 4V8" />
+  <path d="M8 20H16C17.7 20 19 18.7 19 17C19 16 18.6 15.1 17.9 14.4L12 8L6.1 14.4C5.4 15.1 5 16 5 17C5 18.7 6.3 20 8 20Z" />
+</svg>
+
+--- File: icons/debug.svg ---
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 6V4" />
+  <path d="M8 8L6 6" />
+  <path d="M16 8L18 6" />
+
+  <rect x="8" y="8" width="8" height="10" rx="4" />
+
+  <line x1="4" y1="10" x2="8" y2="10" />
+  <line x1="16" y1="10" x2="20" y2="10" />
+
+  <line x1="4" y1="16" x2="8" y2="14" />
+  <line x1="16" y1="14" x2="20" y2="16" />
+</svg>
+
+--- File: scripts/generate-icons.ts ---
+/**
+ * scripts/generate-icons.ts
+ * Generates a typed registry for design-system SVG icons.
+ * - Scans /src/design/icons for SVG files
+ * - Generates a kebab-case → SvgComponent registry
+ * - Uses a dedicated Icon namespace for internal imports
+ * - Produces a safe SvgName union type
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+
+const ROOT = process.cwd();
+const ICON_DIR = path.join(ROOT, 'src/design/shared/icons');
+const OUTPUT_FILE = path.join(ICON_DIR, 'index.ts');
+
+const files = fs
+  .readdirSync(ICON_DIR)
+  .filter((f: string) => f.endsWith('.svg'))
+  .sort();
+
+const imports: string[] = [];
+const entries: string[] = [];
+
+for (const file of files) {
+  const name = file.replace('.svg', '');
+
+  /**
+   * Convert kebab-case filename into a safe internal import name.
+   * We DO NOT expose this externally.
+   *
+   * example:
+   * card-header → IconCardHeader
+   */
+  const importName = name
+    .split('-')
+    .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+
+  const safeImportName = `Icon${importName}`;
+
+  imports.push(
+    `import ${safeImportName} from './${file}';`
+  );
+
+  entries.push(
+    `  '${name}': ${safeImportName}`
+  );
+}
+
+const output = `/**
+ * src/design/icons/index.ts
+ * AUTO-GENERATED FILE
+ * DO NOT EDIT MANUALLY
+ *
+ * Design System Icon Registry
+ *
+ * This file defines the public icon contract for the design system.
+ *
+ * Architecture:
+ * - SVG files are stored in /src/design/shared/icons as the source of truth
+ * Each SVG is transformed into an importable Astro SVG component
+ * - Internal component names are prefixed with "Icon" to avoid collision
+ *   with UI components (e.g. CardHeader, TableRow)
+ * - Public API uses kebab-case string identifiers
+ *
+ * Layers:
+ * - UI Components:       CardHeader, TableRow, ButtonGroup
+ * - Icon Components:     IconCardHeader, IconTableRow, IconButtonGroup
+ * - Public Icon API:     'card-header', 'table-row', 'button-group'
+ *
+ * Usage:
+ * <Svg name="card-header" />
+ *
+ * Type Safety:
+ * - SvgName is derived from the registry keys
+ * - Invalid icon names fail at compile time
+ * Rules:
+ * - Do not manually edit this file
+ * - Treat this file as read-only output of the icon generation process
+ * - Add new icons only by adding SVG files to /src/design/shared/icons
+ * - Run the generator script to update this registry
+ */
+
+import type { SvgComponent } from 'astro/types';
+
+${imports.join('\n')}
+
+export const icons = {
+${entries.join(',\n')}
+} satisfies Record<string, SvgComponent>;
+
+export type SvgName = keyof typeof icons;
+`;
+
+fs.writeFileSync(OUTPUT_FILE, output, 'utf8');
+
+console.log(`Generated ${files.length} icons`);
+
+--- File: effects.css ---
+/* Global Effect Utilities */
+
+/* 1. Shimmer Effect */
+.effect--shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.effect--shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: effect-shimmer-anim 2.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes effect-shimmer-anim {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* 2. Glass Effect */
+.effect--glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. Glow Effect */
+.effect--glow {
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb, 100, 150, 255), 0.5),
+              0 0 20px rgba(var(--color-primary-rgb, 100, 150, 255), 0.3);
+  animation: effect-glow-anim 2s infinite alternate;
+}
+
+@keyframes effect-glow-anim {
+  from {
+    box-shadow: 0 0 10px rgba(var(--color-primary-rgb, 100, 150, 255), 0.5),
+                0 0 20px rgba(var(--color-primary-rgb, 100, 150, 255), 0.3);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb, 100, 150, 255), 0.8),
+                0 0 30px rgba(var(--color-primary-rgb, 100, 150, 255), 0.5);
+  }
+}
+
+/* 4. Ping Effect */
+.effect--ping {
+  position: relative;
+}
+
+.effect--ping::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-color: inherit;
+  animation: effect-ping-anim 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+@keyframes effect-ping-anim {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+
+--- File: shared.md ---
+# Shared
+
+The Shared category acts as the foundational nervous system of the entire design system. It does not contain renderable components itself; rather, it contains the critical types, constants, utilities, and base prop definitions that enforce consistency, type safety, and architectural DRYness (Don't Repeat Yourself) across all other component directories.
+
+This document serves as a guide for understanding how to leverage the shared infrastructure when creating or modifying components, ensuring they properly hook into the design system's global tokens, animations, and effects.
+
+**Major Areas Documented:**
+- **Base Properties & Composition**: How `BaseComponentProps` standardizes HTML attributes, animations, and system-wide effects across all UI components.
+- **Style & Class Resolution**: How `mergeClasses` and `mergeStyles` handle complex string parsing, array filtering, and animation custom property injection securely.
+- **Type Safety & Mapping**: How system-wide types (`DisplaySize`, `TextTone`) are defined once, exported, and mapped cleanly to CSS utilities via constant objects and mapped types.
+- **Global Icon Registry**: The automated SVG registry system that guarantees type safety and scalable icon integration.
+
+## Architecture & Modules
+
+Instead of components, the Shared directory is divided into module domains:
+
+### `props.ts`
+
+#### Component API Standardization
+Defines `BaseComponentProps` and `AnimationProps`. Every single UI component in the design system MUST extend `BaseComponentProps` (usually via `Omit<HTMLAttributes<"...">, keyof BaseComponentProps>`). 
+
+#### Solves Prop Duplication
+By centralizing the definition of `class`, `class:list`, `style`, `animate`, `effects`, and `onScroll`, we eliminate the need to manually declare standard HTML behaviors in every single `.astro` component. This guarantees that if the system needs a new global prop (like `effects`), it is added here and instantly becomes available to every component.
+
+---
+
+### `functions.ts`
+
+#### The Resolution Engine
+Contains the critical utility functions `mergeClasses`, `mergeStyles`, `parseAnimationString`, and `transformReceivedStyle`.
+
+#### Solves Brittle Class Concatenation
+Instead of manually interpolating strings in component templates (`class={\`btn ${size} ${className}\`}`), components pass an array of internal rules alongside `Astro.props` into `mergeClasses`. The function strips falsy values, parses the `animate` string to extract the correct `.animate--*` utility class, parses the `effects` array, and seamlessly merges in any user-provided `class` or `class:list`. `mergeStyles` performs the equivalent operation for inline styles and CSS variable injections (like `--animation-delay`).
+
+---
+
+### `types.ts` & `consts.ts`
+
+#### Centralized Token Taxonomy
+`consts.ts` defines readonly arrays of the system's exact token names (e.g., `DISPLAY_SIZES = ['sm', 'md', 'lg'] as const`). `types.ts` dynamically derives TypeScript union types from these arrays (e.g., `export type DisplaySize = typeof DISPLAY_SIZES[number]`).
+
+#### Solves Type Drift
+This pattern ensures that TypeScript definitions and JavaScript runtime values are always perfectly in sync. When components need a size prop, they import `DisplaySize` rather than hardcoding `'sm' | 'md' | 'lg'`, preventing typos and standardizing the token vernacular system-wide.
+
+---
+
+### `maps.ts`
+
+#### Static Class Mapping
+Contains objects that safely map prop values to their corresponding utility classes or behaviors without relying on dangerous string interpolation at runtime (e.g., mapping a specific semantic intent to a specific hex color variable).
+
+---
+
+### `icons/` & `scripts/generate-icons.ts`
+
+#### Type-Safe SVG Automation
+The `icons/` directory acts as the single source of truth for raw `.svg` files. The `generate-icons.ts` script automatically scans this directory and outputs an `index.ts` file containing a static registry object (`icons`) and a derived union type (`SvgName`).
+
+#### Solves SVG Component Maintenance
+This eliminates the need to manually wrap every SVG in an Astro component or manually type available icon strings. When a new icon is dropped into the folder, running `pnpm gen:icons` instantly registers it and makes it available to the `<Icon>` component securely.
+
+---
+
+### `effects.css`
+
+#### Global Visual Modifiers
+Contains globally accessible utility classes for persistent visual modifications (`.effect--shimmer`, `.effect--glass`, `.effect--glow`, `.effect--ping`).
+
+#### Solves Duplicate Visuals
+Rather than building a "Glass Card" component and a "Glass Button" component, the effects are abstracted to CSS utilities. Because `BaseComponentProps` exposes the `effects` array, any component can become a glassmorphic component by passing `effects={['glass']}`.
+
+
+--- File: background.css ---
+/* Background Tone Utilities
+ * Maps `bg` prop values to CSS background-color declarations.
+ * Layer tones (0-5) use --layer--N variables from styles/vars.css.
+ */
+
+/* Layer tones (mapped to neutral palette) */
+.bg-0 { background-color: var(--layer--0); }
+.bg-1 { background-color: var(--layer--1); }
+.bg-2 { background-color: var(--layer--2); }
+.bg-3 { background-color: var(--layer--3); }
+.bg-4 { background-color: var(--layer--4); }
+.bg-5 { background-color: var(--layer--5); }
+
+/* Semantic tones */
+.bg-primary { background-color: var(--color-primary, hsl(220 90% 56%)); }
+.bg-secondary { background-color: var(--color-secondary, hsl(280 70% 60%)); }
+.bg-accent { background-color: var(--color-accent, hsl(340 80% 58%)); }
+
+/* Keyword tones */
+.bg-white { background-color: white; }
+.bg-black { background-color: black; }
+.bg-default { background-color: var(--bg-default, var(--layer--1)); }
+.bg-transparent { background-color: transparent; }
+.bg-current { background-color: currentColor; }
+.bg-inherit { background-color: inherit; }
+
+
+--- File: consts.ts ---
+/** src/design/shared/consts.ts */
+
+// ---------------------------------------------------------------------------
+// Regex
+// ---------------------------------------------------------------------------
+
+/** Matches valid CSS time values: `0.3s`, `300ms`, `1s` */
+export const TIME_VALUE_RE = /^\d+(\.\d+)?(s|ms)$/;
+
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
+
+export const FONT = {
+  sizes: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "base",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  weights: [
+    "xlt",
+    "lt",
+    "md",
+    "bold",
+    "xbold",
+    "black",
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+    "900",
+  ] as const,
+  families: ["sans", "serif", "mono", "display"] as const,
+  lineHeights: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  letterSpacings: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  whiteSpaces: [
+    "normal",
+    "nowrap",
+    "pre",
+    "pre-wrap",
+    "pre-line",
+    "break-spaces",
+  ] as const,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Color / Tone
+// ---------------------------------------------------------------------------
+
+export const TONE = {
+  text: [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "primary",
+    "secondary",
+    "accent",
+    "white",
+    "black",
+    "default",
+    "muted",
+    "subtle",
+    "danger",
+    "success",
+    "warning",
+    "info",
+    "currentColor",
+    "inherit",
+  ] as const,
+  bg: [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "primary",
+    "secondary",
+    "accent",
+    "white",
+    "black",
+    "default",
+    "transparent",
+    "currentColor",
+    "inherit",
+    "danger",
+    "success",
+    "warning",
+    "info",
+  ] as const,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Alignment
+// ---------------------------------------------------------------------------
+
+export const ALIGN = {
+  x: ["left", "center", "right", "justify", "start", "end"] as const,
+  y: [
+    "super",
+    "top",
+    "text-top",
+    "baseline",
+    "middle",
+    "bottom",
+    "text-bottom",
+    "sub",
+  ] as const,
+  layout: [
+    "start",
+    "center",
+    "end",
+    "stretch",
+    "between",
+    "around",
+    "evenly",
+    "baseline",
+  ] as const,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Spacing
+// ---------------------------------------------------------------------------
+
+export const SPACING = {
+  scale: [
+    "3xs",
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "none",
+  ] as const,
+  gap: ["2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"] as const,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export const COMPONENT = {
+  layers: ["-1", "0", "1", "2", "3", "4", "5"] as const,
+  radii: [
+    "none",
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "full",
+  ] as const,
+  effects: ["shimmer", "glass", "glow", "ping"] as const,
+} as const;
+
+
+
+--- File: props.ts ---
+
+/**
+ * Props interfaces for the components in the library.
+ * 
+ */
+import type { HTMLTag } from 'astro/types';
+import type { AnimationName } from '../animation/Animation.types';
+import type { GapScale, LayoutAlign} from './types.ts';
+
+
+export interface CommonHTMLProps {
+  /*** The one string to rule them all, and in the shadow DOM bind them. */
+  id?: string;
+  
+  /*** This is the styling hook, not your D&D character's vocation. */
+  class?: string;
+  
+  /*** Use only when the cascade has failed you. */
+  style?: string | Record<string, string | number>;
+  
+  /*** Framework utility for conditional/array-based class merging (acts like clsx). */
+  'class:list'?: (string | Record<string, boolean> | undefined | null | false)[] | Record<string, boolean>;
+
+  /*** The catch-all trapdoor for native HTML attributes, ARIA roles, and `data-*` props. */
+  [key: string]: any;
+}
+
+export interface BaseComponentProps extends CommonHTMLProps {
+  
+  /*** Animation name, optional duration & delay. See `../animation/animate.css`
+  *  - accepts any of the following formats:
+  *
+  * @example
+  * animate="sparkle"
+  * animate="sparkle 2s"
+  * animate="sparkle 1.5s delay-1s"
+  * animate="bounce 3s delay-0.5s"
+  */
+  animate?: AnimationName | string;
+
+  /*** animate on scroll? */
+  scrollAnimation?: boolean;
+
+  /*** Type assertion - tells typescript to treat the component as this type of element */
+  as?: HTMLTag;
+}
+
+/**
+ * Shared props for components that use flexbox layout.
+ * Maps to flex utility classes for alignment, gap, and wrapping.
+ */
+export interface FlexboxProps extends BaseComponentProps {
+  /** Gap between children; maps to `gap-*` utility classes */
+  gap?: GapScale;
+  /** Main-axis (horizontal) alignment; maps to `justify-*` utility classes */
+  x?: LayoutAlign;
+  /** Cross-axis (vertical) alignment; maps to `items-*` utility classes */
+  y?: LayoutAlign;
+  /** Whether children should wrap; `'reverse'` applies `flex-wrap-reverse` */
+  wrap?: boolean | 'reverse';
+}
+
+export interface AnimationConfig {
+  name: AnimationName;
+  duration: string;
+  delay: string;
+}
+
+export interface FontStyleProps {
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  uppercase?: boolean;
+  lowercase?: boolean;
+}
+
+--- File: types.ts ---
+import type { FONT, TONE, ALIGN, SPACING, COMPONENT } from "./consts";
+
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
+export type FontSize = (typeof FONT.sizes)[number];
+export type FontWeight = (typeof FONT.weights)[number];
+export type FontFamily = (typeof FONT.families)[number];
+export type LineHeight = (typeof FONT.lineHeights)[number];
+export type LetterSpacing = (typeof FONT.letterSpacings)[number];
+export type WhiteSpace = (typeof FONT.whiteSpaces)[number];
+
+// ---------------------------------------------------------------------------
+// Color / Tone
+// ---------------------------------------------------------------------------
+export type TextTone = (typeof TONE.text)[number];
+export type BackgroundTone = (typeof TONE.bg)[number];
+
+// ---------------------------------------------------------------------------
+// Alignment
+// ---------------------------------------------------------------------------
+export type XAlign = (typeof ALIGN.x)[number];
+export type YAlign = (typeof ALIGN.y)[number];
+export type LayoutAlign = (typeof ALIGN.layout)[number];
+
+// ---------------------------------------------------------------------------
+// Spacing
+// ---------------------------------------------------------------------------
+export type SpacingScale = (typeof SPACING.scale)[number];
+export type GapScale = (typeof SPACING.gap)[number];
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+export type ComponentLayer = (typeof COMPONENT.layers)[number];
+export type ComponentRadius = (typeof COMPONENT.radii)[number];
+export type ComponentEffect = (typeof COMPONENT.effects)[number];
+
+// ---------------------------------------------------------------------------
+// Misc
+// ---------------------------------------------------------------------------
+
+/** A plain CSS-in-JS style object with camelCase keys */
+export type InlineStyle = Record<string, string | number>;
+
+
+--- File: maps.ts ---
+import type {
+  FontSize,
+  TextTone,
+  BackgroundTone,
+  XAlign,
+  YAlign,
+  SpacingScale,
+  ComponentRadius,
+  FontWeight,
+  LineHeight,
+  LetterSpacing,
+} from "./types";
+
+import type { LayoutAlign } from "./types";
+// ---------------------------------------------------------------------------
+// Internal lookup tables
+// ---------------------------------------------------------------------------
+
+/**
+ * Maps numeric font size shorthand keys to their named token equivalents.
+ * Allows consumers to pass either `'0'` or `'2xs'`, `'4'` or `'base'`, etc.
+ */
+const FONT_SIZE_ALIASES: Record<string, string> = {
+  "0": "2xs",
+  "1": "xs",
+  "2": "sm",
+  "3": "md",
+  "4": "base",
+  "5": "lg",
+  "6": "xl",
+  "7": "2xl",
+  "8": "3xl",
+  "9": "4xl",
+  "10": "5xl",
+  "11": "6xl",
+};
+
+/**
+ * Maps numeric gap shorthand keys to their named token equivalents.
+ * Allows consumers to pass either `'0'` or `'2xs'`, `'3'` or `'md'`, etc.
+ */
+const GAP_ALIASES: Record<string, string> = {
+  "0": "2xs",
+  "1": "xs",
+  "2": "sm",
+  "3": "md",
+  "4": "lg",
+  "5": "xl",
+  "6": "2xl",
+  "7": "3xl",
+  "8": "4xl",
+  "9": "5xl",
+};
+
+// ---------------------------------------------------------------------------
+// Class maps
+// ---------------------------------------------------------------------------
+
+/**
+ * CSS class maps for values that have a 1:1 token → class relationship
+ * and don't require normalization or CSS variable injection.
+ *
+ * These are kept as plain Record maps rather than functions because the
+ * mapping is exhaustive, type-safe, and requires no runtime transformation.
+ */
+
+/** Maps text tone tokens to their `text-*` CSS class names */
+export const TEXT_TONE_CLASS_MAP: Record<TextTone, string> = {
+  "0": "text-0",
+  "1": "text-1",
+  "2": "text-2",
+  "3": "text-3",
+  "4": "text-4",
+  "5": "text-5",
+  primary: "text-primary",
+  secondary: "text-secondary",
+  accent: "text-accent",
+  white: "text-white",
+  black: "text-black",
+  default: "text-default",
+  muted: "text-muted",
+  subtle: "text-subtle",
+  danger: "text-danger",
+  success: "text-success",
+  info: "info",
+  warning: "warning",
+  currentColor: "text-current",
+  inherit: "text-inherit",
+};
+
+/** Maps background tone tokens to their `bg-*` CSS class names */
+export const BACKGROUND_TONE_CLASS_MAP: Record<BackgroundTone, string> = {
+  "0": "--layer-0--bg",
+  "1": "--layer-1--bg",
+  "2": "--layer-2--bg",
+  "3": "--layer-3--bg",
+  "4": "--layer-4--bg",
+  "5": "--layer-5--bg",
+  primary: "bg-primary",
+  secondary: "bg-secondary",
+  accent: "bg-accent",
+  white: "bg-white",
+  black: "bg-black",
+  default: "bg-default",
+  transparent: "bg-transparent",
+  danger: "danger--surface",
+  success: "success--surface",
+  info: "info--surface",
+  warning: "warning--surface",
+  currentColor: "bg-current",
+  inherit: "bg-inherit",
+};
+
+/** Maps horizontal alignment tokens to their `text-*` CSS class names */
+export const X_ALIGN_CLASS_MAP: Record<XAlign, string> = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+  justify: "text-justify",
+  start: "text-start",
+  end: "text-end",
+};
+
+/** Maps vertical alignment tokens to their `align-*` CSS class names */
+export const Y_ALIGN_CLASS_MAP: Record<YAlign, string> = {
+  super: "align-super",
+  top: "align-top",
+  "text-top": "align-text-top",
+  baseline: "align-baseline",
+  middle: "align-middle",
+  bottom: "align-bottom",
+  "text-bottom": "align-text-bottom",
+  sub: "align-sub",
+};
+
+// ---------------------------------------------------------------------------
+// CSS variable maps
+// ---------------------------------------------------------------------------
+
+/**
+ * Maps typography prop names to functions that produce scoped CSS custom
+ * property declarations. Components consume these via `var(--local-*)`.
+ *
+ * Font size accepts both numeric shorthands (`'0'`–`'11'`) and named tokens
+ * (`'2xs'`–`'6xl'`); all others accept their token values directly.
+ */
+export const FONT_MAP = {
+  /**
+   * @param val - A {@link FontSize} token, numeric or named
+   * @returns e.g. `'--local-fs: var(--fs-md)'`
+   */
+  size: (val: FontSize): string =>
+    `--local-fs: var(--fs-${FONT_SIZE_ALIASES[val] ?? val})`,
+
+  /**
+   * @param val - A {@link FontWeight} token
+   * @returns e.g. `'--local-fw: var(--fw-bold)'`
+   */
+  weight: (val: FontWeight): string =>
+    `--local-fw: var(--fw-${val})`,
+
+  /**
+   * @param val - A {@link LineHeight} token
+   * @returns e.g. `'--local-lh: var(--lh-tight)'`
+   */
+  lineHeight: (val: LineHeight): string =>
+    `--local-lh: var(--lh-${val})`,
+
+  /**
+   * @param val - A {@link LetterSpacing} token
+   * @returns e.g. `'--local-ls: var(--ls-wide)'`
+   */
+  letterSpacing: (val: LetterSpacing): string =>
+    `--local-ls: var(--ls-${val})`,
+} as const;
+
+/**
+ * Maps tone prop names to functions that produce scoped CSS custom
+ * property declarations. Components consume these via `var(--local-*)`.
+ */
+export const TONE_MAP = {
+  /**
+   * @param val - A {@link TextTone} token
+   * @returns e.g. `'--local-color: var(--text-muted)'`
+   */
+  text: (val: TextTone): string =>
+    `--local-color: var(--text-${val})`,
+} as const;
+
+/**
+ * Maps spacing prop names to functions that produce scoped CSS custom
+ * property declarations. Components consume these via `var(--local-*)`.
+ *
+ * Gap accepts both numeric shorthands (`'0'`–`'9'`) and named tokens
+ * (`'2xs'`–`'5xl'`); all others accept {@link SpacingScale} tokens directly.
+ */
+export const SPACING_MAP = {
+  /** @param val - e.g. `'md'` → `'--local-margin: var(--sp-md)'` */
+  margin: (val: SpacingScale): string =>
+    `--local-margin: var(--sp-${val})`,
+
+  /** @param val - e.g. `'lg'` → `'--local-mx: var(--sp-lg)'` */
+  mx: (val: SpacingScale): string =>
+    `--local-mx: var(--sp-${val})`,
+
+  /** @param val - e.g. `'sm'` → `'--local-my: var(--sp-sm)'` */
+  my: (val: SpacingScale): string =>
+    `--local-my: var(--sp-${val})`,
+
+  /** @param val - e.g. `'xl'` → `'--local-padding: var(--sp-xl)'` */
+  padding: (val: SpacingScale): string =>
+    `--local-padding: var(--sp-${val})`,
+
+  /** @param val - e.g. `'xs'` → `'--local-px: var(--sp-xs)'` */
+  px: (val: SpacingScale): string =>
+    `--local-px: var(--sp-${val})`,
+
+  /** @param val - e.g. `'2xl'` → `'--local-py: var(--sp-2xl)'` */
+  py: (val: SpacingScale): string =>
+    `--local-py: var(--sp-${val})`,
+
+  /**
+   * Accepts both numeric shorthands and named tokens.
+   * @param val - e.g. `'3'` or `'md'` → `'--local-gap: var(--sp-md)'`
+   */
+  gap: (val: SpacingScale): string =>
+    `--local-gap: var(--sp-${GAP_ALIASES[val] ?? val})`,
+} as const;
+
+/**
+ * Maps border radius prop names to functions that produce scoped CSS custom
+ * property declarations. Components consume these via `var(--local-*)`.
+ */
+export const RADIUS_MAP = {
+  /** @param val - e.g. `'md'` → `'--local-rad: var(--rad-md)'` */
+  rad: (val: ComponentRadius): string =>
+    `--local-rad: var(--rad-${val})`,
+} as const;
+
+/** Maps logical layout alignments to standard CSS flexbox/grid property values */
+export const LAYOUT_ALIGN_MAP: Record<LayoutAlign, string> = {
+  start: "flex-start",
+  center: "center",
+  end: "flex-end",
+  stretch: "stretch",
+  between: "space-between",
+  around: "space-around",
+  evenly: "space-evenly",
+  baseline: "baseline"
+};
+

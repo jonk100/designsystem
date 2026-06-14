@@ -36,6 +36,16 @@ The canonical example of a **component-specific** file is `Text.types.ts`, which
 
 ```astro
 ---
+/**
+ * src/components/path/to/file.astro
+ * [A single sentence describing the component's purpose]
+ * - [Bullet point detailing a feature]
+ * - [Bullet point detailing another feature]
+ * @props (local): prop1, prop2
+ * @props (global): class, class:list, frame, effects
+ * - [Explanation of complex prop 1]
+ * - [Explanation of complex prop 2]
+ */
 import type { BaseComponentProps } from '../../shared';
 import { mergeClasses, mergeStyles } from '../../shared';
 import { TYPOGRAPHY_VAR_MAP } from '../typography.maps';

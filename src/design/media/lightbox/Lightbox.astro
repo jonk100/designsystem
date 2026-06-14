@@ -1,0 +1,192 @@
+---
+/**
+ * src/design/media/lightbox/Lightbox.astro
+ *
+ * A fullscreen image viewer — the Region mount point for the Lightbox.
+ * This component is Type C: it renders static HTML and relies on
+ * Lightbox.ts (the external controller) for all interactive behavior.
+ *
+ * The Lightbox listens for `lightbox:open` CustomEvents dispatched by
+ * GalleryItem. It does not import Gallery — the two components are
+ * decoupled via DOM events.
+ *
+ * Place one <Lightbox /> per page. If multiple galleries are present,
+ * they all share this single Lightbox instance.
+ *
+ * @example
+ * <!-- In your layout or page -->
+ * <Lightbox />
+ * <!-- ... rest of page content ... -->
+ * <Gallery images={photos} lightbox />
+ *
+ * @props (local): id
+ * @props (global): class, class:list, style
+ */
+
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses } from '@/design/shared/functions';
+import './Lightbox.css';
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+export interface Props
+  extends BaseComponentProps,
+    Omit<import('astro/types').HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /**
+   * ID for the root dialog element.
+   * The Lightbox controller uses this to find the mount point.
+   * @default 'lightbox-region'
+   */
+  id?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Destructure props
+// ---------------------------------------------------------------------------
+
+const {
+  id = 'lightbox-region',
+  class: className,
+  'class:list': classList,
+  ...rest
+} = Astro.props;
+
+const classes = ['lightbox'];
+const finalClasses = mergeClasses(classes, Astro.props);
+---
+
+<!--
+  The native <dialog> element gives us:
+  - Top-layer stacking (no z-index wars)
+  - ::backdrop pseudo-element for the overlay
+  - Focus trapping when open
+  - ESC key to close (handled natively + reinforced in controller)
+-->
+<dialog
+  id={id}
+  class:list={finalClasses}
+  aria-label="Image viewer"
+  aria-modal="true"
+  data-lightbox-region
+  {...rest}
+>
+  <!-- Backdrop: clicking it closes the lightbox -->
+  <div class="lightbox__backdrop" data-lightbox-backdrop aria-hidden="true"></div>
+
+  <!-- Main container -->
+  <div class="lightbox__container" role="document">
+
+    <!-- Header: counter + close -->
+    <header class="lightbox__header">
+      <span class="lightbox__counter" aria-live="polite" aria-atomic="true" data-lightbox-counter>
+        <!-- Populated by controller: "1 / 12" -->
+      </span>
+      <button
+        class="lightbox__close"
+        type="button"
+        aria-label="Close image viewer"
+        data-lightbox-close
+      >
+        <!-- Close icon: × -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- Image stage -->
+    <div class="lightbox__stage">
+
+      <!-- Previous button -->
+      <button
+        class="lightbox__nav lightbox__nav--prev"
+        type="button"
+        aria-label="Previous image"
+        data-lightbox-prev
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <!-- The image itself. src + alt populated by controller. -->
+      <div class="lightbox__image-wrap">
+        <img
+          class="lightbox__image"
+          src=""
+          alt=""
+          loading="eager"
+          decoding="async"
+          data-lightbox-image
+        />
+      </div>
+
+      <!-- Next button -->
+      <button
+        class="lightbox__nav lightbox__nav--next"
+        type="button"
+        aria-label="Next image"
+        data-lightbox-next
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Caption -->
+    <footer class="lightbox__footer">
+      <p class="lightbox__caption" data-lightbox-caption aria-live="polite" aria-atomic="true">
+        <!-- Populated by controller -->
+      </p>
+    </footer>
+
+  </div>
+</dialog>
+
+<!-- Load the external controller. is:inline is NOT used here so TypeScript
+     compilation applies. The controller finds this dialog by its id. -->
+<script>
+  import { initLightbox } from './Lightbox.ts';
+  initLightbox();
+</script>

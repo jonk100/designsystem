@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Lightbox Component
+   src/design/media/lightbox/Lightbox.css
+
+   Fullscreen image viewer built on the native <dialog> element.
+   Uses the top-layer stacking context — no z-index wars.
+
+   Class structure:
+   - .lightbox                   Root <dialog> element.
+   - .lightbox__backdrop         Clickable overlay behind the container.
+   - .lightbox__container        Inner content box (header + stage + footer).
+   - .lightbox__header           Counter + close button row.
+   - .lightbox__counter          "N / Total" text.
+   - .lightbox__close            Close button.
+   - .lightbox__stage            Image + prev/next button row.
+   - .lightbox__image-wrap       Constrained image container.
+   - .lightbox__image            The <img> element.
+   - .lightbox__nav              Prev / next buttons.
+   - .lightbox__nav--prev        Previous button.
+   - .lightbox__nav--next        Next button.
+   - .lightbox__footer           Caption area.
+   - .lightbox__caption          Caption text.
+   - .lightbox__footer--empty    Applied when there is no caption.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Dialog reset + fullscreen fill
+   -------------------------------------------------------------------------- */
+
+.lightbox {
+  /* Reset browser dialog defaults. */
+  margin: 0;
+  padding: 0;
+  border: none;
+  /* Fill the viewport. */
+  width: 100dvw;
+  height: 100dvh;
+  max-width: 100dvw;
+  max-height: 100dvh;
+  /* Transparent background — the backdrop and container provide the visual layers. */
+  background: transparent;
+  /* Override browser default display: none so our own open/close handling works. */
+  overflow: hidden;
+}
+
+/* Native ::backdrop — the overlay behind the dialog top-layer element. */
+.lightbox::backdrop {
+  background: rgb(0 0 0 / 0.88);
+  /* Slight blur on the page content behind the lightbox. */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop (inner clickable layer for close-on-click)
+   -------------------------------------------------------------------------- */
+
+.lightbox__backdrop {
+  position: fixed;
+  inset: 0;
+  cursor: zoom-out;
+}
+
+/* --------------------------------------------------------------------------
+   Container
+   -------------------------------------------------------------------------- */
+
+.lightbox__container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Prevent container from intercepting backdrop clicks at its edges. */
+  pointer-events: none;
+}
+
+/* Re-enable pointer events on all direct children of the container. */
+.lightbox__container > * {
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Header — counter + close
+   -------------------------------------------------------------------------- */
+
+.lightbox__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space--sm) var(--space--md);
+  flex-shrink: 0;
+}
+
+.lightbox__counter {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--font-size--sm, 0.875rem);
+  color: hsl(0 0% 75%);
+  letter-spacing: 0.05em;
+  /* Prevent layout shift as counter text changes (e.g. 1→12). */
+  min-width: 4ch;
+}
+
+.lightbox__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: var(--radius--sm);
+  background: transparent;
+  color: hsl(0 0% 75%);
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.lightbox__close:hover {
+  color: hsl(0 0% 100%);
+  background: hsl(0 0% 100% / 0.1);
+}
+
+.lightbox__close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Stage — image + prev/next
+   -------------------------------------------------------------------------- */
+
+.lightbox__stage {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space--sm);
+  /* Allow the image to use the full available height. */
+  min-height: 0;
+  padding: 0 var(--space--xs);
+}
+
+/* --------------------------------------------------------------------------
+   Image
+   -------------------------------------------------------------------------- */
+
+.lightbox__image-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 8rem); /* Reserve space for header + footer. */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius--sm);
+  /* Subtle shadow to lift the image off the dark backdrop. */
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.5);
+  /* Smooth src transitions via opacity. */
+  transition: opacity 150ms ease;
+}
+
+/* Loading state: briefly fade out between images. Applied by the controller. */
+.lightbox__image.is-loading {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation buttons
+   -------------------------------------------------------------------------- */
+
+.lightbox__nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid hsl(0 0% 100% / 0.15);
+  border-radius: var(--radius--full, 9999px);
+  background: hsl(0 0% 100% / 0.08);
+  color: hsl(0 0% 90%);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.lightbox__nav:hover {
+  background: hsl(0 0% 100% / 0.18);
+  border-color: hsl(0 0% 100% / 0.3);
+  color: hsl(0 0% 100%);
+}
+
+.lightbox__nav:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.lightbox__nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — caption
+   -------------------------------------------------------------------------- */
+
+.lightbox__footer {
+  padding: var(--space--sm) var(--space--md);
+  flex-shrink: 0;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease;
+}
+
+.lightbox__footer--empty {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lightbox__caption {
+  margin: 0;
+  font-size: var(--font-size--sm, 0.875rem);
+  font-family: var(--font-sans);
+  color: hsl(0 0% 70%);
+  text-align: center;
+  max-width: 60ch;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__image,
+  .lightbox__close,
+  .lightbox__nav,
+  .lightbox__footer {
+    transition: none;
+  }
+}

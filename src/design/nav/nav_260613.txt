@@ -1,0 +1,991 @@
+--- File: nav.types.ts ---
+import type { NAV_ORIENTATIONS } from "./nav.consts";
+import type { NAV_MAP } from "./nav.maps";
+
+
+/**
+ * Provides the choices for the orientation prop in nav components.
+ * @see {@link NAV_MAP}
+ */
+export type NavOrientation = (typeof NAV_ORIENTATIONS)[number];
+
+
+
+--- File: nav.maps.ts ---
+export const NAV_VAR_MAP = {
+  gap: (val: string) => `--local-gap: var(--sp-${val})`,
+};
+
+import type { NavOrientation } from "./nav.types";
+import type { NAV_ORIENTATIONS } from "./nav.consts";
+
+/**
+ * Maps navigation properties to CSS variables.
+ * @see {@link NavOrientation}
+ * @see {@link NAV_ORIENTATIONS}
+ */
+export const NAV_MAP = {
+  orientation: (val: NavOrientation) => `--local-orientation: ${val}`,
+  disabled: (val: boolean) => `--local-disabled: ${val ? "true" : "false"}`,
+  ariaLabel: (val: string) => `--local-aria-label: ${val}`,
+};
+
+--- File: nav.consts.ts ---
+import type { NavOrientation, NavAlignment } from './nav.types';
+
+export const NAV_ORIENTATIONS: NavOrientation[] = ['horizontal', 'vertical'];
+export const NAV_ALIGNMENTS: NavAlignment[] = ['start', 'center', 'end', 'justify'];
+
+--- File: nav.functions.ts ---
+/**
+ * Shared utility functions for navigation components.
+ */
+
+--- File: nav.css ---
+/* Category-level navigation utility classes and shared rules */
+
+--- File: header/Header.astro ---
+
+
+--- File: header/Header.css ---
+
+
+--- File: header/header.svg ---
+
+
+--- File: footer/Footer.astro ---
+
+
+--- File: footer/Footer.css ---
+
+
+--- File: footer/footer.svg ---
+
+
+--- File: navbar/Navbar.astro ---
+---
+/**
+ * src/design/nav/navbar/Navbar.astro
+ * A horizontal navigation bar component.
+ * - Provides a three-zone layout (start, center, end) via named slots.
+ * - Establishes the <nav> landmark with an optional aria-label.
+ * - Manages spacing between zones through the gap prop.
+ * @props (local): label, gap
+ * @props (global): class, class:list, animate, style, bg, effects
+ * - label: The aria-label value for the <nav> element (e.g. "Main navigation").
+ * - gap: Spacing between zones and items within zones, using spacing tokens.
+ */
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { NavProps } from "@/design/nav/nav.types";
+import type { MenuItemDef } from "@/design/nav/menu/Menu.types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { NAV_VAR_MAP } from "@/design/nav/nav.maps";
+import Menu from "@/design/nav/menu/Menu.astro";
+import Image from "@/design/media/image/Image.astro";
+
+import "@/design/nav/nav.css";
+import "./Navbar.css";
+
+export interface Props extends BaseComponentProps, NavProps {
+  /**
+   * The accessible label for the navigation landmark.
+   */
+  label?: string;
+}
+
+const {
+  label,
+  gap = "md",
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * mergeClasses handles global props like animate, effects, bg, etc.
+ */
+const classes = ["navbar-component"];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join before passing to mergeStyles.
+ */
+const styles = [gap && NAV_VAR_MAP.gap(gap)].filter(Boolean).join(";");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+
+const navBarItems: MenuItemDef[] = [
+  { label: "Home",       href: "/",        icon: "home",  type: "link" },
+  { label: "Debug",      href: "/debug",   icon: "debug", type: "link" },
+  { label: "Playground", href: "/sandbox", icon: "playground",  type: "link" },
+];
+---
+
+<nav aria-label={label} class:list={finalClasses} style={finalStyles} {...rest}>
+  {
+    Astro.slots.has("start") && (
+      <div class="navbar__zone navbar__zone--start">
+        <Image src="/design-system-logo.png" alt="Design System Logo" class="navbar__logo" fit="contain" />
+        <slot name="start" />
+      </div>
+    )
+  }
+
+  <div class="navbar__zone navbar__zone--center">
+    <Menu 
+      items={navBarItems} 
+      iconSize="4xl" 
+      orientation="horizontal"
+      align="center"
+      gap="lg"
+      label="Menu"
+      bare={true}
+    >
+      <slot />
+    </Menu>
+  </div>
+
+  {
+    Astro.slots.has("end") && (
+      <div class="navbar__zone navbar__zone--end">
+        <slot name="end" />
+      </div>
+    )
+  }
+</nav>
+
+
+--- File: navbar/Navbar.css ---
+/**
+ * Navbar.css
+ * Fully constrained navbar layout with logo containment.
+ */
+
+.navbar-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 64px;
+
+  gap: var(--local-gap, var(--sp-md));
+  overflow: hidden;
+}
+
+/* Shared zone layout */
+.navbar__zone {
+  display: flex;
+  align-items: center;
+  gap: var(--local-gap, var(--sp-md));
+
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Start zone */
+.navbar__zone--start {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Center zone */
+.navbar__zone--center {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* End zone */
+.navbar__zone--end {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+/* =========================
+   LOGO FIX (IMPORTANT)
+   ========================= */
+
+/* Force the figure wrapper to behave like an icon box */
+.navbar__logo {
+  max-height: 48px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* IMPORTANT: override Image component's wrapper behavior */
+.navbar__logo.image {
+  max-height: 48px;
+  width: auto;
+}
+
+/* Force image to fully respect parent height */
+.navbar__logo .image__img {
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Prevent SVG/menu from forcing navbar growth */
+.navbar__zone--center,
+.navbar__zone--center * {
+  min-width: 0;
+}
+
+.navbar__zone {
+  display: flex;
+  align-items: center; /* keep internal alignment */
+}
+
+--- File: navbar/navbar.svg ---
+
+
+--- File: navbar/navbar.md ---
+# Navbar
+
+A horizontal navigation bar component that arranges a logo, links, and actions in a three‑zone layout.
+
+## Overview
+
+The `Navbar` component provides a flexible, accessible navigation container. It renders a `<nav>` landmark with an optional `aria-label` and splits its content into three named zones: **start** (logo or wordmark), **center** (navigation links), and **end** (actions, avatar, etc.). The component owns the spacing between zones and the internal gap between items, but it does not manage dropdowns, mobile toggles, or other interactive behaviors – those are handled by separate overlay components such as `Menu` or `Drawer`.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `undefined` | Accessible label for the `<nav>` landmark (e.g. "Main navigation"). |
+| `gap` | `SpacingScale` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'`) | `md` | Sets the gap between the three zones and between items within each zone. |
+| `orientation` | `'horizontal' | 'vertical'` | `horizontal` | Determines the layout direction of the navigation items. The component currently renders horizontally; the prop is accepted for future flexibility. |
+| `align` | `'start' | 'center' | 'end' | 'justify'` | `start` | Alignment of items along the main axis. Not used directly by the component but accepted for consistency with the `NavProps` interface. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `string` | | Animation name and optional duration/delay. |
+| `effects` | `DisplayEffect[]` | | Visual effects such as blur or lift. |
+| `bg` | `BackgroundTone` | | Background tone utility class. |
+| `style` | `string` | | Inline styles. |
+| `onScroll` | `boolean` | | Scroll event callback. |
+
+All other standard HTML attributes are forwarded to the `<nav>` element via `BaseComponentProps`.
+
+## Variants / Sizes
+
+The `Navbar` itself has no visual variants; its appearance is driven by the `gap` prop and any global styling applied through `class`, `class:list`, or `bg`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Navbar from '@/design/nav/navbar/Navbar.astro';
+---
+
+<Navbar label="Main navigation">
+  <span slot="start">Logo</span>
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+  <span slot="end">Login</span>
+</Navbar>
+```
+
+### Common Patterns
+
+```astro
+---
+import Navbar from '@/design/nav/navbar/Navbar.astro';
+import Icon from '@/design/icons/Icon.astro';
+---
+
+<!-- Navbar with a logo, centered navigation links, and a user avatar on the end -->
+<Navbar label="Site navigation" gap="lg" bg="primary">
+  <div slot="start">
+    <img src="/logo.svg" alt="Site logo" width="32" height="32" />
+  </div>
+
+  <a href="/">Home</a>
+  <a href="/docs">Docs</a>
+  <a href="/blog">Blog</a>
+
+  <div slot="end">
+    <Icon name="user" />
+  </div>
+</Navbar>
+
+<!-- Navbar with a mobile menu toggle (handled by a separate component) -->
+<Navbar label="Responsive navigation" gap="md">
+  <button slot="start" aria-label="Open menu">☰</button>
+  <a href="/">Home</a>
+  <a href="/features">Features</a>
+  <a href="/pricing">Pricing</a>
+  <button slot="end" aria-label="Search">🔍</button>
+</Navbar>
+```
+
+## Accessibility
+
+The component renders a `<nav>` landmark and accepts an optional `aria-label`. When the `label` prop is omitted, the component relies on the surrounding context or additional ARIA attributes to convey its purpose. The named slots do not affect accessibility; they simply provide a convenient way to position content.
+
+## CSS Architecture
+
+The `Navbar` uses the `navbar-component` BEM base class. It applies a CSS custom property `--local-gap` derived from the `gap` prop via `NAV_VAR_MAP.gap`. The component also defines helper classes for each zone (`navbar__zone--start`, `navbar__zone--center`, `navbar__zone--end`) that use flexbox to align items horizontally. Global props such as `class`, `class:list`, `animate`, and `bg` are merged through `mergeClasses`, and inline styles are merged via `mergeStyles`.
+
+## Related Components
+
+- [`Menu`](/docs/components/menu)
+- [`Drawer`](/docs/components/drawer)
+- [`Header`](/docs/components/header)
+- [`Footer`](/docs/components/footer)
+
+
+--- File: breadcrumbs/Breadcrumbs.astro ---
+
+
+--- File: breadcrumbs/Breadcrumbs.css ---
+
+
+--- File: breadcrumbs/breadcrumbs.svg ---
+
+
+--- File: tabs/tabs.svg ---
+
+
+--- File: tabs/Tabs.astro ---
+---
+/**
+ * src/design/nav/tabs/Tabs.astro
+ * * A navigation primitive that organizes related content into interchangeable views.
+ * Acts as the structural wrapper for individual Tab items.
+ */
+
+import type { TabsProps } from './Tabs.props';
+import { mergeClasses, mergeStyles } from '../../shared/functions';
+import './Tabs.css';
+
+type Props = TabsProps;
+
+const {
+  as: Tag = 'div',
+  variant = 'underline',
+  size = 'md',
+  fullWidth = false,
+  class: className,
+  'class:list': classList,
+  style,
+  animate,
+  scrollAnimation,
+  id,
+  ...rest
+} = Astro.props;
+
+// Component-specific BEM classes
+const classes = [
+  'tabs-component',
+  `tabs-component--${variant}`,
+  `tabs-component--size-${size}`,
+  fullWidth && 'tabs-component--full-width'
+];
+
+// Merge system utilities
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag 
+  id={id}
+  class:list={finalClasses} 
+  style={finalStyles} 
+  role="tablist"
+  {...rest}
+>
+  <slot />
+</Tag>
+
+
+--- File: tabs/Tabs.css ---
+/* src/design/nav/tabs/Tabs.css */
+
+.tabs-component {
+  display: flex;
+  align-items: center;
+  position: relative;
+  /* Pulling from a theoretical gap scale token */
+  gap: var(--space--xs, 0.25rem);
+  border-bottom: 1px solid transparent;
+}
+
+/* --- Variants --- */
+.tabs-component--underline {
+  border-bottom-color: var(--border-layer--2, #e2e8f0);
+}
+
+.tabs-component--pills {
+  /* Pills usually sit in a container with a background */
+  background-color: var(--layer--2, #f1f5f9);
+  padding: var(--space--xs, 0.25rem);
+  border-radius: var(--radius--md, 0.375rem);
+  border-bottom: none;
+}
+
+/* --- Modifiers --- */
+.tabs-component--full-width {
+  width: 100%;
+}
+
+.tabs-component--full-width > * {
+  flex: 1 1 0%;
+  justify-content: center;
+}
+
+
+--- File: tabs/Tabs.props.ts ---
+// src/design/nav/tabs/Tabs.props.ts
+import type { BaseComponentProps } from '../../shared/props';
+
+export interface TabsProps extends BaseComponentProps {
+  /** * The visual style variant of the tabs 
+   * @default 'underline'
+   */
+  variant?: TabsVariant;
+  
+  /** * The sizing scale of the tabs 
+   * @default 'md'
+   */
+  size?: TabsSize;
+  
+  /** * Whether the tabs should stretch to fill the container's width 
+   * @default false
+   */
+  fullWidth?: boolean;
+}
+
+
+--- File: tabs/Tabs.types.ts ---
+// src/design/nav/tabs/Tabs.props.ts
+import type { BaseComponentProps } from '../../shared/props';
+
+export type TabsVariant = 'underline' | 'pills' | 'enclosed' | 'soft';
+export type TabsSize = 'sm' | 'md' | 'lg';
+
+
+
+--- File: tabs/tab/Tab.props.ts ---
+
+
+--- File: pagination/Pagination.astro ---
+
+
+--- File: pagination/Pagination.css ---
+
+
+--- File: pagination/pagination.svg ---
+
+
+--- File: stepper/Stepper.astro ---
+
+
+--- File: stepper/Stepper.css ---
+
+
+--- File: stepper/stepper.svg ---
+
+
+--- File: menu/Menu.astro ---
+---
+/**
+ * src/design/nav/menu/Menu.astro
+ * A semantic navigation menu that renders a list of links, groups, and separators.
+ * - Supports collapsed (icon-only) mode — requires all link items to have an icon defined
+ * - Supports bare mode for rendering inside an existing <nav> landmark
+ * - Uses a discriminated union (MenuItemDef) to narrow item types safely in the template
+ * @props (local): items, label, orientation, align, gap, collapsed, bare
+ * @props (global): class, class:list, style, animate
+ * - collapsed: renders icon-only links; all link items must have an `icon` or a dev warning fires
+ * - bare: skips the <nav> wrapper — use only when already inside a <nav> context
+ * - label: required aria-label for the <nav> landmark; ignored when bare={true}
+ */
+
+import type { HTMLAttributes } from "astro/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { NavProps } from "@/design/nav/nav.types";
+import type { NavMenuProps } from "./Menu.props";
+import type { MenuItemDef, MenuLinkItem } from "./Menu.types";
+import type { DisplaySize } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { warnIfCollapsedItemsMissingIcons } from "./Menu.functions";
+import { MENU_MAP } from "./Menu.maps";
+import Link from "@/design/typography/link/Link.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+
+import "@/design/nav/nav.css";
+import "./Menu.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    NavProps,
+    NavMenuProps,
+    Omit<HTMLAttributes<"ul">, keyof BaseComponentProps | keyof NavProps> {
+  iconSize: DisplaySize;
+}
+
+const {
+  as: Tag = "ul",
+  orientation,
+  align = "justify",
+  gap = "md",
+  items = [],
+  label,
+  bare = false,
+  collapsed = false,
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+if (collapsed) {
+  warnIfCollapsedItemsMissingIcons(items);
+}
+
+const classes = [
+  "menu",
+  MENU_MAP.orientation(orientation),
+  MENU_MAP.align(align),
+  collapsed && "menu--collapsed",
+];
+
+const styles = [gap && MENU_MAP.gap(gap)].filter(Boolean).join(";");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+const { iconSize } = Astro.props;
+---
+
+{
+  bare ? (
+    <Tag class:list={finalClasses} style={finalStyles} {...rest}>
+      {items.map((item: MenuItemDef) => {
+        if (item.type === "separator") {
+          return (
+            <li class="menu__separator" role="separator">
+              <hr />
+            </li>
+          );
+        }
+
+        if (item.type === "group") {
+          return (
+            <li class="menu__group">
+              <span class="menu__group-label">{item.label}</span>
+              <ul class="menu__group-list">
+                {item.children.map((child: MenuLinkItem) => (
+                  <li class="menu__item">
+                    <Link
+                      href={child.href}
+                      class:list={[
+                        "menu__link",
+                        child.active && "menu__link--active",
+                        child.disabled && "menu__link--disabled",
+                      ]}
+                      aria-current={child.active ? "page" : undefined}
+                      aria-disabled={child.disabled ? "true" : undefined}
+                    >
+                      {child.icon && (
+                        <span class="menu__icon" aria-hidden="true">
+                          {child.icon}
+                        </span>
+                      )}
+                      {!collapsed && (
+                        <span class="menu__label">{child.label}</span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        }
+
+        // item.type === "link" — item.href is guaranteed here
+        return (
+          <li class="menu__item">
+            <Link
+              href={item.href}
+              class:list={[
+                "menu__link",
+                item.active && "menu__link--active",
+                item.disabled && "menu__link--disabled",
+              ]}
+              aria-label={collapsed ? item.label : undefined}
+              aria-current={item.active ? "page" : undefined}
+              aria-disabled={item.disabled ? "true" : undefined}
+              title={collapsed ? item.label : undefined}
+            >
+              {item.icon && <Icon name={item.icon} size={iconSize} />}
+              {!collapsed && <span class="menu__label">{item.label}</span>}
+            </Link>
+          </li>
+        );
+      })}
+      <slot />
+    </Tag>
+  ) : (
+    <nav aria-label={label}>
+      <Tag class:list={finalClasses} style={finalStyles} {...rest}>
+        {items.map((item: MenuItemDef) => {
+          if (item.type === "separator") {
+            return (
+              <li class="menu__separator" role="separator">
+                <hr />
+              </li>
+            );
+          }
+
+          if (item.type === "group") {
+            return (
+              <li class="menu__group">
+                <span class="menu__group-label">{item.label}</span>
+                <ul class="menu__group-list">
+                  {item.children.map((child: MenuLinkItem) => (
+                    <li class="menu__item">
+                      <Link
+                        href={child.href}
+                        class:list={[
+                          "menu__link",
+                          child.active && "menu__link--active",
+                          child.disabled && "menu__link--disabled",
+                        ]}
+                        aria-current={child.active ? "page" : undefined}
+                        aria-disabled={child.disabled ? "true" : undefined}
+                      >
+                        {child.icon && (
+                          <span class="menu__icon" aria-hidden="true">
+                            {child.icon}
+                          </span>
+                        )}
+                        {!collapsed && (
+                          <span class="menu__label">{child.label}</span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          }
+
+          return (
+            <li class="menu__item">
+              <Link
+                href={item.href}
+                class:list={[
+                  "menu__link",
+                  item.active && "menu__link--active",
+                  item.disabled && "menu__link--disabled",
+                ]}
+                aria-label={collapsed ? item.label : undefined}
+                aria-current={item.active ? "page" : undefined}
+                aria-disabled={item.disabled ? "true" : undefined}
+                title={collapsed ? item.label : undefined}
+              >
+                {item.icon && <Icon name={item.icon} size={iconSize} />}
+                {!collapsed && <span class="menu__label">{item.label}</span>}
+              </Link>
+            </li>
+          );
+        })}
+        <slot />
+      </Tag>
+    </nav>
+  )
+}
+
+
+--- File: menu/Menu.css ---
+/**
+ * src/design/nav/menu/Menu.css
+ */
+.menu {
+  display: flex;
+  gap: var(--local-gap, 0);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu--vertical {
+  flex-direction: column;
+}
+
+.menu--horizontal {
+  flex-direction: row;
+}
+
+/* Horizontal Alignments (Main Axis) */
+.menu--horizontal.menu--align-start {
+  justify-content: flex-start;
+}
+.menu--horizontal.menu--align-center {
+  justify-content: center;
+}
+.menu--horizontal.menu--align-end {
+  justify-content: flex-end;
+}
+.menu--horizontal.menu--align-justify {
+  justify-content: space-between;
+}
+.menu--horizontal {
+  align-items: center; /* Default cross-axis alignment */
+}
+
+/* Vertical Alignments (Cross Axis) */
+.menu--vertical.menu--align-start {
+  align-items: flex-start;
+}
+.menu--vertical.menu--align-center {
+  align-items: center;
+}
+.menu--vertical.menu--align-end {
+  align-items: flex-end;
+}
+.menu--vertical.menu--align-justify {
+  align-items: stretch;
+}
+.menu--vertical {
+  justify-content: flex-start;
+}
+
+/* Menu.css */
+.menu {
+  --menu-item-label-opacity: 1;
+  --menu-item-label-width: auto;
+  --menu-width: 220px;
+}
+
+.menu--collapsed {
+  --menu-item-label-opacity: 0;
+  --menu-item-label-width: 0;
+  --menu-width: 52px;
+}
+
+.menu__label {
+  opacity: var(--menu-item-label-opacity);
+  width: var(--menu-item-label-width);
+  overflow: hidden;
+  transition:
+    opacity 150ms ease,
+    width 200ms ease;
+  white-space: nowrap;
+  font-size: var(--fs-lg);
+}
+
+.menu__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space--xs);
+  
+}
+
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu__group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+--- File: menu/menu.svg ---
+
+
+--- File: menu/Menu.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="3" y1="12" x2="21" y2="12"></line>
+  <line x1="3" y1="6" x2="21" y2="6"></line>
+  <line x1="3" y1="18" x2="21" y2="18"></line>
+</svg>
+
+--- File: menu/index.ts ---
+import Menu from "./Menu.astro";
+export type { NavMenuProps } from "./Menu.props";
+export type { MenuItemDef } from "./Menu.types";
+export * from "./Menu.consts";
+export * from "./Menu.maps";
+
+export { Menu };
+
+
+--- File: menu/Menu.props.ts ---
+import type { BaseComponentProps } from "@/design/shared";
+import type { NavProps } from "@/design/nav/nav.types";
+import type { MenuItemDef } from "./Menu.types";
+
+export interface NavMenuProps extends BaseComponentProps, NavProps {
+  orientation?: "vertical" | "horizontal";
+  align?: "start" | "center" | "end" | "justify";
+  items: MenuItemDef[];
+  label: string; // Required — unlabeled <nav> is a WCAG 2.4.1 failure
+  bare?: boolean; // Optional — if true, the menu will be rendered without a `<nav>` wrapper
+  collapsed?: boolean;
+}
+
+
+--- File: menu/Menu.consts.ts ---
+export const MENU_ALIGN_OPTS = ["start", "center", "end", "justify"] as const;
+export const MENU_ORIENTATION_OPTS = ["horizontal", "vertical"] as const;
+
+
+--- File: menu/Menu.types.ts ---
+import { MENU_ALIGN_OPTS, MENU_ORIENTATION_OPTS } from "./Menu.consts";
+import type { SvgName } from "@/design/shared/icons/";
+
+export type MenuAlignOptions = (typeof MENU_ALIGN_OPTS)[number];
+export type MenuOrientationOptions = (typeof MENU_ORIENTATION_OPTS)[number];
+
+/**
+ * A standard navigation link item.
+ * Can contain nested children to form a sub-menu.
+ */
+export interface MenuLinkItem {
+  type: "link";
+  label: string;
+  href: string;
+  icon?: SvgName;
+  disabled?: boolean;
+  active?: boolean;
+  children?: MenuLinkItem[];
+}
+
+/**
+ * A non-interactive section heading that labels a group of links.
+ * Never focusable, never a link — purely decorative/semantic grouping.
+ */
+export interface MenuGroupItem {
+  type: "group";
+  label: string;
+  icon?: string;
+  children: MenuLinkItem[];
+}
+
+/**
+ * A horizontal rule separating visual regions of the menu.
+ * No label, no href, no children.
+ */
+export interface MenuSeparatorItem {
+  type: "separator";
+}
+
+/**
+ * The discriminated union of all valid menu item shapes.
+ * Narrow with `item.type` before accessing type-specific fields.
+ */
+export type MenuItemDef = MenuLinkItem | MenuGroupItem | MenuSeparatorItem;
+
+
+--- File: menu/Menu.maps.ts ---
+import type { MenuAlignOptions, MenuOrientationOptions } from "./Menu.types";
+import type { SpacingScale } from "@/design/shared/types";
+
+export const MENU_MAP = {
+  orientation: (val: MenuOrientationOptions) => `menu--${val}`,
+  align: (val: MenuAlignOptions) => `menu--align-${val}`,
+  gap: (val: SpacingScale) => `--local-gap: var(--sp-${val})`,
+};
+
+
+--- File: menu/Menu.functions.ts ---
+// Menu.functions.ts
+
+import type { MenuItemDef, MenuLinkItem } from "./Menu.types";
+
+/**
+ * Validates that all link items in a collapsed menu have icons defined.
+ * Emits a console warning in dev mode for any items missing an icon.
+ * No-ops in production.
+ *
+ * @param items - The full list of menu item definitions to check
+ * @param componentName - The display name used in the warning message
+ */
+export function warnIfCollapsedItemsMissingIcons(
+  items: MenuItemDef[],
+  componentName = "Menu",
+): void {
+  if (!import.meta.env.DEV) return;
+
+  const missingIcons = items
+    .filter((i): i is MenuLinkItem => i.type === "link")
+    .filter((i) => !i.icon);
+
+  if (missingIcons.length > 0) {
+    console.warn(
+      `[${componentName}] collapsed={true} but these items are missing icons:`,
+      missingIcons.map((i) => i.label),
+    );
+  }
+}
+
+
+--- File: skip-link/SkipLink.astro ---
+
+
+--- File: skip-link/SkipLink.css ---
+
+
+--- File: skip-link/skip-link.svg ---
+
+
+--- File: tokens.css ---
+
+
+--- File: vars.css ---
+
+
+--- File: nav.props.ts ---
+import type { NavOrientation } from "./nav.types";
+import type { LayoutAlign } from "@/design/shared/types";
+import type { FlexboxProps } from "@/design/shared/props";
+
+/**
+ * Category-level props shared across all navigation components.
+ *
+ * @see {@link NavOrientation}
+ * @see {@link LayoutAlign}
+ *
+ * @category Navigation
+ * Optional props: `ariaLabel`, `orientation`, `align`, `disabled`, `currentPath`
+ */
+export interface NavComponentProps extends FlexboxProps {
+  /**
+   * Distinguishes multiple <nav> landmarks for screen readers.
+   * Strongly recommended for almost all nav components.
+   */
+  ariaLabel?: string;
+
+  /**
+   * Layout direction for flexible nav components like Tabs, Menus, or Steppers.
+   */
+  orientation?: NavOrientation;
+
+  /**
+   * Globally disables interactions within the nav component
+   * (e.g., locked steppers, disabled pagination rows).
+   */
+  disabled?: boolean;
+
+  /**
+   * Optional URL path to automatically highlight active links.
+   * Only pass this if the component drives URL state (e.g., Navbar, Breadcrumbs).
+   */
+  currentPath?: string;
+}
+

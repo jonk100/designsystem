@@ -1,0 +1,94 @@
+---
+import type { BaseComponentProps, CommonHTMLProps } from '@/design/shared';
+import type { TabsProps } from './Tabs.props';
+import type { HTMLAttributes } from 'astro/types';
+import { mergeClasses, mergeStyles, buildStyles } from '@/design/shared/functions';
+import { LAYOUT_ALIGN_MAP } from "@/design/shared/maps";
+import './Tabs.css';
+
+/**
+ * A navigation primitive that organizes related content into interchangeable views.
+ * Acts as the structural wrapper for individual Tab items.
+ * 
+ * ### Inherited Props Hierarchy
+ * 
+ * **1. `TabsProps`** (Local: `./Tabs.props.ts`)
+ * - `variant`: Visual style (`'underline' | 'pills' | 'enclosed' | 'soft'`).
+ * - `size`: Sizing scale (`'sm' | 'md' | 'lg'`).
+ * - `fullWidth`: Stretches tabs to fill the container width.
+ * 
+ * **2. NavComponentProps (Category)**
+ * - `ariaLabel`: Accessible label to distinguish multiple `<nav>` landmarks.
+ * - `orientation`: Flex layout direction (`'horizontal' | 'vertical'`).
+ * - `disabled`: Globally disables interactions within the tabs.
+ * - `currentPath`: Optional URL path to auto-highlight active tab links.
+ * 
+ * **3. FlexboxProps (Layout)**
+ * - `gap`: Spacing token between children (defaults to `'xs'`).
+ * - `x`, `y`: Main-axis and cross-axis alignments.
+ * - `wrap`: Wrapping behavior for overflowing tabs.
+ * 
+ * **4. BaseComponentProps & CommonHTMLProps (Global)**
+ * - `as`: Polymorphic HTML element tag (defaults to `'div'`).
+ * - `animate`, `scrollAnimation`: Unified motion hooks.
+ * - `id`, `class`, `class:list`, `style`: Standard styling hooks.
+ * - `...rest`: Automatically accepts all standard HTML attributes.
+ * 
+ * @example
+ * ```astro
+ * <Tabs variant="pills" gap="md" ariaLabel="Instrument selection">
+ *   <Tab active target="guitar-panel">Guitar</Tab>
+ *   <Tab target="piano-panel">Piano</Tab>
+ * </Tabs>
+ * ```
+ * 
+ * @see {@link TabsProps}
+ * @see {@link NavComponentProps}
+ * @see {@link FlexboxProps}
+ * [NavComponentProps](../nav.props.ts)
+ */
+export interface Props extends TabsProps, Omit<HTMLAttributes<"div">, keyof TabsProps> {}
+// @-FlexBoxProps
+
+const { 
+  as: Tag = 'div', 
+  variant = 'underline', 
+  size = 'md', 
+  fullWidth = false, 
+  // Intercept Nav & Flexbox props so they don't leak into the DOM
+  orientation = "horizontal",
+  gap = "xs",
+  x,
+  y,
+  wrap,
+  ariaLabel,
+  disabled,
+  currentPath,
+  // Intercept base props for merge utilities
+  class: className, 
+  'class:list': classList, 
+  style, 
+  ...rest 
+} = Astro.props;
+
+const classes = [
+  'tabs-component',
+  `tabs-component--${variant}`,
+  `tabs-component--size-${size}`,
+  fullWidth && 'tabs-component--full-width',
+  wrap === true ? "flex-wrap" : wrap === "reverse" ? "flex-wrap-reverse" : "flex-nowrap",
+];
+
+const customStyles = buildStyles([
+  gap && `--local-gap: var(--sp-${gap})`,
+  x && `justify-content: ${LAYOUT_ALIGN_MAP[x]}`,
+  y && `align-items: ${LAYOUT_ALIGN_MAP[y]}`
+]);
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(customStyles, Astro.props);
+---
+<Tag class:list={finalClasses} style={finalStyles} role="tablist" aria-label={ariaLabel} aria-orientation={orientation} {...rest}>
+  <slot />
+</Tag>
+

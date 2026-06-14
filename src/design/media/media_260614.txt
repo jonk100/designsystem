@@ -1,0 +1,3826 @@
+--- File: media.types.ts ---
+import type { BaseComponentProps } from '../shared';
+
+/**
+ * Base props shared across all media components.
+ *
+ * All media components (Image, Audio, Video, etc.) extend this interface.
+ * It establishes the common surface that consumers can rely on regardless
+ * of which media component they are using.
+ *
+ * @example
+ * // In a component-level props file:
+ * import type { MediaComponentProps } from '../media.props';
+ *
+ * export interface ImageProps extends MediaComponentProps {
+ *   ratio?: ImageRatio;
+ *   fit?: ImageFit;
+ * }
+ */
+export interface MediaComponentProps extends BaseComponentProps {
+  /**
+   * The media source URL.
+   * Required on all media components — images, audio tracks, video files, etc.
+   */
+  src: string;
+
+  /**
+   * A text label associated with the media.
+   * Rendered as a visible `<figcaption>` beneath the media element.
+   * Optional on all media components.
+   */
+  caption?: string;
+}
+
+--- File: media.maps.ts ---
+
+
+--- File: media.consts.ts ---
+
+
+--- File: media.functions.ts ---
+
+
+--- File: media.css ---
+
+
+--- File: image/Image.astro ---
+---
+/**
+ * src/design/media/image/Image.astro
+ * A flexible image primitive with token-driven aspect ratio and object-fit controls.
+ * - Aspect ratio and object-fit are token-driven via CSS custom properties
+ * - Supports optional rounded corners for softer visual presentation
+ * - Loading and decoding attributes optimize performance for lazy-loaded images
+ * - Optional caption renders as a semantic figcaption element
+ * @props (local): alt, ratio, fit, rounded, loading, decoding
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `ratio`     — aspect ratio preset applied to the wrapper; defaults to 'auto' (intrinsic)
+ * - `fit`       — CSS object-fit on the <img> element; defaults to 'cover'
+ * - `rounded`   — applies border-radius to the image; accepts boolean or size preset
+ * - `loading`   — native lazy loading strategy; defaults to 'lazy'
+ * - `decoding`  — image decoding strategy; defaults to 'async'
+ */
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '../../shared';
+import type { ImageRatio, ImageFit, ImageRounded, ImageLoading, ImageDecoding } from './Image.types';
+import { IMAGE_VAR_MAP, resolveRoundedClass } from './Image.maps';
+import './Image.css';
+
+export interface Props extends MediaComponentProps {
+  alt: string;
+  ratio?: ImageRatio;
+  fit?: ImageFit;
+  rounded?: ImageRounded;
+  loading?: ImageLoading;
+  decoding?: ImageDecoding;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  ratio = 'auto',
+  fit = 'cover',
+  rounded = false,
+  loading = 'lazy',
+  decoding = 'async',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'image',
+  resolveRoundedClass(rounded),
+];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join the array before passing to mergeStyles, which expects a string.
+ * Animation styles and the style prop are handled automatically by mergeStyles.
+ */
+const styles = [
+  IMAGE_VAR_MAP.ratio(ratio),
+  IMAGE_VAR_MAP.fit(fit),
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  <img
+    class="image__img"
+    src={src}
+    alt={alt}
+    loading={loading}
+    decoding={decoding}
+  />
+  {caption && <figcaption class="image__caption">{caption}</figcaption>}
+</figure>
+
+--- File: image/Image.css ---
+.image {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--local-ratio);
+  width: 100%;
+}
+
+.image__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--local-fit, cover);
+}
+
+.image__caption {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* When no ratio is set, let the image define its own height */
+.image:not([style*="--local-ratio"]) .image__img {
+  height: auto;
+}
+
+/* ── Rounded modifiers ───────────────────────────────────────────────────── */
+
+.image--rounded-sm   { border-radius: var(--border-radius-sm); }
+.image--rounded-md   { border-radius: var(--border-radius-md); }
+.image--rounded-lg   { border-radius: var(--border-radius-lg); }
+.image--rounded-full { border-radius: 9999px; }
+
+--- File: image/image.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+  <circle cx="8.5" cy="8.5" r="1.5"/>
+  <polyline points="21 15 16 10 5 21"/>
+</svg>
+
+
+--- File: image/Image.props.ts ---
+import type { MediaComponentProps } from '@/design/media/props';
+import type { ImageRatio, ImageFit, ImageRounded, ImageLoading, ImageDecoding } from './Image.types';
+
+/**
+ * Props for the Image component.
+ * Extends MediaComponentProps, which provides `src`, `caption`, and all
+ * BaseComponentProps (animate, effects, bg, class, style, etc.)
+ */
+export interface ImageProps extends MediaComponentProps {
+  /**
+   * Descriptive alt text for the image.
+   * Required for accessibility. Pass an empty string (`alt=""`) only
+   * for purely decorative images that convey no information.
+   */
+  alt: string;
+
+  /**
+   * Aspect ratio preset applied to the figure wrapper.
+   * Controls the `aspect-ratio` CSS property via a local CSS variable.
+   * Defaults to `auto`, which lets the image use its intrinsic dimensions.
+   */
+  ratio?: ImageRatio;
+
+  /**
+   * How the image fills its container.
+   * Maps to the CSS `object-fit` property on the `<img>` element.
+   * Defaults to `cover`.
+   */
+  fit?: ImageFit;
+
+  /**
+   * Applies border-radius token classes to the figure wrapper.
+   * Pass `true` to use the default `md` radius, or a specific size token.
+   * Defaults to `false` (no rounding).
+   */
+  rounded?: ImageRounded;
+
+  /**
+   * Native browser loading strategy for the `<img>` element.
+   * Use `lazy` for below-the-fold images to defer loading.
+   * Defaults to `lazy`.
+   */
+  loading?: ImageLoading;
+
+  /**
+   * Controls whether the image is decoded on or off the main thread.
+   * `async` avoids blocking rendering while the image is decoded.
+   * Defaults to `async`.
+   */
+  decoding?: ImageDecoding;
+}
+
+--- File: image/Image.types.ts ---
+/**
+ * Valid aspect ratio presets for the Image component.
+ * - `square`   — 1:1
+ * - `video`    — 16:9
+ * - `portrait` — 3:4
+ * - `wide`     — 21:9
+ * - `auto`     — no ratio enforced; image uses intrinsic dimensions
+ */
+export type ImageRatio = 'square' | 'video' | 'portrait' | 'wide' | 'auto';
+
+/**
+ * Controls how the image fills its container.
+ * Maps directly to the CSS `object-fit` property.
+ */
+export type ImageFit = 'cover' | 'contain' | 'fill' | 'none';
+
+/**
+ * Border-radius presets applied to the image wrapper.
+ * - `true` defaults to `md`
+ */
+export type ImageRounded = boolean | 'sm' | 'md' | 'lg' | 'full';
+
+/**
+ * Native browser loading strategy for the underlying `<img>` element.
+ */
+export type ImageLoading = 'lazy' | 'eager';
+
+/**
+ * Controls whether the browser decodes the image on the main thread or off it.
+ * `async` allows decoding off the main thread, avoiding paint delays.
+ * `sync` decodes before rendering — rarely needed.
+ * `auto` leaves the decision to the browser.
+ */
+export type ImageDecoding = 'async' | 'sync' | 'auto';
+
+--- File: image/Image.consts.ts ---
+import type { ImageRatio, ImageFit, ImageLoading } from './Image.types';
+
+/**
+ * All valid aspect ratio preset values.
+ * Used for runtime validation if needed.
+ */
+export const IMAGE_RATIOS: ImageRatio[] = [
+  'square',
+  'video',
+  'portrait',
+  'wide',
+  'auto',
+];
+
+/**
+ * All valid object-fit values.
+ */
+export const IMAGE_FITS: ImageFit[] = ['cover', 'contain', 'fill', 'none'];
+
+/**
+ * All valid loading strategy values.
+ */
+export const IMAGE_LOADING_OPTIONS: ImageLoading[] = ['lazy', 'eager'];
+
+/**
+ * Maps each ratio preset to its CSS `aspect-ratio` value.
+ * Used by `Image.maps.ts` to generate the inline CSS custom property.
+ */
+export const IMAGE_RATIO_VALUES: Record<Exclude<ImageRatio, 'auto'>, string> = {
+  square:   '1 / 1',
+  video:    '16 / 9',
+  portrait: '3 / 4',
+  wide:     '21 / 9',
+};
+
+--- File: image/Image.maps.ts ---
+import type { ImageRatio, ImageFit, ImageRounded } from './Image.types';
+import { IMAGE_RATIO_VALUES } from './Image.consts';
+
+/**
+ * Maps Image props to CSS custom property declarations.
+ * Consumed by Image.astro to build the inline style string passed to mergeStyles.
+ */
+export const IMAGE_VAR_MAP = {
+  /**
+   * Returns a CSS custom property declaration for the aspect ratio.
+   * Returns an empty string for `auto` since no ratio should be enforced.
+   *
+   * @param ratio - The ratio preset to resolve.
+   * @returns A CSS custom property string, or empty string for `auto`.
+   *
+   * @example
+   * IMAGE_VAR_MAP.ratio('video') // '--local-ratio: 16 / 9'
+   */
+  ratio: (ratio: ImageRatio): string => {
+    if (ratio === 'auto') return '';
+    return `--local-ratio: ${IMAGE_RATIO_VALUES[ratio]}`;
+  },
+
+  /**
+   * Returns a CSS custom property declaration for object-fit.
+   *
+   * @param fit - The object-fit value to apply.
+   * @returns A CSS custom property string.
+   *
+   * @example
+   * IMAGE_VAR_MAP.fit('contain') // '--local-fit: contain'
+   */
+  fit: (fit: ImageFit): string => `--local-fit: ${fit}`,
+};
+
+/**
+ * Resolves the `rounded` prop to a BEM modifier class.
+ * A value of `true` defaults to the `md` size.
+ *
+ * @param rounded - The rounded prop value.
+ * @returns A BEM modifier class string, or empty string when falsy.
+ *
+ * @example
+ * resolveRoundedClass(true)   // 'image--rounded-md'
+ * resolveRoundedClass('lg')   // 'image--rounded-lg'
+ * resolveRoundedClass(false)  // ''
+ */
+export function resolveRoundedClass(rounded: ImageRounded): string {
+  if (!rounded) return '';
+  if (rounded === true) return 'image--rounded-md';
+  return `image--rounded-${rounded}`;
+}
+
+--- File: image/index.ts ---
+export type { ImageProps } from './Image.props';
+export type { ImageRatio, ImageFit, ImageRounded, ImageLoading, ImageDecoding } from './Image.types';
+export { IMAGE_RATIOS, IMAGE_FITS, IMAGE_LOADING_OPTIONS, IMAGE_RATIO_VALUES } from './Image.consts';
+export { IMAGE_VAR_MAP, resolveRoundedClass } from './Image.maps';
+
+--- File: image/image.md ---
+# Image
+
+A flexible image primitive that provides token-driven aspect-ratio and object-fit controls, optional rounded corners, and lazy-loading optimizations. It renders a semantic `<figure>` with an optional `<figcaption>`.
+
+## Overview
+
+The component's job is to display a single image with consistent styling across the design system. It does **not** handle responsive src-sets, picture elements, or complex cropping – those concerns belong to higher-level image utilities. The component focuses on token-driven sizing, object-fit, and optional visual tweaks like rounding.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| src | `string` | – | URL of the image (required by `MediaComponentProps`). |
+| alt | `string` | – | Alternative text for accessibility (required). |
+| caption | `string` | – | Optional caption rendered as `<figcaption>`. |
+| ratio | `ImageRatio` (`'auto' | 'square' | 'video' | 'portrait' | 'wide'`) | `'auto'` | Aspect-ratio preset applied via CSS custom property. |
+| fit | `ImageFit` (`'cover' | 'contain'`) | `'cover'` | CSS `object-fit` for the `<img>` element. |
+| rounded | `ImageRounded` (`boolean` | `DisplaySize`) | `false` | Applies a border-radius class; `true` uses the default radius, a string selects a preset. |
+| loading | `ImageLoading` (`'eager' | 'lazy'`) | `'lazy'` | Native lazy-loading strategy. |
+| decoding | `ImageDecoding` (`'sync' | 'async' | 'auto'`) | `'async'` | Image decoding strategy. |
+| class | `string` | – | Additional CSS class. |
+| class:list | `Record<string, boolean>` | – | List of conditional classes. |
+| style | `string | Record<string, string>` | – | Inline style. |
+| animate | `string` | – | Animation class/name. |
+| effects | `string[]` | – | Visual effects. |
+| bg | `BackgroundTone` | – | Background tone class added by `mergeClasses`. |
+
+*All props from `BaseComponentProps` and standard HTML attributes are supported.*
+
+## Variants / Sizes
+
+| Prop | Values | Effect |
+|------|--------|--------|
+| `ratio` | `'auto'`, `'square'`, `'video'`, `'portrait'`, `'wide'` | Sets `--local-ratio` custom property; `auto` leaves dimensions intrinsic. |
+| `fit` | `'cover'`, `'contain'` | Sets `--local-fit` custom property controlling how the image fills its container. |
+| `rounded` | `false`, `true`, or size preset (e.g., `'sm'`) | Adds a BEM modifier class via `resolveRoundedClass`. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Image from '@/design/media/image/Image.astro';
+---
+<figure>
+  <Image src="/images/logo.png" alt="Company logo" />
+</figure>
+```
+
+### Common Patterns
+
+**Responsive ratio with cover fit**
+
+```astro
+---
+import Image from '@/design/media/image/Image.astro';
+---
+<figure>
+  <Image
+    src="/images/hero.jpg"
+    alt="Hero banner"
+    ratio="wide"
+    fit="cover"
+    rounded="sm"
+    loading="eager"
+  />
+</figure>
+```
+
+**Rounded thumbnail with lazy loading**
+
+```astro
+---
+import Image from '@/design/media/image/Image.astro';
+---
+<figure>
+  <Image
+    src="/images/avatar.jpg"
+    alt="User avatar"
+    ratio="square"
+    rounded
+    loading="lazy"
+    decoding="async"
+  />
+</figure>
+```
+
+**Image with caption**
+
+```astro
+---
+import Image from '@/design/media/image/Image.astro';
+---
+<figure>
+  <Image src="/images/diagram.svg" alt="Architecture diagram" />
+  <figcaption>System architecture overview</figcaption>
+</figure>
+```
+
+## Logic
+
+The component does **not** contain an inline `<script>` block; all behavior is driven by native HTML and CSS. No external controller or Region component is used.
+
+## Accessibility
+
+* The required `alt` prop provides descriptive text for screen readers.
+* The component renders a `<figure>` with an optional `<figcaption>` for semantic grouping.
+* No custom ARIA roles are needed; accessibility relies on native image semantics.
+
+## CSS Architecture
+
+* Root BEM class: `image`.
+* Modifier class for rounded corners generated by `resolveRoundedClass` (e.g., `image--rounded`).
+* Token-driven custom properties:
+  * `--local-ratio` from `IMAGE_VAR_MAP.ratio`.
+  * `--local-fit` from `IMAGE_VAR_MAP.fit`.
+* Global animation/effect/bg classes merged via `mergeClasses`.
+
+## Related Components
+
+* `Video` — analogous media component with similar token-driven sizing.
+* `Audio` — sibling media primitive.
+* `Spinner` — useful as a loading placeholder for images that load lazily.
+
+
+--- File: gallery/gallery.svg ---
+
+
+--- File: gallery/Gallery.astro ---
+---
+/**
+ * src/design/media/gallery/Gallery.astro
+ *
+ * A layout wrapper for displaying a collection of images.
+ * Composes with GalleryItem and optionally connects to Lightbox.
+ *
+ * Three layout variants:
+ * - `grid`    — Uniform CSS Grid. Best for homogeneous thumbnails.
+ * - `masonry` — Variable-height grid. Best for mixed-ratio photography.
+ * - `strip`   — Horizontal scroll row. Best for timelines or film strips.
+ *
+ * When `lightbox` is true, each GalleryItem dispatches a `lightbox:open`
+ * custom event on click. The Lightbox component listens for this event
+ * independently — Gallery and Lightbox are decoupled.
+ *
+ * Two usage modes:
+ * 1. Data-driven: pass an `images` array; Gallery renders GalleryItems internally.
+ * 2. Slot-driven: omit `images` and place <GalleryItem> components in the default slot.
+ *
+ * @example — data-driven with lightbox
+ * <Gallery
+ *   images={myImages}
+ *   variant="grid"
+ *   columns={3}
+ *   gap="md"
+ *   lightbox
+ * />
+ *
+ * @example — slot-driven
+ * <Gallery variant="masonry" columns={3} gap="sm">
+ *   <GalleryItem src="/img/a.jpg" alt="A" />
+ *   <GalleryItem src="/img/b.jpg" alt="B" />
+ * </Gallery>
+ *
+ * @props (local): variant, columns, gap, images, lightbox, id
+ * @props (global): class, class:list, style, animate
+ */
+
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles } from '@/design/shared/functions';
+import type { GalleryVariant, GalleryColumns, GalleryGap, GalleryImage } from './Gallery.types';
+import { buildGalleryStyles } from './Gallery.maps';
+import GalleryItem from './GalleryItem.astro';
+import './Gallery.css';
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+export interface Props
+  extends BaseComponentProps,
+    Omit<import('astro/types').HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /**
+   * Layout variant controlling how items are arranged.
+   * @default 'grid'
+   */
+  variant?: GalleryVariant;
+
+  /**
+   * Number of columns. Applies to `grid` and `masonry` variants.
+   * Ignored in `strip` variant (which is always a single row).
+   * @default 3
+   */
+  columns?: GalleryColumns;
+
+  /**
+   * Gap size between gallery items.
+   * @default 'sm'
+   */
+  gap?: GalleryGap;
+
+  /**
+   * Image data array for data-driven usage.
+   * When provided, Gallery renders GalleryItems internally.
+   * When omitted, use the default slot to place GalleryItem components.
+   */
+  images?: GalleryImage[];
+
+  /**
+   * When true, each GalleryItem dispatches a `lightbox:open` event on click,
+   * enabling integration with the Lightbox component.
+   * @default false
+   */
+  lightbox?: boolean;
+
+  /**
+   * Unique ID for this gallery instance.
+   * Required when using lightbox — allows multiple galleries on the same page
+   * to each have their own Lightbox without cross-talk.
+   * Auto-generated from a timestamp if not provided.
+   */
+  id?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Destructure props
+// ---------------------------------------------------------------------------
+
+const {
+  variant = 'grid',
+  columns = 3,
+  gap = 'sm',
+  images,
+  lightbox = false,
+  id,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Stable gallery ID. Used to scope lightbox events when multiple galleries
+ * exist on the same page.
+ */
+const galleryId = id ?? `gallery-${Date.now()}`;
+
+// ---------------------------------------------------------------------------
+// Build classes and styles
+// ---------------------------------------------------------------------------
+
+const classes = [
+  'gallery',
+  `gallery--${variant}`,
+];
+
+const localStyles = buildGalleryStyles(columns, gap);
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(localStyles, Astro.props);
+---
+
+<div
+  id={galleryId}
+  class:list={finalClasses}
+  style={finalStyles}
+  data-gallery-variant={variant}
+  data-gallery-lightbox={lightbox ? 'true' : undefined}
+  {...rest}
+>
+  {images
+    ? images.map((img, index) => (
+        <GalleryItem
+          src={img.src}
+          alt={img.alt}
+          caption={img.caption}
+          index={index}
+          total={images.length}
+          galleryId={galleryId}
+          lightbox={lightbox}
+          allImages={images}
+        />
+      ))
+    : <slot />
+  }
+</div>
+
+
+--- File: gallery/Gallery.consts.ts ---
+/**
+ * src/design/media/gallery/Gallery.consts.ts
+ * Constants for the Gallery component.
+ */
+
+import type { GalleryVariant, GalleryColumns, GalleryGap } from './Gallery.types';
+
+/** All valid gallery layout variants. */
+export const GALLERY_VARIANTS: GalleryVariant[] = ['grid', 'masonry', 'strip'];
+
+/** All valid column counts. */
+export const GALLERY_COLUMNS: GalleryColumns[] = [1, 2, 3, 4, 5, 6];
+
+/** All valid gap sizes. */
+export const GALLERY_GAPS: GalleryGap[] = ['none', 'xs', 'sm', 'md', 'lg', 'xl'];
+
+/**
+ * Maps gap size tokens to CSS custom property declarations.
+ * Values reference the shared --space--* token scale.
+ */
+export const GALLERY_GAP_VALUES: Record<GalleryGap, string> = {
+  none: '0',
+  xs:   'var(--space--2xs)',
+  sm:   'var(--space--xs)',
+  md:   'var(--space--sm)',
+  lg:   'var(--space--md)',
+  xl:   'var(--space--lg)',
+};
+
+/** Custom event name dispatched when a gallery item is activated. */
+export const LIGHTBOX_OPEN_EVENT = 'lightbox:open' as const;
+
+/** Custom event name dispatched when the lightbox requests close. */
+export const LIGHTBOX_CLOSE_EVENT = 'lightbox:close' as const;
+
+/** Custom event dispatched when the lightbox navigates to a new image. */
+export const LIGHTBOX_NAVIGATE_EVENT = 'lightbox:navigate' as const;
+
+
+--- File: gallery/Gallery.css ---
+/* ==========================================================================
+   Gallery Component
+   src/design/media/gallery/Gallery.css
+
+   Layout wrapper for a collection of images.
+
+   Class structure:
+   - .gallery          Base structure, always present.
+   - .gallery--grid    Uniform CSS Grid layout.
+   - .gallery--masonry Variable-height column layout.
+   - .gallery--strip   Single horizontal scrollable row.
+
+   CSS custom properties (set inline by Gallery.astro via buildGalleryStyles):
+   - --gallery-columns   Number of grid columns.
+   - --gallery-gap       Gap between items.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+.gallery {
+  --gallery-columns: 3;
+  --gallery-gap: var(--space--sm);
+
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Grid variant
+   Uniform columns, equal-height cells. Images fill their cells via object-fit.
+   -------------------------------------------------------------------------- */
+
+.gallery--grid {
+  display: grid;
+  grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  gap: var(--gallery-gap);
+}
+
+/* --------------------------------------------------------------------------
+   Masonry variant
+   Uses CSS masonry where supported; falls back to a column layout.
+   The JS fallback in Gallery.ts handles browsers that don't support it yet.
+   -------------------------------------------------------------------------- */
+
+.gallery--masonry {
+  /* Progressive enhancement: use masonry if the browser supports it. */
+  display: grid;
+  grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  gap: var(--gallery-gap);
+}
+
+@supports (grid-template-rows: masonry) {
+  .gallery--masonry {
+    grid-template-rows: masonry;
+    align-items: start;
+  }
+}
+
+/* JS-powered masonry fallback: items are positioned absolutely.
+   Applied by Gallery.ts when CSS masonry is unsupported. */
+.gallery--masonry.gallery--js-masonry {
+  position: relative;
+  /* Height is set inline by the JS controller after layout is calculated. */
+}
+
+.gallery--masonry.gallery--js-masonry .gallery-item {
+  position: absolute;
+  /* top / left are set inline by the JS controller. */
+}
+
+/* --------------------------------------------------------------------------
+   Strip variant
+   A single horizontal row with overflow scroll. No wrapping.
+   -------------------------------------------------------------------------- */
+
+.gallery--strip {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gallery-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Smooth momentum scrolling on iOS. */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  /* Hide scrollbar visually but keep it functional. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent, currentColor) transparent;
+}
+
+.gallery--strip .gallery-item {
+  flex: 0 0 auto;
+  width: calc(100% / var(--gallery-columns));
+  scroll-snap-align: start;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — collapse to fewer columns on narrow viewports.
+   These are sensible defaults; override via the `columns` prop inline styles.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+  .gallery--grid,
+  .gallery--masonry {
+    grid-template-columns: repeat(
+      min(var(--gallery-columns), 2),
+      1fr
+    );
+  }
+}
+
+@media (max-width: 30rem) {
+  .gallery--grid,
+  .gallery--masonry {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery--strip .gallery-item {
+    width: 80vw;
+  }
+}
+
+
+--- File: gallery/Gallery.maps.ts ---
+/**
+ * src/design/media/gallery/Gallery.maps.ts
+ * Prop-to-CSS mapping utilities for the Gallery component.
+ */
+
+import type { GalleryColumns, GalleryGap } from './Gallery.types';
+import { GALLERY_GAP_VALUES } from './Gallery.consts';
+
+/**
+ * Builds the inline CSS custom properties for the Gallery layout.
+ * Returns a semicolon-joined string ready to pass to mergeStyles.
+ *
+ * @param columns - Number of columns for the grid layout.
+ * @param gap     - Gap size token between items.
+ * @returns A CSS custom property string.
+ *
+ * @example
+ * buildGalleryStyles(3, 'md')
+ * // '--gallery-columns: 3; --gallery-gap: var(--space--sm)'
+ */
+export function buildGalleryStyles(columns: GalleryColumns, gap: GalleryGap): string {
+  return [
+    `--gallery-columns: ${columns}`,
+    `--gallery-gap: ${GALLERY_GAP_VALUES[gap]}`,
+  ].join('; ');
+}
+
+
+--- File: gallery/Gallery.types.ts ---
+/**
+ * src/design/media/gallery/Gallery.types.ts
+ * Type definitions for the Gallery and GalleryItem components.
+ */
+
+/**
+ * Layout variant for the Gallery component.
+ *
+ * - `grid`    — Uniform columns. All items share the same cell size.
+ *               Best for homogeneous content (avatars, album art, thumbnails).
+ * - `masonry` — Variable-height columns via CSS `grid-template-rows: masonry`
+ *               (with JS fallback for browsers that don't support it yet).
+ *               Best for photography with mixed aspect ratios.
+ * - `strip`   — Single horizontal row, horizontally scrollable.
+ *               Best for timelines, film strips, or preview rows.
+ */
+export type GalleryVariant = 'grid' | 'masonry' | 'strip';
+
+/**
+ * Number of columns in the gallery grid.
+ * Accepts a number (uniform across breakpoints) or a responsive object.
+ */
+export type GalleryColumns = 1 | 2 | 3 | 4 | 5 | 6;
+
+/**
+ * Gap between gallery items.
+ * Maps to shared SpacingScale tokens.
+ */
+export type GalleryGap = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+/**
+ * Data shape for a single gallery image.
+ * Used when passing images as a data array rather than via slots.
+ */
+export interface GalleryImage {
+  /** URL of the image. */
+  src: string;
+  /** Alt text for the image. Required for accessibility. */
+  alt: string;
+  /** Optional caption displayed on hover or in the lightbox. */
+  caption?: string;
+  /** Optional width hint (used by masonry layout). */
+  width?: number;
+  /** Optional height hint (used by masonry layout). */
+  height?: number;
+}
+
+/**
+ * Payload dispatched by the `lightbox:open` custom event.
+ * Consumed by the Lightbox controller.
+ */
+export interface LightboxOpenPayload {
+  /** All images in the current gallery, in order. */
+  images: GalleryImage[];
+  /** Index of the image that triggered the open. */
+  index: number;
+  /** The gallery instance ID, used to scope event listeners. */
+  galleryId: string;
+}
+
+
+--- File: gallery/GalleryItem.astro ---
+---
+/**
+ * src/design/media/gallery/GalleryItem.astro
+ *
+ * An individual item within a Gallery. Renders an Image with an optional
+ * hover overlay and caption reveal.
+ *
+ * When `lightbox` is true, clicking the item dispatches a `lightbox:open`
+ * custom DOM event with the full image set and the current index as payload.
+ * The Lightbox controller listens for this event — GalleryItem does not
+ * import or depend on Lightbox directly.
+ *
+ * Can be used standalone inside a Gallery slot, or rendered automatically
+ * by Gallery when the `images` data array prop is provided.
+ *
+ * @props (local): src, alt, caption, index, total, galleryId, lightbox, allImages
+ * @props (global): class, class:list, style
+ */
+
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses, mergeStyles } from '@/design/shared/functions';
+import Image from '@/design/media/image/Image.astro';
+import type { GalleryImage } from './Gallery.types';
+import { LIGHTBOX_OPEN_EVENT } from './Gallery.consts';
+import './GalleryItem.css';
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+export interface Props
+  extends BaseComponentProps,
+    Omit<import('astro/types').HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /** Image source URL. */
+  src: string;
+  /** Alt text for the image. Required for accessibility. */
+  alt: string;
+  /** Optional caption shown in the hover overlay and in the Lightbox. */
+  caption?: string;
+  /**
+   * Zero-based index of this item within its Gallery.
+   * Used to set the correct starting position when opening Lightbox.
+   */
+  index?: number;
+  /** Total number of items in the Gallery. Used for aria-label. */
+  total?: number;
+  /** The parent Gallery's ID. Passed through to the lightbox:open event. */
+  galleryId?: string;
+  /**
+   * When true, the item is interactive: hover overlay shows, click dispatches
+   * a `lightbox:open` event.
+   * @default false
+   */
+  lightbox?: boolean;
+  /**
+   * The full array of images in the parent Gallery.
+   * Passed through in the `lightbox:open` event payload so the Lightbox
+   * can build its navigation set.
+   */
+  allImages?: GalleryImage[];
+}
+
+// ---------------------------------------------------------------------------
+// Destructure props
+// ---------------------------------------------------------------------------
+
+const {
+  src,
+  alt,
+  caption,
+  index = 0,
+  total = 1,
+  galleryId = '',
+  lightbox = false,
+  allImages = [],
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// ---------------------------------------------------------------------------
+// Build classes
+// ---------------------------------------------------------------------------
+
+const classes = [
+  'gallery-item',
+  lightbox && 'gallery-item--interactive',
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+
+// ---------------------------------------------------------------------------
+// Aria label for screen readers
+// ---------------------------------------------------------------------------
+
+const ariaLabel = lightbox
+  ? `Open image ${index + 1} of ${total}${caption ? `: ${caption}` : ''}`
+  : undefined;
+---
+
+<div
+  class:list={finalClasses}
+  style={finalStyles}
+  role={lightbox ? 'button' : undefined}
+  tabindex={lightbox ? 0 : undefined}
+  aria-label={ariaLabel}
+  data-gallery-item
+  data-index={index}
+  data-gallery-id={galleryId || undefined}
+  {...rest}
+>
+  <Image
+    src={src}
+    alt={alt}
+    ratio="auto"
+    fit="cover"
+    class="gallery-item__image"
+  />
+
+  {(caption || lightbox) && (
+    <div class="gallery-item__overlay" aria-hidden="true">
+      {caption && <p class="gallery-item__caption">{caption}</p>}
+      {lightbox && (
+        <span class="gallery-item__zoom-icon">
+          <!-- Inline SVG zoom icon; no external dependency. -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <line x1="11" y1="8" x2="11" y2="14" />
+            <line x1="8" y1="11" x2="14" y2="11" />
+          </svg>
+        </span>
+      )}
+    </div>
+  )}
+</div>
+
+{lightbox && (
+  <script define:vars={{ index, galleryId, allImages, LIGHTBOX_OPEN_EVENT }}>
+    /**
+     * GalleryItem inline script.
+     * Scoped to this item; runs once per item on page load.
+     * Dispatches a `lightbox:open` CustomEvent when the item is activated.
+     */
+    (function () {
+      /** @type {HTMLElement | null} */
+      const item = document.querySelector(
+        `[data-gallery-id="${galleryId}"][data-index="${index}"]`
+      );
+
+      if (!item) return;
+
+      /**
+       * Dispatches the lightbox:open event with the full image set and index.
+       */
+      function openLightbox() {
+        window.dispatchEvent(
+          new CustomEvent(LIGHTBOX_OPEN_EVENT, {
+            detail: {
+              images: allImages,
+              index: index,
+              galleryId: galleryId,
+            },
+          })
+        );
+      }
+
+      item.addEventListener('click', openLightbox);
+
+      item.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox();
+        }
+      });
+    })();
+  </script>
+)}
+
+
+--- File: gallery/GalleryItem.css ---
+/* ==========================================================================
+   GalleryItem Component
+   src/design/media/gallery/GalleryItem.css
+
+   Individual item within a Gallery. Handles image display, hover overlay,
+   caption reveal, and zoom icon.
+
+   Class structure:
+   - .gallery-item               Base structure. Always present.
+   - .gallery-item--interactive  Adds hover/focus states for lightbox-enabled items.
+   - .gallery-item__image        The Image component wrapper.
+   - .gallery-item__overlay      Hover overlay containing caption and zoom icon.
+   - .gallery-item__caption      Caption text inside the overlay.
+   - .gallery-item__zoom-icon    SVG zoom indicator.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+.gallery-item {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  /* Border radius matches the shared radius token for cards/images. */
+  border-radius: var(--radius--md);
+  background: var(--layer--0, var(--color-bg));
+  /* Prevent layout shift while images load. */
+  min-height: 4rem;
+}
+
+.gallery-item__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Overlay
+   Hidden by default; revealed on hover/focus-within for interactive items.
+   -------------------------------------------------------------------------- */
+
+.gallery-item__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--space--sm);
+  /* Gradient from transparent at top to semi-opaque at bottom. */
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgb(0 0 0 / 0.6) 100%
+  );
+  opacity: 0;
+  transition: opacity 200ms ease;
+  /* Prevent overlay from capturing pointer events when hidden. */
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive variant — hover / focus-within states
+   -------------------------------------------------------------------------- */
+
+.gallery-item--interactive {
+  cursor: pointer;
+}
+
+.gallery-item--interactive:hover .gallery-item__overlay,
+.gallery-item--interactive:focus-visible .gallery-item__overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gallery-item--interactive:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-accent));
+  outline-offset: 2px;
+}
+
+/* Image subtle scale on hover — only for interactive items. */
+.gallery-item--interactive .gallery-item__image {
+  transition: transform 300ms ease;
+}
+
+.gallery-item--interactive:hover .gallery-item__image {
+  transform: scale(1.04);
+}
+
+/* --------------------------------------------------------------------------
+   Caption
+   -------------------------------------------------------------------------- */
+
+.gallery-item__caption {
+  margin: 0;
+  font-size: var(--font-size--xs, 0.75rem);
+  font-family: var(--font-sans);
+  color: hsl(0 0% 95%);
+  text-align: center;
+  /* Prevent overflow on long captions. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Zoom icon
+   -------------------------------------------------------------------------- */
+
+.gallery-item__zoom-icon {
+  position: absolute;
+  top: var(--space--xs);
+  right: var(--space--xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: hsl(0 0% 95%);
+  opacity: 0.85;
+}
+
+.gallery-item__zoom-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item--interactive .gallery-item__image {
+    transition: none;
+  }
+
+  .gallery-item__overlay {
+    transition: none;
+  }
+}
+
+
+--- File: gallery/gallery-lightbox.md ---
+# Gallery + Lightbox
+
+A composed image collection system. `Gallery` handles layout; `Lightbox` handles fullscreen viewing. They are decoupled — `Gallery` works without `Lightbox`, and `Lightbox` can be triggered by anything that dispatches a `lightbox:open` event.
+
+---
+
+## Gallery
+
+A layout wrapper for displaying a collection of images. Three layout variants: `grid`, `masonry`, and `strip`.
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `variant` | `'grid' \| 'masonry' \| 'strip'` | `'grid'` | Layout mode. |
+| `columns` | `1–6` | `3` | Number of columns. Ignored in `strip` variant. |
+| `gap` | `'none' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Gap between items. Maps to `--space--*` tokens. |
+| `images` | `GalleryImage[]` | — | Data-driven image array. When provided, Gallery renders GalleryItems internally. |
+| `lightbox` | `boolean` | `false` | When true, each item dispatches a `lightbox:open` event on click. |
+| `id` | `string` | auto | Stable ID for this gallery instance. Required when multiple galleries coexist on the same page. |
+| `class` | `string` | — | Additional CSS classes. |
+| `class:list` | `string` | — | List of CSS classes. |
+
+### Variants
+
+#### `grid`
+Uniform CSS Grid. All items share the same cell size. Best for homogeneous content — avatars, album art, thumbnails.
+
+#### `masonry`
+Variable-height columns. Uses `grid-template-rows: masonry` where supported, with a CSS column fallback elsewhere. Best for photography with mixed aspect ratios.
+
+#### `strip`
+A single horizontal row with `overflow-x: scroll` and `scroll-snap`. Best for timelines, film strips, or preview rows.
+
+### Usage
+
+**Data-driven with lightbox:**
+```astro
+---
+import Gallery from '@/design/media/gallery/Gallery.astro';
+import Lightbox from '@/design/media/lightbox/Lightbox.astro';
+
+const photos = [
+  { src: '/photos/a.jpg', alt: 'A photo', caption: 'Caption text' },
+  { src: '/photos/b.jpg', alt: 'B photo' },
+];
+---
+
+<Lightbox />
+
+<Gallery
+  images={photos}
+  variant="grid"
+  columns={3}
+  gap="md"
+  lightbox
+/>
+```
+
+**Slot-driven:**
+```astro
+---
+import Gallery from '@/design/media/gallery/Gallery.astro';
+import GalleryItem from '@/design/media/gallery/GalleryItem.astro';
+---
+
+<Gallery variant="masonry" columns={3} gap="sm">
+  <GalleryItem src="/a.jpg" alt="A" caption="Caption A" lightbox allImages={photos} galleryId="my-gallery" index={0} total={2} />
+  <GalleryItem src="/b.jpg" alt="B" lightbox allImages={photos} galleryId="my-gallery" index={1} total={2} />
+</Gallery>
+```
+
+**Film strip:**
+```astro
+<Gallery variant="strip" columns={4} gap="xs" images={frames} />
+```
+
+---
+
+## GalleryItem
+
+An individual item within a Gallery. Renders an `Image` with an optional hover overlay and caption reveal.
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `src` | `string` | — | Image source URL. Required. |
+| `alt` | `string` | — | Alt text. Required. |
+| `caption` | `string` | — | Optional caption shown in overlay and Lightbox. |
+| `index` | `number` | `0` | Zero-based index within the Gallery. Used for Lightbox navigation. |
+| `total` | `number` | `1` | Total images in the Gallery. Used for aria-label. |
+| `galleryId` | `string` | `''` | Parent Gallery's ID. Scopes the `lightbox:open` event. |
+| `lightbox` | `boolean` | `false` | Enables hover overlay and click-to-open behaviour. |
+| `allImages` | `GalleryImage[]` | `[]` | Full image set passed in the `lightbox:open` event payload. |
+
+---
+
+## Lightbox
+
+A fullscreen image viewer. Type C Region component — static HTML mount point (`Lightbox.astro`) with an external TypeScript controller (`Lightbox.ts`).
+
+Place **one `<Lightbox />`** per page. All galleries share it.
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `id` | `string` | `'lightbox-region'` | ID for the root `<dialog>` element. |
+
+### Keyboard support
+
+| Key | Action |
+|---|---|
+| `←` Arrow | Previous image |
+| `→` Arrow | Next image |
+| `Escape` | Close |
+
+### Touch support
+
+Swipe left → next image. Swipe right → previous image. Minimum 50px swipe distance to prevent accidental navigation.
+
+### Custom events
+
+| Event | Direction | Payload |
+|---|---|---|
+| `lightbox:open` | Gallery → Lightbox | `{ images, index, galleryId }` |
+| `lightbox:close` | Lightbox → world | none |
+
+Anything that dispatches a `lightbox:open` `CustomEvent` on `window` can open the Lightbox — it's not tied to Gallery specifically.
+
+---
+
+## Architecture notes
+
+**Decoupling.** Gallery and Lightbox communicate exclusively via `window.dispatchEvent`. Neither imports the other. This means:
+- Gallery works without Lightbox on the page (items just don't open a viewer).
+- Lightbox can be triggered from anywhere — a card, a button, a custom component.
+- Multiple gallery instances on one page share a single Lightbox dialog without any wiring.
+
+**`<dialog>` element.** The Lightbox uses the native HTML `<dialog>` element with `showModal()`. This gives top-layer stacking (no `z-index` configuration), a native `::backdrop` pseudo-element, and built-in focus trapping and `Escape` key handling via the browser.
+
+**Double-init guard.** `initLightbox()` checks for a `data-lightbox-init` attribute before attaching listeners. This prevents duplicate event bindings if the script runs more than once (e.g. in Astro's view transitions).
+
+**`GalleryImage` type.** Shared between Gallery and Lightbox via `Gallery.types.ts`. Both re-export it from their own `index.ts` for clean import paths.
+
+---
+
+## Related components
+
+- [`Image`](/docs/components/image)
+- [`Video`](/docs/components/video)
+- [`Paper`](/docs/components/paper)
+
+
+--- File: gallery/index.ts ---
+/**
+ * src/design/media/gallery/index.ts
+ * Barrel exports for the Gallery component family.
+ */
+
+export type {
+  GalleryVariant,
+  GalleryColumns,
+  GalleryGap,
+  GalleryImage,
+  LightboxOpenPayload,
+} from './Gallery.types';
+
+export {
+  GALLERY_VARIANTS,
+  GALLERY_COLUMNS,
+  GALLERY_GAPS,
+  GALLERY_GAP_VALUES,
+  LIGHTBOX_OPEN_EVENT,
+  LIGHTBOX_CLOSE_EVENT,
+  LIGHTBOX_NAVIGATE_EVENT,
+} from './Gallery.consts';
+
+export { buildGalleryStyles } from './Gallery.maps';
+
+
+--- File: waveform/Waveform.astro ---
+
+
+--- File: waveform/Waveform.css ---
+
+
+--- File: waveform/waveform.svg ---
+
+
+--- File: audio/audio.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 18V5l12-2v13"/>
+  <circle cx="6" cy="18" r="3"/>
+  <circle cx="18" cy="16" r="3"/>
+</svg>
+
+
+--- File: audio/Audio.astro ---
+---
+/**
+ * src/design/media/audio/Audio.astro
+ * A flexible audio primitive supporting native browser controls or a custom minimal overlay player.
+ * - Native variant uses browser controls for maximum accessibility
+ * - Minimal variant renders a custom overlay with play/pause, scrubber, and timestamp
+ * - Boolean attributes (loop, autoplay, muted) are coerced to `undefined` when false to prevent HTML attribute leakage
+ * - Optional title and label provide semantic context for screen readers
+ * @props (local): title, label, variant, type, loop, autoplay, muted
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `variant` — 'native' uses browser controls; 'minimal' renders a custom overlay
+ * - `title`   — descriptive title displayed above the audio player
+ * - `label`   — additional label text for context or metadata
+ */
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '../../shared';
+import type { AudioVariant, AudioMimeType } from './Audio.types';
+import { resolveVariantClass } from './Audio.maps';
+import './Audio.css';
+
+export interface Props extends MediaComponentProps {
+  title?: string;
+  label?: string;
+  variant?: AudioVariant;
+  type?: AudioMimeType;
+  loop?: boolean;
+  autoplay?: boolean;
+  muted?: boolean;
+}
+
+const {
+  src,
+  caption,
+  title,
+  label,
+  variant = 'native',
+  type,
+  loop = false,
+  autoplay = false,
+  muted = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'audio',
+  resolveVariantClass(variant),
+];
+
+/**
+ * No component-specific CSS custom properties for Audio —
+ * layout is not token-driven in the same way as Image.
+ * mergeStyles still handles animation styles and the style prop.
+ */
+const styles = '';
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {title && <p class="audio__title">{title}</p>}
+  {label && <p class="audio__label">{label}</p>}
+
+  {variant === 'native' && (
+    <audio
+      controls
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+    >
+      <source src={src} type={type} />
+    </audio>
+  )}
+
+  {variant === 'minimal' && (
+    <div
+      class="audio__player"
+      data-audio-player
+      data-src={src}
+      data-loop={loop}
+      data-autoplay={autoplay}
+      data-muted={muted}
+    >
+      <button class="audio__play" aria-label="Play">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+          <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+        </svg>
+      </button>
+      <div class="audio__scrubber" data-scrubber>
+        <div class="audio__progress" data-progress></div>
+      </div>
+      <span class="audio__time" data-time>0:00</span>
+    </div>
+  )}
+
+  {caption && <figcaption class="audio__caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  /**
+   * Wires up all minimal audio players on the page.
+   * Runs once on load; uses data attributes to avoid coupling to the
+   * component's internal class names.
+   */
+  function initAudioPlayers(): void {
+    const players = document.querySelectorAll<HTMLElement>('[data-audio-player]');
+
+    players.forEach((player) => {
+      const src       = player.dataset.src ?? '';
+      const loop      = player.dataset.loop === 'true';
+      const autoplay  = player.dataset.autoplay === 'true';
+      const muted     = player.dataset.muted === 'true';
+
+      const playBtn   = player.querySelector<HTMLButtonElement>('.audio__play');
+      const scrubber  = player.querySelector<HTMLElement>('[data-scrubber]');
+      const progress  = player.querySelector<HTMLElement>('[data-progress]');
+      const timeEl    = player.querySelector<HTMLElement>('[data-time]');
+
+      // Guard against malformed or partially-rendered markup.
+      // The non-null assertions below are safe because this return ensures
+      // we only proceed when all four elements are present.
+      if (!playBtn || !scrubber || !progress || !timeEl) return;
+
+      const btn  = playBtn!;
+      const scr  = scrubber!;
+      const prog = progress!;
+      const time = timeEl!;
+
+      const audio = new Audio(src);
+      audio.loop    = loop;
+      audio.muted   = muted;
+
+      /** Formats seconds into `m:ss` display string. */
+      function formatTime(seconds: number): string {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      }
+
+      /** Updates the play button icon to reflect current playback state. */
+      function syncPlayIcon(playing: boolean): void {
+        btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        btn.innerHTML = playing
+          ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <rect x="2" y="1" width="3.5" height="12" rx="1" />
+               <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
+             </svg>`
+          : `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+             </svg>`;
+      }
+
+      /** Updates the scrubber fill and time display on each timeupdate tick. */
+      function onTimeUpdate(): void {
+        if (!audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        prog.style.width = `${pct}%`;
+        time.textContent = formatTime(audio.currentTime);
+      }
+
+      /** Seeks the audio to the position clicked on the scrubber. */
+      function onScrubberClick(e: MouseEvent): void {
+        if (!audio.duration) return;
+        const rect = scr.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pct * audio.duration;
+      }
+
+      btn.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      });
+
+      audio.addEventListener('play',       () => syncPlayIcon(true));
+      audio.addEventListener('pause',      () => syncPlayIcon(false));
+      audio.addEventListener('ended',      () => syncPlayIcon(false));
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      scr.addEventListener('click',        onScrubberClick);
+
+      if (autoplay) audio.play();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initAudioPlayers);
+</script>
+
+--- File: audio/Audio.consts.ts ---
+import type { AudioVariant, AudioMimeType } from './Audio.types';
+
+/**
+ * All valid variant values.
+ * Used for runtime validation if needed.
+ */
+export const AUDIO_VARIANTS: AudioVariant[] = ['native', 'minimal', 'none'];
+
+/**
+ * All valid MIME type values.
+ * Used for runtime validation if needed.
+ */
+export const AUDIO_MIME_TYPES: AudioMimeType[] = [
+  'audio/mpeg',
+  'audio/ogg',
+  'audio/wav',
+  'audio/webm',
+  'audio/aac',
+  'audio/flac',
+];
+
+
+--- File: audio/Audio.css ---
+.audio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.audio__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.audio__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.audio__caption {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ── Native variant ──────────────────────────────────────────────────────── */
+
+.audio--native audio {
+  width: 100%;
+  display: block;
+}
+
+/* ── Minimal variant ─────────────────────────────────────────────────────── */
+
+.audio__player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.audio__play {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-primary);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.audio__play:hover {
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-secondary);
+}
+
+.audio__play:active {
+  transform: scale(0.96);
+}
+
+.audio__scrubber {
+  flex: 1;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--color-border-tertiary);
+  position: relative;
+  cursor: pointer;
+}
+
+.audio__progress {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--color-text-primary);
+  width: 0%;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+.audio__time {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+
+--- File: audio/Audio.maps.ts ---
+import type { AudioVariant } from './Audio.types';
+
+/**
+ * Resolves the `variant` prop to a BEM modifier class.
+ *
+ * @param variant - The variant value to resolve.
+ * @returns A BEM modifier class string.
+ *
+ * @example
+ * resolveVariantClass('minimal') // 'audio--minimal'
+ * resolveVariantClass('native')  // 'audio--native'
+ */
+export function resolveVariantClass(variant: AudioVariant): string {
+  return `audio--${variant}`;
+}
+
+/**
+ * Formats a duration in seconds into a human-readable `m:ss` string.
+ * Used by the minimal player to display elapsed and total time.
+ * Not called at build time — exported here so Audio.astro can inline
+ * it into the component's <script> without duplicating the logic.
+ *
+ * @param seconds - A non-negative number of seconds.
+ * @returns A formatted time string, e.g. `"3:07"`.
+ *
+ * @example
+ * formatAudioTime(187) // '3:07'
+ * formatAudioTime(60)  // '1:00'
+ * formatAudioTime(9)   // '0:09'
+ */
+export function formatAudioTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+
+--- File: audio/Audio.props.ts ---
+import type { MediaComponentProps } from '@/design/media/props';
+import type { AudioVariant, AudioMimeType } from './Audio.types';
+
+/**
+ * Props for the Audio component.
+ * Extends MediaComponentProps, which provides `src`, `caption`, and all
+ * BaseComponentProps (animate, effects, bg, class, style, etc.)
+ */
+export interface AudioProps extends MediaComponentProps {
+  /**
+   * Optional visible title rendered above the player.
+   * Useful for identifying the track, episode, or clip.
+   */
+  title?: string;
+
+  /**
+   * Optional secondary label rendered beneath the title.
+   * Typically used for the artist name, show name, or source.
+   */
+  label?: string;
+
+  /**
+   * Controls how much of the player UI is rendered.
+   * - `native`  — delegates entirely to the browser's built-in controls
+   * - `minimal` — renders a custom single-line play/pause + scrubber + time display
+   * - `none`    — no controls; useful when playback is driven by an external trigger
+   * Defaults to `native`.
+   */
+  variant?: AudioVariant;
+
+  /**
+   * MIME type hint for the audio source.
+   * Passed to `<source type>` so the browser can skip formats it cannot
+   * decode without downloading the file first.
+   * Optional — omit if the file extension makes the type unambiguous.
+   */
+  type?: AudioMimeType;
+
+  /**
+   * Whether the audio should restart from the beginning when it ends.
+   * Defaults to `false`.
+   */
+  loop?: boolean;
+
+  /**
+   * Whether the audio should begin playing as soon as it is ready.
+   * Browsers may block autoplay without a prior user interaction.
+   * Defaults to `false`.
+   */
+  autoplay?: boolean;
+
+  /**
+   * Whether the audio should start muted.
+   * Required by most browsers for autoplay to be permitted.
+   * Defaults to `false`.
+   */
+  muted?: boolean;
+}
+
+
+--- File: audio/Audio.types.ts ---
+/**
+ * Controls how much of the browser's native audio UI is exposed.
+ * - `native`  — full browser controls (play, seek, volume, download)
+ * - `minimal` — custom single-line player (play/pause, scrubber, time)
+ * - `none`    — no controls; useful when playback is driven externally
+ */
+export type AudioVariant = 'native' | 'minimal' | 'none';
+
+/**
+ * MIME type hint for the audio source.
+ * Passed to the `<source type>` attribute so the browser can skip
+ * formats it cannot decode without downloading the file first.
+ */
+export type AudioMimeType =
+  | 'audio/mpeg'
+  | 'audio/ogg'
+  | 'audio/wav'
+  | 'audio/webm'
+  | 'audio/aac'
+  | 'audio/flac';
+
+
+--- File: audio/index.ts ---
+export type { AudioProps } from './Audio.props';
+export type { AudioVariant, AudioMimeType } from './Audio.types';
+export { AUDIO_VARIANTS, AUDIO_MIME_TYPES } from './Audio.consts';
+export { resolveVariantClass, formatAudioTime } from './Audio.maps';
+
+
+--- File: audio/audio.md ---
+# Audio
+
+A flexible audio primitive that can render native browser controls or a minimal custom overlay player. It provides a simple, accessible way to embed audio tracks while giving developers control over UI complexity.
+
+## Overview
+
+The component's job is to play an audio source and optionally present a minimal UI with play/pause, scrubber, and timestamp. It does **not** handle playlists, advanced visualizations, or custom decoding – those responsibilities belong to higher‑level media controllers. The component is deliberately lightweight, exposing only the props needed to configure source, format, and basic playback behavior.
+
+## Props
+
+| Prop      | Type                              | Default   | Description |
+|-----------|-----------------------------------|-----------|-------------|
+| src       | `string`                          | –         | URL of the audio file (required by `MediaComponentProps`). |
+| caption   | `string`                          | –         | Optional caption rendered as `<figcaption>`. |
+| title     | `string`                          | –         | Optional title displayed above the player. |
+| label     | `string`                          | –         | Optional secondary label displayed below the title. |
+| variant   | `'native' \| 'minimal' \| 'none'`| `'native'`| Controls UI: `native` shows full browser controls, `minimal` shows a custom overlay, `none` renders only the `<audio>` element without UI. |
+| type      | `AudioMimeType` (see types file)  | –         | MIME type hint for the `<source>` element. |
+| loop      | `boolean`                         | `false`   | Whether the audio should loop. |
+| autoplay  | `boolean`                         | `false`   | Whether playback starts automatically. |
+| muted     | `boolean`                         | `false`   | Whether the audio starts muted. |
+| class     | `string`                          | –         | Global class prop merged via `mergeClasses`. |
+| class:list| `Record<string, boolean>`         | –         | Object‑list class prop merged via `mergeClasses`. |
+| style     | `string \| Record<string,string>` | –         | Inline styles merged via `mergeStyles`. |
+| animate   | `string`                          | –         | Animation string processed by `mergeClasses`. |
+| effects   | `string[]`                        | –         | Visual effects processed by `mergeClasses`. |
+| bg        | `BackgroundTone`                  | –         | Background tone class added by `mergeClasses`. |
+
+*All props from `MediaComponentProps` (`src`, `caption`) and `BaseComponentProps` (global props) are included.*
+
+## Variants / Sizes
+
+| Variant | Visual effect |
+|---------|---------------|
+| `native` | Full native browser UI (play, seek, volume, download). |
+| `minimal`| Single‑line custom overlay with play/pause button, scrubber, and timestamp. |
+| `none`   | No UI – only the `<audio>` element; useful for background audio. |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Audio from '@/design/media/audio/Audio.astro';
+---
+<figure>
+  <Audio src="/media/song.mp3" />
+</figure>
+```
+
+### Common Patterns
+
+**Native controls with caption**
+
+```astro
+---
+import Audio from '@/design/media/audio/Audio.astro';
+---
+<figure>
+  <Audio src="/media/podcast.mp3" variant="native" caption="Episode 12 – Design Systems" />
+</figure>
+```
+
+**Minimal overlay with autoplay and loop**
+
+```astro
+---
+import Audio from '@/design/media/audio/Audio.astro';
+---
+<figure>
+  <Audio
+    src="/media/ambient.wav"
+    variant="minimal"
+    autoplay
+    loop
+    title="Ambient Loop"
+    label="Background ambience"
+  />
+</figure>
+```
+
+**Muted background audio (no UI)**
+
+```astro
+---
+import Audio from '@/design/media/audio/Audio.astro';
+---
+<figure>
+  <Audio src="/media/background.mp3" variant="none" muted />
+</figure>
+```
+
+## Logic
+
+The component contains an inline `<script>` that runs once on page load. It:
+
+* Finds every element with `data-audio-player`.
+* Reads data attributes (`src`, `loop`, `autoplay`, `muted`).
+* Instantiates a native `Audio` object and wires up:
+  * Play/pause button toggling.
+  * Scrubber click handling for seeking.
+  * Time‑update handling to update the progress bar and timestamp.
+  * Autoplay handling when the `autoplay` attribute is true.
+
+All behavior lives inside the component; there is no external controller file.
+
+## Accessibility
+
+* The native variant relies on the browser's built‑in accessibility for `<audio>`.
+* The minimal overlay provides an accessible button with `aria-label` that toggles between "Play" and "Pause".
+* Captions are rendered inside `<figcaption>` for screen‑reader context.
+* No custom ARIA roles are required beyond the native element.
+
+## CSS Architecture
+
+* BEM root class: `audio`.
+* Modifier class generated by `resolveVariantClass` (e.g., `audio--minimal`).
+* No component‑specific CSS custom properties; layout is handled by the wrapper and token‑driven classes from the design system.
+* Global animation, effects, and background classes are merged via `mergeClasses`.
+
+## Related Components
+
+* `Image` – visual media counterpart.
+* `Video` – similar pattern with a minimal overlay player.
+* `Spinner` – generic loading indicator often used alongside media components.
+
+--- File: video/video.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+  <line x1="7" y1="2" x2="7" y2="22"/>
+  <line x1="17" y1="2" x2="17" y2="22"/>
+  <line x1="2" y1="12" x2="22" y2="12"/>
+  <line x1="2" y1="7" x2="7" y2="7"/>
+  <line x1="2" y1="17" x2="7" y2="17"/>
+  <line x1="17" y1="17" x2="22" y2="17"/>
+  <line x1="17" y1="7" x2="22" y2="7"/>
+</svg>
+
+
+--- File: video/index.ts ---
+export type { VideoProps } from './Video.props';
+export type { VideoVariant, VideoRatio, VideoFit, VideoMimeType } from './Video.types';
+export { VIDEO_VARIANTS, VIDEO_RATIOS, VIDEO_FITS, VIDEO_MIME_TYPES, VIDEO_RATIO_VALUES } from './Video.consts';
+export { VIDEO_VAR_MAP, resolveVariantClass, formatVideoTime } from './Video.maps';
+
+
+--- File: video/Video.astro ---
+---
+/**
+ * src/design/media/video/Video.astro
+ * A flexible video primitive supporting native browser controls or a custom minimal overlay player.
+ * - Aspect ratio and object-fit are token-driven via CSS custom properties
+ * - Minimal variant renders a custom overlay with play/pause, scrubber, timestamp, and fullscreen
+ * - Boolean attributes (loop, autoplay, muted) are coerced to `undefined` when false to prevent HTML attribute leakage
+ * - Controls fade in on hover or focus, keeping ambient/none variants visually clean
+ * @props (local): src, poster, variant, ratio, fit, type, loop, autoplay, muted, disablePip, caption
+ * @props (global): class, class:list, style, animate, effects, bg
+ * - `variant`    — 'native' uses browser controls; 'minimal' renders a custom overlay; 'none' hides all controls
+ * - `ratio`      — aspect ratio preset applied to the wrapper; defaults to 'video' (16:9)
+ * - `fit`        — CSS object-fit on the <video> element; defaults to 'contain'
+ * - `disablePip` — prevents the browser from offering picture-in-picture mode
+ */
+
+import type { MediaComponentProps } from '@/design/media/props';
+import { mergeClasses, mergeStyles } from '@/design/shared';
+import type { VideoVariant, VideoRatio, VideoFit, VideoMimeType } from './Video.types';
+import { VIDEO_VAR_MAP, resolveVariantClass } from './Video.maps';
+import './Video.css';
+
+export interface Props extends MediaComponentProps {
+  poster?: string;
+  variant?: VideoVariant;
+  ratio?: VideoRatio;
+  fit?: VideoFit;
+  type?: VideoMimeType;
+  loop?: boolean;
+  autoplay?: boolean;
+  muted?: boolean;
+  disablePip?: boolean;
+}
+
+const {
+  src,
+  caption,
+  poster,
+  variant = 'native',
+  ratio = 'video',
+  fit = 'contain',
+  type,
+  loop = false,
+  autoplay = false,
+  muted = false,
+  disablePip = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * Animation, effects, bg, class, and class:list are handled automatically by mergeClasses.
+ */
+const classes = [
+  'video',
+  resolveVariantClass(variant),
+];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join the array before passing to mergeStyles, which expects a string.
+ * Animation styles and the style prop are handled automatically by mergeStyles.
+ */
+const styles = [
+  VIDEO_VAR_MAP.ratio(ratio),
+  VIDEO_VAR_MAP.fit(fit),
+].filter(Boolean).join(';');
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+---
+
+<figure
+  class:list={finalClasses}
+  style={finalStyles}
+  {...rest}
+>
+  {variant === 'native' && (
+    <video
+      class="video__el"
+      src={src}
+      poster={poster}
+      controls
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+      disablepictureinpicture={disablePip || undefined}
+    >
+      <source src={src} type={type} />
+    </video>
+  )}
+
+  {variant === 'minimal' && (
+    <div
+      class="video__wrapper"
+      data-video-player
+      data-src={src}
+      data-loop={loop}
+      data-autoplay={autoplay}
+      data-muted={muted}
+    >
+      <video
+        class="video__el"
+        poster={poster}
+        loop={loop || undefined}
+        autoplay={autoplay || undefined}
+        muted={muted || undefined}
+        disablepictureinpicture={disablePip || undefined}
+        playsinline
+      >
+        <source src={src} type={type} />
+      </video>
+      <div class="video__controls" data-controls>
+        <button class="video__play" aria-label="Play">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+            <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+          </svg>
+        </button>
+        <div class="video__scrubber" data-scrubber>
+          <div class="video__progress" data-progress></div>
+        </div>
+        <span class="video__time" data-time>0:00</span>
+        <button class="video__fullscreen" aria-label="Enter fullscreen">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 5V1h4M10 1h4v4M15 10v4h-4M6 15H1v-4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )}
+
+  {variant === 'none' && (
+    <video
+      class="video__el"
+      src={src}
+      poster={poster}
+      loop={loop || undefined}
+      autoplay={autoplay || undefined}
+      muted={muted || undefined}
+      disablepictureinpicture={disablePip || undefined}
+      playsinline
+    >
+      <source src={src} type={type} />
+    </video>
+  )}
+
+  {caption && <figcaption class="video__caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  /**
+   * Wires up all minimal video players on the page.
+   * Runs once on load; uses data attributes to avoid coupling to the
+   * component's internal class names.
+   */
+  function initVideoPlayers(): void {
+    const players = document.querySelectorAll<HTMLElement>('[data-video-player]');
+
+    players.forEach((player) => {
+      const loop     = player.dataset.loop === 'true';
+      const autoplay = player.dataset.autoplay === 'true';
+      const muted    = player.dataset.muted === 'true';
+
+      const videoEl   = player.querySelector<HTMLVideoElement>('.video__el');
+      const playBtn   = player.querySelector<HTMLButtonElement>('.video__play');
+      const scrubber  = player.querySelector<HTMLElement>('[data-scrubber]');
+      const progress  = player.querySelector<HTMLElement>('[data-progress]');
+      const timeEl    = player.querySelector<HTMLElement>('[data-time]');
+      const fullscBtn = player.querySelector<HTMLButtonElement>('.video__fullscreen');
+
+      // Guard against malformed or partially-rendered markup.
+      // The non-null assertions below are safe because this return ensures
+      // we only proceed when all elements are present.
+      if (!videoEl || !playBtn || !scrubber || !progress || !timeEl || !fullscBtn) return;
+
+      const vid    = videoEl!;
+      const btn    = playBtn!;
+      const scr    = scrubber!;
+      const prog   = progress!;
+      const time   = timeEl!;
+      const fullsc = fullscBtn!;
+
+      vid.loop  = loop;
+      vid.muted = muted;
+
+      /** Formats seconds into `m:ss` display string. */
+      function formatTime(seconds: number): string {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      }
+
+      /** Updates the play button icon to reflect current playback state. */
+      function syncPlayIcon(playing: boolean): void {
+        btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        btn.innerHTML = playing
+          ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <rect x="2" y="1" width="3.5" height="12" rx="1" />
+               <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
+             </svg>`
+          : `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+               <path d="M2 1.5l10 5.5-10 5.5V1.5z" />
+             </svg>`;
+      }
+
+      /** Updates the scrubber fill and time display on each timeupdate tick. */
+      function onTimeUpdate(): void {
+        if (!vid.duration) return;
+        const pct = (vid.currentTime / vid.duration) * 100;
+        prog.style.width = `${pct}%`;
+        time.textContent = formatTime(vid.currentTime);
+      }
+
+      /** Seeks the video to the position clicked on the scrubber. */
+      function onScrubberClick(e: MouseEvent): void {
+        if (!vid.duration) return;
+        const rect = scr.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        vid.currentTime = pct * vid.duration;
+      }
+
+      /** Toggles fullscreen on the player wrapper element. */
+      function onFullscreen(): void {
+        if (!document.fullscreenElement) {
+          player.requestFullscreen();
+          fullsc.setAttribute('aria-label', 'Exit fullscreen');
+        } else {
+          document.exitFullscreen();
+          fullsc.setAttribute('aria-label', 'Enter fullscreen');
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        if (vid.paused) {
+          vid.play();
+        } else {
+          vid.pause();
+        }
+      });
+
+      vid.addEventListener('play',       () => syncPlayIcon(true));
+      vid.addEventListener('pause',      () => syncPlayIcon(false));
+      vid.addEventListener('ended',      () => syncPlayIcon(false));
+      vid.addEventListener('timeupdate', onTimeUpdate);
+      scr.addEventListener('click',      onScrubberClick);
+      fullsc.addEventListener('click',   onFullscreen);
+
+      if (autoplay) vid.play();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initVideoPlayers);
+</script>
+
+
+--- File: video/Video.consts.ts ---
+import type { VideoVariant, VideoRatio, VideoFit, VideoMimeType } from './Video.types';
+
+/**
+ * All valid variant values.
+ * Used for runtime validation if needed.
+ */
+export const VIDEO_VARIANTS: VideoVariant[] = ['native', 'minimal', 'none'];
+
+/**
+ * All valid aspect ratio preset values.
+ * Used for runtime validation if needed.
+ */
+export const VIDEO_RATIOS: VideoRatio[] = [
+  'square',
+  'video',
+  'portrait',
+  'wide',
+  'auto',
+];
+
+/**
+ * All valid object-fit values.
+ * Used for runtime validation if needed.
+ */
+export const VIDEO_FITS: VideoFit[] = ['cover', 'contain'];
+
+/**
+ * All valid MIME type values.
+ * Used for runtime validation if needed.
+ */
+export const VIDEO_MIME_TYPES: VideoMimeType[] = [
+  'video/mp4',
+  'video/webm',
+  'video/ogg',
+  'video/mov',
+];
+
+/**
+ * Maps each ratio preset to its CSS `aspect-ratio` value.
+ * Used by `Video.maps.ts` to generate the inline CSS custom property.
+ */
+export const VIDEO_RATIO_VALUES: Record<Exclude<VideoRatio, 'auto'>, string> = {
+  square:   '1 / 1',
+  video:    '16 / 9',
+  portrait: '9 / 16',
+  wide:     '21 / 9',
+};
+
+
+--- File: video/Video.css ---
+.video {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--local-ratio);
+  background: var(--color-background-tertiary);
+}
+
+.video__el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--local-fit, contain);
+}
+
+.video__caption {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* When no ratio is set, let the video define its own height */
+.video:not([style*="--local-ratio"]) .video__el {
+  height: auto;
+}
+
+/* ── Minimal variant ─────────────────────────────────────────────────────── */
+
+.video__controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.video:hover .video__controls,
+.video:focus-within .video__controls,
+.video--playing .video__controls {
+  opacity: 1;
+}
+
+.video__play {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.video__play:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.video__play:active {
+  transform: scale(0.96);
+}
+
+.video__scrubber {
+  flex: 1;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.3);
+  position: relative;
+  cursor: pointer;
+}
+
+.video__progress {
+  height: 100%;
+  border-radius: 9999px;
+  background: #fff;
+  width: 0%;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+.video__time {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.85);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+.video__fullscreen {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.video__fullscreen:hover {
+  color: #fff;
+}
+
+
+--- File: video/Video.maps.ts ---
+import type { VideoRatio, VideoFit, VideoVariant } from './Video.types';
+import { VIDEO_RATIO_VALUES } from './Video.consts';
+
+/**
+ * Maps Video props to CSS custom property declarations.
+ * Consumed by Video.astro to build the inline style string passed to mergeStyles.
+ */
+export const VIDEO_VAR_MAP = {
+  /**
+   * Returns a CSS custom property declaration for the aspect ratio.
+   * Returns an empty string for `auto` since no ratio should be enforced.
+   *
+   * @param ratio - The ratio preset to resolve.
+   * @returns A CSS custom property string, or empty string for `auto`.
+   *
+   * @example
+   * VIDEO_VAR_MAP.ratio('video')    // '--local-ratio: 16 / 9'
+   * VIDEO_VAR_MAP.ratio('portrait') // '--local-ratio: 9 / 16'
+   * VIDEO_VAR_MAP.ratio('auto')     // ''
+   */
+  ratio: (ratio: VideoRatio): string => {
+    if (ratio === 'auto') return '';
+    return `--local-ratio: ${VIDEO_RATIO_VALUES[ratio]}`;
+  },
+
+  /**
+   * Returns a CSS custom property declaration for object-fit.
+   *
+   * @param fit - The object-fit value to apply.
+   * @returns A CSS custom property string.
+   *
+   * @example
+   * VIDEO_VAR_MAP.fit('cover')   // '--local-fit: cover'
+   * VIDEO_VAR_MAP.fit('contain') // '--local-fit: contain'
+   */
+  fit: (fit: VideoFit): string => `--local-fit: ${fit}`,
+};
+
+/**
+ * Resolves the `variant` prop to a BEM modifier class.
+ *
+ * @param variant - The variant value to resolve.
+ * @returns A BEM modifier class string.
+ *
+ * @example
+ * resolveVariantClass('minimal') // 'video--minimal'
+ * resolveVariantClass('native')  // 'video--native'
+ */
+export function resolveVariantClass(variant: VideoVariant): string {
+  return `video--${variant}`;
+}
+
+/**
+ * Formats a duration in seconds into a human-readable `m:ss` string.
+ * Used by the minimal player to display elapsed and total time.
+ * Not called at build time — exported here so Video.astro can inline
+ * it into the component's <script> without duplicating the logic.
+ *
+ * @param seconds - A non-negative number of seconds.
+ * @returns A formatted time string, e.g. `"3:07"`.
+ *
+ * @example
+ * formatVideoTime(187) // '3:07'
+ * formatVideoTime(60)  // '1:00'
+ * formatVideoTime(9)   // '0:09'
+ */
+export function formatVideoTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+
+--- File: video/Video.props.ts ---
+import type { MediaComponentProps } from '@/design/media/props';
+import type { VideoVariant, VideoRatio, VideoFit, VideoMimeType } from './Video.types';
+
+/**
+ * Props for the Video component.
+ * Extends MediaComponentProps, which provides `src`, `caption`, and all
+ * BaseComponentProps (animate, effects, bg, class, style, etc.)
+ */
+export interface VideoProps extends MediaComponentProps {
+  /**
+   * URL for the video poster image.
+   * Displayed before the video plays and while it is loading.
+   */
+  poster?: string;
+
+  /**
+   * Controls how much of the player UI is rendered.
+   * - `native`  — delegates entirely to the browser's built-in controls
+   * - `minimal` — renders a custom overlay with play/pause, scrubber, time, and fullscreen
+   * - `none`    — no controls; suitable for ambient or background video
+   * Defaults to `native`.
+   */
+  variant?: VideoVariant;
+
+  /**
+   * Aspect ratio preset applied to the video wrapper.
+   * Controls the `aspect-ratio` CSS property via a local CSS variable.
+   * Defaults to `video` (16:9).
+   */
+  ratio?: VideoRatio;
+
+  /**
+   * How the video fills its container.
+   * Maps to the CSS `object-fit` property on the `<video>` element.
+   * Defaults to `contain`.
+   */
+  fit?: VideoFit;
+
+  /**
+   * MIME type hint for the video source.
+   * Passed to `<source type>` so the browser can skip formats it cannot
+   * decode without downloading the file first.
+   * Optional — omit if the file extension makes the type unambiguous.
+   */
+  type?: VideoMimeType;
+
+  /**
+   * Whether the video should restart from the beginning when it ends.
+   * Defaults to `false`.
+   */
+  loop?: boolean;
+
+  /**
+   * Whether the video should begin playing as soon as it is ready.
+   * Most browsers require `muted` to be `true` for autoplay to be permitted.
+   * Defaults to `false`.
+   */
+  autoplay?: boolean;
+
+  /**
+   * Whether the video should start muted.
+   * Required by most browsers for autoplay to be permitted.
+   * Defaults to `false`.
+   */
+  muted?: boolean;
+
+  /**
+   * Whether picture-in-picture mode should be disabled.
+   * Defaults to `false`.
+   */
+  disablePip?: boolean;
+}
+
+
+--- File: video/Video.types.ts ---
+/**
+ * Controls how much of the browser's native video UI is exposed.
+ * - `native`  — full browser controls (play, seek, volume, fullscreen)
+ * - `minimal` — custom overlay controls (play/pause, scrubber, time, fullscreen)
+ * - `none`    — no controls; useful for background/ambient video
+ */
+export type VideoVariant = 'native' | 'minimal' | 'none';
+
+/**
+ * Valid aspect ratio presets for the Video component.
+ * - `square`   — 1:1
+ * - `video`    — 16:9 (default for most video content)
+ * - `portrait` — 9:16 (vertical/mobile video)
+ * - `wide`     — 21:9 (cinematic)
+ * - `auto`     — no ratio enforced; video uses intrinsic dimensions
+ */
+export type VideoRatio = 'square' | 'video' | 'portrait' | 'wide' | 'auto';
+
+/**
+ * Controls how the video fills its container.
+ * Maps directly to the CSS `object-fit` property.
+ */
+export type VideoFit = 'cover' | 'contain';
+
+/**
+ * MIME type hint for the video source.
+ * Passed to the `<source type>` attribute so the browser can skip
+ * formats it cannot decode without downloading the file first.
+ */
+export type VideoMimeType =
+  | 'video/mp4'
+  | 'video/webm'
+  | 'video/ogg'
+  | 'video/mov';
+
+
+--- File: video/video.md ---
+# Video
+
+A flexible video primitive that supports native browser controls or a custom minimal overlay player. It offers token-driven aspect-ratio and object-fit handling, plus optional fullscreen support.
+
+## Overview
+
+The component's responsibility is to render a video source with optional UI controls. It does **not** manage playlists, adaptive streaming, or complex media pipelines – those are left to higher-level controllers. The minimal overlay adds a lightweight UI (play/pause, scrubber, timestamp, fullscreen) while keeping the markup simple and accessible.
+
+## Props
+
+| Prop          | Type                              | Default   | Description |
+|---------------|-----------------------------------|-----------|-------------|
+| src           | `string`                          | –       | URL of the video file (required by `MediaComponentProps`). |
+| caption       | `string`                          | –       | Optional caption rendered as `<figcaption>`. |
+| poster        | `string`                          | –       | Optional poster image shown before playback. |
+| variant       | `'native' \| 'minimal' \| 'none'`| `'native'`| UI mode: native browser controls, minimal custom overlay, or no UI. |
+| ratio         | `VideoRatio`` ('square'|'video'|'portrait'|'wide'|'auto'`) | `'video'` | Aspect-ratio preset applied via CSS custom property. |
+| fit           | `VideoFit`` ('cover'|'contain'`)  | `'contain'`| CSS `object-fit` for the video element. |
+| type          | `VideoMimeType` (see types file)  | –       | MIME type hint for the `<source>` element. |
+| loop          | `boolean`                         | `false`   | Whether the video should loop. |
+| autoplay      | `boolean`                         | `false`   | Whether playback starts automatically. |
+| muted         | `boolean`                         | `false`   | Whether the video starts muted. |
+| disablePip    | `boolean`                         | `false`   | Disables native picture-in-picture mode. |
+| class         | `string`                          | –       | Global class prop merged via `mergeClasses`. |
+| class:list    | `Record<string, boolean>`         | –       | Object-list class prop merged via `mergeClasses`. |
+| style         | `string \| Record<string,string>` | –       | Inline styles merged via `mergeStyles`. |
+| animate       | `string`                          | –       | Animation string processed by `mergeClasses`. |
+| effects       | `string[]`                        | –       | Visual effects processed by `mergeClasses`. |
+| bg            | `BackgroundTone`                  | –       | Background tone class added by `mergeClasses`. |
+
+*All props from `MediaComponentProps`` (src`, `caption`) and `BaseComponentProps` (global props) are included.*
+
+## Variants / Sizes
+
+| Variant | Visual effect |
+|---------|---------------|
+| `native` | Full native browser UI (play, seek, volume, fullscreen). |
+| `minimal`| Custom overlay with play/pause button, scrubber, timestamp, and fullscreen toggle. |
+| `none`   | No UI – only the `video` element (useful for background video). |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/intro.mp4" />
+</figure>
+```
+
+### Common Patterns
+
+**Native video with poster**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/demo.mp4" poster="/media/demo-poster.jpg" variant="native" />
+</figure>
+```
+
+**Minimal overlay with custom ratio and fullscreen**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video
+    src="/media/hero.mp4"
+    variant="minimal"
+    ratio="wide"
+    fit="cover"
+    autoplay
+    muted
+    disablePip
+  />
+</figure>
+```
+
+**Background video (no UI, auto-loop)**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/bg.mp4" variant="none" loop autoplay muted />
+</figure>
+```
+
+## Logic
+
+The component includes an inline `<script>` that:
+
+* Finds all elements with `data-video-player`.
+* Reads data attributes (`loop`, `autoplay`, `muted`).
+* Sets up the video element, play/pause button, scrubber, progress bar, timestamp, and fullscreen button.
+* Handles:
+  * Play/pause toggling.
+  * Scrubber click seeking.
+  * Time-update for progress bar and timestamp.
+  * Fullscreen toggle (request/exit fullscreen).
+  * Autoplays when the `autoplay` attribute is true.
+
+All logic is self-contained; there is no external controller file.
+
+## Accessibility
+
+* Native variant inherits full browser accessibility for `video`.
+* Minimal overlay provides a button with `aria-label` that toggles between "Play" and "Pause", and a fullscreen button with appropriate labeling.
+* Captions are rendered inside `<figcaption>` for screen-reader context.
+* No custom ARIA roles beyond native semantics.
+
+## CSS Architecture
+
+* Root BEM class: `video`.
+* Modifier class from `resolveVariantClass` (e.g., `video--minimal`).
+* Token-driven custom properties:
+  * `--local-ratio` from `VIDEO_VAR_MAP.ratio`.
+  * `--local-fit` from `VIDEO_VAR_MAP.fit`.
+* Global animation/effect/bg classes merged via `mergeClasses`.
+
+## Related Components
+
+* `Audio` – sibling media primitive with similar minimal overlay logic.
+* `Image` – token-driven visual component.
+* `Spinner` – often used as a loading placeholder for media. (`'square'|'video'|'portrait'|'wide'|'auto'`) | `'video'` | Aspect-ratio preset applied via CSS custom property. |
+| fit           | `VideoFit` (`'cover'|'contain'`)  | `'contain'`| CSS `object-fit` for the video element. |
+| type          | `VideoMimeType` (see types file)  | –       | MIME type hint for the `<source>` element. |
+| loop          | `boolean`                         | `false`   | Whether the video should loop. |
+| autoplay      | `boolean`                         | `false`   | Whether playback starts automatically. |
+| muted         | `boolean`                         | `false`   | Whether the video starts muted. |
+| disablePip    | `boolean`                         | `false`   | Disables native picture-in-picture mode. |
+| class         | `string`                          | –       | Global class prop merged via `mergeClasses`. |
+| class:list    | `Record<string, boolean>`         | –       | Object-list class prop merged via `mergeClasses`. |
+| style         | `string \| Record<string,string>` | –       | Inline styles merged via `mergeStyles`. |
+| animate       | `string`                          | –       | Animation string processed by `mergeClasses`. |
+| effects       | `string[]`                        | –       | Visual effects processed by `mergeClasses`. |
+| bg            | `BackgroundTone`                  | –       | Background tone class added by `mergeClasses`. |
+
+*All props from `MediaComponentProps` (`src`, `caption`) and `BaseComponentProps` (global props) are included.*
+
+## Variants / Sizes
+
+| Variant | Visual effect |
+|---------|---------------|
+| `native` | Full native browser UI (play, seek, volume, fullscreen). |
+| `minimal`| Custom overlay with play/pause button, scrubber, timestamp, and fullscreen toggle. |
+| `none`   | No UI – only the `video` element (useful for background video). |
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/intro.mp4" />
+</figure>
+```
+
+### Common Patterns
+
+**Native video with poster**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/demo.mp4" poster="/media/demo-poster.jpg" variant="native" />
+</figure>
+```
+
+**Minimal overlay with custom ratio and fullscreen**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video
+    src="/media/hero.mp4"
+    variant="minimal"
+    ratio="wide"
+    fit="cover"
+    autoplay
+    muted
+    disablePip
+  />
+</figure>
+```
+
+**Background video (no UI, auto-loop)**
+
+```astro
+---
+import Video from '@/design/media/video/Video.astro';
+---
+<figure>
+  <Video src="/media/bg.mp4" variant="none" loop autoplay muted />
+</figure>
+```
+
+## Logic
+
+The component includes an inline `<script>` that:
+
+* Finds all elements with `data-video-player`.
+* Reads data attributes (`loop`, `autoplay`, `muted`).
+* Sets up the video element, play/pause button, scrubber, progress bar, timestamp, and fullscreen button.
+* Handles:
+  * Play/pause toggling.
+  * Scrubber click seeking.
+  * Time-update for progress bar and timestamp.
+  * Fullscreen toggle (request/exit fullscreen).
+  * Autoplays when the `autoplay` attribute is true.
+
+All logic is self-contained; there is no external controller file.
+
+## Accessibility
+
+* Native variant inherits full browser accessibility for `video`.
+* Minimal overlay provides a button with `aria-label` that toggles between "Play" and "Pause", and a fullscreen button with appropriate labeling.
+* Captions are rendered inside `<figcaption>` for screen-reader context.
+* No custom ARIA roles beyond native semantics.
+
+## CSS Architecture
+
+* Root BEM class: `video`.
+* Modifier class from `resolveVariantClass` (e.g., `video--minimal`).
+* Token-driven custom properties:
+  * `--local-ratio` from `VIDEO_VAR_MAP.ratio`.
+  * `--local-fit` from `VIDEO_VAR_MAP.fit`.
+* Global animation/effect/bg classes merged via `mergeClasses`.
+
+## Related Components
+
+* `Audio` – sibling media primitive with similar minimal overlay logic.
+* `Image` – token-driven visual component.
+* `Spinner` – often used as a loading placeholder for media.
+
+--- File: avatar-group/AvatarGroup.astro ---
+
+
+--- File: avatar-group/AvatarGroup.css ---
+
+
+--- File: avatar-group/avatar-group.svg ---
+
+
+--- File: file-preview/FilePreview.astro ---
+
+
+--- File: file-preview/FilePreview.css ---
+
+
+--- File: file-preview/file-preview.svg ---
+
+
+--- File: lightbox/lightbox.svg ---
+
+
+--- File: lightbox/index.ts ---
+/**
+ * src/design/media/lightbox/index.ts
+ * Barrel exports for the Lightbox component.
+ */
+
+export type { LightboxState, GalleryImage, LightboxOpenPayload } from './Lightbox.types';
+export { initLightbox } from './Lightbox.ts';
+
+
+--- File: lightbox/Lightbox.astro ---
+---
+/**
+ * src/design/media/lightbox/Lightbox.astro
+ *
+ * A fullscreen image viewer — the Region mount point for the Lightbox.
+ * This component is Type C: it renders static HTML and relies on
+ * Lightbox.ts (the external controller) for all interactive behavior.
+ *
+ * The Lightbox listens for `lightbox:open` CustomEvents dispatched by
+ * GalleryItem. It does not import Gallery — the two components are
+ * decoupled via DOM events.
+ *
+ * Place one <Lightbox /> per page. If multiple galleries are present,
+ * they all share this single Lightbox instance.
+ *
+ * @example
+ * <!-- In your layout or page -->
+ * <Lightbox />
+ * <!-- ... rest of page content ... -->
+ * <Gallery images={photos} lightbox />
+ *
+ * @props (local): id
+ * @props (global): class, class:list, style
+ */
+
+import type { BaseComponentProps } from '@/design/shared/props';
+import { mergeClasses } from '@/design/shared/functions';
+import './Lightbox.css';
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+export interface Props
+  extends BaseComponentProps,
+    Omit<import('astro/types').HTMLAttributes<'div'>, keyof BaseComponentProps> {
+  /**
+   * ID for the root dialog element.
+   * The Lightbox controller uses this to find the mount point.
+   * @default 'lightbox-region'
+   */
+  id?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Destructure props
+// ---------------------------------------------------------------------------
+
+const {
+  id = 'lightbox-region',
+  class: className,
+  'class:list': classList,
+  ...rest
+} = Astro.props;
+
+const classes = ['lightbox'];
+const finalClasses = mergeClasses(classes, Astro.props);
+---
+
+<!--
+  The native <dialog> element gives us:
+  - Top-layer stacking (no z-index wars)
+  - ::backdrop pseudo-element for the overlay
+  - Focus trapping when open
+  - ESC key to close (handled natively + reinforced in controller)
+-->
+<dialog
+  id={id}
+  class:list={finalClasses}
+  aria-label="Image viewer"
+  aria-modal="true"
+  data-lightbox-region
+  {...rest}
+>
+  <!-- Backdrop: clicking it closes the lightbox -->
+  <div class="lightbox__backdrop" data-lightbox-backdrop aria-hidden="true"></div>
+
+  <!-- Main container -->
+  <div class="lightbox__container" role="document">
+
+    <!-- Header: counter + close -->
+    <header class="lightbox__header">
+      <span class="lightbox__counter" aria-live="polite" aria-atomic="true" data-lightbox-counter>
+        <!-- Populated by controller: "1 / 12" -->
+      </span>
+      <button
+        class="lightbox__close"
+        type="button"
+        aria-label="Close image viewer"
+        data-lightbox-close
+      >
+        <!-- Close icon: × -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- Image stage -->
+    <div class="lightbox__stage">
+
+      <!-- Previous button -->
+      <button
+        class="lightbox__nav lightbox__nav--prev"
+        type="button"
+        aria-label="Previous image"
+        data-lightbox-prev
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <!-- The image itself. src + alt populated by controller. -->
+      <div class="lightbox__image-wrap">
+        <img
+          class="lightbox__image"
+          src=""
+          alt=""
+          loading="eager"
+          decoding="async"
+          data-lightbox-image
+        />
+      </div>
+
+      <!-- Next button -->
+      <button
+        class="lightbox__nav lightbox__nav--next"
+        type="button"
+        aria-label="Next image"
+        data-lightbox-next
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          width="24"
+          height="24"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Caption -->
+    <footer class="lightbox__footer">
+      <p class="lightbox__caption" data-lightbox-caption aria-live="polite" aria-atomic="true">
+        <!-- Populated by controller -->
+      </p>
+    </footer>
+
+  </div>
+</dialog>
+
+<!-- Load the external controller. is:inline is NOT used here so TypeScript
+     compilation applies. The controller finds this dialog by its id. -->
+<script>
+  import { initLightbox } from './Lightbox.ts';
+  initLightbox();
+</script>
+
+
+--- File: lightbox/Lightbox.css ---
+/* ==========================================================================
+   Lightbox Component
+   src/design/media/lightbox/Lightbox.css
+
+   Fullscreen image viewer built on the native <dialog> element.
+   Uses the top-layer stacking context — no z-index wars.
+
+   Class structure:
+   - .lightbox                   Root <dialog> element.
+   - .lightbox__backdrop         Clickable overlay behind the container.
+   - .lightbox__container        Inner content box (header + stage + footer).
+   - .lightbox__header           Counter + close button row.
+   - .lightbox__counter          "N / Total" text.
+   - .lightbox__close            Close button.
+   - .lightbox__stage            Image + prev/next button row.
+   - .lightbox__image-wrap       Constrained image container.
+   - .lightbox__image            The <img> element.
+   - .lightbox__nav              Prev / next buttons.
+   - .lightbox__nav--prev        Previous button.
+   - .lightbox__nav--next        Next button.
+   - .lightbox__footer           Caption area.
+   - .lightbox__caption          Caption text.
+   - .lightbox__footer--empty    Applied when there is no caption.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Dialog reset + fullscreen fill
+   -------------------------------------------------------------------------- */
+
+.lightbox {
+  /* Reset browser dialog defaults. */
+  margin: 0;
+  padding: 0;
+  border: none;
+  /* Fill the viewport. */
+  width: 100dvw;
+  height: 100dvh;
+  max-width: 100dvw;
+  max-height: 100dvh;
+  /* Transparent background — the backdrop and container provide the visual layers. */
+  background: transparent;
+  /* Override browser default display: none so our own open/close handling works. */
+  overflow: hidden;
+}
+
+/* Native ::backdrop — the overlay behind the dialog top-layer element. */
+.lightbox::backdrop {
+  background: rgb(0 0 0 / 0.88);
+  /* Slight blur on the page content behind the lightbox. */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop (inner clickable layer for close-on-click)
+   -------------------------------------------------------------------------- */
+
+.lightbox__backdrop {
+  position: fixed;
+  inset: 0;
+  cursor: zoom-out;
+}
+
+/* --------------------------------------------------------------------------
+   Container
+   -------------------------------------------------------------------------- */
+
+.lightbox__container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Prevent container from intercepting backdrop clicks at its edges. */
+  pointer-events: none;
+}
+
+/* Re-enable pointer events on all direct children of the container. */
+.lightbox__container > * {
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Header — counter + close
+   -------------------------------------------------------------------------- */
+
+.lightbox__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space--sm) var(--space--md);
+  flex-shrink: 0;
+}
+
+.lightbox__counter {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--font-size--sm, 0.875rem);
+  color: hsl(0 0% 75%);
+  letter-spacing: 0.05em;
+  /* Prevent layout shift as counter text changes (e.g. 1→12). */
+  min-width: 4ch;
+}
+
+.lightbox__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: var(--radius--sm);
+  background: transparent;
+  color: hsl(0 0% 75%);
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.lightbox__close:hover {
+  color: hsl(0 0% 100%);
+  background: hsl(0 0% 100% / 0.1);
+}
+
+.lightbox__close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Stage — image + prev/next
+   -------------------------------------------------------------------------- */
+
+.lightbox__stage {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space--sm);
+  /* Allow the image to use the full available height. */
+  min-height: 0;
+  padding: 0 var(--space--xs);
+}
+
+/* --------------------------------------------------------------------------
+   Image
+   -------------------------------------------------------------------------- */
+
+.lightbox__image-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 8rem); /* Reserve space for header + footer. */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius--sm);
+  /* Subtle shadow to lift the image off the dark backdrop. */
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.5);
+  /* Smooth src transitions via opacity. */
+  transition: opacity 150ms ease;
+}
+
+/* Loading state: briefly fade out between images. Applied by the controller. */
+.lightbox__image.is-loading {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation buttons
+   -------------------------------------------------------------------------- */
+
+.lightbox__nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid hsl(0 0% 100% / 0.15);
+  border-radius: var(--radius--full, 9999px);
+  background: hsl(0 0% 100% / 0.08);
+  color: hsl(0 0% 90%);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.lightbox__nav:hover {
+  background: hsl(0 0% 100% / 0.18);
+  border-color: hsl(0 0% 100% / 0.3);
+  color: hsl(0 0% 100%);
+}
+
+.lightbox__nav:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.lightbox__nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — caption
+   -------------------------------------------------------------------------- */
+
+.lightbox__footer {
+  padding: var(--space--sm) var(--space--md);
+  flex-shrink: 0;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease;
+}
+
+.lightbox__footer--empty {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lightbox__caption {
+  margin: 0;
+  font-size: var(--font-size--sm, 0.875rem);
+  font-family: var(--font-sans);
+  color: hsl(0 0% 70%);
+  text-align: center;
+  max-width: 60ch;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__image,
+  .lightbox__close,
+  .lightbox__nav,
+  .lightbox__footer {
+    transition: none;
+  }
+}
+
+
+--- File: lightbox/Lightbox.ts ---
+/**
+ * src/design/media/lightbox/Lightbox.ts
+ *
+ * External controller for the Lightbox Region component.
+ * Imported and initialised by Lightbox.astro via a <script> block.
+ *
+ * Responsibilities:
+ * - Listen for `lightbox:open` CustomEvents dispatched by GalleryItem.
+ * - Manage open / close state on the <dialog> element.
+ * - Handle previous / next navigation.
+ * - Respond to keyboard events (Arrow keys, Escape).
+ * - Update image src, alt, caption, and counter in the DOM.
+ * - Restore focus to the triggering element on close.
+ * - Support swipe gestures on touch devices.
+ *
+ * This controller does NOT import Gallery or GalleryItem. Communication
+ * is entirely via CustomEvents, keeping the two sides decoupled.
+ */
+
+import type { LightboxState, GalleryImage } from './Lightbox.types';
+import {
+  LIGHTBOX_OPEN_EVENT,
+  LIGHTBOX_CLOSE_EVENT,
+} from '../gallery/Gallery.consts';
+
+// ---------------------------------------------------------------------------
+// DOM selectors — one place to update if IDs/attrs change
+// ---------------------------------------------------------------------------
+
+/** Data attribute selectors for all Lightbox DOM nodes. */
+const SEL = {
+  dialog:   '[data-lightbox-region]',
+  backdrop: '[data-lightbox-backdrop]',
+  image:    '[data-lightbox-image]',
+  caption:  '[data-lightbox-caption]',
+  counter:  '[data-lightbox-counter]',
+  close:    '[data-lightbox-close]',
+  prev:     '[data-lightbox-prev]',
+  next:     '[data-lightbox-next]',
+} as const;
+
+// ---------------------------------------------------------------------------
+// Module-level state
+// ---------------------------------------------------------------------------
+
+/** Mutable state for the current lightbox session. */
+const state: LightboxState = {
+  isOpen:       false,
+  images:       [],
+  currentIndex: 0,
+  galleryId:    '',
+};
+
+/** The element that had focus before the lightbox opened. Restored on close. */
+let previouslyFocused: HTMLElement | null = null;
+
+/** Touch start X position for swipe detection. */
+let touchStartX = 0;
+
+// ---------------------------------------------------------------------------
+// DOM helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Retrieves a required DOM element within a given root.
+ * Logs a warning if the element isn't found — useful during development.
+ *
+ * @param root     - The element to search within.
+ * @param selector - CSS selector string.
+ * @returns The found element, or null.
+ */
+function qs<T extends HTMLElement>(root: Element | Document, selector: string): T | null {
+  const el = root.querySelector<T>(selector);
+  if (!el) console.warn(`[Lightbox] Element not found: ${selector}`);
+  return el;
+}
+
+// ---------------------------------------------------------------------------
+// State updater — syncs DOM with current state
+// ---------------------------------------------------------------------------
+
+/**
+ * Updates all lightbox DOM elements to reflect the current state.
+ * Called after any navigation or open event.
+ *
+ * @param dialog - The <dialog> element to update within.
+ */
+function render(dialog: HTMLDialogElement): void {
+  const { images, currentIndex } = state;
+  const current: GalleryImage | undefined = images[currentIndex];
+
+  if (!current) return;
+
+  const imgEl    = qs<HTMLImageElement>(dialog, SEL.image);
+  const captEl   = qs<HTMLParagraphElement>(dialog, SEL.caption);
+  const counterEl = qs<HTMLSpanElement>(dialog, SEL.counter);
+  const prevBtn  = qs<HTMLButtonElement>(dialog, SEL.prev);
+  const nextBtn  = qs<HTMLButtonElement>(dialog, SEL.next);
+
+  if (imgEl) {
+    imgEl.src = current.src;
+    imgEl.alt = current.alt;
+  }
+
+  if (captEl) {
+    captEl.textContent = current.caption ?? '';
+    // Hide the footer visually if there's no caption.
+    captEl.closest('.lightbox__footer')?.classList.toggle(
+      'lightbox__footer--empty',
+      !current.caption
+    );
+  }
+
+  if (counterEl) {
+    counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
+  }
+
+  // Hide prev/next buttons when at the boundary — no wrapping.
+  if (prevBtn) prevBtn.disabled = currentIndex === 0;
+  if (nextBtn) nextBtn.disabled = currentIndex === images.length - 1;
+}
+
+// ---------------------------------------------------------------------------
+// Open / close
+// ---------------------------------------------------------------------------
+
+/**
+ * Opens the lightbox with the provided image set and starting index.
+ *
+ * @param dialog    - The <dialog> element to open.
+ * @param images    - The full array of images for this gallery session.
+ * @param index     - The zero-based index of the image to display first.
+ * @param galleryId - The ID of the Gallery that triggered this open.
+ */
+function openLightbox(
+  dialog: HTMLDialogElement,
+  images: GalleryImage[],
+  index: number,
+  galleryId: string
+): void {
+  // Capture the currently focused element so we can restore it on close.
+  previouslyFocused = document.activeElement as HTMLElement;
+
+  // Update state.
+  state.isOpen       = true;
+  state.images       = images;
+  state.currentIndex = index;
+  state.galleryId    = galleryId;
+
+  // Render the initial image.
+  render(dialog);
+
+  // showModal() opens the dialog as a top-layer modal with a ::backdrop.
+  dialog.showModal();
+
+  // Move focus to the close button so keyboard users have an immediate target.
+  qs<HTMLButtonElement>(dialog, SEL.close)?.focus();
+}
+
+/**
+ * Closes the lightbox and restores focus to the element that opened it.
+ *
+ * @param dialog - The <dialog> element to close.
+ */
+function closeLightbox(dialog: HTMLDialogElement): void {
+  state.isOpen    = false;
+  state.images    = [];
+  state.galleryId = '';
+
+  dialog.close();
+
+  // Restore focus to the gallery item that triggered the open.
+  previouslyFocused?.focus();
+  previouslyFocused = null;
+
+  // Allow external listeners to react to close (e.g. analytics).
+  window.dispatchEvent(new CustomEvent(LIGHTBOX_CLOSE_EVENT));
+}
+
+// ---------------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------------
+
+/**
+ * Navigates to the previous image. No-op at the start of the set.
+ *
+ * @param dialog - The <dialog> element to update.
+ */
+function prev(dialog: HTMLDialogElement): void {
+  if (state.currentIndex > 0) {
+    state.currentIndex -= 1;
+    render(dialog);
+  }
+}
+
+/**
+ * Navigates to the next image. No-op at the end of the set.
+ *
+ * @param dialog - The <dialog> element to update.
+ */
+function next(dialog: HTMLDialogElement): void {
+  if (state.currentIndex < state.images.length - 1) {
+    state.currentIndex += 1;
+    render(dialog);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Event listeners
+// ---------------------------------------------------------------------------
+
+/**
+ * Wires up all event listeners for the Lightbox.
+ * Called once by initLightbox after the dialog is confirmed to exist.
+ *
+ * @param dialog - The <dialog> element to attach listeners to.
+ */
+function attachListeners(dialog: HTMLDialogElement): void {
+
+  // ── Open ──────────────────────────────────────────────────────────────────
+
+  /**
+   * Listens for `lightbox:open` events dispatched by GalleryItem.
+   * Any gallery on the page can trigger this single Lightbox.
+   */
+  window.addEventListener(LIGHTBOX_OPEN_EVENT, (e: Event) => {
+    const { images, index, galleryId } = (e as CustomEvent).detail;
+    openLightbox(dialog, images, index, galleryId);
+  });
+
+  // ── Close ─────────────────────────────────────────────────────────────────
+
+  /** Close button click. */
+  qs<HTMLButtonElement>(dialog, SEL.close)?.addEventListener('click', () => {
+    closeLightbox(dialog);
+  });
+
+  /**
+   * Clicking the backdrop (outside the container) closes the lightbox.
+   * We check the click target — clicks on the container itself should not close.
+   */
+  dialog.addEventListener('click', (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.lightbox__container') === null) {
+      closeLightbox(dialog);
+    }
+  });
+
+  /** Native dialog cancel event (e.g. Escape key pressed). */
+  dialog.addEventListener('cancel', (e: Event) => {
+    e.preventDefault(); // Prevent default close so our state is cleaned up.
+    closeLightbox(dialog);
+  });
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+
+  qs<HTMLButtonElement>(dialog, SEL.prev)?.addEventListener('click', () => prev(dialog));
+  qs<HTMLButtonElement>(dialog, SEL.next)?.addEventListener('click', () => next(dialog));
+
+  // ── Keyboard ──────────────────────────────────────────────────────────────
+
+  /**
+   * Keyboard navigation while the lightbox is open.
+   * Arrow keys navigate; Escape closes.
+   */
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (!state.isOpen) return;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault();
+        prev(dialog);
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        next(dialog);
+        break;
+      case 'Escape':
+        e.preventDefault();
+        closeLightbox(dialog);
+        break;
+    }
+  });
+
+  // ── Touch / swipe ─────────────────────────────────────────────────────────
+
+  /**
+   * Records the X position at the start of a touch.
+   * Used to determine swipe direction on touchend.
+   */
+  dialog.addEventListener('touchstart', (e: TouchEvent) => {
+    touchStartX = e.changedTouches[0]?.clientX ?? 0;
+  }, { passive: true });
+
+  /**
+   * Calculates swipe direction and navigates accordingly.
+   * A minimum swipe distance of 50px is required to trigger navigation,
+   * reducing accidental swipes.
+   */
+  dialog.addEventListener('touchend', (e: TouchEvent) => {
+    const touchEndX = e.changedTouches[0]?.clientX ?? 0;
+    const delta = touchStartX - touchEndX;
+    const MIN_SWIPE_PX = 50;
+
+    if (Math.abs(delta) < MIN_SWIPE_PX) return;
+
+    if (delta > 0) {
+      next(dialog); // Swiped left → next
+    } else {
+      prev(dialog); // Swiped right → prev
+    }
+  }, { passive: true });
+}
+
+// ---------------------------------------------------------------------------
+// Initialiser — called by Lightbox.astro
+// ---------------------------------------------------------------------------
+
+/**
+ * Finds the Lightbox dialog element in the DOM and initialises the controller.
+ * Safe to call multiple times — exits early if already initialised or if the
+ * dialog element isn't present on this page.
+ *
+ * @example
+ * // In Lightbox.astro's <script> block:
+ * import { initLightbox } from './Lightbox.ts';
+ * initLightbox();
+ */
+export function initLightbox(): void {
+  const dialog = document.querySelector<HTMLDialogElement>(SEL.dialog);
+
+  if (!dialog) {
+    // No lightbox on this page — silently exit.
+    return;
+  }
+
+  if (dialog.dataset.lightboxInit === 'true') {
+    // Already initialised — prevent double-binding listeners.
+    return;
+  }
+
+  dialog.dataset.lightboxInit = 'true';
+  attachListeners(dialog);
+}
+
+
+--- File: lightbox/Lightbox.types.ts ---
+/**
+ * src/design/media/lightbox/Lightbox.types.ts
+ * Type definitions for the Lightbox component and its controller.
+ */
+
+import type { GalleryImage, LightboxOpenPayload } from '../gallery/Gallery.types';
+
+// Re-export for convenience so consumers only need to import from lightbox.
+export type { GalleryImage, LightboxOpenPayload };
+
+/**
+ * Internal state managed by the Lightbox controller.
+ */
+export interface LightboxState {
+  /** Whether the lightbox is currently open. */
+  isOpen: boolean;
+  /** All images in the current set. */
+  images: GalleryImage[];
+  /** Index of the currently displayed image. */
+  currentIndex: number;
+  /** The gallery ID that triggered this lightbox instance. */
+  galleryId: string;
+}
+
+/**
+ * DOM element selectors used by the Lightbox controller.
+ * Centralised here so typos in selector strings only need fixing in one place.
+ */
+export interface LightboxSelectors {
+  /** The root dialog element. */
+  dialog: string;
+  /** The main displayed image element. */
+  image: string;
+  /** The caption text element. */
+  caption: string;
+  /** The image counter element (e.g. "3 / 12"). */
+  counter: string;
+  /** The close button. */
+  closeBtn: string;
+  /** The previous image button. */
+  prevBtn: string;
+  /** The next image button. */
+  nextBtn: string;
+  /** The backdrop/overlay element. */
+  backdrop: string;
+}
+
+
+--- File: cropper/Cropper.astro ---
+
+
+--- File: cropper/Cropper.css ---
+
+
+--- File: cropper/cropper.svg ---
+
+
+--- File: tokens.css ---
+
+
+--- File: vars.css ---
+
+
+--- File: props.ts ---
+import type { BaseComponentProps } from '../shared';
+
+/**
+ * Base props shared across all media components.
+ *
+ * All media components (Image, Audio, Video, etc.) extend this interface.
+ * It establishes the common surface that consumers can rely on regardless
+ * of which media component they are using.
+ *
+ * @example
+ * // In a component-level props file:
+ * import type { MediaComponentProps } from '../media.props';
+ *
+ * export interface ImageProps extends MediaComponentProps {
+ *   ratio?: ImageRatio;
+ *   fit?: ImageFit;
+ * }
+ */
+export interface MediaComponentProps extends BaseComponentProps {
+  /**
+   * The media source URL.
+   * Required on all media components — images, audio tracks, video files, etc.
+   */
+  src: string;
+
+  /**
+   * A text label associated with the media.
+   * Rendered as a visible `<figcaption>` beneath the media element.
+   * Optional on all media components.
+   */
+  caption?: string;
+}
+

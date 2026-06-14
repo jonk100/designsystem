@@ -18,39 +18,22 @@ import type {
   TransitionTiming
 } from './overlays.types';
 
-/**
- * Available overlay positions
- */
 export const OVERLAY_POSITIONS: OverlayPosition[] = [
   'top', 'top-left', 'top-right',
   'bottom', 'bottom-left', 'bottom-right',
   'left', 'right', 'center'
 ];
-
-/**
- * Available overlay sizes
- */
-export const OVERLAY_SIZES: OverlaySize[] = ['xs', 'sm', 'md', 'lg', 'xl', 'full'];
-
-/**
- * Available overlay animations
- */
-export const OVERLAY_ANIMATIONS: OverlayAnimation[] = ['fade', 'slide', 'scale', 'zoom', 'none'];
-
-/**
- * Available backdrop blur options
- */
-export const BACKDROP_BLURS: BackdropBlur[] = ['none', 'sm', 'md', 'lg', 'xl'];
-
-/**
- * Available overlay placements
- */
 export const OVERLAY_PLACEMENTS: OverlayPlacement[] = [
   'top', 'top-start', 'top-end',
   'bottom', 'bottom-start', 'bottom-end',
   'left', 'left-start', 'left-end',
   'right', 'right-start', 'right-end'
 ];
+
+export const OVERLAY_SIZES: OverlaySize[] = ['xs', 'sm', 'md', 'lg', 'xl', 'full'];
+export const OVERLAY_ANIMATIONS: OverlayAnimation[] = ['fade', 'slide', 'scale', 'zoom', 'none'];
+export const BACKDROP_BLURS: BackdropBlur[] = ['none', 'sm', 'md', 'lg', 'xl'];
+
 
 /**
  * Available overlay triggers

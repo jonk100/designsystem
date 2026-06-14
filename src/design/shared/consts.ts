@@ -1,43 +1,203 @@
-export const FONT_SIZES = ['0', '2xs', '1', 'xs', '2', 'sm', '3', 'md', '4', 'base', '5', 'lg', '6', 'xl', '7', '2xl', '8', '3xl', '9', '4xl', '10', '5xl', '11', '6xl'] as const;
+/** src/design/shared/consts.ts */
 
-export const TEXT_TONES = [
-  '0', '1', '2', '3', '4', '5',
-  'primary', 'secondary', 'accent', 'white', 'black',
-  'default', 'muted', 'subtle', 'danger', 'success',
-  'currentColor', 'inherit'
-] as const;
+// ---------------------------------------------------------------------------
+// Regex
+// ---------------------------------------------------------------------------
 
-export const BACKGROUND_TONES = [
-  '0', '1', '2', '3', '4', '5',
-  'primary', 'secondary', 'accent', 'white', 'black',
-  'default', 'transparent', 'currentColor', 'inherit'
-] as const;
+/** Matches valid CSS time values: `0.3s`, `300ms`, `1s` */
+export const TIME_VALUE_RE = /^\d+(\.\d+)?(s|ms)$/;
 
-export const X_ALIGNS = ['left', 'center', 'right', 'justify', 'start', 'end'] as const;
-export const Y_ALIGNS = ['super', 'top', 'text-top', 'baseline', 'middle', 'bottom', 'text-bottom', 'sub'] as const;
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
 
-export const FONT_WEIGHTS = ['thin', 'extralight', 'light', 'normal', 'medium', 'semibold', 'bold', 'extrabold', 'black', '100', '200', '300', '400', '500', '600', '700', '800', '900'] as const;
+export const FONT = {
+  sizes: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "base",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  weights: [
+    "xlt",
+    "lt",
+    "md",
+    "bold",
+    "xbold",
+    "black",
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+    "900",
+  ] as const,
+  families: ["sans", "serif", "mono", "display"] as const,
+  lineHeights: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  letterSpacings: [
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "6xl",
+  ] as const,
+  whiteSpaces: [
+    "normal",
+    "nowrap",
+    "pre",
+    "pre-wrap",
+    "pre-line",
+    "break-spaces",
+  ] as const,
+} as const;
 
-export const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose', '1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8'] as const;
+// ---------------------------------------------------------------------------
+// Color / Tone
+// ---------------------------------------------------------------------------
 
-export const LETTER_SPACINGS = ['tighter', 'tight', 'normal', 'wide', 'wider', 'widest', ] as const;
+export const TONE = {
+  text: [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "primary",
+    "secondary",
+    "accent",
+    "white",
+    "black",
+    "default",
+    "muted",
+    "subtle",
+    "danger",
+    "success",
+    "warning",
+    "info",
+    "currentColor",
+    "inherit",
+  ] as const,
+  bg: [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "primary",
+    "secondary",
+    "accent",
+    "white",
+    "black",
+    "default",
+    "transparent",
+    "currentColor",
+    "inherit",
+    "danger",
+    "success",
+    "warning",
+    "info",
+  ] as const,
+} as const;
 
-export const FONT_FAMILIES = ['heading', 'body', 'sans', 'serif', 'mono'] as const;
+// ---------------------------------------------------------------------------
+// Alignment
+// ---------------------------------------------------------------------------
 
-export const WHITE_SPACES = ['normal', 'nowrap', 'pre', 'pre-wrap', 'pre-line', 'break-spaces'] as const;
+export const ALIGN = {
+  x: ["left", "center", "right", "justify", "start", "end"] as const,
+  y: [
+    "super",
+    "top",
+    "text-top",
+    "baseline",
+    "middle",
+    "bottom",
+    "text-bottom",
+    "sub",
+  ] as const,
+  layout: [
+    "start",
+    "center",
+    "end",
+    "stretch",
+    "between",
+    "around",
+    "evenly",
+    "baseline",
+  ] as const,
+} as const;
 
-export const LAYOUT_ALIGNS = ['start', 'center', 'end', 'stretch', 'between', 'around', 'evenly', 'baseline'] as const;
+// ---------------------------------------------------------------------------
+// Spacing
+// ---------------------------------------------------------------------------
 
-export const COMPONENT_LAYERS = ['-1', '0', '1', '2', '3', '4', '5'] as const;
+export const SPACING = {
+  scale: [
+    "3xs",
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "4xl",
+    "5xl",
+    "none",
+  ] as const,
+  gap: ["2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"] as const,
+} as const;
 
-export const DISPLAY_SIZES = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'] as const;
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-export const SPACING_SCALES = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', 'none'] as const;
+export const COMPONENT = {
+  layers: ["-1", "0", "1", "2", "3", "4", "5"] as const,
+  radii: [
+    "none",
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+    "full",
+  ] as const,
+  effects: ["shimmer", "glass", "glow", "ping"] as const,
+} as const;
 
-export const COMPONENT_RADII = ['none', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'full'] as const;
-
-export const DISPLAY_VARIANTS = ['default', 'primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
-
-export const DISPLAY_EFFECTS = ['shimmer', 'glass', 'glow', 'ping'] as const;
-
-export const GAP_SCALE = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const;

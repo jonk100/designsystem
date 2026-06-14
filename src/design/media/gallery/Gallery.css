@@ -1,0 +1,121 @@
+/* ==========================================================================
+   Gallery Component
+   src/design/media/gallery/Gallery.css
+
+   Layout wrapper for a collection of images.
+
+   Class structure:
+   - .gallery          Base structure, always present.
+   - .gallery--grid    Uniform CSS Grid layout.
+   - .gallery--masonry Variable-height column layout.
+   - .gallery--strip   Single horizontal scrollable row.
+
+   CSS custom properties (set inline by Gallery.astro via buildGalleryStyles):
+   - --gallery-columns   Number of grid columns.
+   - --gallery-gap       Gap between items.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+.gallery {
+  --gallery-columns: 3;
+  --gallery-gap: var(--space--sm);
+
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Grid variant
+   Uniform columns, equal-height cells. Images fill their cells via object-fit.
+   -------------------------------------------------------------------------- */
+
+.gallery--grid {
+  display: grid;
+  grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  gap: var(--gallery-gap);
+}
+
+/* --------------------------------------------------------------------------
+   Masonry variant
+   Uses CSS masonry where supported; falls back to a column layout.
+   The JS fallback in Gallery.ts handles browsers that don't support it yet.
+   -------------------------------------------------------------------------- */
+
+.gallery--masonry {
+  /* Progressive enhancement: use masonry if the browser supports it. */
+  display: grid;
+  grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  gap: var(--gallery-gap);
+}
+
+@supports (grid-template-rows: masonry) {
+  .gallery--masonry {
+    grid-template-rows: masonry;
+    align-items: start;
+  }
+}
+
+/* JS-powered masonry fallback: items are positioned absolutely.
+   Applied by Gallery.ts when CSS masonry is unsupported. */
+.gallery--masonry.gallery--js-masonry {
+  position: relative;
+  /* Height is set inline by the JS controller after layout is calculated. */
+}
+
+.gallery--masonry.gallery--js-masonry .gallery-item {
+  position: absolute;
+  /* top / left are set inline by the JS controller. */
+}
+
+/* --------------------------------------------------------------------------
+   Strip variant
+   A single horizontal row with overflow scroll. No wrapping.
+   -------------------------------------------------------------------------- */
+
+.gallery--strip {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gallery-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Smooth momentum scrolling on iOS. */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  /* Hide scrollbar visually but keep it functional. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent, currentColor) transparent;
+}
+
+.gallery--strip .gallery-item {
+  flex: 0 0 auto;
+  width: calc(100% / var(--gallery-columns));
+  scroll-snap-align: start;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — collapse to fewer columns on narrow viewports.
+   These are sensible defaults; override via the `columns` prop inline styles.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+  .gallery--grid,
+  .gallery--masonry {
+    grid-template-columns: repeat(
+      min(var(--gallery-columns), 2),
+      1fr
+    );
+  }
+}
+
+@media (max-width: 30rem) {
+  .gallery--grid,
+  .gallery--masonry {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery--strip .gallery-item {
+    width: 80vw;
+  }
+}

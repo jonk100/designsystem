@@ -1,0 +1,1899 @@
+--- File: animate.css ---
+/**
+ * ============================================================================
+ *                         ANIMATION LIBRARY
+ * ============================================================================
+ * 
+ * ENTRANCES
+ * fadeIn      - opacity 0→1, the reliable workhorse
+ * fadeUp      - fade in while translating up slightly (8–12px), great for cards and list items
+ * fadeDown    - same but from above, good for dropdowns
+ * fadeLeft    - directional entrance from left, for sidebars and drawers
+ * fadeRight   - directional entrance from right, for sidebars and drawers
+ * scaleIn     - scale 0.95→1 with fade, feels native, good for modals and popovers
+ * revealUp    - clip-path reveal from bottom, elegant for headlines
+ * slideIn     - similar to fadeUp/fadeDown with larger translation
+ * slideLeft   - similar to fadeLeft
+ * slideRight  - similar to fadeRight
+ * 
+ * ATTENTION / STATE
+ * pulse       - gentle opacity cycle, good for loading states or "live" indicators
+ * ping        - radiating ring effect, good for notification badges
+ * shimmer     - sweeping highlight across a surface, the skeleton loader standard
+ * blink       - cursor-style blink, useful for terminal or typing UIs
+ * glow        - pulsing shadow/glow effect
+ * 
+ * CONTINUOUS / AMBIENT
+ * spin        - straightforward rotation, loading spinners
+ * spinSlow    - very slow rotation (20–30s), good for background orbs or decorative elements
+ * float       - gentle vertical drift (4–6px), good for hero illustrations
+ * breathe     - subtle scale 1→1.03→1, makes something feel alive without being distracting
+ * sparkle     - scaling and rotating star effect
+ * 
+ * FEEDBACK / INTERACTION
+ * shake       - horizontal jitter, form validation errors
+ * bounce      - vertical snap, success confirmations
+ * wiggle      - small rotation oscillation, softer than shake, good for empty states
+ * headShake   - horizontal with slight rotation, a more expressive "no"
+ * jello       - scale X/Y stagger, playful success feedback
+ * jiggle      - alternative shake
+ * swivel      - 3D-like rotational shake
+ * ripple      - radiating wave effect
+ * vibrate     - rapid micro-movements
+ * 
+ * EXITS
+ * fadeOut     - the obvious pair to fadeIn
+ * scaleOut    - scale 1→0.95 with fade, modal dismiss feel
+ * collapse    - height 0 with fade, for accordion items
+ * 
+ * QUIRKY / MISC
+ * pickle        - playful bounce
+ * DancingMonkey - bouncy rotation
+ * 
+ * ============================================================================
+ */
+
+@import './motion.vars.css';
+
+/* ============================================================================
+    - - - - - - - -- SCROLL BEHAVIOR -- - - - - - - - - - - - - - - - - - - - -
+=============================================================================== */
+/**
+*    -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+*    The following styles ensure that animations do not play until the element
+*    is visible in the viewport. This is achieved by setting the animation
+*    to 'none' when the element is not visible and then adding the 'is-visible'
+*    class to the element when it is visible.
+*    -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+*/
+[data-on-scroll]:not(.is-visible) {
+  animation: none !important;
+}
+
+[data-on-scroll="wave"]:not(.is-visible)>*,
+[data-on-scroll="staggered"]:not(.is-visible)>*,
+[data-on-scroll="alternating"]:not(.is-visible)>* {
+  animation: none !important;
+}
+
+@keyframes staggeredSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100cqw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes staggeredSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(100cqw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* ============================================================================
+    - - - - - - - -- ANIMATIONS -- - - - - - - - - - - - - - - - - - - - - - -
+=============================================================================== */
+
+/**                 Sparkle________________________________________
+*          Sparkle  */
+.animate--sparkle,
+.wave--sparkle>* {
+  display: inline-block;
+  animation-name: sparkle;
+  animation-duration: var(--animation-duration, var(--speed-10));
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+/**              Pulse________________________________________
+*         Pulse  */
+.animate--pulse,
+.wave--pulse>* {
+  animation-name: pulse;
+  animation-duration: var(--animation-duration, var(--speed-7));
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/**                Bounce________________________________________
+*          Bounce  */
+.animate--bounce,
+.wave--bounce>* {
+  animation-name: bounce;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-bounce);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: var(--ease-bounce);
+  }
+
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: var(--ease-smooth);
+  }
+}
+
+/**                Spin________________________________________
+*          Spin  */
+.animate--spin,
+.wave--spin>* {
+  animation-name: spin;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/**                Ping________________________________________
+*          Ping  */
+.animate--ping,
+.wave--ping>* {
+  animation-name: ping;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes ping {
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/**                Wiggle________________________________________
+*         Wiggle  */
+.animate--wiggle,
+.wave--wiggle>* {
+  animation-name: wiggle;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/**                Float________________________________________
+*          Float  */
+.animate--float,
+.wave--float>* {
+  animation-name: float;
+  animation-duration: var(--animation-duration, var(--speed-8));
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/**                Glow________________________________________
+*          Glow  */
+.animate--glow,
+.wave--glow>* {
+  animation-name: glow;
+  animation-duration: var(--animation-duration, var(--speed-7));
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px currentColor);
+    opacity: 1;
+  }
+
+  50% {
+    filter: drop-shadow(0 0 20px currentColor);
+    opacity: 0.8;
+  }
+}
+
+/**                Shake________________________________________
+*          Shake  */
+.animate--shake,
+.wave--shake>* {
+  animation-name: shake;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                Fade In________________________________________
+*         Fade In  */
+.animate--fadeIn,
+.wave--fadeIn>* {
+  animation-name: fadeIn;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-in);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/**                Slide In________________________________________
+*          Slide In  */
+.animate--slideIn,
+.wave--slideIn>* {
+  animation-name: slideIn;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                Slide Left________________________________________
+*          Slide Left  */
+.animate--slideLeft,
+.wave--slideLeft>* {
+  animation-name: slideLeft;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Slide Right________________________________________
+*          Slide Right  */
+.animate--slideRight,
+.wave--slideRight>* {
+  animation-name: slideRight;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                 Scale In________________________________________
+*           Scale In  */
+.animate--scaleIn,
+.wave--scaleIn>* {
+  animation-name: scaleIn;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-elastic);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/**                    Jiggle____________________________________
+ *         Jiggle    */
+.animate--jiggle,
+.wave--jiggle>* {
+  animation-name: jiggle;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes jiggle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                 Shimmer________________________________________
+*          Shimmer  */
+.animate--shimmer,
+.wave--shimmer>* {
+  animation-name: shimmer;
+  animation-duration: var(--animation-duration, var(--speed-7));
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    background-position: 200% 50%;
+  }
+
+  50% {
+    background-position: 0% 50%;
+  }
+}
+
+/**                    Swivel____________________________________
+ *         Swivel    */
+.animate--swivel,
+.wave--swivel>* {
+  animation-name: swivel;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes swivel {
+
+  10%,
+  90% {
+    transform: rotate(2deg);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-2deg);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: rotate(4deg);
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: rotate(-4deg);
+    transform: translateX(4px);
+  }
+}
+
+/**                    Ripple____________________________________
+ *          Ripple    */
+.animate--ripple,
+.wave--ripple>* {
+  animation-name: ripple;
+  animation-duration: var(--animation-duration, var(--speed-10));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes ripple {
+
+  10%,
+  90% {
+    transform: rotate(2deg);
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-2deg);
+    transform: scaleY(1.05);
+    opacity: 0.8;
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+    transform: scaleY(0.95);
+    opacity: 0.5;
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+    transform: scaleY(1.05);
+    opacity: 1;
+  }
+}
+
+/**                    Half Ripple____________________________________
+ *         Half Ripple    */
+.animate--half-ripple,
+.wave--half-ripple>* {
+  animation-name: half-ripple;
+  animation-duration: var(--animation-duration, var(--speed-10));
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes half-ripple {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    opacity: .75;
+    transform: scaleY(0.6);
+  }
+
+  20%,
+  80% {
+    transform: rotate(0deg);
+    transform: scaleY(.94);
+    opacity: 1;
+  }
+
+  15%,
+  30%,
+  50%,
+  70%,
+  85% {
+    transform: translateX(-2px);
+    transform: scaleY(1);
+    opacity: 0.25;
+  }
+
+  40%,
+  60% {
+    transform: translateX(2px);
+    transform: scaleY(.9);
+    opacity: .75;
+  }
+}
+
+/**                    Quarter Ripple____________________________________
+ *         Quarter Ripple    */
+.animate--quarter-ripple,
+.wave--quarter-ripple>* {
+  animation-name: quarter-ripple;
+  animation-duration: var(--animation-duration, var(--speed-10));
+  animation-timing-function: var(--ease-smooth);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes quarter-ripple {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    opacity: .75;
+    transform: scaleY(0.1.1);
+  }
+
+  20%,
+  50%,
+  80% {
+    transform: rotate(0deg);
+    transform: scaleY(.94);
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    transform: translateX(-2px);
+    transform: scaleY(.6);
+    opacity: 0.25;
+  }
+
+  40%,
+  60% {
+    transform: rotate(-5deg);
+    transform: scaleY(0.1.1);
+    opacity: .75;
+  }
+}
+
+/**                    Pickle____________________________________
+ *          Pickle     */
+.animate--pickle,
+.wave--pickle>* {
+  animation-name: pickle;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pickle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                    Pickle____________________________________
+ *          Pickle     */
+.animate--pickle,
+.wave--pickle>* {
+  animation-name: pickle;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-sharp);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes pickle {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+/**                    Dancing Monkey____________________________
+ *          Dancing Monkey    */
+.animate--DancingMonkey,
+.wave--DancingMonkey>* {
+  animation-name: DancingMonkey;
+  animation-duration: var(--animation-duration, var(--speed-10));
+  animation-timing-function: var(--ease-bounce);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes DancingMonkey {
+
+  10%,
+  90% {
+    transform: rotate(5deg);
+    transform: translateX(1px);
+  }
+
+  20%,
+  80% {
+    transform: rotate(-5deg);
+    transform: translateX(-2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+    transform: rotate(5deg);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+    transform: rotate(-5deg);
+  }
+}
+
+/**
+*       Vibrate________________________________________________
+*          Vibrate             */
+.animate--vibrate,
+.wave--vibrate>* {
+  animation-name: vibrate;
+  animation-duration: var(--animation-duration, var(--speed-1));
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes vibrate {
+
+  10%,
+  90% {
+    transform: translateX(1px);
+    transform: rotate(1deg);
+    opacity: .95;
+  }
+
+  20%,
+  80% {
+    transform: translateX(-2px);
+    transform: rotate(-1deg);
+    opacity: 1;
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(1px);
+    transform: rotate(2deg);
+    opacity: .95;
+  }
+
+  40%,
+  60% {
+    transform: translateX(-1px);
+    transform: rotate(-1deg);
+    opacity: 1;
+  }
+}
+
+/**                Fade Up________________________________________
+*          Fade Up  */
+.animate--fadeUp,
+.wave--fadeUp>* {
+  animation-name: fadeUp;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                Fade Down________________________________________
+*          Fade Down  */
+.animate--fadeDown,
+.wave--fadeDown>* {
+  animation-name: fadeDown;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**                Fade Left________________________________________
+*          Fade Left  */
+.animate--fadeLeft,
+.wave--fadeLeft>* {
+  animation-name: fadeLeft;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Fade Right________________________________________
+*          Fade Right  */
+.animate--fadeRight,
+.wave--fadeRight>* {
+  animation-name: fadeRight;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/**                Reveal Up________________________________________
+*          Reveal Up  */
+.animate--revealUp,
+.wave--revealUp>* {
+  animation-name: revealUp;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes revealUp {
+  from {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transform: translateY(100%);
+  }
+
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(0);
+  }
+}
+
+/**                Blink________________________________________
+*          Blink  */
+.animate--blink,
+.wave--blink>* {
+  animation-name: blink;
+  animation-duration: var(--animation-duration, 1s);
+  animation-timing-function: steps(2, start);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/**                Spin Slow________________________________________
+*          Spin Slow  */
+.animate--spinSlow,
+.wave--spinSlow>* {
+  animation-name: spinSlow;
+  animation-duration: var(--animation-duration, 20s);
+  animation-timing-function: var(--ease-linear);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/**                Breathe________________________________________
+*          Breathe  */
+.animate--breathe,
+.wave--breathe>* {
+  animation-name: breathe;
+  animation-duration: var(--animation-duration, 4s);
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: var(--iteration-infinite);
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/**                Head Shake________________________________________
+*          Head Shake  */
+.animate--headShake,
+.wave--headShake>* {
+  animation-name: headShake;
+  animation-duration: var(--animation-duration, var(--speed-6));
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes headShake {
+  0% {
+    transform: translateX(0);
+  }
+
+  6.5% {
+    transform: translateX(-6px) rotateY(-9deg);
+  }
+
+  18.5% {
+    transform: translateX(5px) rotateY(7deg);
+  }
+
+  31.5% {
+    transform: translateX(-3px) rotateY(-5deg);
+  }
+
+  43.5% {
+    transform: translateX(2px) rotateY(3deg);
+  }
+
+  50% {
+    transform: translateX(0);
+  }
+}
+
+/**                Jello________________________________________
+*          Jello  */
+.animate--jello,
+.wave--jello>* {
+  animation-name: jello;
+  animation-duration: var(--animation-duration, var(--speed-7));
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes jello {
+
+  0%,
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+}
+
+/**                Fade Out________________________________________
+*         Fade Out  */
+.animate--fadeOut,
+.wave--fadeOut>* {
+  animation-name: fadeOut;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/**                Scale Out________________________________________
+*          Scale Out  */
+.animate--scaleOut,
+.wave--scaleOut>* {
+  animation-name: scaleOut;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/**                Collapse________________________________________
+*          Collapse  */
+.animate--collapse,
+.wave--collapse>* {
+  animation-name: collapse;
+  animation-duration: var(--animation-duration, var(--speed-5));
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: var(--fill-both);
+  animation-delay: var(--animation-delay, var(--delay-none));
+  overflow: hidden;
+}
+
+@keyframes collapse {
+  from {
+    opacity: 1;
+    max-height: 1000px;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    margin-top: inherit;
+    margin-bottom: inherit;
+  }
+
+  to {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+--- File: motion.vars.css ---
+/**
+ * Animation Variables
+ * CSS custom properties for animation timing, easing, and durations
+ */
+
+:root {
+  /* Animation Durations */
+  --speed-1: 100ms;
+  --speed-2: 200ms;
+  --speed-3: 300ms;
+  --speed-4: 500ms;
+  --speed-5: 750ms;
+  --speed-6: 1s;
+  --speed-7: 1.5s;
+  --speed-8: 2s;
+  --speed-9: 3s;
+  --speed-10: 5s;
+
+  /* Animation Timing Functions (Easing) */
+  --ease-linear: linear;
+  --ease-in: ease-in;
+  --ease-out: ease-out;
+  --ease-in-out: ease-in-out;
+
+  /* Custom Cubic Bezier Curves */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.8, 0, 1, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-sharp: cubic-bezier(0.36, 0.07, 0.19, 0.97);
+
+  /* Animation Iteration Counts */
+  --iteration-once: 1;
+  --iteration-infinite: infinite;
+
+  /* Animation Fill Modes */
+  --fill-none: none;
+  --fill-forwards: forwards;
+  --fill-backwards: backwards;
+  --fill-both: both;
+
+  /* Animation Delays */
+  --delay-none: 0s;
+  --delay-short: 0.1s;
+  --delay-medium: 0.3s;
+  --delay-long: 0.5s;
+  --delay-longer: 1s;
+
+  /* Transform Origins */
+  --origin-center: center;
+  --origin-top: top;
+  --origin-bottom: bottom;
+  --origin-left: left;
+  --origin-right: right;
+}
+
+/** Semantic Aliases **/
+:root {
+  --fastest: var(--speed-1);
+  --faster: var(--speed-2);
+  --normal: var(--speed-3);
+  --no-rush: var(--speed-4);
+  --slow: var(--speed-5);
+  --stroll: var(--speed-6);
+  --slower: var(--speed-7);
+  --leisurely: var(--speed-8);
+  --slowest: var(--speed-9);
+  --dead: var(--speed-10);
+}
+
+--- File: nextlevel.md ---
+# Animation Next Level ideas, concepts, and considerations
+
+## Debugging tools
+- [ ] a global animation toggle for testing/debugging purposes. 
+- [ ] a "this animation" on/off toggle.
+- [ ] a slow-motion mode that slows down all animations by a factor of 10.
+- [ ] a visual indicator that animation debugging is enabled.
+
+## Reduced Motion
+- [ ] `prefers-reduced-motion` media query as a first-class concern, not an afterthought
+- [ ] a global toggle (class on `<html>`) for user-controlled disable
+- [ ] distinguishing *decorative* animations (can cut entirely) from *functional* ones (should reduce, not remove — e.g. a loading spinner still needs to spin)
+
+## Timing & Rhythm
+- [ ] A numeric scale for durations (you have this) but also named semantic aliases: `--duration-instant`, `--duration-quick`, `--duration-moderate` etc.
+- [ ] Matching easing curves to animation intent — entrances ease-out, exits ease-in, interactive feedback ease-in-out
+- [ ] A stagger utility — either a CSS custom property (`--stagger-index: 2`) multiplied by a base delay, or a JS helper that sets them on children
+- [ ] Keeping durations shorter than you think — 150–300ms for most UI, 400–600ms for larger transitions
+
+## Architecture
+- [ ] Separating *what* animates (classes) from *how* (keyframes) from *when* (delay/duration overrides via props/CSS vars) — lets you compose freely
+- [ ] A convention for animation CSS var overrides: `--animation-duration`, `--animation-delay`, `--animation-iteration` on the element, consumed by the class
+- [ ] Deciding early whether animations live on the element or a wrapper — `display: inline-block` requirements (like your sparkle) can affect layout
+
+## JavaScript Utilities
+- [ ] `prefersReducedMotion()` — a simple JS check mirroring the media query, for JS-driven animations
+- [ ] `staggerChildren(parent, delay)` — sets `--stagger-index` on each child
+- [ ] `onAnimationEnd(el, cb)` — promise-based wrapper around `animationend`, useful for sequencing
+- [ ] `playOnce(el, className)` — adds a class, removes it on `animationend`, so it can be re-triggered
+- [ ] An intersection observer hook/utility for triggering entrance animations on scroll
+
+## State & Sequencing
+- [ ] A clear pattern for enter/exit states (the hard part CSS alone can't fully solve) — either a library like Motion or a small state machine
+- [ ] `animation-fill-mode: both` as the default for entrances/exits so elements don't flash before/after
+- [ ] Thinking about interrupted animations — what happens if a user hovers off mid-animation
+
+---
+- `prefers-reduced-motion` media query as a first-class concern, not an afterthought
+- A global toggle (class on `<html>`) for user-controlled disable
+- Distinguishing *decorative* animations (can cut entirely) from *functional* ones (should reduce, not remove — e.g. a loading spinner still needs to spin)
+
+**Timing & Rhythm**
+- A numeric scale for durations (you have this) but also named semantic aliases: `--duration-instant`, `--duration-quick`, `--duration-moderate` etc.
+- Matching easing curves to animation intent — entrances ease-out, exits ease-in, interactive feedback ease-in-out
+- A stagger utility — either a CSS custom property (`--stagger-index: 2`) multiplied by a base delay, or a JS helper that sets them on children
+- Keeping durations shorter than you think — 150–300ms for most UI, 400–600ms for larger transitions
+
+**Architecture**
+- Separating *what* animates (classes) from *how* (keyframes) from *when* (delay/duration overrides via props/CSS vars) — lets you compose freely
+- A convention for animation CSS var overrides: `--animation-duration`, `--animation-delay`, `--animation-iteration` on the element, consumed by the class
+- Deciding early whether animations live on the element or a wrapper — `display: inline-block` requirements (like your sparkle) can affect layout
+
+**JavaScript Utilities**
+- `prefersReducedMotion()` — a simple JS check mirroring the media query, for JS-driven animations
+- `staggerChildren(parent, delay)` — sets `--stagger-index` on each child
+- `onAnimationEnd(el, cb)` — promise-based wrapper around `animationend`, useful for sequencing
+- `playOnce(el, className)` — adds a class, removes it on `animationend`, so it can be re-triggered
+- An intersection observer hook/utility for triggering entrance animations on scroll
+
+**State & Sequencing**
+- A clear pattern for enter/exit states (the hard part CSS alone can't fully solve) — either a library like Motion or a small state machine
+- `animation-fill-mode: both` as the default for entrances/exits so elements don't flash before/after
+- Thinking about interrupted animations — what happens if a user hovers off mid-animation
+
+**Developer Experience**
+- A `data-animate` attribute approach as an alternative to class-based, keeps templates cleaner
+- A slow-motion dev mode (e.g. `* { animation-duration: 10x !important }`) for debugging
+- Documenting every animation with its intended use case, not just its visual description — "use for modal dismiss" is more useful than "fades out"
+
+--- File: animation.md ---
+# Animation
+
+The Animation category provides a centralized, performant motion system designed to decouple animation logic from individual UI components. By leveraging declarative props, intersection observers, and CSS custom properties, it ensures that motion across the design system is cohesive, manageable, and easy to apply.
+
+This document serves as a guide for developers working with animations. It outlines the shared architectural pattern that governs motion, preventing CSS redundancy and ensuring scroll-triggered animations behave predictably.
+
+**Major Areas Documented:**
+- **Declarative Motion API**: How the `animate` prop systematically applies animations, durations, and delays without hardcoding CSS in individual components.
+- **Scroll-Triggered & Staggered Animations**: How components like `Wave` and `Alternating` manage intersection observation and staggered children sequences.
+- **Architectural Separation of Concerns**: Decoupling *what* animates (utility classes) from *how* (keyframes) and *when* (CSS variables).
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+|---|---|---|---|
+| **M** (Motion) | Primitive | `animate`, `as` | (none) |
+| **Wave** | Wrapper | `animate`, `as` | `stagger`, `viewport` |
+| **Alternating** | Wrapper | `animate`, `as` | `stagger`, `viewport`, `reverse` |
+| **Staggered** | Wrapper | `animate`, `as` | `stagger`, `viewport` |
+
+*(Note: All animation components implicitly inherit `BaseComponentProps` which includes standard properties like `class`, `animate`, and `onScroll`.)*
+
+---
+
+### M (Motion)
+
+`src/design/animation/M.astro`
+
+#### Inline Declarative Motion Primitive
+
+The `M` component is a low-level primitive designed specifically to wrap any element or text with declarative motion. It is especially useful when you need to animate standard HTML tags or text nodes without creating custom components just to access the `animate` prop. 
+
+#### System-Wide Parser Integration
+
+It relies entirely on the system's `mergeClasses` and `mergeStyles` utilities to parse string-based animation instructions (e.g., `animate="fadeIn 0.5s delay-1s"`) into CSS custom properties that dynamically drive keyframes from `animate.css`.
+
+---
+
+### Wave
+
+`src/design/animation/Wave.astro`
+
+#### Scroll-Triggered Stagger Sequence
+
+`Wave` is a role-based wrapper designed to handle staggered entry animations for a group of children (e.g., a list of cards). It assigns incremental `--stagger-index` CSS variables to its immediate children based on their DOM position.
+
+#### Intersection Observer Management
+
+Instead of animating immediately, `Wave` utilizes a centralized `IntersectionObserver` via the `data-on-scroll` attribute. The animations are paused until the element enters the viewport, at which point the system activates the animation sequence, creating a visually pleasing "wave" effect as children fade in one by one.
+
+---
+
+### Alternating
+
+`src/design/animation/Alternating.astro`
+
+#### Directional Stagger Variant
+
+`Alternating` extends the staggered scroll-triggered sequence concept but alternates the base animation direction or variant applied to odd/even children. It is ideal for timelines, zigzag layouts, or conversational UI flows where visual rhythm relies on alternating sides or states.
+
+---
+
+### Staggered
+
+`src/design/animation/Staggered.astro`
+
+#### Base Stagger Container
+
+`Staggered` is the foundational wrapper that sets up the stagger indices for children without the specific directional nuances of `Alternating` or the semantic intent of `Wave`. It is the primary workhorse for standard list/grid staggered reveals.
+
+---
+
+## The Motion Architecture
+
+The system resolves motion through a strictly decoupled architecture:
+
+### 1. The `animate` Prop Pattern
+All components within the design system that extend `BaseComponentProps` automatically support the `animate` prop.
+The syntax allows for declaring the animation name, duration, and delay in a single string:
+`animate="[name] [duration] delay-[delay]"`
+Example: `animate="slideIn 0.8s delay-0.2s"`
+
+### 2. The Shared Utilities (`mergeClasses` & `mergeStyles`)
+Rather than rewriting animation parsing logic inside every component, the design system utilizes `mergeClasses` and `mergeStyles` (from `src/design/shared/functions.ts`). These utilities extract the `animate` prop string, outputting the necessary `.animate--<name>` class and setting the scoped CSS variables `--animation-duration` and `--animation-delay`.
+
+### 3. CSS Decoupling
+Keyframes and animation base classes live exclusively in `src/design/animation/animate.css`. Component-specific CSS files should **never** contain `@keyframes` or animation definitions. They should only govern layout and structural aesthetics, relying on the `animate` prop for motion behavior.
+
+
+--- File: Alternating.astro ---
+---
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents" | "flex";
+  duration?: number;
+  [key: string]: any;
+}
+
+
+const props = Astro.props;
+
+const {
+  as: Tag = "div",
+  display = "block",
+  duration = 300,
+  onScroll,
+  ...rest
+} = props;
+
+if (onScroll) {
+  rest["data-on-scroll"] = "alternating";
+}
+
+const uniqueId = Math.random().toString(36).slice(2, 11);
+const classes = [
+  "alternating-component",
+  display && `alternating-display--${display}`,
+  `alternating-instance-${uniqueId}`,
+];
+
+console.log({ duration });
+
+// Alternating: alternates between slideLeft and slideRight
+// Uses a pronounced delay: max(duration / 2, 200ms)
+let cssRules = "";
+let currentDelay = 0;
+const delayStep = Math.max(duration / 2, 100);
+
+for (let i = 1; i <= 30; i++) {
+  const animName = i % 2 !== 0 ? "staggeredSlideLeft" : "staggeredSlideRight";
+  cssRules += `.alternating-instance-${uniqueId} > *:nth-child(${i}) { 
+    animation-name: ${animName};
+    animation-duration: ${duration}ms;
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: ${Math.round(currentDelay)}ms;
+  }\n`;
+  currentDelay += delayStep;
+}
+console.log({ delayStep });
+const finalClasses = mergeClasses(classes, { ...props, animate: undefined });
+const finalStyles = mergeStyles("", { ...props, animate: undefined });
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style set:html={cssRules}></style>
+
+<style>
+  .alternating-display--block {
+    display: block;
+  }
+  .alternating-display--inline {
+    display: inline;
+  }
+  .alternating-display--inline-block {
+    display: inline-block;
+  }
+  .alternating-display--contents {
+    display: contents;
+  }
+  .alternating-display--flex {
+    display: flex;
+  }
+
+  .alternating-component {
+    container-type: inline-size;
+    width: 100%;
+  }
+</style>
+
+
+--- File: M.astro ---
+---
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents";
+  [key: string]: any;
+}
+
+const standardProps = [
+  "as",
+  "class",
+  "class:list",
+  "style",
+  "id",
+  "display",
+  "animate",
+  "onScroll",
+];
+const props = Astro.props;
+
+let animationName = "";
+let animationValue = "";
+
+// Find the first prop that isn't a standard prop and is truthy
+// This assumes any non-standard prop is the animation name (e.g. `fadeIn`, `wiggle`)
+for (const [key, value] of Object.entries(props)) {
+  if (!standardProps.includes(key) && value !== false && value !== undefined) {
+    animationName = key;
+    animationValue = typeof value === "string" ? value : "";
+    break;
+  }
+}
+
+// Construct the standard animate prop string expected by mergeClasses/mergeStyles
+const animate = animationName
+  ? `${animationName} ${animationValue}`.trim()
+  : Astro.props.animate;
+
+const { as: Tag = "div", display = "inline-block", onScroll, ...rest } = props;
+
+if (onScroll) {
+  rest['data-on-scroll'] = "true";
+}
+
+// Remove the extracted animation prop from rest so it doesn't get rendered as an HTML attribute
+if (animationName) {
+  delete rest[animationName];
+}
+
+const classes = [display && `m-display--${display}`];
+
+// Pass the constructed `animate` string directly to the shared functions
+const finalClasses = mergeClasses(classes, { ...props, animate });
+const finalStyles = mergeStyles("", { ...props, animate });
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .m-display--block {
+    display: block;
+  }
+  .m-display--inline {
+    display: inline;
+  }
+  .m-display--inline-block {
+    display: inline-block;
+  }
+  .m-display--contents {
+    display: contents;
+  }
+</style>
+
+
+--- File: Staggered.astro ---
+---
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents" | "flex";
+  duration?: number;
+  [key: string]: any;
+}
+
+
+const props = Astro.props;
+
+const {
+  as: Tag = "div",
+  display = "block",
+  duration = 500,
+  onScroll,
+  ...rest
+} = props;
+
+if (onScroll) {
+  rest["data-on-scroll"] = "staggered";
+}
+
+const uniqueId = Math.random().toString(36).slice(2, 11);
+const classes = [
+  "staggered-component",
+  display && `staggered-display--${display}`,
+  `staggered-instance-${uniqueId}`,
+];
+
+// Generate a unique ID for this instance to scope the child delays
+classes.push(`staggered-instance-${uniqueId}`);
+
+const finalClasses = mergeClasses(classes, { ...props, animate: undefined });
+const finalStyles = mergeStyles("", { ...props, animate: undefined });
+
+// Staggered: alternates between slideLeft and slideRight
+// Starts the next one just before the previous one has finished (e.g., at 85% of duration)
+let cssRules = "";
+let currentDelay = 0;
+const staggerDelay = duration * 0.85;
+
+for (let i = 1; i <= 30; i++) {
+  const animName = i % 2 !== 0 ? "staggeredSlideLeft" : "staggeredSlideRight";
+  cssRules += `.staggered-instance-${uniqueId} > *:nth-child(${i}) { 
+    animation-name: ${animName};
+    animation-duration: ${duration}ms;
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: ${Math.round(currentDelay)}ms;
+  }\n`;
+  currentDelay += staggerDelay;
+}
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style set:html={cssRules}></style>
+
+<style>
+  .staggered-display--block {
+    display: block;
+  }
+  .staggered-display--inline {
+    display: inline;
+  }
+  .staggered-display--inline-block {
+    display: inline-block;
+  }
+  .staggered-display--contents {
+    display: contents;
+  }
+  .staggered-display--flex {
+    display: flex;
+  }
+
+  .staggered-component {
+    container-type: inline-size;
+    width: 100%;
+  }
+</style>
+
+
+--- File: Wave.astro ---
+---
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export interface Props extends BaseComponentProps {
+  display?: "block" | "inline" | "inline-block" | "contents";
+  [key: string]: any;
+}
+
+const standardProps = [
+  "as",
+  "class",
+  "class:list",
+  "style",
+  "id",
+  "display",
+  "animate",
+  "onScroll",
+];
+const props = Astro.props;
+
+let animationName = "";
+let animationValue = "";
+
+for (const [key, value] of Object.entries(props)) {
+  if (!standardProps.includes(key) && value !== false && value !== undefined) {
+    animationName = key;
+    animationValue = typeof value === "string" ? value : "";
+    break;
+  }
+}
+
+const animate = animationName
+  ? `${animationName} ${animationValue}`.trim()
+  : Astro.props.animate;
+
+// Extract base delay if provided in the string
+let baseDelayMs = 100; // default 100ms
+if (animate) {
+  const parts = animate.split(/\s+/);
+  for (const part of parts) {
+    if (part.startsWith("delay-")) {
+      const val = part.replace("delay-", "");
+      if (val.endsWith("ms")) baseDelayMs = parseFloat(val);
+      else if (val.endsWith("s")) baseDelayMs = parseFloat(val) * 1000;
+    }
+  }
+}
+
+const { as: Tag = "div", display = "block", onScroll, ...rest } = props;
+
+if (onScroll) {
+  rest['data-on-scroll'] = "wave";
+}
+
+if (animationName) {
+  delete rest[animationName];
+}
+
+// Ensure the name is added so animate.css `.wave--[name] > *` rule targets the children
+const parsedName = animate ? animate.split(/\s+/)[0] : "";
+const classes = [
+  "wave-component",
+  display && `wave-display--${display}`,
+  parsedName && `wave--${parsedName}`,
+];
+
+// Generate a unique ID for this instance to scope the child delays
+const uniqueId = Math.random().toString(36).slice(2, 11);
+classes.push(`wave-instance-${uniqueId}`);
+
+// We do NOT pass `animate` to mergeClasses because we don't want the `.animate--` class on the container itself!
+// The container should NOT animate. Only its children should.
+const finalClasses = mergeClasses(classes, { ...props, animate: undefined });
+const finalStyles = mergeStyles("", { ...props, animate: undefined });
+
+// Generate the cascading delay CSS for up to 30 children
+let delayCSS = "";
+let currentDelay = baseDelayMs;
+for (let i = 1; i <= 30; i++) {
+  delayCSS += `.wave-instance-${uniqueId} > *:nth-child(${i}) { animation-delay: ${Math.round(currentDelay)}ms !important; }\n`;
+  currentDelay *= 1.5;
+}
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+<style set:html={delayCSS}></style>
+
+<style>
+  .wave-display--block {
+    display: block;
+  }
+  .wave-display--inline {
+    display: inline;
+  }
+  .wave-display--inline-block {
+    display: inline-block;
+  }
+  .wave-display--contents {
+    display: contents;
+  }
+
+  /* Prevent FOUC for entrance animations by hiding children before the animation starts */
+  .wave-component[class*="wave--fadeIn"] > *,
+  .wave-component[class*="wave--slideIn"] > *,
+  .wave-component[class*="wave--scaleIn"] > * {
+    animation-fill-mode: both !important;
+  }
+</style>
+
+
+--- File: motion.ts ---
+/**
+ * src/design/design.animations.ts
+ * Centralized animation system for all components
+ */
+import type { AnimationName } from './Animation.types';
+import type { AnimationConfig } from '@/design/shared/types';
+
+/**
+ * Parse animation string into configuration
+ * 
+ * @param animateStr - Animation string (e.g., "sparkle", "sparkle 2s", "sparkle 1.5s delay-1s")
+ * @returns Parsed animation config or null if no animation
+ * 
+ * @example
+ * parseAnimation("sparkle") // { name: "sparkle", duration: "1s", delay: "0s" }
+ * parseAnimation("sparkle 2s") // { name: "sparkle", duration: "2s", delay: "0s" }
+ * parseAnimation("sparkle 1.5s delay-1s") // { name: "sparkle", duration: "1.5s", delay: "1s" }
+ */
+export const parseAnimation = (animateStr: string | undefined): AnimationConfig | null => {
+  if (!animateStr) return null;
+  
+  const parts = animateStr.trim().split(/\s+/);
+  const name = parts[0] as AnimationName;
+  let duration = '1s';
+  let delay = '0s';
+  
+  for (let i = 1; i < parts.length; i++) {
+    const part = parts[i];
+    if (part.startsWith('delay-')) {
+      delay = part.replace('delay-', '');
+    } else if (part.match(/^\d+\.?\d*(s|ms)$/)) {
+      duration = part;
+    }
+  }
+  
+  return { name, duration, delay };
+};
+
+/**
+ * Generate animation CSS class name
+ *
+ * @param animation - Animation config
+ * @returns CSS class name
+ */
+export const getAnimationClass = (animation: AnimationConfig | null): string | null => {
+  if (!animation) return null;
+  return `animate--${animation.name}`;
+};
+
+/**
+ * Generate animation inline styles
+ * 
+ * @param animation - Animation config
+ * @returns CSS style string
+ */
+export const getAnimationStyles = (animation: AnimationConfig | null): string => {
+  if (!animation) return '';
+  return `animation-duration: ${animation.duration}; animation-delay: ${animation.delay};`;
+};
+
+/**
+ * Animation descriptions for documentation
+ */
+export const ANIMATION_DESCRIPTIONS: Partial<Record<AnimationName, string>> = {
+  sparkle: 'Scale and rotate with opacity change',
+  pulse: 'Fade in and out',
+  bounce: 'Bounce up and down',
+  spin: 'Continuous rotation',
+  ping: 'Scale up and fade out',
+  wiggle: 'Rotate left and right',
+  float: 'Move up and down smoothly',
+  glow: 'Pulsing glow effect',
+  shake: 'Shake horizontally',
+  fadeIn: 'Fade in once (use with delay for staggered effects)',
+  slideIn: 'Slide in from bottom',
+  scaleIn: 'Scale in with bounce'
+};
+
+/**
+ * Get all available animations with descriptions
+ */
+export const getAvailableAnimations = (): Array<{ name: AnimationName; description: string }> => {
+  return Object.entries(ANIMATION_DESCRIPTIONS).map(([name, description]) => ({
+    name: name as AnimationName,
+    description
+  }));
+};
+
+/**
+ * Process animation prop and return all necessary values
+ * Use this helper to reduce boilerplate in components
+ *
+ * @param animate - Animation string from props
+ * @returns Object with animation class and styles
+ *
+ * @example
+ * const { animationClass, animationStyles } = processAnimation(animate);
+ * const classes = ['my-component', animationClass, className];
+ * const styles = [myStyles, animationStyles, receivedStyles].filter(Boolean).join(';');
+ */
+export const processAnimation = (animate: string | undefined) => {
+  const animation = parseAnimation(animate);
+  return {
+    animation,
+    animationClass: getAnimationClass(animation),
+    animationStyles: getAnimationStyles(animation)
+  };
+};
+
+// Made with Bob
+
+
+--- File: Animation.types.ts ---
+/**
+ * Available animation names
+ */
+export type AnimationName =
+  | 'fadeIn'
+  | 'fadeUp'
+  | 'fadeDown'
+  | 'fadeLeft'
+  | 'fadeRight'
+  | 'scaleIn'
+  | 'revealUp'
+  | 'slideIn'
+  | 'slideLeft'
+  | 'slideRight'
+  | 'pulse'
+  | 'ping'
+  | 'shimmer'
+  | 'blink'
+  | 'glow'
+  | 'spin'
+  | 'spinSlow'
+  | 'float'
+  | 'breathe'
+  | 'sparkle'
+  | 'shake'
+  | 'bounce'
+  | 'wiggle'
+  | 'headShake'
+  | 'jello'
+  | 'jiggle'
+  | 'swivel'
+  | 'ripple'
+  | 'half-ripple'
+  | 'quarter-ripple'
+  | 'vibrate'
+  | 'fadeOut'
+  | 'scaleOut'
+  | 'collapse'
+  | 'pickle'
+  | 'DancingMonkey'
+  | 'staggeredSlideLeft'
+  | 'staggeredSlideRight'
+  | 'alternatingSlideLeft'
+  | 'alternatingSlideRight';
+/**
+ * Animation prop interface — add to any component's Props to enable animations.
+ */
+export interface AnimationProps {
+  /**
+   * Animation name with optional duration and delay.
+   *
+   * Format: `"<name> [duration] [delay-<value>]"`
+   *
+   * See animate.css for full documentation of each animation.
+   *
+   * @example
+   * animate="sparkle"
+   * animate="sparkle 2s"
+   * animate="sparkle 1.5s delay-1s"
+   * animate="bounce 3s delay-0.5s"
+   */
+  animate?: AnimationName | string;
+}
+

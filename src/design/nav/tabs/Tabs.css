@@ -1,0 +1,33 @@
+/* src/design/nav/tabs/Tabs.css */
+
+.tabs-component {
+  display: flex;
+  align-items: center;
+  position: relative;
+  /* Pulling from a theoretical gap scale token */
+  gap: var(--space--xs, 0.25rem);
+  border-bottom: 1px solid transparent;
+}
+
+/* --- Variants --- */
+.tabs-component--underline {
+  border-bottom-color: var(--border-layer--2, #e2e8f0);
+}
+
+.tabs-component--pills {
+  /* Pills usually sit in a container with a background */
+  background-color: var(--layer--2, #f1f5f9);
+  padding: var(--space--xs, 0.25rem);
+  border-radius: var(--radius--md, 0.375rem);
+  border-bottom: none;
+}
+
+/* --- Modifiers --- */
+.tabs-component--full-width {
+  width: 100%;
+}
+
+.tabs-component--full-width > * {
+  flex: 1 1 0%;
+  justify-content: center;
+}

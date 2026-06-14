@@ -1,0 +1,2079 @@
+--- File: surfaces.maps.ts ---
+import type { SurfacePadding } from "./surfaces.types";
+
+export const SURFACE_PADDING_CLASS_MAP: Record<SurfacePadding, string> = {
+  none: 'surface-padding--none',
+  sm: 'surface-padding--sm',
+  default: 'surface-padding--md',
+  md: 'surface-padding--md',
+  lg: 'surface-padding--lg',
+  xl: 'surface-padding--xl',
+};
+
+--- File: surfaces.consts.ts ---
+
+
+--- File: surfaces.functions.ts ---
+
+
+--- File: surfaces.css ---
+/* src/design/surfaces/surfaces.css */
+.surface-padding--none { --surface-pad: 0; --surface-pad-half: 0; padding: var(--surface-pad); }
+.surface-padding--sm { --surface-pad: var(--sp-sm); --surface-pad-half: var(--sp-xs); padding: var(--surface-pad); }
+.surface-padding--default,
+.surface-padding--md { --surface-pad: var(--sp-md); --surface-pad-half: var(--sp-sm); padding: var(--surface-pad); }
+.surface-padding--lg { --surface-pad: var(--sp-lg); --surface-pad-half: var(--sp-md); padding: var(--surface-pad); }
+.surface-padding--xl { --surface-pad: var(--sp-xl); --surface-pad-half: var(--sp-lg); padding: var(--surface-pad); }
+
+.surface-layer--0 { background-color: var(--layer--0); }
+.surface-layer--1 { background-color: var(--layer--1); }
+.surface-layer--2 { background-color: var(--layer--2); }
+.surface-layer--3 { background-color: var(--layer--3); }
+.surface-layer--4 { background-color: var(--layer--4); }
+.surface-layer--5 { background-color: var(--layer--5); }
+
+--- File: paper/paper.svg ---
+
+
+--- File: paper/Paper.astro ---
+---
+/**
+ * src/design/surfaces/paper/Paper.astro
+ * A regional document surface sitting just above the page floor (--layer--1).
+ * - Serves as a subtly lifted container for main content areas or editor canvases.
+ * - Distinct from Card as it acts more as a zone or region rather than a discrete object.
+ * @props (local): as, elevation, padding
+ * @props (global): class, class:list, animate, onScroll
+ * - elevation: Controls the visual lift, defaulting to 'sm'.
+ * - padding: Internal space of the paper surface, handled by the component.
+ */
+import type { SpacingScale } from "@/design/shared";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+import './Paper.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  elevation?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  padding?: SpacingScale;
+}
+
+const {
+  as: Tag = 'div',
+  elevation = 'sm',
+  padding = 'sm',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'paper-component',
+  `paper-elevation--${elevation}`,
+  `paper-padding--${padding}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: paper/Paper.css ---
+.paper-component {
+  background: var(--layer--1);
+  border: 1px solid var(--border-layer--1);
+  border-radius: var(--radius-layer--1);
+  box-sizing: border-box;
+}
+
+.paper-padding--none { padding: 0; }
+.paper-padding--xs { padding: var(--sp-2xs); }
+.paper-padding--sm { padding: var(--sp-xs); }
+.paper-padding--md { padding: var(--sp-sm); }
+.paper-padding--lg { padding: var(--sp-md); }
+.paper-padding--xl { padding: var(--sp-lg); }
+
+.paper-elevation--none { box-shadow: none; }
+.paper-elevation--sm { box-shadow: var(--sh-sm, 0 1px 2px rgba(0,0,0,0.1)); }
+.paper-elevation--md { box-shadow: var(--sh-md, 0 4px 6px rgba(0,0,0,0.1)); }
+.paper-elevation--lg { box-shadow: var(--sh-lg, 0 10px 15px rgba(0,0,0,0.1)); }
+.paper-elevation--xl { box-shadow: var(--sh-xl, 0 20px 25px rgba(0,0,0,0.1)); }
+
+
+--- File: paper/paper.md ---
+# Paper
+
+A surface component that provides a subtly elevated container, reminiscent of a sheet of paper.
+
+## Overview
+
+The `Paper` component is designed to create distinct areas within an application, visually separated from the background by a slight elevation. It functions as a container for content that needs to stand out, such as main content areas, editor canvases, or forms. Unlike a `Card`, which often represents a discrete object with clear boundaries and actions, `Paper` acts more as a distinct region or zone. It manages its own internal padding and elevation, providing a clean and consistent surface for content.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `elevation` | `'none' | 'sm' | 'md' | 'lg' | 'xl'` | `sm` | Controls the visual elevation of the paper surface, affecting its shadow and perceived depth. 'none' removes the shadow. |
+| `padding` | `SpacingScale` (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'`) | `sm` | Sets the internal padding around the paper's content. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Paper` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Elevation
+
+- `none`: No shadow, appears flush with the background.
+- `sm`: Small shadow, indicating slight lift.
+- `md`: Medium shadow, indicating moderate lift.
+- `lg`: Large shadow, indicating significant lift.
+- `xl`: Extra large shadow, providing the most pronounced lift.
+
+### Padding
+
+- `xs`: Extra small internal padding.
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+- `2xl`: Extra extra large internal padding.
+- `3xl`: Extra extra extra large internal padding.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Paper from '@/design/surfaces/paper/Paper.astro';
+---
+
+<Paper>
+  <p>This content sits on a paper surface.</p>
+</Paper>
+```
+
+### Common Patterns
+
+```astro
+---
+import Paper from '@/design/surfaces/paper/Paper.astro';
+import Card from '@/design/surfaces/card/Card.astro'; // Example of composing Paper with Card
+---
+
+<!-- Paper with medium elevation and large padding -->
+<Paper elevation="md" padding="lg">
+  <h2>Section Title</h2>
+  <p>Content that requires distinct visual separation.</p>
+</Paper>
+
+<!-- Paper used as a container for a Card -->
+<Paper elevation="lg" padding="xl">
+  <Card>
+    <Card.Header>Card Inside Paper</Card.Header>
+    <Card.Content>This card is placed on an elevated paper surface.</Card.Content>
+  </Card>
+</Paper>
+```
+
+## Accessibility
+
+The `Paper` component primarily affects visual presentation and does not introduce specific ARIA roles unless its `as` prop is set to a more semantic element. Ensure that the content placed within the `Paper` surface is accessible by using appropriate semantic HTML elements and providing necessary ARIA attributes if the content forms an interactive component or landmark.
+
+## CSS Architecture
+
+The `Paper` component uses the `paper-component` class for its base styling. It applies modifier classes for `elevation` (e.g., `paper-elevation--md`) and `padding` (e.g., `paper-padding--lg`). These classes reference CSS custom properties defined in `Paper.css` and `surfaces.css` for shadows and spacing. The elevation classes correspond to z-index and box-shadow definitions. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`Panel`](/docs/components/panel)
+- [`Backdrop`](/docs/components/backdrop)
+
+
+--- File: card/card.svg ---
+
+
+--- File: card/Card.astro ---
+---
+/**
+ * src/design/surfaces/card/Card.astro
+ * A general-purpose container component used to group related content and actions.
+ * - Supports multiple padding sizes, text alignments, and visual variants.
+ * - Inherits animation props for unified motion integration.
+ * @props (local): as, padding, align, variant
+ * @props (global): class, class:list, animate, onScroll
+ * - The internal space (the padding) is handled by the `padding` prop.
+ * - When used as a compound component (with CardHeader/CardContent/CardFooter), the `padding` prop on Card broadcasts CSS variables (`--surface-pad`) to its children, and Card strips its own padding so child borders can run edge-to-edge.
+ * - The exterior space (the margin) is handled by the parent. Card doesn't concern itself with space outside.
+ */
+
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+
+import "@/design/surfaces/surfaces.css";
+import "./Card.css";
+
+export interface Props extends SurfaceComponentProps {
+  class?: string;
+  style?: string;
+  align?: "left" | "center" | "right";
+  variant?: "default" | "stat";
+}
+
+const {
+  as: Tag = "div",
+  padding = "xl",
+  align = "left",
+  variant = "default",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "card-component",
+  padding && SURFACE_PADDING_CLASS_MAP[padding],
+  `card-align--${align}`,
+  `card-variant--${variant}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: card/Card.css ---
+.card-component {
+  background: var(--layer--2);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-layer--2);
+  border-radius: var(--radius-layer--2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+/* Strip padding if using compound sub-components */
+.card-component:has(> .card-header-component),
+.card-component:has(> .card-content-component),
+.card-component:has(> .card-footer-component) {
+  padding: 0;
+}
+
+.card-align--left { text-align: left; }
+.card-align--center { text-align: center; }
+.card-align--right { text-align: right; }
+
+.card-variant--default:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: var(--card-border-hover);
+}
+
+.card-variant--stat:hover {
+  transform: translateY(-5px);
+  border-color: var(--card-border-hover-thick);
+}
+
+
+--- File: card/card.md ---
+# Card
+
+A versatile container component used to group related content and actions, providing a clear visual boundary.
+
+## Overview
+
+The `Card` component acts as a fundamental organizational unit in a user interface, designed to encapsulate distinct pieces of information or functionality. It is responsible for providing consistent visual styling (such as borders, shadows, and background), managing its internal padding, and supporting various content alignments and visual variants. When used as a compound component (with `CardHeader`, `CardContent`, `CardFooter`), it intelligently broadcasts padding to its children while stripping its own, allowing child borders to extend edge-to-edge. The `Card` is *not* responsible for external spacing (margins), complex layout within its children (beyond alignment), or the logic of actions contained within it; those concerns are managed by parent components or the components placed inside the card.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `padding` | `'sm' | 'md' | 'lg' | 'xl'` | `xl` | Sets the internal padding of the card. When used with compound card components, this value is broadcasted as a CSS variable `--surface-pad` to its children. |
+| `align` | `'left' | 'center' | 'right'` | `left` | Specifies the horizontal alignment of the content within the card. |
+| `variant` | `'default' | 'stat'` | `default` | Defines the visual style of the card. The `stat` variant is optimized for displaying statistics or key metrics. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Card` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Padding
+
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+
+### Alignment
+
+- `left`: Content is aligned to the left (default).
+- `center`: Content is horizontally centered.
+- `right`: Content is aligned to the right.
+
+### Variant
+
+- `default`: The standard visual presentation for a card.
+- `stat`: A variant optimized for displaying statistics or key metrics, often with a more minimalist design.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Card from '@/design/surfaces/card/Card.astro';
+---
+
+<Card>
+  <h3>Card Title</h3>
+  <p>This is some content inside a basic card.</p>
+</Card>
+```
+
+### Common Patterns
+
+```astro
+---
+import Card from '@/design/surfaces/card/Card.astro';
+import CardHeader from '@/design/surfaces/card-header/CardHeader.astro';
+import CardContent from '@/design/surfaces/card-content/CardContent.astro';
+import CardFooter from '@/design/surfaces/card-footer/CardFooter.astro';
+---
+
+<!-- Card with Header, Content, and Footer -->
+<Card padding="md">
+  <CardHeader>Monthly Report</CardHeader>
+  <CardContent>
+    <p>Revenue increased by 15% this month.</p>
+  </CardContent>
+  <CardFooter>
+    <button>View Details</button>
+  </CardFooter>
+</Card>
+
+<!-- Centered Card with Stat Variant -->
+<Card align="center" variant="stat" as="article">
+  <h4>Users Online</h4>
+  <h2>1,234</h2>
+</Card>
+```
+
+## Accessibility
+
+The `Card` component typically serves as a grouping mechanism for related content. Using semantic HTML tags for `as` (e.g., `article`, `section`) can enhance its accessibility by providing clearer structural meaning to assistive technologies. Ensure that the content within the card is well-structured with appropriate headings and landmarks. If the card itself is interactive, ensure it has a clear focus indicator and keyboard operability.
+
+## CSS Architecture
+
+The `Card` component uses the `card-component` class for its base styling, which establishes its background, borders, and shadows. It applies modifier classes for `padding` (e.g., `surface-padding--md`), `align` (e.g., `card-align--center`), and `variant` (e.g., `card-variant--stat`). When used with compound components, the `padding` prop sets the `--surface-pad` CSS variable. Styling is derived from `Card.css` and `surfaces.css`, referencing semantic tokens for colors and spacing. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`CardHeader`](/docs/components/card-header)
+- [`CardContent`](/docs/components/card-content)
+- [`CardFooter`](/docs/components/card-footer)
+- [`Paper`](/docs/components/paper)
+- [`Panel`](/docs/components/panel)
+
+
+--- File: card-header/CardHeader.css ---
+.card-header-component {
+  width: 100%;
+  padding: var(--surface-pad, var(--sp-md)) var(--surface-pad, var(--sp-md)) var(--surface-pad-half, var(--sp-sm));
+}
+
+.card-header--border-bottom {
+  border-bottom: 1px solid var(--border--1);
+}
+
+
+--- File: card-header/card-header.svg ---
+
+
+--- File: card-header/CardHeader.astro ---
+---
+/**
+ * src/design/surfaces/card-header/CardHeader.astro
+ * The top section of a Card component.
+ * - Owns its own padding (top, left, right, and a smaller bottom padding).
+ * - Allows independent background coloring and optional bottom border.
+ * @props (local): as, padding, borderBottom
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import './CardHeader.css';
+
+export interface Props extends SurfaceComponentProps {
+  borderBottom?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  borderBottom = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-header-component',
+  padding && SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  borderBottom && 'card-header--border-bottom',
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+--- File: card-header/card-header.md ---
+# CardHeader
+
+The header section of a `Card` component, typically used for titles, subtitles, or icons.
+
+## Overview
+
+The `CardHeader` component is the designated area at the top of a `Card`, intended for introductory or identifying information such as titles, subtitles, icons, or even brief summaries. It inherits padding from its parent `Card` via CSS variables (`--surface-pad`), ensuring its content aligns with the card's internal spacing, while also applying its own specific top, left, and right padding, and a slightly reduced bottom padding to create visual separation from the card's content. It can also support custom background colors and an optional bottom border for further definition. It is *not* responsible for the card's overall layout, content, footer, or external spacing; its focus is solely on the header area.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `default` | Sets the internal padding of the header area. When used within a `Card`, this value primarily influences the `--surface-pad` CSS variable, ensuring alignment with other card sections. |
+| `bg` | `BackgroundTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'transparent' | 'subtle' | 'hover' | 'outline'`) | | Applies a background color tone to the header area. |
+| `borderBottom` | `boolean` | `false` | If `true`, a bottom border is applied to the header for visual separation. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `CardHeader` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import CardHeader from '@/design/surfaces/card-header/CardHeader.astro';
+---
+
+<CardHeader>
+  <h3>Card Title</h3>
+</CardHeader>
+```
+
+### Common Patterns
+
+```astro
+---
+import Card from '@/design/surfaces/card/Card.astro';
+import CardHeader from '@/design/surfaces/card-header/CardHeader.astro';
+import CardContent from '@/design/surfaces/card-content/CardContent.astro';
+import CardFooter from '@/design/surfaces/card-footer/CardFooter.astro';
+---
+
+<!-- CardHeader with a subtitle and bottom border -->
+<Card>
+  <CardHeader borderBottom>
+    <h4>Card Title</h4>
+    <p>A brief subtitle explaining the card.</p>
+  </CardHeader>
+  <CardContent>Card content goes here.</CardContent>
+</Card>
+
+<!-- CardHeader with a different background color -->
+<Card>
+  <CardHeader bg="primary" padding="lg">
+    <h2>Important Information</h2>
+  </CardHeader>
+  <CardContent>Details about the important information.</CardContent>
+</Card>
+```
+
+## Accessibility
+
+The `CardHeader` component, when used for titles, should ideally contain heading elements (e.g., `h1`, `h2`) to provide semantic structure for assistive technologies. Ensure that the information presented in the header is clear and concise. If interactive elements are included in the header, they must adhere to accessibility best practices, including keyboard operability and focus management.
+
+## CSS Architecture
+
+The `CardHeader` component uses the `card-header-component` class for its base styling. It applies padding classes (e.g., `surface-padding--md`) based on the `padding` prop, and background tone classes (e.g., `bg-primary`) based on the `bg` prop. The `card-header--border-bottom` modifier class is applied when the `borderBottom` prop is `true`. These classes utilize CSS custom properties for spacing and colors defined in `surfaces.css` and shared maps. When `padding` is set, it also sets the `--surface-pad` CSS variable, which is utilized by parent `Card` components for consistent spacing and alignment. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`CardContent`](/docs/components/card-content)
+- [`CardFooter`](/docs/components/card-footer)
+
+
+--- File: card-content/CardContent.css ---
+.card-content-component {
+  width: 100%;
+  padding: var(--surface-pad, var(--sp-md));
+}
+
+
+--- File: card-content/card-content.svg ---
+
+
+--- File: card-content/CardContent.astro ---
+---
+/**
+ * src/design/surfaces/card-content/CardContent.astro
+ * The middle content section of a Card component.
+ * - Owns its own uniform padding.
+ * - Allows independent background coloring.
+ * @props (local): as, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import './CardContent.css';
+
+export interface Props extends SurfaceComponentProps {
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-content-component',
+  padding && SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+--- File: card-content/card-content.md ---
+# CardContent
+
+The content area of a `Card` component, typically used for the main body of information.
+
+## Overview
+
+The `CardContent` component is designed to hold the primary content within a `Card`. It inherits padding settings from its parent `Card` component via CSS variables (`--surface-pad`), allowing its borders to align seamlessly with the card's edges. It can also accept its own padding and background color, offering flexibility in visual presentation. It is *not* responsible for the card's overall structure, header, footer, or external spacing; its sole purpose is to present the core content.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `default` | Sets the internal padding of the content area. Note that when used within a `Card`, this prop's value is primarily used to set the `--surface-pad` CSS variable for child elements, and the `CardContent` itself might have minimal padding to allow child borders to run edge-to-edge. |
+| `bg` | `BackgroundTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'transparent' | 'subtle' | 'hover' | 'outline'`) | | Applies a background color tone to the content area. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `CardContent` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import CardContent from '@/design/surfaces/card-content/CardContent.astro';
+---
+
+<CardContent>
+  <p>This is the main content of the card.</p>
+</CardContent>
+```
+
+### Common Patterns
+
+```astro
+---
+import Card from '@/design/surfaces/card/Card.astro';
+import CardContent from '@/design/surfaces/card-content/CardContent.astro';
+import CardHeader from '@/design/surfaces/card-header/CardHeader.astro';
+import CardFooter from '@/design/surfaces/card-footer/CardFooter.astro';
+---
+
+<!-- CardContent with custom padding and background -->
+<Card>
+  <CardHeader>Content Header</CardHeader>
+  <CardContent padding="md" bg="subtle">
+    <p>This content area has medium padding and a subtle background.</p>
+  </CardContent>
+  <CardFooter>Content Footer</CardFooter>
+</Card>
+
+<!-- CardContent using its default padding -->
+<Card>
+  <CardHeader>Another Section</CardHeader>
+  <CardContent>
+    <p>This uses the default padding and background of the Card component.</p>
+  </CardContent>
+</Card>
+```
+
+## Accessibility
+
+The `CardContent` component, as a container for content, relies on the semantic structure of its child elements for accessibility. When used within a `Card`, it contributes to the overall understanding of the grouped information. Ensure that the content placed within `CardContent` is semantically appropriate (e.g., using correct heading levels, lists, etc.) to provide a clear and accessible experience for all users.
+
+## CSS Architecture
+
+The `CardContent` component uses the `card-content-component` class for its base styling. It applies padding classes (e.g., `surface-padding--md`) and background tone classes (e.g., `bg-subtle`) based on the `padding` and `bg` props, respectively. These classes utilize CSS custom properties for spacing and colors defined in `surfaces.css` and shared maps. When `padding` is set, it also sets the `--surface-pad` CSS variable, which can be utilized by parent `Card` components or other related surface elements for consistent spacing. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`CardHeader`](/docs/components/card-header)
+- [`CardFooter`](/docs/components/card-footer)
+- [`Panel`](/docs/components/panel)
+
+
+--- File: card-footer/CardFooter.css ---
+.card-footer-component {
+  width: 100%;
+  padding: var(--surface-pad-half, var(--sp-sm)) var(--surface-pad, var(--sp-md));
+}
+
+.card-footer--border-top {
+  border-top: 1px solid var(--border--1);
+}
+
+
+--- File: card-footer/card-footer.svg ---
+
+
+--- File: card-footer/CardFooter.astro ---
+---
+/**
+ * src/design/surfaces/card-footer/CardFooter.astro
+ * The bottom section of a Card component.
+ * - Owns its own padding (bottom, left, right, and a smaller top padding).
+ * - Allows independent background coloring and optional top border.
+ * @props (local): as, padding, borderTop
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import './CardFooter.css';
+
+export interface Props extends SurfaceComponentProps {
+  borderTop?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  padding = 'default',
+  bg,
+  borderTop = false,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'card-footer-component',
+  padding && SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  borderTop && 'card-footer--border-top',
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+--- File: card-footer/card-footer.md ---
+# CardFooter
+
+The footer section of a `Card` component, typically used for actions or metadata.
+
+## Overview
+
+The `CardFooter` component is the designated area at the bottom of a `Card`, intended for grouping actions, secondary information, or metadata related to the card's content. It inherits padding from its parent `Card` via CSS variables, ensuring its content aligns with the card's internal spacing. It is designed to work seamlessly with `CardHeader` and `CardContent` to create well-structured cards. It is *not* responsible for the card's overall layout, header, content, or external spacing; its focus is solely on the footer area.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `default` | Sets the internal padding of the footer area. When used within a `Card`, this value primarily influences the `--surface-pad` CSS variable, ensuring alignment with other card sections. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `CardFooter` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import CardFooter from '@/design/surfaces/card-footer/CardFooter.astro';
+---
+
+<CardFooter>
+  <button>Action Button</button>
+</CardFooter>
+```
+
+### Common Patterns
+
+```astro
+---
+import Card from '@/design/surfaces/card/Card.astro';
+import CardHeader from '@/design/surfaces/card-header/CardHeader.astro';
+import CardContent from '@/design/surfaces/card-content/CardContent.astro';
+import CardFooter from '@/design/surfaces/card-footer/CardFooter.astro';
+---
+
+<!-- CardFooter with multiple actions -->
+<Card>
+  <CardHeader>Card Title</CardHeader>
+  <CardContent>Some descriptive text.</CardContent>
+  <CardFooter>
+    <button>Primary Action</button>
+    <button variant="secondary">Secondary Action</button>
+  </CardFooter>
+</Card>
+
+<!-- CardFooter with metadata -->
+<Card>
+  <CardHeader>Update Details</CardHeader>
+  <CardContent>User profile information.</CardContent>
+  <CardFooter>
+    <span>Last updated: 2 hours ago</span>
+    <span>Status: Pending</span>
+  </CardFooter>
+</Card>
+```
+
+## Accessibility
+
+The `CardFooter` component, as a container for actions or metadata, should ensure that its content is accessible. If the footer contains interactive elements like buttons, they must have clear focus indicators and be operable via keyboard. If the footer provides metadata, ensure it is presented in a readable and understandable format for all users, including those using assistive technologies.
+
+## CSS Architecture
+
+The `CardFooter` component uses the `card-footer-component` class for its base styling. It applies padding classes (e.g., `surface-padding--md`) based on the `padding` prop. When `padding` is set, it also sets the `--surface-pad` CSS variable, which is utilized by parent `Card` components to manage consistent spacing and alignment across card sections. Styling is derived from `CardFooter.css` and `surfaces.css`. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`CardHeader`](/docs/components/card-header)
+- [`CardContent`](/docs/components/card-content)
+
+
+--- File: screen/Screen.css ---
+.screen-component {
+  min-height: 100dvh;
+  position: relative;
+}
+
+
+--- File: screen/screen.svg ---
+
+
+--- File: screen/Screen.astro ---
+---
+/**
+ * src/design/surfaces/screen/Screen.astro
+ * The outermost surface representing the full viewport or page canvas.
+ * - Establishes the base background at --layer--0.
+ * - Provides the minimum height (100dvh) and a stacking context.
+ * - Is purely environmental, not a layout component.
+ * @props (local): as, layer
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import '@/design/surfaces/surfaces.css';
+import './Screen.css';
+
+export interface Props extends SurfaceComponentProps {
+}
+
+const {
+  as: Tag = 'div',
+  layer = 0,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'screen-component',
+  `surface-layer--${layer}`
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+--- File: screen/screen.md ---
+# Screen
+
+The outermost surface component, representing the entire viewport or page canvas.
+
+## Overview
+
+The `Screen` component defines the fundamental visual environment for the application. It acts as the base layer, establishing the page's background color (typically `--layer--0`) and ensuring that the content takes up at least the full viewport height (`100dvh`). It serves as the foundational stacking context for all other UI elements. The `Screen` component is purely environmental and does not dictate layout or structure; its primary role is to provide a consistent and complete canvas for the rest of the application's UI. It is *not* a layout component and should not be used for structuring content within the page.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `layer` | `number` | `0` | Sets the elevation layer for the screen. Typically corresponds to `--layer--0`, indicating the base background. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Screen` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Screen from '@/design/surfaces/screen/Screen.astro';
+---
+
+<Screen>
+  <!-- Your page content goes here -->
+  <h1>Welcome</h1>
+  <p>This is the main content of the page.</p>
+</Screen>
+```
+
+### Common Patterns
+
+```astro
+---
+import Screen from '@/design/surfaces/screen/Screen.astro';
+import Panel from '@/design/surfaces/panel/Panel.astro';
+---
+
+<!-- Example of using Screen with a sidebar Panel -->
+<Screen>
+  <Panel position="left" layer={1}>
+    <nav>
+      <ul>
+        <li>Menu Item 1</li>
+        <li>Menu Item 2</li>
+      </ul>
+    </nav>
+  </Panel>
+  <main>
+    <!-- Main content area -->
+    <h2>Main Content Area</h2>
+    <p>This is the primary content of the page, positioned next to the sidebar.</p>
+  </main>
+</Screen>
+```
+
+## Accessibility
+
+The `Screen` component itself does not introduce specific ARIA roles, as it represents the base canvas. Accessibility concerns are primarily related to the content placed within the `Screen`. Ensure that the overall page structure, including headings, landmarks, and interactive elements, is accessible.
+
+## CSS Architecture
+
+The `Screen` component uses the `screen-component` class and applies a `surface-layer--0` class to establish the base background and elevation. It leverages CSS custom properties defined in `surfaces.css` for the background color and ensures a minimum viewport height. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Panel`](/docs/components/panel)
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+
+
+--- File: bento-cell/bento-cell.svg ---
+
+
+--- File: bento-cell/BentoCell.astro ---
+---
+/**
+ * src/design/surfaces/bento-cell/BentoCell.astro
+ * An individual cell within a bento grid layout.
+ * - Designed to sit flush within the grid or as a discrete block.
+ * - Owns its internal padding, but relies on the parent BentoGrid for external gaps.
+ * @props (local): as, span, padding
+ * @props (global): class, class:list, animate, onScroll
+ * - span: How many columns this cell should span (e.g. 1, 2, 3, or 'full').
+ * - padding: Internal padding of the cell.
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+import './BentoCell.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  span?: 1 | 2 | 3 | 'full';
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const {
+  as: Tag = 'div',
+  span = 1,
+  padding = 'xl',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'bento-cell-component',
+  `bento-cell-span--${span}`,
+  `bento-cell-padding--${padding}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: bento-cell/BentoCell.css ---
+.bento-cell-component {
+  background: var(--layer--2);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-layer--2);
+  border-radius: var(--radius-layer--2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.bento-cell-padding--sm { padding: var(--sp-sm); }
+.bento-cell-padding--md { padding: var(--sp-md); }
+.bento-cell-padding--lg { padding: var(--sp-lg); }
+.bento-cell-padding--xl { padding: var(--sp-xl); }
+
+.bento-cell-component::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bento-cell-component:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.bento-cell-component:hover::before {
+  opacity: 1;
+}
+
+/* Gradient variations for cells */
+.bento-cell-component:nth-child(2n)::before { background: var(--gradient-2); }
+.bento-cell-component:nth-child(3n)::before { background: var(--gradient-3); }
+.bento-cell-component:nth-child(4n)::before { background: var(--gradient-4); }
+.bento-cell-component:nth-child(5n)::before { background: var(--gradient-5); }
+
+/* Span classes for larger screens */
+@media (min-width: 768px) {
+  .bento-cell-span--2 { grid-column: span 2; }
+  .bento-cell-span--3 { grid-column: span 3; }
+  .bento-cell-span--full { grid-column: 1 / -1; }
+}
+
+
+--- File: bento-cell/bento-cell.md ---
+# BentoCell
+
+An individual cell component designed for use within a `BentoGrid` layout.
+
+## Overview
+
+The `BentoCell` component represents a single, self-contained unit within a `BentoGrid`. Its primary role is to house content and manage its own internal spacing via the `padding` prop, while its size and position within the grid are largely dictated by the parent `BentoGrid` and its `span` prop. It is designed to sit flush within the grid structure and adapt to the grid's external gaps. It is *not* responsible for defining the grid structure itself, the gaps between cells, or the overall layout of multiple cells; these concerns are handled by the `BentoGrid` component.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `span` | `1 | 2 | 3 | 'full'` | `1` | Defines how many columns the cell should span within the `BentoGrid`. 'full' indicates it spans all available columns. |
+| `padding` | `'sm' | 'md' | 'lg' | 'xl'` | `xl` | Sets the internal padding around the cell's content. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `BentoCell` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Span
+
+- `1`: The cell spans a single column.
+- `2`: The cell spans two columns.
+- `3`: The cell spans three columns.
+- `full`: The cell spans all available columns in its row.
+
+### Padding
+
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import BentoCell from '@/design/surfaces/bento-cell/BentoCell.astro';
+---
+
+<BentoCell>
+  <h3>Cell Content</h3>
+  <p>Some information inside the cell.</p>
+</BentoCell>
+```
+
+### Common Patterns
+
+```astro
+---
+import BentoCell from '@/design/surfaces/bento-cell/BentoCell.astro';
+---
+
+<!-- Cell spanning two columns with medium padding -->
+<BentoCell span={2} padding="md">
+  <h3>Feature Highlight</h3>
+  <p>This cell takes up more space to highlight important content.</p>
+</BentoCell>
+
+<!-- Full-width cell with custom tag and classes -->
+<BentoCell as="article" span="full" class="my-custom-cell">
+  <h2>Full-width Article</h2>
+  <p>This article spans the entire width of the bento grid.</p>
+</BentoCell>
+```
+
+## Accessibility
+
+The `BentoCell` component, as a container for content, relies on the semantic correctness of its child elements for accessibility. It typically forms part of a larger `BentoGrid` structure, and the overall accessibility of the grid pattern should be considered. Ensure that the content within each `BentoCell` is logically structured and accessible independently.
+
+## CSS Architecture
+
+The `BentoCell` component utilizes the `bento-cell-component` class for its base styling. It dynamically applies modifier classes based on the `span` prop (e.g., `bento-cell-span--2`, `bento-cell-span--full`) and the `padding` prop (e.g., `bento-cell-padding--md`, `bento-cell-padding--xl`) to control its layout and internal spacing. Styling for these classes is defined in `BentoCell.css`, often leveraging CSS custom properties for spacing values. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`BentoGrid`](/docs/components/bento-grid)
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+
+
+--- File: bento-grid/BentoGrid.css ---
+.bento-grid-component {
+  display: grid;
+  width: 100%;
+}
+
+.bento-grid-columns--1 { grid-template-columns: 1fr; }
+.bento-grid-columns--2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.bento-grid-columns--3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.bento-grid-columns--4 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+.bento-grid-gap--sm { gap: var(--sp-sm); }
+.bento-grid-gap--md { gap: var(--sp-md); }
+.bento-grid-gap--lg { gap: var(--sp-lg); }
+.bento-grid-gap--xl { gap: var(--sp-xl); }
+
+
+--- File: bento-grid/bento-grid.svg ---
+
+
+--- File: bento-grid/BentoGrid.astro ---
+---
+/**
+ * src/design/surfaces/bento-grid/BentoGrid.astro
+ * A specialized grid container tailored for bento-box style layouts.
+ * - Manages the arrangement of flush or discrete bento cells.
+ * - Relies on CSS Grid under the hood to enforce structural separation.
+ * @props (local): as, columns, gap
+ * @props (global): class, class:list, animate, onScroll
+ * - columns: Defines the number of columns in the bento layout.
+ * - gap: The external spacing between cells, managed by this parent grid.
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { BaseComponentProps } from "@/design/shared/props";
+import './BentoGrid.css';
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  columns?: number;
+  gap?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const {
+  as: Tag = 'div',
+  columns = 3,
+  gap = 'lg',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'bento-grid-component',
+  `bento-grid-columns--${columns}`,
+  `bento-grid-gap--${gap}`
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: bento-grid/bento-grid.md ---
+# BentoGrid
+
+A specialized grid container designed for creating bento-box style layouts.
+
+## Overview
+
+The `BentoGrid` component acts as a parent container for `BentoCell` components, arranging them into a structured grid. Its primary responsibility is to define the grid's column structure and the external spacing (`gap`) between its child cells, leveraging CSS Grid for robust layout management. It enforces a visual separation between cells but expects individual `BentoCell` components to manage their internal padding. It is *not* responsible for the content within each cell, the internal padding of cells, or directly handling the responsiveness of cell content; those concerns are delegated to the `BentoCell` and the content within.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `columns` | `number` | `3` | Defines the number of columns in the bento layout. |
+| `gap` | `'sm' | 'md' | 'lg' | 'xl'` | `lg` | Sets the external spacing (gap) between the `BentoCell` children. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `BentoGrid` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Columns
+
+The `columns` prop accepts a number, defining the fixed number of columns for the grid. For example:
+
+- `columns={2}`: A two-column grid.
+- `columns={3}`: A three-column grid (default).
+- `columns={4}`: A four-column grid.
+
+### Gap
+
+- `sm`: Small external gap between cells.
+- `md`: Medium external gap between cells.
+- `lg`: Large external gap between cells.
+- `xl`: Extra large external gap between cells.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import BentoGrid from '@/design/surfaces/bento-grid/BentoGrid.astro';
+import BentoCell from '@/design/surfaces/bento-cell/BentoCell.astro';
+---
+
+<BentoGrid>
+  <BentoCell>Content 1</BentoCell>
+  <BentoCell>Content 2</BentoCell>
+  <BentoCell>Content 3</BentoCell>
+</BentoGrid>
+```
+
+### Common Patterns
+
+```astro
+---
+import BentoGrid from '@/design/surfaces/bento-grid/BentoGrid.astro';
+import BentoCell from '@/design/surfaces/bento-cell/BentoCell.astro';
+---
+
+<!-- A two-column grid with a medium gap -->
+<BentoGrid columns={2} gap="md">
+  <BentoCell span={1}>Item A</BentoCell>
+  <BentoCell span={1}>Item B</BentoCell>
+  <BentoCell span={2}>Item C (Spans two columns)</BentoCell>
+</BentoGrid>
+
+<!-- Grid with custom HTML tag and classes -->
+<BentoGrid as="section" columns={4} class="my-custom-grid">
+  <BentoCell>Quarter 1</BentoCell>
+  <BentoCell>Quarter 2</BentoCell>
+  <BentoCell>Quarter 3</BentoCell>
+  <BentoCell>Quarter 4</BentoCell>
+</BentoGrid>
+```
+
+## Accessibility
+
+As a layout container, the `BentoGrid` component enhances the visual presentation of content. It relies on the semantic structure of its `BentoCell` children and the content within them to ensure accessibility. For complex grid layouts, consider ARIA attributes if the visual order differs significantly from the DOM order, or if the grid functions as an interactive widget. However, for most presentational grids, the inherent semantics of the `div` and its children are sufficient.
+
+## CSS Architecture
+
+The `BentoGrid` component uses the `bento-grid-component` class, which applies CSS Grid properties to establish the column structure and define gaps. It dynamically generates modifier classes based on the `columns` prop (e.g., `bento-grid-columns--2`, `bento-grid-columns--3`) and the `gap` prop (e.g., `bento-grid-gap--md`, `bento-grid-gap--lg`). These classes leverage CSS custom properties for consistent spacing and grid definitions, found in `BentoGrid.css`. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`BentoCell`](/docs/components/bento-cell)
+- [`Grid`](/docs/components/grid) (Hypothetical, for a more general-purpose grid layout)
+- [`Section`](/docs/components/section)
+
+
+--- File: section/Section.css ---
+.section-component {
+  width: 100%;
+}
+
+
+--- File: section/section.svg ---
+
+
+--- File: section/Section.astro ---
+---
+/**
+ * src/design/surfaces/section/Section.astro
+ * A named region within a page establishing a background context.
+ * - Operates by default transparently, but can accept a layer prop (e.g., --layer--1).
+ * - Accepts padding props via the surface padding scale.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import '@/design/surfaces/surfaces.css';
+import './Section.css';
+
+export interface Props extends SurfaceComponentProps {
+}
+
+const {
+  as: Tag = 'section',
+  layer,
+  padding = 'xl',
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'section-component',
+  layer !== undefined && `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+--- File: section/section.md ---
+# Section
+
+A component representing a distinct, named region within a page, establishing its own background context and internal spacing.
+
+## Overview
+
+The `Section` component is a fundamental building block for structuring page content into logical, thematic groupings. It provides a semantic wrapper for content, defaulting to a transparent background but allowing for an optional `layer` prop to apply an elevated background color (e.g., `--layer--1`). It manages its internal spacing through the `padding` prop, ensuring consistent visual separation between the section's content and its boundaries. The `Section` is *not* responsible for defining the page's overall layout, managing responsive behavior beyond its intrinsic content, or directly controlling the visibility of its content; these concerns are typically handled by higher-level layout components or the content placed within the section.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `section` | The HTML tag to use for the component's root element. Defaults to `<section>` for semantic relevance. |
+| `layer` | `number` | `undefined` | Controls the background elevation level of the section. When set, it applies a background color token (e.g., `--layer--1`). |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `xl` | Sets the internal padding around the section's content. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Section` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Layer
+
+The `layer` prop allows you to visually elevate the section, applying a distinct background color based on design tokens. For example, `layer={1}` would typically apply `--layer--1` for a subtle background. When `layer` is `undefined`, the section is transparent.
+
+### Padding
+
+- `default`: Default internal padding.
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Section from '@/design/surfaces/section/Section.astro';
+---
+
+<Section>
+  <h2>About Us</h2>
+  <p>Our company's mission and values.</p>
+</Section>
+```
+
+### Common Patterns
+
+```astro
+---
+import Section from '@/design/surfaces/section/Section.astro';
+import Card from '@/design/surfaces/card/Card.astro';
+---
+
+<!-- Section with a background layer and custom padding -->
+<Section layer={1} padding="lg">
+  <h3>Featured Products</h3>
+  <p>Explore our latest offerings.</p>
+</Section>
+
+<!-- Section containing multiple cards -->
+<Section as="div" padding="xl" class="product-grid">
+  <Card>
+    <Card.Header>Product A</Card.Header>
+    <Card.Content>Description for product A.</Card.Content>
+  </Card>
+  <Card>
+    <Card.Header>Product B</Card.Header>
+    <Card.Content>Description for product B.</Card.Content>
+  </Card>
+</Section>
+```
+
+## Accessibility
+
+The `Section` component, when used with the default `as="section"` tag, provides a semantic landmark for assistive technologies, helping users navigate complex pages. Ensure that each section has a meaningful heading (e.g., `<h2>` within the section) to describe its content. If `as` is set to a generic `div`, its semantic value is reduced, so careful consideration should be given to providing alternative accessibility cues if necessary.
+
+## CSS Architecture
+
+The `Section` component uses the `section-component` class for its base styling. It applies modifier classes for `layer` (e.g., `surface-layer--1`) and `padding` (e.g., `surface-padding--lg`). These classes reference CSS custom properties for background colors and spacing defined in `surfaces.css` and `surfaces.maps.ts`. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Screen`](/docs/components/screen)
+- [`Panel`](/docs/components/panel)
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+
+
+--- File: tokens.css ---
+
+
+--- File: vars.css ---
+
+
+--- File: surfaces.md ---
+# Surfaces
+
+Surfaces are the spatial foundations of the design system. They establish the z-axis elevation and background context for content, providing distinct boundaries and visual hierarchy.
+
+## The Layer Stack
+
+Surfaces primarily define elevation using the `--layer--*` variables.
+- `--layer--0`: The page floor (`Screen`).
+- `--layer--1`: Subtly lifted regions and page-level zones (`Paper`, `Section`, `Well`).
+- `--layer--2`: Discrete, self-contained objects (`Card`, `Bento`, `Panel`, `Tile`).
+- `--layer--3` to `--layer--5`: Floating dynamic surfaces, which belong in the `overlays` category (Modals, Popovers, Tooltips), not `surfaces`.
+
+## Current Components
+
+### `Screen`
+The outermost surface. Represents the full viewport or page canvas at `--layer--0`. It is not a layout component; it purely establishes the base background and stacking context for everything inside.
+
+### `Paper`
+A barely-lifted surface at `--layer--1`. Acts as a document or sheet sitting just above the page floor. Used for page-level content areas, editor canvases, or main content regions. Distinct from `Card` in that it represents a zone, not a discrete object.
+
+### `Card`
+A discrete, self-contained object at `--layer--2`. The workhorse of the surface system. The `Card` family (`Card`, `CardHeader`, `CardContent`, `CardFooter`) uses a composition pattern enforcing consistent internal structure.
+**Padding Pattern:** When a `<Card>` is given a `padding` prop (e.g. `padding="sm"`), it maps to a surface class (e.g. `.surface-padding--sm`) that defines CSS variables (`--surface-pad` and `--surface-pad-half`). If the `Card` contains compound children (`CardHeader`, etc.), it automatically removes its own padding using a `:has()` selector, and the children inherit and consume the CSS variables to apply their specific directional padding. This allows inner borders (like a header's bottom border) to run edge-to-edge seamlessly.
+
+### `Section`
+A named region within a page. Its primary job is establishing a background context for its content region. Often operates at `--layer--1` or transparently.
+
+### `BentoGrid` & `BentoCell`
+Specialized variants for dense, grid-based layouts.
+
+### `Panel`
+An in-between surface (`--layer--2` or `--layer--3`) like a sidebar, inspector pane, or persistent drawer. It is anchored to the shell and doesn't float like an overlay or scroll like a paper.
+
+### `Well`
+A recessed surface (the visual inverse of a card). Sinks into the page rather than lifting above it. Used for code blocks, nested content, and read-only fields.
+
+### `Backdrop`
+The semi-transparent dark layer behind a modal covering the Screen. It utilizes the semantic `--backdrop-color` token.
+
+### `Tile`
+A flush, borderless variant of a card meant for grids where the grid lines provide separation rather than the individual borders.
+
+## Misplaced Components
+
+- **`Frame`**: This component enforces aspect ratios and acts as a visual boundary for media. Because it constrains content rather than grouping arbitrary UI elements, it belongs in the `display` category, not `surfaces`.
+
+
+--- File: panel/Panel.css ---
+.panel-component {
+  height: 100%;
+  overflow-y: auto;
+}
+.panel-position--left { border-right: 1px solid var(--border--1); }
+.panel-position--right { border-left: 1px solid var(--border--1); }
+.panel-position--top { border-bottom: 1px solid var(--border--1); }
+.panel-position--bottom { border-top: 1px solid var(--border--1); }
+
+
+--- File: panel/Panel.astro ---
+---
+/**
+ * src/design/surfaces/panel/Panel.astro
+ * An attached, persistent surface (e.g. sidebar, inspector pane).
+ * - Anchored to the shell, it doesn't float (like an overlay) or scroll (like Paper).
+ * - Uses --layer--2 or --layer--3 based on elevation context.
+ * @props (local): as, layer, position, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import '@/design/surfaces/surfaces.css';
+import './Panel.css';
+
+export interface Props extends SurfaceComponentProps {
+  position?: 'left' | 'right' | 'top' | 'bottom' | 'none';
+}
+
+const {
+  as: Tag = 'aside',
+  layer = 2,
+  position = 'none',
+  padding = 'default',
+  bg,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'panel-component',
+  `surface-layer--${layer}`,
+  `panel-position--${position}`,
+  SURFACE_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: panel/panel.md ---
+# Panel
+
+A surface component designed for persistent UI elements like sidebars, inspector panes, or toolbars that are anchored to the application shell.
+
+## Overview
+
+The `Panel` component provides a distinct surface that is attached to the main application window, rather than floating as an overlay or scrolling with the main content. It is typically used for navigation drawers, sidebars, or context-specific panes that remain visible. Panels are styled with elevation levels (`layer`) and can be positioned relative to the viewport edges (`position`). They utilize CSS custom properties for background colors and padding, ensuring consistency with other surface components. The `Panel` is *not* responsible for managing the visibility state of its content (e.g., opening/closing a sidebar), nor does it handle complex layout or interactions within its content area; these are typically managed by parent components or the content placed inside.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `aside` | The HTML tag to use for the component's root element. Defaults to `<aside>` for semantic relevance. |
+| `layer` | `number` | `2` | Controls the elevation level of the panel, influencing its z-index and shadow. Typically `--layer--2` or `--layer--3`. |
+| `position` | `'left' | 'right' | 'top' | 'bottom' | 'none'` | `none` | Defines the panel's anchoring position relative to the viewport edges. `'none'` implies it doesn't have a default anchored position. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `default` | Sets the internal padding of the panel content area. |
+| `bg` | `BackgroundTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'transparent' | 'subtle' | 'hover' | 'outline'`) | | Applies a background color tone to the panel. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Panel` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Position
+
+- `left`: Anchored to the left side of the screen.
+- `right`: Anchored to the right side of the screen.
+- `top`: Anchored to the top of the screen.
+- `bottom`: Anchored to the bottom of the screen.
+- `none`: No default anchored position; typically used when the panel's position is controlled by custom styling or JavaScript.
+
+### Layer
+
+The `layer` prop corresponds to elevation levels, affecting the panel's visual depth and z-index. Common values are `2` and `3`, corresponding to CSS variables like `--layer--2` and `--layer--3`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Panel from '@/design/surfaces/panel/Panel.astro';
+---
+
+<Panel>
+  <p>This is a panel.</p>
+</Panel>
+```
+
+### Common Patterns
+
+```astro
+---
+import Panel from '@/design/surfaces/panel/Panel.astro';
+---
+
+<!-- Left-aligned panel with a higher layer and custom background -->
+<Panel position="left" layer={3} bg="primary" padding="lg">
+  <h3>Navigation</h3>
+  <ul>
+    <li>Link 1</li>
+    <li>Link 2</li>
+  </ul>
+</Panel>
+
+<!-- Bottom-anchored panel for a status bar -->
+<Panel position="bottom" bg="subtle" padding="sm">
+  <span>Status: All systems nominal.</span>
+</Panel>
+```
+
+## Accessibility
+
+When used for navigation or as a sidebar, `Panel` components should be implemented with accessibility in mind. If a panel contains navigation links, ensure they are properly focusable and keyboard-operable. For panels that reveal or hide content (like a collapsible sidebar), manage focus appropriately when the panel opens and closes. Using the `aside` tag semantically indicates that the panel contains content tangentially related to the main document. Ensure sufficient contrast for text and interactive elements within the panel.
+
+## CSS Architecture
+
+The `Panel` component uses the `panel-component` class for its base styling, establishing its attached nature and z-index context. It applies modifier classes for `position` (e.g., `panel-position--left`), `layer` (e.g., `surface-layer--3`), `padding` (e.g., `surface-padding--md`), and `bg` (e.g., `bg-primary`). These classes reference CSS custom properties defined in `surfaces.css`, `surfaces.css`, and shared maps for elevation, spacing, and colors. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+- [`Backdrop`](/docs/components/backdrop)
+
+
+--- File: well/Well.css ---
+.well-component {
+  border-radius: var(--radius--md);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Subtly recessed */
+}
+
+
+--- File: well/Well.astro ---
+---
+/**
+ * src/design/surfaces/well/Well.astro
+ * A recessed surface, visual inverse of a Card.
+ * - Sinks into the page rather than lifting above it.
+ * - Used for code blocks, nested content, and read-only fields.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import '@/design/surfaces/surfaces.css';
+import './Well.css';
+
+export interface Props extends SurfaceComponentProps {
+}
+
+const {
+  as: Tag = 'div',
+  layer = 1,
+  padding = 'md',
+  bg,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'well-component',
+  `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding as keyof typeof SURFACE_PADDING_CLASS_MAP],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg as keyof typeof BACKGROUND_TONE_CLASS_MAP]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: well/well.md ---
+# Well
+
+A recessed surface component that visually sinks into the page, providing a subtle visual distinction from its surroundings.
+
+## Overview
+
+The `Well` component serves as a container for content that needs to be visually set apart, often indicating a secondary or nested context. Unlike a `Card` that typically lifts above the surface, a `Well` recedes into the page, creating a sense of containment. It is commonly used for code blocks, embedded examples, read-only fields, or areas requiring a distinct background. It supports various background layers (`layer`), internal padding (`padding`), and background color tones (`bg`). The `Well` is *not* responsible for the layout of its internal content, or any complex interactive behaviors; it is a purely presentational surface.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `layer` | `number` | `1` | Controls the background elevation level of the well, typically corresponding to a `--layer--1` or similar token for a subtle recessed background. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `md` | Sets the internal padding around the well's content. |
+| `bg` | `BackgroundTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'transparent' | 'subtle' | 'hover' | 'outline'`) | | Applies a background color tone to the well. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Well` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Layer
+
+The `layer` prop controls the background elevation, affecting the well's background color. For example, `layer={1}` would typically apply `--layer--1` for a distinct recessed background.
+
+### Padding
+
+- `default`: Default internal padding.
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Well from '@/design/surfaces/well/Well.astro';
+---
+
+<Well>
+  <p>This content is inside a well.</p>
+</Well>
+```
+
+### Common Patterns
+
+```astro
+---
+import Well from '@/design/surfaces/well/Well.astro';
+import Code from '@/design/typography/code/Code.astro';
+---
+
+<!-- Well containing a code block with a custom background -->
+<Well layer={1} padding="lg" bg="subtle">
+  <Code block language="javascript">
+    function greet() {
+      console.log("Hello from the well!");
+    }
+    greet();
+  </Code>
+</Well>
+
+<!-- Well used for nested content -->
+<Well as="section" padding="xl">
+  <h3>Nested Section</h3>
+  <p>This content is visually nested within a well.</p>
+</Well>
+```
+
+## Accessibility
+
+The `Well` component is a presentational container. Its accessibility depends on the semantic correctness of the content it holds. If the well contains interactive elements, ensure they are focusable and keyboard-operable. For read-only fields, ensure the content is clearly presented and can be understood by assistive technologies.
+
+## CSS Architecture
+
+The `Well` component uses the `well-component` class for its base styling, which creates the recessed visual effect. It applies modifier classes for `layer` (e.g., `surface-layer--1`), `padding` (e.g., `surface-padding--md`), and `bg` (e.g., `bg-subtle`). These classes reference CSS custom properties for background colors and spacing defined in `Well.css`, `surfaces.css`, and shared maps. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+- [`Code`](/docs/components/code)
+
+
+--- File: backdrop/Backdrop.css ---
+.backdrop-component {
+  position: fixed;
+  inset: 0;
+  background-color: var(--backdrop-color);
+  z-index: 100;
+}
+.backdrop--non-interactive {
+  pointer-events: none;
+}
+
+
+--- File: backdrop/Backdrop.astro ---
+---
+/**
+ * src/design/surfaces/backdrop/Backdrop.astro
+ * A fixed, full-viewport scrim.
+ * - Used behind modals, drawers, and sheets.
+ * - Uses semantic --backdrop-color token for transparency compositing.
+ * @props (local): as, interactive
+ * @props (global): class, class:list, animate, onScroll
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import './Backdrop.css';
+
+export interface Props extends SurfaceComponentProps {
+  interactive?: boolean;
+}
+
+const {
+  as: Tag = 'div',
+  interactive = true,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'backdrop-component',
+  !interactive && 'backdrop--non-interactive'
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: backdrop/backdrop.md ---
+# Backdrop
+
+A fixed, full-viewport scrim component used primarily behind overlays like modals, drawers, and sheets.
+
+## Overview
+
+The Backdrop component serves as a visual and interactive barrier, obscuring the content behind an overlay to draw focus to the foreground element. It covers the entire viewport, typically with a semi-transparent color derived from semantic design tokens. The Backdrop is responsible for creating a visual separation and optionally capturing click events to dismiss the overlay. It is *not* responsible for the overlay content itself, managing the open/close state of modals, or complex z-index management beyond its own layer; these concerns should be handled by orchestrating parent components.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `interactive` | `boolean` | `true` | If `true`, the backdrop will capture click events, which can be used to dismiss an overlay. If `false`, it will allow pointer events to pass through. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Backdrop` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Backdrop from '@/design/surfaces/backdrop/Backdrop.astro';
+---
+
+<Backdrop>
+  <!-- Overlay content goes here -->
+</Backdrop>
+```
+
+### Common Patterns
+
+```astro
+---
+import Backdrop from '@/design/surfaces/backdrop/Backdrop.astro';
+---
+
+<!-- Non-interactive Backdrop (e.g., for a loading screen) -->
+<Backdrop interactive={false}>
+  <p>Loading data...</p>
+</Backdrop>
+
+<!-- Backdrop with custom HTML tag -->
+<Backdrop as="section" class="custom-backdrop-style">
+  <h2>Modal Content</h2>
+</Backdrop>
+```
+
+## Accessibility
+
+The `Backdrop` component is typically used in conjunction with accessible overlay patterns (e.g., modals with `aria-modal` and focus management). While the backdrop itself does not have a direct ARIA role, its role in obscuring content helps screen reader users understand that the main application content is temporarily inaccessible. When `interactive` is `true`, it can receive focus and be dismissible via click, contributing to a good user experience for all input methods.
+
+## CSS Architecture
+
+The `Backdrop` component uses the `backdrop-component` class for its base styling, applying fixed positioning and full-viewport coverage. It references the `--backdrop-color` semantic token for its background, allowing for consistent transparency across the design system. The `backdrop--non-interactive` modifier class is applied when the `interactive` prop is `false`, disabling pointer events. Global props like `class` and `class:list` are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`Modal`](/docs/components/modal) (Hypothetical, as this is a common association)
+- [`Drawer`](/docs/components/drawer) (Hypothetical, as this is a common association)
+- [`Panel`](/docs/components/panel)
+
+
+--- File: tile/Tile.css ---
+.tile-component {
+  border-radius: 0;
+  border: none;
+}
+
+
+--- File: tile/Tile.astro ---
+---
+/**
+ * src/design/surfaces/tile/Tile.astro
+ * A flush, borderless, radiusless variant of Card.
+ * - Meant to be used in grids where grid lines provide the separation.
+ * @props (local): as, layer, padding
+ * @props (global): class, class:list, animate, onScroll, bg
+ */
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import type { SurfaceComponentProps } from "@/design/surfaces/surfaces.types";
+import { SURFACE_PADDING_CLASS_MAP } from "@/design/surfaces/surfaces.maps";
+import { BACKGROUND_TONE_CLASS_MAP } from "@/design/shared/maps";
+import '@/design/surfaces/surfaces.css';
+import './Tile.css';
+
+export interface Props extends SurfaceComponentProps {
+}
+
+const {
+  as: Tag = 'div',
+  layer = 2,
+  padding = 'default',
+  bg,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'tile-component',
+  `surface-layer--${layer}`,
+  SURFACE_PADDING_CLASS_MAP[padding],
+  bg && BACKGROUND_TONE_CLASS_MAP[bg]
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles('', Astro.props);
+---
+
+<Tag class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</Tag>
+
+
+--- File: tile/tile.md ---
+# Tile
+
+A flush, borderless, and radiusless surface component, typically used in grid layouts where grid lines provide the visual separation.
+
+## Overview
+
+The `Tile` component serves as a simple, unadorned container for content, designed to seamlessly integrate into grid-based layouts. Unlike a `Card`, `Tile` intentionally foregoes borders and rounded corners, allowing the underlying grid structure to define the visual separation between individual tiles. It supports various background layers (`layer`), internal padding (`padding`), and background color tones (`bg`) to differentiate content. The `Tile` is *not* responsible for establishing the grid layout itself, managing external spacing between tiles, or providing any complex interactive behaviors; these concerns are handled by parent grid components.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `as` | `keyof HTMLElementTagNameMap` | `div` | The HTML tag to use for the component's root element. |
+| `layer` | `number` | `2` | Controls the background elevation level of the tile, typically corresponding to a `--layer--2` or similar token for a subtle background. |
+| `padding` | `'default' | 'sm' | 'md' | 'lg' | 'xl'` | `default` | Sets the internal padding around the tile's content. |
+| `bg` | `BackgroundTone` (`'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'transparent' | 'subtle' | 'hover' | 'outline'`) | | Applies a background color tone to the tile. |
+| `class` | `string` | | Additional CSS classes to apply to the component. |
+| `class:list` | `string` | | List of CSS classes to apply to the component. |
+| `animate` | `boolean` | `false` | Enables animation effects for the component. |
+| `onScroll` | `function` | | Callback function to execute on scroll events. |
+
+In addition to the above, the `Tile` component accepts all standard HTML attributes for its root element, inherited via `BaseComponentProps`.
+
+## Variants / Sizes
+
+### Layer
+
+The `layer` prop controls the background elevation, affecting the tile's background color. For example, `layer={2}` would typically apply `--layer--2` for a distinct background.
+
+### Padding
+
+- `default`: Default internal padding.
+- `sm`: Small internal padding.
+- `md`: Medium internal padding.
+- `lg`: Large internal padding.
+- `xl`: Extra large internal padding.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Tile from '@/design/surfaces/tile/Tile.astro';
+---
+
+<Tile>
+  <h3>Item Title</h3>
+  <p>Some brief content.</p>
+</Tile>
+```
+
+### Common Patterns
+
+```astro
+---
+import Tile from '@/design/surfaces/tile/Tile.astro';
+import BentoGrid from '@/design/surfaces/bento-grid/BentoGrid.astro'; // Example with BentoGrid
+import BentoCell from '@/design/surfaces/bento-cell/BentoCell.astro';
+---
+
+<!-- Tiles within a BentoGrid -->
+<BentoGrid columns={3} gap="md">
+  <BentoCell>
+    <Tile layer={1} padding="md">
+      <h4>Product 1</h4>
+      <p>Description for product 1.</p>
+    </Tile>
+  </BentoCell>
+  <BentoCell>
+    <Tile layer={1} padding="md" bg="subtle">
+      <h4>Product 2</h4>
+      <p>Description for product 2 with a subtle background.</p>
+    </Tile>
+  </BentoCell>
+  <BentoCell>
+    <Tile layer={1} padding="md">
+      <h4>Product 3</h4>
+      <p>Description for product 3.</p>
+    </Tile>
+  </BentoCell>
+</BentoGrid>
+
+<!-- Standalone Tile with custom tag -->
+<Tile as="article" bg="primary" padding="lg">
+  <h2>Featured Article</h2>
+  <p>This article is presented as a prominent tile.</p>
+</Tile>
+```
+
+## Accessibility
+
+The `Tile` component itself is a generic container. Its accessibility largely depends on the content it houses. If a tile functions as a clickable element (e.g., to navigate or trigger an action), it should be wrapped in an interactive element like a `<button>` or `<a>` with appropriate ARIA roles and keyboard support. Ensure that textual content within the tile has sufficient color contrast.
+
+## CSS Architecture
+
+The `Tile` component uses the `tile-component` class for its base styling, which ensures it is flush, borderless, and has no rounded corners. It applies modifier classes for `layer` (e.g., `surface-layer--2`), `padding` (e.g., `surface-padding--md`), and `bg` (e.g., `bg-subtle`). These classes reference CSS custom properties for background colors and spacing defined in `Tile.css`, `surfaces.css`, and shared maps. Global `class` and `class:list` props are merged using `mergeClasses`, and `style` props are merged using `mergeStyles`.
+
+## Related Components
+
+- [`BentoCell`](/docs/components/bento-cell)
+- [`BentoGrid`](/docs/components/bento-grid)
+- [`Card`](/docs/components/card)
+- [`Paper`](/docs/components/paper)
+
+
+--- File: surfaces.types.ts ---
+import type { BaseComponentProps } from "@/design/shared/props";
+
+export type SurfacePadding = 'none' | 'sm' | 'default' | 'md' | 'lg' | 'xl';
+export type SurfaceLayer = 0 | 1 | 2 | 3 | 4 | 5;
+
+export interface SurfaceComponentProps extends BaseComponentProps {
+  /** The padding applied to the internal edges of the surface. */
+  padding?: SurfacePadding;
+  /** The elevation layer, defining background color and shadow. */
+  layer?: SurfaceLayer;
+}
+

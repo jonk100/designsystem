@@ -1,47 +1,209 @@
 ---
 /**
  * src/design/nav/menu/Menu.astro
- * A semantic navigation menu component for grouping links or actions.
- * - Supports horizontal and vertical orientations
- * - Configurable gap and flex alignment
- * @props (local): orientation, align, gap
+ * A semantic navigation menu that renders a list of links, groups, and separators.
+ * - Supports collapsed (icon-only) mode — requires all link items to have an icon defined
+ * - Supports bare mode for rendering inside an existing <nav> landmark
+ * - Uses a discriminated union (MenuItemDef) to narrow item types safely in the template
+ * @props (local): items, label, orientation, align, gap, collapsed, bare
  * @props (global): class, class:list, style, animate
+ * - collapsed: renders icon-only links; all link items must have an `icon` or a dev warning fires
+ * - bare: skips the <nav> wrapper — use only when already inside a <nav> context
+ * - label: required aria-label for the <nav> landmark; ignored when bare={true}
  */
-import type { HTMLAttributes } from 'astro/types';
-import type { BaseComponentProps } from '@/design/shared/props';
-import type { NavProps } from '@/design/nav/nav.types';
-import { mergeClasses, mergeStyles } from '@/design/shared/functions';
-import { NAV_VAR_MAP } from '@/design/nav/nav.maps';
-import '@/design/nav/nav.css';
-import './Menu.css';
 
-export interface Props extends BaseComponentProps, NavProps, Omit<HTMLAttributes<'menu'>, keyof BaseComponentProps | keyof NavProps> {}
+import type { HTMLAttributes } from "astro/types";
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { NavProps } from "@/design/nav/nav.types";
+import type { NavMenuProps } from "./Menu.props";
+import type { MenuItemDef, MenuLinkItem } from "./Menu.types";
+import type { DisplaySize } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { warnIfCollapsedItemsMissingIcons } from "./Menu.functions";
+import { MENU_MAP } from "./Menu.maps";
+import Link from "@/design/typography/link/Link.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+
+import "@/design/nav/nav.css";
+import "./Menu.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    NavProps,
+    NavMenuProps,
+    Omit<HTMLAttributes<"ul">, keyof BaseComponentProps | keyof NavProps> {
+  iconSize: DisplaySize;
+}
 
 const {
-  as: Tag = 'menu',
-  orientation = 'vertical',
-  align = 'start',
-  gap = 'md',
+  as: Tag = "ul",
+  orientation,
+  align = "justify",
+  gap = "md",
+  items = [],
+  label,
+  bare = false,
+  collapsed = false,
   class: className,
-  'class:list': classList,
+  "class:list": classList,
   style,
   ...rest
 } = Astro.props;
 
+if (collapsed) {
+  warnIfCollapsedItemsMissingIcons(items);
+}
+
 const classes = [
-  'menu-component',
-  `menu--${orientation}`,
-  `menu--align-${align}`
+  "menu",
+  MENU_MAP.orientation(orientation),
+  MENU_MAP.align(align),
+  collapsed && "menu--collapsed",
 ];
 
-const styles = [
-  gap && NAV_VAR_MAP.gap(gap)
-].filter(Boolean).join(';');
+const styles = [gap && MENU_MAP.gap(gap)].filter(Boolean).join(";");
 
 const finalClasses = mergeClasses(classes, Astro.props);
 const finalStyles = mergeStyles(styles, Astro.props);
+const { iconSize } = Astro.props;
 ---
 
-<Tag class:list={finalClasses} style={finalStyles} {...rest}>
-  <slot />
-</Tag>
+{
+  bare ? (
+    <Tag class:list={finalClasses} style={finalStyles} {...rest}>
+      {items.map((item: MenuItemDef) => {
+        if (item.type === "separator") {
+          return (
+            <li class="menu__separator" role="separator">
+              <hr />
+            </li>
+          );
+        }
+
+        if (item.type === "group") {
+          return (
+            <li class="menu__group">
+              <span class="menu__group-label">{item.label}</span>
+              <ul class="menu__group-list">
+                {item.children.map((child: MenuLinkItem) => (
+                  <li class="menu__item">
+                    <Link
+                      href={child.href}
+                      class:list={[
+                        "menu__link",
+                        child.active && "menu__link--active",
+                        child.disabled && "menu__link--disabled",
+                      ]}
+                      aria-current={child.active ? "page" : undefined}
+                      aria-disabled={child.disabled ? "true" : undefined}
+                    >
+                      {child.icon && (
+                        <span class="menu__icon" aria-hidden="true">
+                          {child.icon}
+                        </span>
+                      )}
+                      {!collapsed && (
+                        <span class="menu__label">{child.label}</span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        }
+
+        // item.type === "link" — item.href is guaranteed here
+        return (
+          <li class="menu__item">
+            <Link
+              href={item.href}
+              class:list={[
+                "menu__link",
+                item.active && "menu__link--active",
+                item.disabled && "menu__link--disabled",
+              ]}
+              aria-label={collapsed ? item.label : undefined}
+              aria-current={item.active ? "page" : undefined}
+              aria-disabled={item.disabled ? "true" : undefined}
+              title={collapsed ? item.label : undefined}
+            >
+              {item.icon && <Icon name={item.icon} size={iconSize} />}
+              {!collapsed && <span class="menu__label">{item.label}</span>}
+            </Link>
+          </li>
+        );
+      })}
+      <slot />
+    </Tag>
+  ) : (
+    <nav aria-label={label}>
+      <Tag class:list={finalClasses} style={finalStyles} {...rest}>
+        {items.map((item: MenuItemDef) => {
+          if (item.type === "separator") {
+            return (
+              <li class="menu__separator" role="separator">
+                <hr />
+              </li>
+            );
+          }
+
+          if (item.type === "group") {
+            return (
+              <li class="menu__group">
+                <span class="menu__group-label">{item.label}</span>
+                <ul class="menu__group-list">
+                  {item.children.map((child: MenuLinkItem) => (
+                    <li class="menu__item">
+                      <Link
+                        href={child.href}
+                        class:list={[
+                          "menu__link",
+                          child.active && "menu__link--active",
+                          child.disabled && "menu__link--disabled",
+                        ]}
+                        aria-current={child.active ? "page" : undefined}
+                        aria-disabled={child.disabled ? "true" : undefined}
+                      >
+                        {child.icon && (
+                          <span class="menu__icon" aria-hidden="true">
+                            {child.icon}
+                          </span>
+                        )}
+                        {!collapsed && (
+                          <span class="menu__label">{child.label}</span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          }
+
+          return (
+            <li class="menu__item">
+              <Link
+                href={item.href}
+                class:list={[
+                  "menu__link",
+                  item.active && "menu__link--active",
+                  item.disabled && "menu__link--disabled",
+                ]}
+                aria-label={collapsed ? item.label : undefined}
+                aria-current={item.active ? "page" : undefined}
+                aria-disabled={item.disabled ? "true" : undefined}
+                title={collapsed ? item.label : undefined}
+              >
+                {item.icon && <Icon name={item.icon} size={iconSize} />}
+                {!collapsed && <span class="menu__label">{item.label}</span>}
+              </Link>
+            </li>
+          );
+        })}
+        <slot />
+      </Tag>
+    </nav>
+  )
+}

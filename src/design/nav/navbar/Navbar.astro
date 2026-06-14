@@ -1,0 +1,93 @@
+---
+/**
+ * src/design/nav/navbar/Navbar.astro
+ * A horizontal navigation bar component.
+ * - Provides a three-zone layout (start, center, end) via named slots.
+ * - Establishes the <nav> landmark with an optional aria-label.
+ * - Manages spacing between zones through the gap prop.
+ * @props (local): label, gap
+ * @props (global): class, class:list, animate, style, bg, effects
+ * - label: The aria-label value for the <nav> element (e.g. "Main navigation").
+ * - gap: Spacing between zones and items within zones, using spacing tokens.
+ */
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { NavProps } from "@/design/nav/nav.types";
+import type { MenuItemDef } from "@/design/nav/menu/Menu.types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import { NAV_VAR_MAP } from "@/design/nav/nav.maps";
+import Menu from "@/design/nav/menu/Menu.astro";
+import Image from "@/design/media/image/Image.astro";
+
+import "@/design/nav/nav.css";
+import "./Navbar.css";
+
+export interface Props extends BaseComponentProps, NavProps {
+  /**
+   * The accessible label for the navigation landmark.
+   */
+  label?: string;
+}
+
+const {
+  label,
+  gap = "md",
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+/**
+ * Component-specific BEM classes.
+ * mergeClasses handles global props like animate, effects, bg, etc.
+ */
+const classes = ["navbar-component"];
+
+/**
+ * Component-specific inline styles.
+ * Pre-join before passing to mergeStyles.
+ */
+const styles = [gap && NAV_VAR_MAP.gap(gap)].filter(Boolean).join(";");
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles(styles, Astro.props);
+
+const navBarItems: MenuItemDef[] = [
+  { label: "Home",       href: "/",        icon: "home",  type: "link" },
+  { label: "Debug",      href: "/debug",   icon: "debug", type: "link" },
+  { label: "Playground", href: "/sandbox", icon: "playground",  type: "link" },
+];
+---
+
+<nav aria-label={label} class:list={finalClasses} style={finalStyles} {...rest}>
+  {
+    Astro.slots.has("start") && (
+      <div class="navbar__zone navbar__zone--start">
+        <Image src="/design-system-logo.png" alt="Design System Logo" class="navbar__logo" fit="contain" />
+        <slot name="start" />
+      </div>
+    )
+  }
+
+  <div class="navbar__zone navbar__zone--center">
+    <Menu 
+      items={navBarItems} 
+      iconSize="4xl" 
+      orientation="horizontal"
+      align="center"
+      gap="lg"
+      label="Menu"
+      bare={true}
+    >
+      <slot />
+    </Menu>
+  </div>
+
+  {
+    Astro.slots.has("end") && (
+      <div class="navbar__zone navbar__zone--end">
+        <slot name="end" />
+      </div>
+    )
+  }
+</nav>

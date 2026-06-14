@@ -1,0 +1,5598 @@
+--- File: controls.maps.ts ---
+import type { 
+  ControlSize, 
+  ControlVariant, 
+  ControlColor, 
+  ControlState, 
+  ValidationState,
+  ControlOrientation,
+  ControlAlignment,
+  ControlRadius,
+  IconPosition,
+  LoadingPosition
+} from './controls.types';
+
+/**
+ * Maps control sizes to their CSS class names
+ */
+export const CONTROL_SIZE_CLASS_MAP: Record<ControlSize, string> = {
+  'xs': 'control-xs',
+  'sm': 'control-sm',
+  'md': 'control-md',
+  'lg': 'control-lg',
+  'xl': 'control-xl'
+};
+
+/**
+ * Maps control variants to their CSS class names
+ */
+export const CONTROL_VARIANT_CLASS_MAP: Record<ControlVariant, string> = {
+  'solid': 'control-solid',
+  'outline': 'control-outline',
+  'ghost': 'control-ghost',
+  'link': 'control-link',
+  'soft': 'control-soft'
+};
+
+/**
+ * Maps control colors to their CSS class names
+ */
+export const CONTROL_COLOR_CLASS_MAP: Record<ControlColor, string> = {
+  'primary': 'control-primary',
+  'secondary': 'control-secondary',
+  'accent': 'control-accent',
+  'success': 'control-success',
+  'warning': 'control-warning',
+  'danger': 'control-danger',
+  'info': 'control-info',
+  'neutral': 'control-neutral'
+};
+
+/**
+ * Maps control states to their CSS class names
+ */
+export const CONTROL_STATE_CLASS_MAP: Record<ControlState, string> = {
+  'default': 'control-default',
+  'hover': 'control-hover',
+  'focus': 'control-focus',
+  'active': 'control-active',
+  'disabled': 'control-disabled',
+  'loading': 'control-loading',
+  'error': 'control-error',
+  'success': 'control-success'
+};
+
+/**
+ * Maps validation states to their CSS class names
+ */
+export const VALIDATION_STATE_CLASS_MAP: Record<ValidationState, string> = {
+  'valid': 'validation-valid',
+  'invalid': 'validation-invalid',
+  'warning': 'validation-warning',
+  'pending': 'validation-pending'
+};
+
+/**
+ * Maps control orientations to their CSS class names
+ */
+export const CONTROL_ORIENTATION_CLASS_MAP: Record<ControlOrientation, string> = {
+  'horizontal': 'control-horizontal',
+  'vertical': 'control-vertical'
+};
+
+/**
+ * Maps control alignments to their CSS class names
+ */
+export const CONTROL_ALIGNMENT_CLASS_MAP: Record<ControlAlignment, string> = {
+  'start': 'control-align-start',
+  'center': 'control-align-center',
+  'end': 'control-align-end',
+  'stretch': 'control-align-stretch'
+};
+
+/**
+ * Maps control radius options to their CSS class names
+ */
+export const CONTROL_RADIUS_CLASS_MAP: Record<ControlRadius, string> = {
+  'none': 'control-radius-none',
+  'sm': 'control-radius-sm',
+  'md': 'control-radius-md',
+  'lg': 'control-radius-lg',
+  'full': 'control-radius-full'
+};
+
+/**
+ * Maps icon positions to their CSS class names
+ */
+export const ICON_POSITION_CLASS_MAP: Record<IconPosition, string> = {
+  'left': 'icon-left',
+  'right': 'icon-right',
+  'start': 'icon-start',
+  'end': 'icon-end'
+};
+
+/**
+ * Maps loading positions to their CSS class names
+ */
+export const LOADING_POSITION_CLASS_MAP: Record<LoadingPosition, string> = {
+  'prefix': 'loading-prefix',
+  'suffix': 'loading-suffix',
+  'overlay': 'loading-overlay'
+};
+
+/**
+ * Maps control sizes to their pixel dimensions
+ */
+export const CONTROL_SIZE_DIMENSIONS: Record<ControlSize, { height: string; padding: string }> = {
+  'xs': { height: '1.5rem', padding: '0.25rem 0.5rem' },
+  'sm': { height: '2rem', padding: '0.375rem 0.75rem' },
+  'md': { height: '2.5rem', padding: '0.5rem 1rem' },
+  'lg': { height: '3rem', padding: '0.625rem 1.25rem' },
+  'xl': { height: '3.5rem', padding: '0.75rem 1.5rem' }
+};
+
+/**
+ * Maps validation states to their semantic colors
+ */
+export const VALIDATION_STATE_COLORS: Record<ValidationState, string> = {
+  'valid': 'success',
+  'invalid': 'danger',
+  'warning': 'warning',
+  'pending': 'info'
+};
+
+/**
+ * Maps control states to their interactive status
+ */
+export const CONTROL_STATE_INTERACTIVE: Record<ControlState, boolean> = {
+  'default': true,
+  'hover': true,
+  'focus': true,
+  'active': true,
+  'disabled': false,
+  'loading': false,
+  'error': true,
+  'success': true
+};
+
+// Made with Bob
+
+
+--- File: controls.consts.ts ---
+import type { 
+  ControlSize, 
+  ControlVariant, 
+  ControlColor, 
+  InputType, 
+  ControlState, 
+  ValidationState,
+  ControlOrientation,
+  ControlAlignment,
+  ControlRadius,
+  IconPosition,
+  LoadingPosition
+} from './controls.types';
+
+/**
+ * Available control sizes
+ */
+export const CONTROL_SIZES: ControlSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+
+/**
+ * Available control variants
+ */
+export const CONTROL_VARIANTS: ControlVariant[] = ['solid', 'outline', 'ghost', 'link', 'soft'];
+
+/**
+ * Available control colors
+ */
+export const CONTROL_COLORS: ControlColor[] = [
+  'primary', 'secondary', 'accent',
+  'success', 'warning', 'danger', 'info', 'neutral'
+];
+
+/**
+ * Available input types
+ */
+export const INPUT_TYPES: InputType[] = [
+  'text', 'email', 'password', 'number', 'tel', 'url', 'search',
+  'date', 'time', 'datetime-local', 'month', 'week',
+  'color', 'file', 'hidden'
+];
+
+/**
+ * Available control states
+ */
+export const CONTROL_STATES: ControlState[] = [
+  'default', 'hover', 'focus', 'active', 'disabled', 'loading', 'error', 'success'
+];
+
+/**
+ * Available validation states
+ */
+export const VALIDATION_STATES: ValidationState[] = ['valid', 'invalid', 'warning', 'pending'];
+
+/**
+ * Available control orientations
+ */
+export const CONTROL_ORIENTATIONS: ControlOrientation[] = ['horizontal', 'vertical'];
+
+/**
+ * Available control alignments
+ */
+export const CONTROL_ALIGNMENTS: ControlAlignment[] = ['start', 'center', 'end', 'stretch'];
+
+/**
+ * Available control radius options
+ */
+export const CONTROL_RADII: ControlRadius[] = ['none', 'sm', 'md', 'lg', 'full'];
+
+/**
+ * Available icon positions
+ */
+export const ICON_POSITIONS: IconPosition[] = ['left', 'right', 'start', 'end'];
+
+/**
+ * Available loading positions
+ */
+export const LOADING_POSITIONS: LoadingPosition[] = ['prefix', 'suffix', 'overlay'];
+
+/**
+ * Default values
+ */
+export const DEFAULT_CONTROL_SIZE: ControlSize = 'md';
+export const DEFAULT_CONTROL_VARIANT: ControlVariant = 'solid';
+export const DEFAULT_CONTROL_COLOR: ControlColor = 'primary';
+export const DEFAULT_INPUT_TYPE: InputType = 'text';
+export const DEFAULT_CONTROL_STATE: ControlState = 'default';
+export const DEFAULT_VALIDATION_STATE: ValidationState = 'valid';
+export const DEFAULT_CONTROL_ORIENTATION: ControlOrientation = 'horizontal';
+export const DEFAULT_CONTROL_ALIGNMENT: ControlAlignment = 'start';
+export const DEFAULT_CONTROL_RADIUS: ControlRadius = 'md';
+export const DEFAULT_ICON_POSITION: IconPosition = 'left';
+export const DEFAULT_LOADING_POSITION: LoadingPosition = 'overlay';
+
+// Made with Bob
+
+
+--- File: controls.functions.ts ---
+import type { 
+  ControlSize, 
+  ControlVariant, 
+  ControlColor, 
+  InputType, 
+  ControlState, 
+  ValidationState,
+  ControlOrientation,
+  ControlAlignment,
+  ControlRadius,
+  IconPosition,
+  LoadingPosition
+} from './controls.types';
+
+/**
+ * Validates if a value is a valid control size
+ */
+export function isValidControlSize(value: string): value is ControlSize {
+  const validSizes: ControlSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+  return validSizes.includes(value as ControlSize);
+}
+
+/**
+ * Validates if a value is a valid control variant
+ */
+export function isValidControlVariant(value: string): value is ControlVariant {
+  const validVariants: ControlVariant[] = ['solid', 'outline', 'ghost', 'link', 'soft'];
+  return validVariants.includes(value as ControlVariant);
+}
+
+/**
+ * Validates if a value is a valid control color
+ */
+export function isValidControlColor(value: string): value is ControlColor {
+  const validColors: ControlColor[] = [
+    'primary', 'secondary', 'accent',
+    'success', 'warning', 'danger', 'info', 'neutral'
+  ];
+  return validColors.includes(value as ControlColor);
+}
+
+/**
+ * Validates if a value is a valid input type
+ */
+export function isValidInputType(value: string): value is InputType {
+  const validTypes: InputType[] = [
+    'text', 'email', 'password', 'number', 'tel', 'url', 'search',
+    'date', 'time', 'datetime-local', 'month', 'week',
+    'color', 'file', 'hidden'
+  ];
+  return validTypes.includes(value as InputType);
+}
+
+/**
+ * Validates if a value is a valid control state
+ */
+export function isValidControlState(value: string): value is ControlState {
+  const validStates: ControlState[] = [
+    'default', 'hover', 'focus', 'active', 'disabled', 'loading', 'error', 'success'
+  ];
+  return validStates.includes(value as ControlState);
+}
+
+/**
+ * Validates if a value is a valid validation state
+ */
+export function isValidValidationState(value: string): value is ValidationState {
+  const validStates: ValidationState[] = ['valid', 'invalid', 'warning', 'pending'];
+  return validStates.includes(value as ValidationState);
+}
+
+/**
+ * Gets the CSS class name for a control size
+ */
+export function getControlSizeClass(size: ControlSize): string {
+  return `control-${size}`;
+}
+
+/**
+ * Gets the CSS class name for a control variant
+ */
+export function getControlVariantClass(variant: ControlVariant): string {
+  return `control-${variant}`;
+}
+
+/**
+ * Gets the CSS class name for a control color
+ */
+export function getControlColorClass(color: ControlColor): string {
+  return `control-${color}`;
+}
+
+/**
+ * Gets the CSS class name for a control state
+ */
+export function getControlStateClass(state: ControlState): string {
+  return `control-${state}`;
+}
+
+/**
+ * Gets the CSS class name for a validation state
+ */
+export function getValidationStateClass(state: ValidationState): string {
+  return `validation-${state}`;
+}
+
+/**
+ * Gets the CSS class name for control orientation
+ */
+export function getControlOrientationClass(orientation: ControlOrientation): string {
+  return `control-${orientation}`;
+}
+
+/**
+ * Gets the CSS class name for control alignment
+ */
+export function getControlAlignmentClass(alignment: ControlAlignment): string {
+  return `control-align-${alignment}`;
+}
+
+/**
+ * Gets the CSS class name for control radius
+ */
+export function getControlRadiusClass(radius: ControlRadius): string {
+  return `control-radius-${radius}`;
+}
+
+/**
+ * Gets the CSS class name for icon position
+ */
+export function getIconPositionClass(position: IconPosition): string {
+  return `icon-${position}`;
+}
+
+/**
+ * Gets the CSS class name for loading position
+ */
+export function getLoadingPositionClass(position: LoadingPosition): string {
+  return `loading-${position}`;
+}
+
+/**
+ * Combines multiple control classes
+ */
+export function combineControlClasses(...classes: (string | undefined | false)[]): string {
+  return classes.filter(Boolean).join(' ');
+}
+
+/**
+ * Checks if a control is in an interactive state
+ */
+export function isInteractiveState(state: ControlState): boolean {
+  return !['disabled', 'loading'].includes(state);
+}
+
+/**
+ * Checks if a control has an error state
+ */
+export function hasErrorState(state: ControlState | ValidationState): boolean {
+  return state === 'error' || state === 'invalid';
+}
+
+/**
+ * Checks if a control has a success state
+ */
+export function hasSuccessState(state: ControlState | ValidationState): boolean {
+  return state === 'success' || state === 'valid';
+}
+
+// Made with Bob
+
+
+--- File: button/button.svg ---
+
+
+--- File: button/Button.astro ---
+---
+/**
+ * src/design/controls/button/Button.astro
+ * A customizable button control for user interactions.
+ * - Supports standard, icon-only, and toggle button variants.
+ * - Dynamically renders as an anchor <a> or <button> based on href.
+ * - Tracks toggled states for screen readers via aria-pressed.
+ * @props (local): variant, size, iconOnly, toggle, active, href
+ * @props (global): class, class:list, animate, onScroll, effects, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./Button.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"button"> & import("astro/types").HTMLAttributes<"a">, keyof ControlComponentProps> {
+  /** Visual theme variant */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'gold' | 'danger';
+  /** Size modifier */
+  size?: 'sm' | 'md' | 'lg';
+  /** Render style optimized for icon-only contents */
+  iconOnly?: boolean;
+  /** Enable toggle button behavior */
+  toggle?: boolean;
+  /** Active pressed state for toggle buttons */
+  active?: boolean;
+  /** Optional URL. If provided, renders as an <a> tag */
+  href?: string;
+}
+
+const {
+  variant = "secondary",
+  size = "md",
+  iconOnly = false,
+  toggle = false,
+  active = false,
+  href,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+// Resolve BEM class structures
+const classes = [
+  toggle ? "toggle-btn" : iconOnly ? "icon-btn" : "btn",
+  toggle && iconOnly && "toggle-btn--icon-only",
+  toggle
+    ? (iconOnly ? `toggle-btn--icon-only--${size}` : `toggle-btn--${size}`)
+    : (iconOnly ? `icon-btn--${size}` : `btn--${size}`),
+  !toggle && (iconOnly ? `icon-btn--${variant}` : `btn--${variant}`),
+  toggle && active && "is-pressed",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<Tag
+  class:list={finalClasses}
+  style={finalStyles}
+  href={href}
+  type={Tag === 'button' ? "button" : undefined}
+  aria-pressed={toggle ? (active ? "true" : "false") : undefined}
+  {...rest as any}
+>
+  <slot />
+</Tag>
+
+<script>
+  const setupToggleButtons = () => {
+    document.querySelectorAll(".toggle-btn").forEach((btn) => {
+      if (btn.getAttribute("data-has-toggle-listener")) return;
+      btn.setAttribute("data-has-toggle-listener", "true");
+
+      btn.addEventListener("click", () => {
+        const isPressed = btn.getAttribute("aria-pressed") === "true";
+        const nextState = !isPressed;
+        
+        btn.setAttribute("aria-pressed", String(nextState));
+        btn.classList.toggle("is-pressed", nextState);
+      });
+    });
+  };
+
+  setupToggleButtons();
+  document.addEventListener("astro:page-load", setupToggleButtons);
+</script>
+
+
+
+--- File: button/Button.css ---
+/* src/design/controls/button/Button.css */
+
+/* ─── STANDARD BUTTON ─────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2xs);
+  padding: 0 var(--sp-md);
+  height: 38px;
+  border-radius: var(--rad-md);
+  border: 0.5px solid var(--border--0);
+  background: var(--layer--2);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--ff-sans);
+  color: var(--text--3);
+  font-weight: 500;
+  transition: all var(--td-fast) var(--te-in-out);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--layer--3);
+  border-color: var(--border--1);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Size modifiers */
+.btn--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+.btn--md {
+  height: 38px;
+}
+.btn--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 16px;
+}
+
+/* Variant modifiers */
+.btn--primary {
+  background: var(--color-gold);
+  border-color: var(--color-gold-dim);
+  color: var(--layer--0);
+}
+.btn--primary:hover {
+  background: hsl(38 50% 60%);
+  border-color: var(--color-gold);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+.btn--ghost:hover {
+  background: var(--layer--2);
+  border-color: var(--border--0);
+}
+
+.btn--gold {
+  background: var(--color-gold-subtle);
+  border-color: var(--color-gold-border);
+  color: var(--color-gold);
+}
+.btn--gold:hover {
+  background: var(--color-gold-focus);
+}
+
+.btn--danger {
+  background: var(--color-danger-subtle);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--color-danger) 25%, transparent);
+}
+
+
+/* ─── ICON BUTTON ─────────────────────────────────────── */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  background: transparent;
+  cursor: pointer;
+  color: var(--text--3);
+  transition: all var(--td-fast) var(--te-in-out);
+  white-space: nowrap;
+}
+
+.icon-btn:hover {
+  background: var(--layer--2);
+  border-color: var(--border--1);
+}
+
+.icon-btn:active {
+  transform: scale(0.96);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Size modifiers */
+.icon-btn--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+.icon-btn--md {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.icon-btn--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+
+/* Variant modifiers */
+.icon-btn--ghost {
+  border-color: transparent;
+}
+.icon-btn--ghost:hover {
+  border-color: var(--border--0);
+}
+
+.icon-btn--gold {
+  border-color: var(--color-gold-border);
+  color: var(--color-gold);
+}
+.icon-btn--gold:hover {
+  background: var(--color-gold-subtle);
+}
+
+.icon-btn--danger {
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+.icon-btn--danger:hover {
+  background: var(--color-danger-subtle);
+}
+
+
+/* ─── TOGGLE BUTTON ───────────────────────────────────── */
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2xs);
+  padding: 0 var(--sp-md);
+  height: 36px;
+  border-radius: var(--rad-md);
+  border: 0.5px solid var(--border--0);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--ff-sans);
+  color: var(--text--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  white-space: nowrap;
+}
+
+.toggle-btn:hover:not([aria-pressed="true"]):not(.is-pressed) {
+  background: var(--layer--3);
+  color: var(--text--3);
+}
+
+.toggle-btn[aria-pressed="true"],
+.toggle-btn.is-pressed {
+  background: var(--color-gold-subtle);
+  border-color: color-mix(in srgb, var(--color-gold) 50%, transparent);
+  color: var(--color-gold);
+}
+
+.toggle-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Sizing and layout modifiers for toggle buttons */
+.toggle-btn--icon-only {
+  padding: 0;
+  justify-content: center;
+}
+
+.toggle-btn--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+.toggle-btn--md {
+  height: 38px;
+}
+.toggle-btn--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 16px;
+}
+
+.toggle-btn--icon-only--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+.toggle-btn--icon-only--md {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.toggle-btn--icon-only--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+
+
+
+--- File: button/Button.md ---
+# Button
+
+A customizable button control for user interactions. It handles hover, active, pressed, and focus visual states, and can dynamically render as either a native HTML button or an anchor element.
+
+## Overview
+
+The job of the `Button` component is to trigger immediate user actions (like submitting forms or opening dialogs) or navigate to other URLs. It is NOT responsible for grouping multiple actions (use `ButtonGroup` for that), displaying complex dropdown menus (use `Select` or a custom popover), or managing form-level state.
+
+## Props
+
+The `Button` component accepts all standard HTML attributes for either a `<button>` or an `<a>` element (depending on whether `href` is provided), in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'gold' \| 'danger'` | `'secondary'` | The visual style theme variant of the button. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The size modifier determining the height, padding, and font size. |
+| `iconOnly` | `boolean` | `false` | When true, applies equal square dimensions optimized for single-icon contents. |
+| `toggle` | `boolean` | `false` | When true, enables toggle button behavior, adding click event handlers to track pressed state. |
+| `active` | `boolean` | `false` | Sets the initial or current active pressed state for toggle buttons. |
+| `href` | `string` | `undefined` | An optional destination URL. If provided, the component renders as an `<a>` anchor tag instead of a `<button>`. |
+| `disabled` | `boolean` | `false` | Disables user interaction and applies visual disabled styling (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Marks the control as invalid (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Variants**:
+  - `primary`: Uses the theme's gold color (`--color-gold`) for maximum visual emphasis. Recommended for primary call-to-actions.
+  - `secondary`: Uses a dark layer background (`--layer--2`) with a subtle border. Suitable for most general actions.
+  - `ghost`: Transparent background and borders. Becomes styled on hover. Used for lower emphasis or toolbars.
+  - `gold`: Tinted gold background and text for themed secondary actions.
+  - `danger`: Red text and border indicating a destructive action.
+- **Sizes**:
+  - `sm`: Height of 30px, 12px font size. Recommended for dense layouts.
+  - `md`: Height of 38px, 14px font size. The default size.
+  - `lg`: Height of 46px, 16px font size. Recommended for prominent hero actions.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<Button>Click Me</Button>
+```
+
+### Common Patterns
+
+#### Primary Form Submission
+To submit a form with a strong visual cue:
+
+```astro
+---
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<Button variant="primary" type="submit">
+  Submit Order
+</Button>
+```
+
+#### Navigation Link
+Renders as an `<a>` element visually styled as a button:
+
+```astro
+---
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<Button href="/dashboard" variant="ghost">
+  Return to Dashboard
+</Button>
+```
+
+#### Icon Only
+Optimized square button container for standalone icon triggers:
+
+```astro
+---
+import Button from "@/design/controls/button/Button.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+---
+
+<Button iconOnly variant="ghost" aria-label="Settings">
+  <Icon name="settings" size="sm" />
+</Button>
+```
+
+#### Toggle Button
+A button that retains its pressed/active state:
+
+```astro
+---
+import Button from "@/design/controls/button/Button.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+---
+
+<Button toggle active aria-label="Mute Audio">
+  <Icon name="volume-mute" size="sm" />
+</Button>
+```
+
+## Logic
+
+The `Button` component contains an inline script that automatically manages the state of toggle buttons:
+
+1. **State Management**: When a button is configured with `toggle={true}`, it receives the class `.toggle-btn` and tracks its active state via the `aria-pressed` attribute.
+2. **Event Listeners**: The script attaches click listeners to all toggle buttons to invert their state (`aria-pressed="true" | "false"`) and toggle the `.is-pressed` CSS class.
+3. **View Transitions**: It automatically re-runs setup on page load (`astro:page-load`) to support single-page navigation without losing event registration.
+
+## Accessibility
+
+- **Semantic Tags**: Renders as a native `<button>` by default, or an `<a>` tag when a destination `href` is supplied, ensuring natural screen reader and keyboard compatibility.
+- **ARIA Attributes**: For toggle buttons, updates `aria-pressed` dynamically to inform assistive technologies of the current state.
+- **Icon-Only Labeling**: When rendering an icon-only button, ensure that a descriptive label is supplied using `aria-label` or inner `.sr-only` content to keep the trigger accessible.
+- **Keyboard Support**: Fully supports standard focus states (`:focus-visible` ring) and keyboard trigger inputs (`Space` / `Enter`).
+
+## CSS Architecture
+
+- **BEM Class Structure**: Uses BEM classes for modifiers (`.btn`, `.btn--primary`, `.btn--sm`, `.icon-btn`, `.toggle-btn`).
+- **Focus Rings**: Applies consistent outline rings using the global variables `--focus-ring` and `--focus-ring-offset`.
+- **Transitions**: Animates borders, backgrounds, and transforms smoothly using `--td-fast` duration and `--te-in-out` easing.
+
+## Related Components
+
+- **ButtonGroup**: Organizes multiple related buttons into a unified container.
+- **Icon**: Commonly placed inside buttons to provide visual context.
+
+
+--- File: button-group/button-group.svg ---
+
+
+--- File: button-group/ButtonGroup.astro ---
+---
+/**
+ * src/design/controls/button-group/ButtonGroup.astro
+ * A container component to group related buttons together.
+ * - Restructures border radiuses to merge adjacent buttons visually.
+ * - Handles horizontal inline alignment.
+ * @props (local): size
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./ButtonGroup.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** Size for all buttons in the group */
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  size,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "button-group",
+  size && `button-group--${size}`
+];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  <slot />
+</div>
+
+
+--- File: button-group/ButtonGroup.css ---
+/* src/design/controls/button-group/ButtonGroup.css */
+
+.button-group {
+  display: inline-flex;
+  border-radius: var(--rad-md);
+  box-shadow: var(--sh-2xs);
+}
+
+/* Children in a button group */
+.button-group > * {
+  position: relative;
+  border-radius: 0 !important;
+}
+
+.button-group > *:not(:first-child) {
+  margin-left: -0.5px;
+}
+
+/* First child */
+.button-group > *:first-child {
+  border-top-left-radius: var(--rad-md) !important;
+  border-bottom-left-radius: var(--rad-md) !important;
+}
+
+/* Last child */
+.button-group > *:last-child {
+  border-top-right-radius: var(--rad-md) !important;
+  border-bottom-right-radius: var(--rad-md) !important;
+}
+
+/* Hover, active, focus states need higher z-index to overlay borders */
+.button-group > *:hover,
+.button-group > *:focus-within,
+.button-group > *:focus,
+.button-group > *.is-pressed,
+.button-group > *[aria-pressed="true"] {
+  z-index: 1;
+}
+
+/* If a single button is both first and last, keep all border radiuses */
+.button-group > *:first-child:last-child {
+  border-radius: var(--rad-md) !important;
+}
+
+/* ─── SIZE OVERRIDES ────────────────────────────────── */
+
+/* Small */
+.button-group--sm > .btn {
+  height: 30px !important;
+  padding: 0 var(--sp-sm) !important;
+  font-size: 12px !important;
+}
+.button-group--sm > .icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+}
+.button-group--sm > .toggle-btn {
+  height: 30px !important;
+  padding: 0 var(--sp-sm) !important;
+  font-size: 12px !important;
+}
+.button-group--sm > .toggle-btn.toggle-btn--icon-only {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+  padding: 0 !important;
+}
+.button-group--sm .icon-component {
+  --local-size: var(--display-size-xs) !important;
+}
+
+/* Medium */
+.button-group--md > .btn {
+  height: 38px !important;
+  padding: 0 var(--sp-md) !important;
+  font-size: 14px !important;
+}
+.button-group--md > .icon-btn {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 18px !important;
+}
+.button-group--md > .toggle-btn {
+  height: 38px !important;
+  padding: 0 var(--sp-md) !important;
+  font-size: 13px !important;
+}
+.button-group--md > .toggle-btn.toggle-btn--icon-only {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 18px !important;
+  padding: 0 !important;
+}
+.button-group--md .icon-component {
+  --local-size: var(--display-size-sm) !important;
+}
+
+/* Large */
+.button-group--lg > .btn {
+  height: 46px !important;
+  padding: 0 var(--sp-lg) !important;
+  font-size: 16px !important;
+}
+.button-group--lg > .icon-btn {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 22px !important;
+}
+.button-group--lg > .toggle-btn {
+  height: 46px !important;
+  padding: 0 var(--sp-lg) !important;
+  font-size: 16px !important;
+}
+.button-group--lg > .toggle-btn.toggle-btn--icon-only {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 22px !important;
+  padding: 0 !important;
+}
+.button-group--lg .icon-component {
+  --local-size: var(--display-size-md) !important;
+}
+
+
+
+--- File: button-group/ButtonGroup.md ---
+# ButtonGroup
+
+A container component used to group related buttons together into a single, cohesive visual segment.
+
+## Overview
+
+The job of the `ButtonGroup` is to manage the layout, spacing, and styling of adjacent button controls. It is NOT responsible for handling user interactions directly (that is the job of individual child `Button` components) or managing exclusive toggle states.
+
+## Props
+
+The `ButtonGroup` component accepts all standard HTML attributes for its root `div` element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `size` | `'sm' \| 'md' \| 'lg'` | `undefined` | Overrides the size of all child buttons inside the group to ensure alignment. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Unified Sizing**: If the `size` prop is set on the `ButtonGroup`, it overrides the sizes of all nested standard buttons (`.btn`), icon buttons (`.icon-btn`), and toggle buttons (`.toggle-btn`) using CSS `!important`.
+  - `sm`: Forces children to a height of 30px and 12px font size.
+  - `md`: Forces children to a height of 38px and 14px font size.
+  - `lg`: Forces children to a height of 46px and 16px font size.
+- **Icon Scaling**: Nested icon components (`.icon-component`) are scaled down to match the group size (`--local-size: var(--display-size-xs)` for `sm`, `--local-size: var(--display-size-sm)` for `md`, and `--local-size: var(--display-size-md)` for `lg`).
+
+## Usage
+
+### Basic
+
+```astro
+---
+import ButtonGroup from "@/design/controls/button-group/ButtonGroup.astro";
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<ButtonGroup>
+  <Button>Cancel</Button>
+  <Button variant="primary">Confirm</Button>
+</ButtonGroup>
+```
+
+### Common Patterns
+
+#### Segmented Toggle Control
+Creating a segmented control for mutually exclusive states:
+
+```astro
+---
+import ButtonGroup from "@/design/controls/button-group/ButtonGroup.astro";
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<ButtonGroup size="sm">
+  <Button toggle active aria-label="Align Left">Left</Button>
+  <Button toggle aria-label="Align Center">Center</Button>
+  <Button toggle aria-label="Align Right">Right</Button>
+</ButtonGroup>
+```
+
+#### Mixed Button Types
+Grouping standard buttons and icon triggers:
+
+```astro
+---
+import ButtonGroup from "@/design/controls/button-group/ButtonGroup.astro";
+import Button from "@/design/controls/button/Button.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+---
+
+<ButtonGroup>
+  <Button variant="secondary">Edit File</Button>
+  <Button iconOnly variant="ghost" aria-label="More Actions">
+    <Icon name="more-horizontal" size="sm" />
+  </Button>
+</ButtonGroup>
+```
+
+## Accessibility
+
+- **Keyboard Focus Management**: Individual children retain focus rings when navigating via keyboard. Since child buttons are next to each other in the DOM, they support natural tab order natively.
+- **Roles & Labels**: If the button group represents a single cohesive tool (like a text formatting bar), developers should attach `role="group"` and an `aria-label` or `aria-labelledby` attribute to the container for assistive technologies.
+
+## CSS Architecture
+
+- **Visual Merging**: Sets the border-radius of all child elements to `0 !important` and restores the original radius (`var(--rad-md)`) only on the outer corners of the first and last children.
+- **Overlap Borders**: Applies `margin-left: -0.5px` to overlapping borders between buttons to prevent doubling the border thickness.
+- **Z-Index Layering**: Increases `z-index` to `1` dynamically when a child button is focused, hovered, or active. This ensures its borders overlay those of its neighbors.
+
+## Related Components
+
+- **Button**: The interactive elements grouped together inside this container.
+
+
+--- File: input/input.svg ---
+
+
+--- File: input/Input.astro ---
+---
+/**
+ * src/design/controls/input/Input.astro
+ * A standard customizable text field input.
+ * - Supports various input types (text, email, password, etc.).
+ * - Integrates BEM modifiers for sizes and error/disabled states.
+ * @props (local): type, size, variant, disabled, readonly, invalid, placeholder, value, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./Input.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** The type of input field */
+  type?: import("@/design/controls/controls.types").InputType;
+}
+
+const {
+  type = "text",
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  readonly = false,
+  invalid = false,
+  placeholder,
+  value,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "input-component",
+  `input-component--${size}`,
+  `input-component--${variant}`,
+  disabled && "is-disabled",
+  readonly && "is-readonly",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<input
+  type={type}
+  name={name}
+  value={value}
+  placeholder={placeholder}
+  disabled={disabled}
+  readonly={readonly}
+  class:list={finalClasses}
+  style={finalStyles}
+  aria-invalid={invalid ? "true" : undefined}
+  {...rest}
+/>
+
+
+--- File: input/Input.css ---
+/* src/design/controls/input/Input.css */
+
+.input-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-component::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.input-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.input-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers */
+.input-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+
+.input-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  font-size: 13px;
+}
+
+.input-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.input-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.input-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.input-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Disabled state */
+.input-component:disabled,
+.input-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+/* Readonly state */
+.input-component[readonly],
+.input-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.input-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.input-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+
+--- File: input/Input.md ---
+# Input
+
+A standard customizable text input field component.
+
+## Overview
+
+The job of the `Input` component is to collect single-line text or value inputs (such as names, emails, passwords, and numbers) from users. It handles consistent borders, heights, focus rings, placeholders, and error state indicators. It is NOT responsible for multiline text areas (use `Textarea` if available), input grouping overlays (use `InputGroup` to attach buttons or prefixes), or form validation logic.
+
+## Props
+
+The `Input` component accepts all standard HTML attributes for a native `<input>` element (such as `required`, `pattern`, or `maxlength`), in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `type` | `InputType` | `'text'` | The behavior type of input (e.g. `'text'`, `'email'`, `'password'`, `'number'`, `'tel'`). |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The size modifier determining height, padding, and font size. |
+| `variant` | `'outline' \| 'solid'` | `'outline'` | The visual border and background styling variant. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims opacity (inherited from `ControlComponentProps`). |
+| `readonly` | `boolean` | `false` | Marks the input as read-only, preventing edits but maintaining form submissions (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights input borders red to denote validation failure (inherited from `ControlComponentProps`). |
+| `placeholder` | `string` | `undefined` | Dim placeholder text displayed when the input is empty (inherited from `ControlComponentProps`). |
+| `value` | `string` | `undefined` | The initial or current text value of the input field (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | Input name submitted with form data (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Variants**:
+  - `outline`: Default style with a thin border (`--border--0`) and light grey background (`--layer--2`).
+  - `solid`: Borderless variant with a darker background (`--layer--3`), recommended for secondary parameters.
+- **Sizes**:
+  - `sm`: Height of 30px, 12px font size. Recommended for dense grids or filters.
+  - `md`: Height of 38px, 13px font size. The default size.
+  - `lg`: Height of 46px, 15px font size. Recommended for primary login fields.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Input from "@/design/controls/input/Input.astro";
+---
+
+<Input name="username" placeholder="Username" />
+```
+
+### Common Patterns
+
+#### Password Input
+Utilizes the standard type modifier to mask character inputs:
+
+```astro
+---
+import Input from "@/design/controls/input/Input.astro";
+---
+
+<Input type="password" name="password" placeholder="••••••••" required />
+```
+
+#### Read-Only Key Display
+Displaying static keys or tokens that can be copied but not edited:
+
+```astro
+---
+import Input from "@/design/controls/input/Input.astro";
+---
+
+<Input name="api-key" value="ds_live_51HnB..." readonly />
+```
+
+#### Invalid state indicator
+Binds custom validation states to highlight input errors:
+
+```astro
+---
+import Input from "@/design/controls/input/Input.astro";
+---
+
+<Input type="email" name="email" value="invalid-email" invalid />
+```
+
+## Accessibility
+
+- **Native Accessibility**: Uses a native `<input>` element directly, which natively handles assistive technologies, screen reader announcements, autofill options, and keyboard focus routing.
+- **Form Labels**: Ensure the input is associated with a label (using a `<label>` tag with a matching `for` attribute) to keep it screen reader friendly.
+- **ARIA States**: Adds `aria-invalid="true"` when the `invalid` prop is enabled to notify assistive technology of validation errors.
+
+## CSS Architecture
+
+- **Transitions**: Smoothly animates border colors and focus box-shadows using transitions (`transition: all var(--td-fast) var(--te-in-out)`).
+- **Focus Rings**: Employs focus indicators via box-shadow rings (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused.
+- **Read-Only / Disabled Backdrops**: When read-only or disabled, sets background-color to `--layer--1` to visually separate input controls from editable fields.
+
+## Related Components
+
+- **InputGroup**: Layout container to join inputs with adjacent buttons or text prefixes.
+- **Select**: Dropdown selection menu matching text input field proportions.
+
+
+--- File: input-group/input-group.svg ---
+
+
+--- File: input-group/InputGroup.astro ---
+---
+/**
+ * src/design/controls/input-group/InputGroup.astro
+ * A container to group addons (text or buttons) adjacent to an input field.
+ * - Collapses adjacent border-radiuses and borders between components.
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./InputGroup.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {}
+
+const classes = ["input-group"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...Astro.props}>
+  <slot />
+</div>
+
+
+--- File: input-group/InputGroup.css ---
+/* src/design/controls/input-group/InputGroup.css */
+
+.input-group {
+  display: flex;
+  width: 100%;
+  border-radius: var(--rad-md);
+  box-shadow: var(--sh-2xs);
+}
+
+/* Children in an input group (inputs, selects, buttons, text addons) */
+.input-group > * {
+  position: relative;
+  border-radius: 0 !important;
+  flex: 1 1 auto;
+}
+
+/* Direct input styling overrides to adjust flex behavior */
+.input-group > .btn,
+.input-group > .icon-btn,
+.input-group > .toggle-btn {
+  flex-grow: 0;
+}
+
+/* Shift left margins to merge adjacent borders */
+.input-group > *:not(:first-child) {
+  margin-left: -0.5px;
+}
+
+/* First child radius */
+.input-group > *:first-child {
+  border-top-left-radius: var(--rad-md) !important;
+  border-bottom-left-radius: var(--rad-md) !important;
+}
+
+/* Last child radius */
+.input-group > *:last-child {
+  border-top-right-radius: var(--rad-md) !important;
+  border-bottom-right-radius: var(--rad-md) !important;
+}
+
+/* Ensure focus/hover states sit on top of neighbors to preserve borders */
+.input-group > *:hover,
+.input-group > *:focus-within,
+.input-group > *:focus {
+  z-index: 1;
+}
+
+/* Non-interactive text addons in the input group */
+.input-group__addon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-sm);
+  background: var(--layer--3);
+  border: 0.5px solid var(--border--0);
+  color: var(--text--3);
+  font-family: var(--ff-sans);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* If single element, preserve all borders */
+.input-group > *:first-child:last-child {
+  border-radius: var(--rad-md) !important;
+}
+
+
+--- File: input-group/InputGroup.md ---
+# InputGroup
+
+A layout container component used to group text fields, select menus, buttons, or text addons into a single horizontal segment.
+
+## Overview
+
+The job of the `InputGroup` component is to manage adjacent input additions (like prepended web protocols, appended search buttons, or inline select filters). It collapses the inner border-radiuses of adjacent child controls so they merge into a single visual block. It is NOT responsible for managing input states, click listener callbacks, or validation styles (which remain the responsibility of individual children).
+
+## Props
+
+The `InputGroup` component accepts all standard HTML attributes for its root `div` element, and inherits base options like animations:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Visual Addons**: You can append or prepend non-interactive text elements inside the group using standard tags (like `span` or `div`) styled with the class `.input-group__addon`.
+- **Focus Rings**: When any child component within the group receives focus, its borders are brought to the foreground (`z-index: 1`) to ensure focus rings are fully drawn over neighbors.
+
+## Usage
+
+### Basic
+
+Combining a text input and action button:
+
+```astro
+---
+import InputGroup from "@/design/controls/input-group/InputGroup.astro";
+import Input from "@/design/controls/input/Input.astro";
+import Button from "@/design/controls/button/Button.astro";
+---
+
+<InputGroup>
+  <Input name="search" placeholder="Search system database..." />
+  <Button variant="primary">Search</Button>
+</InputGroup>
+```
+
+### Common Patterns
+
+#### Pre-pended Text Addon
+Render prepended domain protocols or symbols:
+
+```astro
+---
+import InputGroup from "@/design/controls/input-group/InputGroup.astro";
+import Input from "@/design/controls/input/Input.astro";
+---
+
+<InputGroup>
+  <span class="input-group__addon">https://</span>
+  <Input name="url" placeholder="example.com" />
+</InputGroup>
+```
+
+#### Currency Input
+Combining text labels, input fields, and selectors:
+
+```astro
+---
+import InputGroup from "@/design/controls/input-group/InputGroup.astro";
+import Input from "@/design/controls/input/Input.astro";
+import Select from "@/design/controls/select/Select.astro";
+---
+
+<InputGroup>
+  <span class="input-group__addon">$</span>
+  <Input type="number" name="amount" placeholder="0.00" />
+  <Select name="currency" style="max-width: 90px;">
+    <option value="usd">USD</option>
+    <option value="cad">CAD</option>
+  </Select>
+</InputGroup>
+```
+
+## Accessibility
+
+- **Keyboard Focus Management**: Sibling inputs and buttons inside the group support natural tab orders because they are adjacent in the DOM structure.
+- **Labels**: Addons with the `.input-group__addon` class are read as plain text. Ensure input elements are still correctly associated with descriptive parent labels or `aria-label` tags for screen readers.
+
+## CSS Architecture
+
+- **Border-Radius Collapsing**: Sets the border-radius of all child components to `0 !important`, restoring the system radius (`var(--rad-md)`) only on the left corners of the first child, and the right corners of the last child.
+- **Flex Layout**: Arranges elements horizontally (`display: flex`) with children filling remaining space (`flex: 1 1 auto`). Button overrides are configured so buttons do not grow or stretch (`flex-grow: 0`).
+- **Overlap Borders**: Offsets siblings using `margin-left: -0.5px` to overlap adjacent border boundaries.
+- **Z-Index Layering**: Hovered, focused-within, or focused child components are given `z-index: 1` dynamically, ensuring focus rings draw over sibling borders.
+
+## Related Components
+
+- **Input**: The text fields grouped inside this container.
+- **Select**: The dropdown selectors grouped inside this container.
+- **Button**: The triggers grouped inside this container.
+- **ButtonGroup**: A similar layout group container restricted to buttons.
+
+
+--- File: select/select.svg ---
+
+
+--- File: select/Select.astro ---
+---
+/**
+ * src/design/controls/select/Select.astro
+ * A styled select dropdown control that wraps a native HTML <select>.
+ * - Preserves native accessibility and options.
+ * - Places a custom chevron icon on the right.
+ * @props (local): size, variant, disabled, invalid, label, name, placeholder
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
+import "./Select.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"select">, keyof ControlComponentProps> {
+  /** Optional placeholder when no option is selected */
+  placeholder?: string;
+}
+
+const {
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  invalid = false,
+  placeholder,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "select-component",
+  `select-component--${size}`,
+  `select-component--${variant}`,
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class="select-wrapper">
+  <select
+    name={name}
+    disabled={disabled}
+    class:list={finalClasses}
+    style={finalStyles}
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  >
+    {placeholder && (
+      <option value="" disabled selected hidden>
+        {placeholder}
+      </option>
+    )}
+    <slot />
+  </select>
+  <span class="select-wrapper__chevron">
+    <Icon name="chevron-down" size={size === 'sm' ? 'xs' : 'sm'} />
+  </span>
+</div>
+
+
+--- File: select/Select.css ---
+/* src/design/controls/select/Select.css */
+
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.select-component {
+  width: 100%;
+  background-color: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Padding right is larger to accommodate the absolute chevron */
+.select-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-xs);
+  padding-right: 28px;
+  font-size: 12px;
+}
+
+.select-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  padding-right: 36px;
+  font-size: 13px;
+}
+
+.select-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  padding-right: 44px;
+  font-size: 15px;
+}
+
+.select-component:hover:not(:disabled) {
+  border-color: var(--border--1);
+}
+
+.select-component:focus:not(:disabled) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Variant solid */
+.select-component--solid {
+  background-color: var(--layer--3);
+  border-color: transparent;
+}
+.select-component--solid:hover:not(:disabled) {
+  background-color: var(--layer--4);
+}
+.select-component--solid:focus:not(:disabled) {
+  background-color: var(--layer--2);
+}
+
+/* Chevron indicator */
+.select-wrapper__chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--sp-xs);
+  transform: translateY(-50%);
+  color: var(--text--m);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Align chevron positioning for different sizes */
+.select-component--sm ~ .select-wrapper__chevron {
+  right: var(--sp-2xs);
+}
+.select-component--lg ~ .select-wrapper__chevron {
+  right: var(--sp-sm);
+}
+
+/* Disabled state */
+.select-component:disabled,
+.select-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--layer--1);
+}
+
+.select-component:disabled ~ .select-wrapper__chevron {
+  opacity: 0.5;
+}
+
+/* Invalid / Error state */
+.select-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.select-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+
+--- File: select/Select.md ---
+# Select
+
+A styled dropdown select control that wraps a native HTML `<select>` element.
+
+## Overview
+
+The job of the `Select` component is to allow users to pick a single choice from a drop-down menu of options. It wraps a native browser select element to maintain native form capabilities and accessibility, while styling borders, backgrounds, and overlaying a custom chevron icon. It is NOT responsible for multiple selections (use `Multiselect` instead) or custom searchable menus.
+
+## Props
+
+The `Select` component wraps a native `<select>` element, forwarding all standard HTML select attributes (such as `required`, `autofocus`, or `multiple`) to the native element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `placeholder` | `string` | `undefined` | Optional text displayed as a pre-selected placeholder option when no value is chosen. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The size modifier determining height, padding, and font size. |
+| `variant` | `'outline' \| 'solid'` | `'outline'` | The visual border and background styling variant. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims opacity (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights input borders red to denote validation error (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | Input name submitted with form data (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Variants**:
+  - `outline`: Default style with a thin border (`--border--0`) and light grey background (`--layer--2`).
+  - `solid`: Borderless variant with a darker background (`--layer--3`), recommended for secondary settings columns.
+- **Sizes**:
+  - `sm`: Height of 30px, 12px font size. Requires right padding of 28px for the chevron.
+  - `md`: Height of 38px, 13px font size. Requires right padding of 36px for the chevron.
+  - `lg`: Height of 46px, 15px font size. Requires right padding of 44px for the chevron.
+
+## Usage
+
+### Basic
+
+Place native `<option>` elements inside the component:
+
+```astro
+---
+import Select from "@/design/controls/select/Select.astro";
+---
+
+<Select name="options">
+  <option value="1">Option One</option>
+  <option value="2">Option Two</option>
+  <option value="3">Option Three</option>
+</Select>
+```
+
+### Common Patterns
+
+#### Select with Placeholder
+Renders a disabled, selected placeholder option that is hidden from the choice list:
+
+```astro
+---
+import Select from "@/design/controls/select/Select.astro";
+---
+
+<Select name="categories" placeholder="Select a category...">
+  <option value="tech">Technology</option>
+  <option value="health">Healthcare</option>
+  <option value="finance">Finance</option>
+</Select>
+```
+
+#### Size Variants
+Adjusting the select field height to align with adjacent actions:
+
+```astro
+---
+import Select from "@/design/controls/select/Select.astro";
+---
+
+<Select size="sm" name="filter-sort">
+  <option value="newest">Newest</option>
+  <option value="oldest">Oldest</option>
+</Select>
+```
+
+## Accessibility
+
+- **Native Select Semantics**: Uses the native HTML `<select>` element directly, which guarantees default browser keyboard accessibility (arrow key adjustments), screen reader reading nodes, and native dropdown modal drawers on mobile devices.
+- **ARIA States**: Incorporates `aria-invalid="true"` automatically when `invalid` is enabled to alert screen readers of validation issues.
+- **Visual Focus**: Retains visible focus outlines (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused via keyboard navigation.
+
+## CSS Architecture
+
+- **Visual Chevron Override**: Disables default browser dropdown chevron indicators using `appearance: none`, replacing them with an absolute positioned SVG `.select-wrapper__chevron` placed on the right side.
+- **Overlap Padding**: Restructures right-hand padding depending on the size modifier (`padding-right: 28px | 36px | 44px`) to ensure option text never overlaps the absolute chevron.
+- **Disabled State**: Dims the wrapper opacity to `0.5` and blocks pointer events (`cursor: not-allowed`) when the component is disabled.
+
+## Related Components
+
+- **Multiselect**: Combobox component designed for multi-option selection.
+- **Input**: Standard text input field matching the select component's design token heights.
+
+
+--- File: combobox/combobox.svg ---
+
+
+--- File: combobox/Combobox.astro ---
+---
+/**
+ * src/design/controls/combobox/Combobox.astro
+ * A searchable single-value dropdown combobox component.
+ * - Allows searching and filtering options.
+ * - Synchronizes with a hidden native `<select>` for form submissions.
+ * @props (local): options, selected, placeholder, label, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
+import "./Combobox.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** List of selectable options */
+  options: Array<{ value: string; label: string } | string>;
+  /** Initially selected value */
+  selected?: string;
+  /** Input placeholder when empty */
+  placeholder?: string;
+}
+
+const {
+  options = [],
+  selected = "",
+  placeholder = "Select an option...",
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Standardize options array to { value, label } format
+const formattedOptions = options.map((opt) =>
+  typeof opt === "string" ? { value: opt, label: opt } : opt
+);
+
+const initialSelectedOpt = formattedOptions.find(opt => opt.value === selected);
+const initialLabel = initialSelectedOpt ? initialSelectedOpt.label : "";
+
+const classes = ["combobox"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} data-placeholder={placeholder} {...rest}>
+  <!-- Hidden native select for form integration -->
+  <select name={name} class="combobox__native-select" aria-hidden="true" tabindex="-1">
+    <option value=""></option>
+    {formattedOptions.map((opt) => (
+      <option value={opt.value} selected={opt.value === selected}>{opt.label}</option>
+    ))}
+  </select>
+
+  <div class="combobox__trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+    <input
+      type="text"
+      class="combobox__input"
+      placeholder={placeholder}
+      value={initialLabel}
+      aria-autocomplete="list"
+    />
+    <Icon name="chevron-down" class="combobox__chevron" size="sm" />
+  </div>
+
+  <ul class="combobox__dropdown" role="listbox">
+    {formattedOptions.map((opt) => {
+      const isSelected = opt.value === selected;
+      return (
+        <li
+          class:list={["combobox__option", isSelected && "is-selected"]}
+          role="option"
+          aria-selected={isSelected ? "true" : "false"}
+          data-value={opt.value}
+          data-label={opt.label}
+        >
+          <span class="combobox__check">
+            {isSelected && <Icon name="check" size="2xs" />}
+          </span>
+          <span class="combobox__option-label">{opt.label}</span>
+        </li>
+      );
+    })}
+    <li class="combobox__empty" style="display: none;">No results found</li>
+  </ul>
+</div>
+
+<script>
+  const setupComboboxes = () => {
+    document.querySelectorAll(".combobox").forEach((container) => {
+      const trigger = container.querySelector(".combobox__trigger") as HTMLDivElement;
+      const input = container.querySelector(".combobox__input") as HTMLInputElement;
+      const dropdown = container.querySelector(".combobox__dropdown") as HTMLUListElement;
+      const nativeSelect = container.querySelector(".combobox__native-select") as HTMLSelectElement;
+      const options = container.querySelectorAll(".combobox__option") as NodeListOf<HTMLLIElement>;
+      const emptyItem = container.querySelector(".combobox__empty") as HTMLLIElement;
+
+      if (!trigger || !input || !dropdown || !nativeSelect) return;
+
+      let currentLabel = input.value;
+
+      const toggleDropdown = (open?: boolean) => {
+        const isOpen = open !== undefined ? open : !container.classList.contains("is-open");
+        const wasClosed = !container.classList.contains("is-open");
+
+        if (isOpen) {
+          container.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+          if (wasClosed) {
+            input.value = "";
+            filterOptions();
+          }
+          input.focus();
+        } else {
+          container.classList.remove("is-open");
+          trigger.setAttribute("aria-expanded", "false");
+          input.value = currentLabel;
+        }
+      };
+
+      const filterOptions = () => {
+        const query = input.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        options.forEach((opt) => {
+          const label = (opt.getAttribute("data-label") || "").toLowerCase();
+          if (label.includes(query)) {
+            opt.style.display = "";
+            visibleCount++;
+          } else {
+            opt.style.display = "none";
+          }
+        });
+
+        if (emptyItem) {
+          emptyItem.style.display = visibleCount === 0 ? "" : "none";
+        }
+      };
+
+      const selectOption = (value: string, label: string) => {
+        nativeSelect.value = value;
+        currentLabel = label;
+        input.value = label;
+
+        options.forEach((opt) => {
+          const isSelected = opt.getAttribute("data-value") === value;
+          opt.classList.toggle("is-selected", isSelected);
+          opt.setAttribute("aria-selected", isSelected ? "true" : "false");
+          
+          const check = opt.querySelector(".combobox__check") as HTMLSpanElement;
+          if (check) {
+            check.innerHTML = isSelected ? `<svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-2xs, var(--fs-2xs));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : "";
+          }
+        });
+
+        nativeSelect.dispatchEvent(new Event("change"));
+        toggleDropdown(false);
+      };
+
+      trigger.addEventListener("click", (e) => {
+        if (e.target === input) {
+          toggleDropdown(true);
+        } else {
+          toggleDropdown();
+        }
+      });
+
+      trigger.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          if (e.target === input) return;
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Enter" || e.key === "ArrowDown") {
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Escape") {
+          toggleDropdown(false);
+        }
+      });
+
+      input.addEventListener("input", () => {
+        toggleDropdown(true);
+        filterOptions();
+      });
+
+      options.forEach((opt) => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const value = opt.getAttribute("data-value") || "";
+          const label = opt.getAttribute("data-label") || "";
+          selectOption(value, label);
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!container.contains(e.target as Node)) {
+          toggleDropdown(false);
+        }
+      });
+    });
+  };
+
+  setupComboboxes();
+  document.addEventListener("astro:page-load", setupComboboxes);
+</script>
+
+
+--- File: combobox/Combobox.css ---
+/* src/design/controls/combobox/Combobox.css */
+
+.combobox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.combobox__native-select {
+  display: none;
+}
+
+.combobox__trigger {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 38px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  background: var(--layer--2);
+  cursor: pointer;
+  transition: border-color var(--td-fast) var(--te-in-out), box-shadow var(--td-fast) var(--te-in-out);
+  outline: none;
+}
+
+.combobox__trigger:focus-within,
+.combobox__trigger:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+.combobox__input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: var(--ff-sans);
+  color: var(--text--5);
+  width: 100%;
+  height: 100%;
+  padding: var(--sp-3xs) var(--sp-xs);
+  padding-right: 36px;
+  cursor: text;
+}
+
+.combobox__input::placeholder {
+  color: var(--text--m);
+}
+
+.combobox__chevron {
+  position: absolute;
+  right: var(--sp-xs);
+  color: var(--text--m);
+  flex-shrink: 0;
+  transition: transform var(--td-normal) var(--te-in-out);
+  pointer-events: none;
+}
+
+.combobox.is-open .combobox__chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.combobox__dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: var(--sh-m);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.combobox.is-open .combobox__dropdown {
+  display: block;
+}
+
+.combobox__option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-2xs) var(--sp-xs);
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text--3);
+  transition: background-color var(--td-fast) var(--te-in-out);
+}
+
+.combobox__option:hover {
+  background-color: var(--layer--3);
+}
+
+.combobox__option.is-selected {
+  color: var(--color-gold);
+}
+
+.combobox__option-label {
+  font-family: var(--ff-sans);
+}
+
+/* Checkbox indicator left of the label */
+.combobox__check {
+  width: 14px;
+  height: 14px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-xs);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background-color: var(--layer--1);
+}
+
+.combobox__option.is-selected .combobox__check {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+  color: var(--layer--0);
+}
+
+.combobox__empty {
+  padding: var(--sp-xs) var(--sp-xs);
+  font-size: 13px;
+  color: var(--text--m);
+  font-family: var(--ff-sans);
+  text-align: center;
+}
+
+
+--- File: combobox/Combobox.md ---
+# Combobox
+
+A searchable single-value dropdown combobox component.
+
+## Overview
+
+The job of the `Combobox` component is to allow users to search and select a single option from a dropdown menu. It features a text search input that filters options in real-time, displays selected choices with checked markers, and synchronizes selection states with a hidden native `<select>` element to work with native forms. It is NOT responsible for multi-item selections (use `Multiselect` instead) or displaying multiple visual chips.
+
+## Props
+
+The `Combobox` component accepts all standard HTML attributes for its root `div` container element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `options` | `Array<{ value: string; label: string } \| string>` | `[]` | List of options to choose from (either string values or custom label/value objects). |
+| `selected` | `string` | `""` | The value of the initially selected option. |
+| `placeholder` | `string` | `'Select an option...'` | Placeholder text displayed inside the text input when no option is selected. |
+| `name` | `string` | `undefined` | Input name submitted with form data (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Dropdown Overlay**: Opens an overlay panel directly beneath the trigger, with options highlighted on hover or checkmarked when selected.
+- **Interactive States**: Displays a custom border and a gold focus shadow (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused or clicked.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Combobox from "@/design/controls/combobox/Combobox.astro";
+---
+
+<Combobox
+  name="framework"
+  options={["Astro", "React", "Vue", "Angular"]}
+  placeholder="Choose a framework..."
+/>
+```
+
+### Common Patterns
+
+#### Initial Value Selection
+To render the component with a pre-selected option:
+
+```astro
+---
+import Combobox from "@/design/controls/combobox/Combobox.astro";
+---
+
+<Combobox
+  name="status"
+  options={[
+    { value: "open", label: "Open Action" },
+    { value: "closed", label: "Closed/Archived" }
+  ]}
+  selected="open"
+/>
+```
+
+## Logic
+
+The `Combobox` component contains an inline script that manages the dropdown state, search logic, and value synchronization:
+
+1. **Dropdown Overlay**: Toggles visibility of the `.combobox__dropdown` panel when the trigger element or input is clicked, closing it automatically on clicks outside the component container.
+2. **Keystroke Search Filter**: Captures keyboard input on `.combobox__input` to filter dropdown list elements in real-time. Displays a "No results found" message if no list option matches the query.
+3. **Form Synchronization**: Selecting a choice updates the value of the hidden native `<select>` element and triggers a browser `change` event.
+4. **Text Recovery**: When closing the dropdown without making a selection, recovers the input field text to display the last selected option's label.
+5. **Keyboard Support**: Focuses the input element when opening, and listens to `Space`, `Enter`, or `ArrowDown` keys on the trigger to open the options panel, and `Escape` to close it.
+6. **Transitions Support**: Re-executes container scripts on `astro:page-load` to keep comboboxes functional during view transitions.
+
+## Accessibility
+
+- **ARIA Attributes**: The trigger utilizes `role="combobox"`, `aria-haspopup="listbox"`, and `aria-expanded` states. The dropdown container applies `role="listbox"`, and options use `role="option"` with `aria-selected` to provide screen readers with context.
+- **Native Form Integration**: Uses a hidden native `<select>` element to ensure selections are processed correctly by standard HTML `<form>` submissions and browser autofill.
+- **Keyboard Navigation**: Focuses the input element when opening, allowing keyboard users to type queries and navigate options.
+
+## CSS Architecture
+
+- **BEM Class Structure**: Built with clear modifier selectors (`.combobox`, `.combobox__trigger`, `.combobox__dropdown`, `.combobox__option`, `.combobox__check`).
+- **Overlay Elevation**: The dropdown uses `position: absolute` with a high index (`z-index: var(--z-dropdown)`) and shadow rules (`box-shadow: var(--sh-m)`) to overlap pages.
+- **Chevron Rotation**: The chevron icon `.combobox__chevron` rotates 180 degrees using CSS transitions when the parent element is `.is-open`.
+
+## Related Components
+
+- **Select**: Dropdown component designed for native browser single selections.
+- **Multiselect**: Searchable multi-value combobox displaying selections as chips.
+- **Icon**: Renders checkmarks and down arrow glyphs.
+
+
+--- File: checkbox/checkbox.svg ---
+
+
+--- File: checkbox/Checkbox.astro ---
+---
+/**
+ * src/design/controls/checkbox/Checkbox.astro
+ * A custom styled checkbox component.
+ * - Wraps a native hidden checkbox for full accessibility.
+ * - Supports disabled, checked, and invalid states.
+ * @props (local): checked, disabled, invalid, name, value, label
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
+import "./Checkbox.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** Checked state */
+  checked?: boolean;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  invalid = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "checkbox-component",
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<label class:list={finalClasses} style={finalStyles}>
+  <input
+    type="checkbox"
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="checkbox-component__native"
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+  <span class="checkbox-component__indicator">
+    <span class="checkbox-component__check-icon">
+      <Icon name="check" size="2xs" />
+    </span>
+  </span>
+  <span class="checkbox-component__label">
+    <slot />
+  </span>
+</label>
+
+
+--- File: checkbox/Checkbox.css ---
+/* src/design/controls/checkbox/Checkbox.css */
+
+.checkbox-component {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--ff-sans);
+  font-size: 14px;
+  color: var(--text--3);
+}
+
+/* Hide native checkbox visually but keep it focusable */
+.checkbox-component__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Styled checkbox box */
+.checkbox-component__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-xs);
+  background-color: var(--layer--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  flex-shrink: 0;
+}
+
+.checkbox-component__check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--td-fast) var(--te-in-out), transform var(--td-fast) var(--te-spring);
+  color: var(--layer--0);
+}
+
+/* Hover indicator box */
+.checkbox-component:hover:not(.is-disabled) .checkbox-component__indicator {
+  border-color: var(--border--1);
+  background-color: var(--layer--3);
+}
+
+/* Focus outline ring */
+.checkbox-component__native:focus-visible ~ .checkbox-component__indicator {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Checked state */
+.checkbox-component__native:checked ~ .checkbox-component__indicator {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+}
+
+.checkbox-component__native:checked ~ .checkbox-component__indicator .checkbox-component__check-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hover when checked */
+.checkbox-component:hover:not(.is-disabled) .checkbox-component__native:checked ~ .checkbox-component__indicator {
+  background-color: hsl(38 50% 60%);
+}
+
+/* Disabled state */
+.checkbox-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.checkbox-component.is-disabled .checkbox-component__indicator {
+  background-color: var(--layer--1);
+}
+
+/* Invalid state */
+.checkbox-component.is-invalid .checkbox-component__indicator {
+  border-color: var(--color-danger-border);
+}
+
+
+--- File: checkbox/Checkbox.md ---
+# Checkbox
+
+A custom-styled checkbox control representing a binary state (checked or unchecked) for form inputs.
+
+## Overview
+
+The job of the `Checkbox` component is to allow users to toggle binary choices (like subscribing to a newsletter or accepting terms). It wraps a visually hidden native input for robust accessibility while presenting a styled indicator box. It is NOT responsible for mutually exclusive choice groups (use `Radio` or `RadioGroup` for that) or displaying progress states.
+
+## Props
+
+The `Checkbox` component renders a root `<label>` element. Standard HTML attributes passed to the component (such as `required`, `autofocus`, or `form`) are forwarded to the underlying native `<input type="checkbox">` element.
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `checked` | `boolean` | `false` | The current checked state of the checkbox. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims visual contrast (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights the indicator border red to denote validation failure (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | The name of the input control submitted with form data (inherited from `ControlComponentProps`). |
+| `value` | `string` | `undefined` | The value attribute submitted when checked (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Checked State**: When checked, the background changes to gold (`--color-gold`) and reveals the check icon with a pop animation.
+- **Disabled State**: When disabled, the checkbox is translucent, pointer events are disabled, and it receives a darker grey background (`--layer--1`).
+- **Invalid State**: When invalid, the indicator's border changes to the red danger border (`--color-danger-border`).
+
+## Usage
+
+### Basic
+
+The label text is supplied using the component's default slot:
+
+```astro
+---
+import Checkbox from "@/design/controls/checkbox/Checkbox.astro";
+---
+
+<Checkbox name="terms">
+  I accept the terms and conditions
+</Checkbox>
+```
+
+### Common Patterns
+
+#### Pre-selected Disabled Input
+Useful for displaying unmodifiable checked requirements:
+
+```astro
+---
+import Checkbox from "@/design/controls/checkbox/Checkbox.astro";
+---
+
+<Checkbox name="terms" checked disabled>
+  Acceptance of Core Policy (Required)
+</Checkbox>
+```
+
+#### Invalid/Error State
+Highlighting a checkbox that must be checked before proceeding:
+
+```astro
+---
+import Checkbox from "@/design/controls/checkbox/Checkbox.astro";
+---
+
+<Checkbox name="marketing" invalid required>
+  Confirm subscription options
+</Checkbox>
+```
+
+## Accessibility
+
+- **Implicit Association**: The root element is a semantic `<label>`. This automatically associates the label text with the native input element.
+- **Focus Management**: The native `<input>` is visually hidden but remains fully focusable. When navigating via keyboard, focusing the native input triggers a visible outline ring surrounding the custom indicator box.
+- **ARIA States**: Adds `aria-invalid="true"` when the `invalid` prop is enabled to notify assistive technology of error states.
+
+## CSS Architecture
+
+- **Visual Hiding**: Uses absolute positioning and clip paths (`.checkbox-component__native`) to hide the native input without removing it from screen readers or keyboard tab order.
+- **Spring Checkmark**: The check icon is scaled down (`transform: scale(0.6)`) and hidden (`opacity: 0`) by default. When the native input matches the `:checked` state, it animates to full size using `--te-spring` transition timing.
+- **Cursor Indicators**: Changes cursor states to `pointer` on hover, and `not-allowed` when disabled.
+
+## Related Components
+
+- **Icon**: Renders the checkmark graphic (`name="check"`) inside the indicator.
+- **Switch**: An alternative control for toggling instant binary settings on and off.
+
+
+--- File: radio/radio.svg ---
+
+
+--- File: radio/Radio.astro ---
+---
+/**
+ * src/design/controls/radio/Radio.astro
+ * A custom styled radio button component.
+ * - Wraps a native hidden radio input for full accessibility.
+ * - Supports disabled, checked, and invalid states.
+ * @props (local): checked, disabled, invalid, name, value, label
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./Radio.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {
+  /** Checked state */
+  checked?: boolean;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  invalid = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "radio-component",
+  disabled && "is-disabled",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<label class:list={finalClasses} style={finalStyles}>
+  <input
+    type="radio"
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="radio-component__native"
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+  <span class="radio-component__indicator">
+    <span class="radio-component__dot"></span>
+  </span>
+  <span class="radio-component__label">
+    <slot />
+  </span>
+</label>
+
+
+--- File: radio/Radio.css ---
+/* src/design/controls/radio/Radio.css */
+
+.radio-component {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--ff-sans);
+  font-size: 14px;
+  color: var(--text--3);
+}
+
+/* Hide native radio visually but keep it focusable */
+.radio-component__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Styled radio circle */
+.radio-component__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-full);
+  background-color: var(--layer--2);
+  transition: all var(--td-fast) var(--te-in-out);
+  flex-shrink: 0;
+}
+
+.radio-component__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rad-full);
+  background-color: var(--color-gold);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--td-fast) var(--te-in-out), transform var(--td-fast) var(--te-spring);
+}
+
+/* Hover indicator box */
+.radio-component:hover:not(.is-disabled) .radio-component__indicator {
+  border-color: var(--border--1);
+  background-color: var(--layer--3);
+}
+
+/* Focus outline ring */
+.radio-component__native:focus-visible ~ .radio-component__indicator {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Checked state */
+.radio-component__native:checked ~ .radio-component__indicator {
+  border-color: var(--color-gold);
+}
+
+.radio-component__native:checked ~ .radio-component__indicator .radio-component__dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Disabled state */
+.radio-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.radio-component.is-disabled .radio-component__indicator {
+  background-color: var(--layer--1);
+}
+
+/* Invalid state */
+.radio-component.is-invalid .radio-component__indicator {
+  border-color: var(--color-danger-border);
+}
+
+
+--- File: radio/Radio.md ---
+# Radio
+
+A custom-styled radio button component used for selecting a single option from a mutually exclusive list.
+
+## Overview
+
+The job of the `Radio` component is to present a single choice in a group of mutually exclusive options. It wraps a visually hidden native input for robust accessibility while presenting a styled round indicator dot. It is NOT responsible for laying out multiple options, mapping group-level name attributes, or managing collective alignment (use `RadioGroup` for that).
+
+## Props
+
+The `Radio` component renders a root `<label>` element. Standard HTML attributes passed to the component (such as `required`, `autofocus`, or `form`) are forwarded to the underlying native `<input type="radio">` element.
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `checked` | `boolean` | `false` | The current checked state of the radio option. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims visual contrast (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights the indicator border red to denote validation failure (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | The name of the input control submitted with form data (inherited from `ControlComponentProps`). |
+| `value` | `string` | `undefined` | The value attribute submitted when selected (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Checked State**: When selected, the inner dot scales up and fades in using a spring curve animation. The border color changes to gold (`--color-gold`).
+- **Disabled State**: When disabled, visual opacity is reduced, pointer events are blocked, and the indicator receives a darker background (`--layer--1`).
+- **Invalid State**: When invalid, the indicator border changes to the red danger border (`--color-danger-border`).
+
+## Usage
+
+### Basic
+
+The label text is supplied using the component's default slot:
+
+```astro
+---
+import Radio from "@/design/controls/radio/Radio.astro";
+---
+
+<Radio name="theme" value="light">
+  Light Mode
+</Radio>
+```
+
+### Common Patterns
+
+#### Pre-selected Option
+To mark an option as selected by default:
+
+```astro
+---
+import Radio from "@/design/controls/radio/Radio.astro";
+---
+
+<Radio name="option" value="default" checked>
+  Standard Option (Recommended)
+</Radio>
+```
+
+#### Disabled State
+Displaying choices that are currently unavailable to the user:
+
+```astro
+---
+import Radio from "@/design/controls/radio/Radio.astro";
+---
+
+<Radio name="delivery" value="drone" disabled>
+  Drone Delivery (Out of service)
+</Radio>
+```
+
+## Accessibility
+
+- **Implicit Association**: The root element is a semantic `<label>`, which automatically binds the slotted text label with the underlying native radio input.
+- **Focus Management**: The native `<input>` is visually hidden but remains fully focusable. When navigating via keyboard, focusing the native radio input triggers a visible outline ring surrounding the custom indicator circle.
+- **ARIA States**: Adds `aria-invalid="true"` when the `invalid` prop is enabled to notify assistive technology of validation errors.
+- **Keyboard Navigation**: Standard browser keyboard interactions (arrow keys to move selection within a group) are fully supported natively.
+
+## CSS Architecture
+
+- **Visual Hiding**: Uses absolute positioning and clip paths (`.radio-component__native`) to hide the native input without removing it from screen readers or keyboard tab order.
+- **Spring Indicator Dot**: The inner dot `.radio-component__dot` is scaled down (`transform: scale(0.6)`) and hidden (`opacity: 0`) by default. When the native input matches the `:checked` state, it animates to full size using `--te-spring` transition timing.
+- **Cursor Indicators**: Changes cursor states to `pointer` on hover, and `not-allowed` when disabled.
+
+## Related Components
+
+- **RadioGroup**: Layout container to organize, spacing, and label a collection of related radio options.
+- **Checkbox**: Similar control for toggling binary, non-mutually exclusive choices.
+
+
+--- File: radio-group/radio-group.svg ---
+
+
+--- File: radio-group/RadioGroup.astro ---
+---
+/**
+ * src/design/controls/radio-group/RadioGroup.astro
+ * A layout container for grouping related radio components.
+ * - Supports horizontal and vertical orientations.
+ * - Ensures a consistent gap between options.
+ * @props (local): orientation, gap
+ * @props (global): class, class:list, animate, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./RadioGroup.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Alignment orientation of the radio group */
+  orientation?: "horizontal" | "vertical";
+  /** Gap spacing spacing token suffix (e.g. 'xs', 'sm', 'md') */
+  gap?: string;
+  /** Group name for grouping native radios */
+  name?: string;
+}
+
+const {
+  orientation = "vertical",
+  gap = "sm",
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "radio-group-component",
+  `radio-group-component--${orientation}`,
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const customGapStyle = gap ? `--radio-group-gap: var(--sp-${gap});` : "";
+const finalStyles = mergeStyles(customGapStyle, Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} role="radiogroup" data-name={name} {...rest}>
+  <slot />
+</div>
+
+<script>
+  const setupRadioGroups = () => {
+    document.querySelectorAll(".radio-group-component").forEach((group) => {
+      const name = group.getAttribute("data-name");
+      if (!name) return;
+
+      const nativeInputs = group.querySelectorAll(".radio-component__native") as NodeListOf<HTMLInputElement>;
+      nativeInputs.forEach((input) => {
+        input.setAttribute("name", name);
+      });
+    });
+  };
+
+  setupRadioGroups();
+  document.addEventListener("astro:page-load", setupRadioGroups);
+</script>
+
+
+--- File: radio-group/RadioGroup.css ---
+/* src/design/controls/radio-group/RadioGroup.css */
+
+.radio-group-component {
+  display: flex;
+  gap: var(--radio-group-gap, var(--sp-sm));
+}
+
+.radio-group-component--vertical {
+  flex-direction: column;
+}
+
+.radio-group-component--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+
+--- File: radio-group/RadioGroup.md ---
+# RadioGroup
+
+A layout container component used to group related radio buttons together and manage their layout, spacing, and name attributes.
+
+## Overview
+
+The job of the `RadioGroup` is to organize multiple related `Radio` components in a single container. It handles vertical or horizontal layouts, option spacing, and automatically distributes a single `name` prop down to all nested native radio inputs. It is NOT responsible for managing checked states, disabled states, or validation styling on individual options (that is the job of each nested `Radio` component).
+
+## Props
+
+The `RadioGroup` component accepts all standard HTML attributes for its root `div` element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `orientation` | `'horizontal' \| 'vertical'` | `'vertical'` | The visual alignment orientation of the radio choices. |
+| `gap` | `string` | `'sm'` | The gap spacing token suffix (e.g. `'xs'`, `'sm'`, `'md'`) representing variables like `var(--sp-sm)`. |
+| `name` | `string` | `undefined` | The common group name assigned to all nested native radios. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Orientations**:
+  - `vertical`: Arranges radio options in a single column using flexbox column layout. Recommended for list layouts.
+  - `horizontal`: Arranges radio options in a row with wrap safety (`flex-wrap: wrap`) for dense headers or settings panels.
+- **Dynamic Spacing**: The spacing gap is defined using the `gap` prop suffix (e.g., `gap="md"` maps to `var(--sp-md)`), which is applied via a CSS custom property `--radio-group-gap` on the flex container.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import RadioGroup from "@/design/controls/radio-group/RadioGroup.astro";
+import Radio from "@/design/controls/radio/Radio.astro";
+---
+
+<RadioGroup name="payment">
+  <Radio value="card">Credit Card</Radio>
+  <Radio value="paypal">PayPal</Radio>
+</RadioGroup>
+```
+
+### Common Patterns
+
+#### Horizontal Selection Bar
+Arranging options horizontally with custom gaps:
+
+```astro
+---
+import RadioGroup from "@/design/controls/radio-group/RadioGroup.astro";
+import Radio from "@/design/controls/radio/Radio.astro";
+---
+
+<RadioGroup name="billing" orientation="horizontal" gap="md">
+  <Radio value="monthly" checked>Monthly</Radio>
+  <Radio value="yearly">Yearly (Save 20%)</Radio>
+</RadioGroup>
+```
+
+## Logic
+
+The `RadioGroup` component contains an inline script that automates the distribution of the group name to individual radio options:
+
+1. **Input Name Auto-Propagation**: The script searches for all `.radio-group-component` containers that possess a `data-name` attribute (which matches the parent's `name` prop).
+2. **Attribute Distribution**: For each group, it selects all nested native inputs with the class `.radio-component__native` and applies the same `name` attribute to them. This eliminates the need for developers to write the same `name` attribute on every single `<Radio>` option.
+3. **View Transitions Hook**: Registers initialization functions on `astro:page-load` to support view transition navigations without failing to bind event scripts.
+
+## Accessibility
+
+- **Semantic Role**: The root element includes `role="radiogroup"`, signaling to screen readers that all nested controls belong to a single related set of options.
+- **Form Association**: Automatically matching the name attribute across all nested native inputs enables correct browser-native radio group keyboard navigation (navigating through options using the keyboard arrow keys).
+
+## CSS Architecture
+
+- **Flexbox Layout**: Utilizes standard CSS flexbox layout (`display: flex`) with direction controlled by the orientation class modifier.
+- **Spacing Custom Variables**: Employs a local custom property fallback (`--radio-group-gap, var(--sp-sm)`) to dynamically override gaps without using inline margins or styles on child components.
+
+## Related Components
+
+- **Radio**: The individual selectable radio button option components.
+- **Checkbox**: For binary choices that do not require mutual exclusivity.
+
+
+--- File: switch/switch.svg ---
+
+
+--- File: switch/Switch.astro ---
+---
+/**
+ * src/design/controls/switch/Switch.astro
+ * A binary toggle switch component (accessible switch control).
+ * - Enforces keyboard navigation, ARIA attributes (role="switch"), and focused rings.
+ * - Leverages BEM structure with custom styles for thumb translation.
+ * @props (local): checked, disabled, name, value
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Switch.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"button">, keyof BaseComponentProps> {
+  /** If true, the switch is initially checked */
+  checked?: boolean;
+  /** Disables interaction */
+  disabled?: boolean;
+  /** Input name for forms */
+  name?: string;
+  /** Input value for forms */
+  value?: string;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "switch-component",
+  checked && "is-checked",
+  disabled && "is-disabled",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<button
+  type="button"
+  role="switch"
+  aria-checked={checked ? "true" : "false"}
+  aria-disabled={disabled ? "true" : undefined}
+  class:list={finalClasses}
+  style={finalStyles}
+  disabled={disabled}
+  data-name={name}
+  data-value={value}
+  {...rest}
+>
+  <span class="switch-component__track">
+    <span class="switch-component__thumb"></span>
+  </span>
+</button>
+
+
+--- File: switch/Switch.css ---
+/* src/design/controls/switch/Switch.css */
+
+.switch-component {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  border-radius: var(--rad-full);
+}
+
+.switch-component__track {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background-color: var(--layer--4);
+  border-radius: var(--rad-full);
+  border: 0.5px solid var(--border--0);
+  transition: background-color var(--td-fast) var(--te-in-out), border-color var(--td-fast) var(--te-in-out);
+}
+
+.switch-component__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--text--5);
+  border-radius: var(--rad-full);
+  transition: transform var(--td-fast) var(--te-in-out), background-color var(--td-fast) var(--te-in-out);
+  box-shadow: var(--sh-2xs);
+}
+
+/* Hover state */
+.switch-component:hover:not(.is-disabled) .switch-component__track {
+  background-color: var(--layer--5);
+  border-color: var(--border--1);
+}
+
+/* Checked state */
+.switch-component.is-checked .switch-component__track {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+}
+
+.switch-component.is-checked .switch-component__thumb {
+  transform: translateX(20px);
+  background-color: var(--layer--0);
+}
+
+.switch-component.is-checked:hover:not(.is-disabled) .switch-component__track {
+  background-color: hsl(38 50% 60%);
+}
+
+/* Focus indicator */
+.switch-component:focus-visible .switch-component__track {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Disabled state */
+.switch-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+--- File: switch/Switch.md ---
+# Switch
+
+A binary toggle switch component used for toggling instant settings on or off.
+
+## Overview
+
+The job of the `Switch` component is to allow users to toggle binary, immediate options (such as activating dark mode or muting audio). It focuses on high accessibility by wrapping a native `<button>` element with `role="switch"` and standard keyboard navigation capabilities. It is NOT responsible for storing checked states internally (it is a stateless wrapper; click triggers and value updates must be handled by parent state systems) or managing mutually exclusive groups.
+
+## Props
+
+The `Switch` component accepts all standard HTML attributes for its root `<button>` element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `checked` | `boolean` | `false` | Sets whether the switch is visually toggled on. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims visual contrast (inherited from `BaseComponentProps`). |
+| `name` | `string` | `undefined` | Common input name assigned to the control container. |
+| `value` | `string` | `undefined` | Common input value submitted with form data. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Checked State**: When checked (`.is-checked`), the track background shifts to gold (`--color-gold`) and translates the thumb slider horizontally (`transform: translateX(20px)`).
+- **Disabled State**: When disabled (`.is-disabled`), visual opacity is reduced, cursor changes to `not-allowed`, and pointer events are blocked.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Switch from "@/design/controls/switch/Switch.astro";
+---
+
+<Switch checked name="newsletter" />
+```
+
+### Common Patterns
+
+#### State-controlled Client Interaction
+Because the component is stateless, click event listeners must toggle the `.is-checked` class and `aria-checked` attribute:
+
+```astro
+---
+import Switch from "@/design/controls/switch/Switch.astro";
+---
+
+<Switch id="audio-toggle" aria-label="Toggle Audio" />
+
+<script>
+  const toggleBtn = document.getElementById("audio-toggle");
+  toggleBtn?.addEventListener("click", () => {
+    const isChecked = toggleBtn.getAttribute("aria-checked") === "true";
+    toggleBtn.setAttribute("aria-checked", String(!isChecked));
+    toggleBtn.classList.toggle("is-checked", !isChecked);
+  });
+</script>
+```
+
+## Accessibility
+
+- **Semantic Role**: Configures the root button with `role="switch"` and `aria-checked` attributes, signaling binary toggle options correctly to screen readers.
+- **Keyboard Navigation**: As a native `<button>`, it automatically supports standard focus states, keyboard tab order, and triggers action clicks when the user presses `Space` or `Enter`.
+- **Focus Indicators**: Focus rings are rendered around the switch track border (`.switch-component:focus-visible .switch-component__track`).
+
+## CSS Architecture
+
+- **BEM Class Structure**: Uses BEM classes for modifiers (`.switch-component`, `.switch-component__track`, `.switch-component__thumb`).
+- **Thumb Slide Translation**: Shifts the thumb horizontally using CSS transforms (`transform: translateX(20px)`) and changes the background color of both thumb and track dynamically when the parent has the `.is-checked` modifier.
+- **Transitions**: Smoothly animates backgrounds, borders, and transforms using `--td-fast` duration and `--te-in-out` easing.
+
+## Related Components
+
+- **Checkbox**: Similar control for toggling binary values, recommended inside forms that require a submit button.
+- **Radio**: For mutually exclusive choices.
+
+
+--- File: date-picker/date-picker.svg ---
+
+
+--- File: date-picker/DatePicker.astro ---
+---
+/**
+ * src/design/controls/date-picker/DatePicker.astro
+ * A styled date picker input wrapper for native browser calendar fields.
+ * - Wraps a native calendar picker with standard control states and BEM styles.
+ * @props (local): size, variant, disabled, readonly, invalid, name, value
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import "./DatePicker.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {}
+
+const {
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  readonly = false,
+  invalid = false,
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "datepicker-component",
+  `datepicker-component--${size}`,
+  `datepicker-component--${variant}`,
+  disabled && "is-disabled",
+  readonly && "is-readonly",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<input
+  type="date"
+  name={name}
+  value={value}
+  disabled={disabled}
+  readonly={readonly}
+  class:list={finalClasses}
+  style={finalStyles}
+  aria-invalid={invalid ? "true" : undefined}
+  {...rest}
+/>
+
+
+--- File: date-picker/DatePicker.css ---
+/* src/design/controls/date-picker/DatePicker.css */
+
+.datepicker-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.datepicker-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.datepicker-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers */
+.datepicker-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  font-size: 12px;
+}
+
+.datepicker-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  font-size: 13px;
+}
+
+.datepicker-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.datepicker-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.datepicker-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.datepicker-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Custom calendar icon styling for webkit browsers */
+.datepicker-component::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.6); /* Slightly muted color, matches var(--text--m) */
+  transition: filter var(--td-fast) var(--te-in-out);
+}
+
+.datepicker-component:hover::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+}
+
+/* Disabled state */
+.datepicker-component:disabled,
+.datepicker-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+/* Readonly state */
+.datepicker-component[readonly],
+.datepicker-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.datepicker-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.datepicker-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+
+--- File: date-picker/DatePicker.md ---
+# DatePicker
+
+A styled date picker input wrapper for native browser calendar fields.
+
+## Overview
+
+The job of the `DatePicker` component is to collect calendar date selections (such as booking dates or birthdays) from users. It wraps a native browser `<input type="date">` to maintain native system calendars, keyboards, and browser validation, while styling consistent borders, backgrounds, and muted WebKit indicators. It is NOT responsible for custom modal dropdown calendars or date range selections (selecting start/end ranges).
+
+## Props
+
+The `DatePicker` component accepts all standard HTML attributes for a native date input element (such as `required`, `min`, or `max`), in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The size modifier determining height, padding, and font size. |
+| `variant` | `'outline' \| 'solid'` | `'outline'` | The visual border and background styling variant. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims opacity (inherited from `ControlComponentProps`). |
+| `readonly` | `boolean` | `false` | Marks the input as read-only, preventing edits but maintaining form submissions (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights input borders red to denote validation failure (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | Input name submitted with form data (inherited from `ControlComponentProps`). |
+| `value` | `string` | `undefined` | The initial or current date value (formatted as `YYYY-MM-DD`) of the input field (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Variants**:
+  - `outline`: Default style with a thin border (`--border--0`) and light grey background (`--layer--2`).
+  - `solid`: Borderless variant with a darker background (`--layer--3`), recommended for secondary parameters.
+- **Sizes**:
+  - `sm`: Height of 30px, 12px font size. Recommended for dense grids or filters.
+  - `md`: Height of 38px, 13px font size. The default size.
+  - `lg`: Height of 46px, 15px font size. Recommended for prominent input forms.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import DatePicker from "@/design/controls/date-picker/DatePicker.astro";
+---
+
+<DatePicker name="event-date" />
+```
+
+### Common Patterns
+
+#### Pre-selected Value
+To initialize the component with a specific date:
+
+```astro
+---
+import DatePicker from "@/design/controls/date-picker/DatePicker.astro";
+---
+
+<DatePicker name="booking-start" value="2026-06-08" />
+```
+
+#### Min/Max Date Bounds
+Attributes limiting range selections are passed directly to the native input element:
+
+```astro
+---
+import DatePicker from "@/design/controls/date-picker/DatePicker.astro";
+---
+
+<DatePicker name="vacation" min="2026-06-01" max="2026-06-30" required />
+```
+
+## Accessibility
+
+- **Native Calendar Semantics**: Employs a browser-native date input directly, which guarantees default browser keyboard accessibility, screen reader announcements, and native calendar overlays (particularly crucial on mobile touchscreen interfaces).
+- **ARIA States**: Adds `aria-invalid="true"` when the `invalid` prop is enabled to notify assistive technology of validation errors.
+- **Focus Rings**: Displays focus indicators via box-shadow rings (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused.
+
+## CSS Architecture
+
+- **Calendar Indicator Styling**: Overrides default WebKit picker indicator styling (`::-webkit-calendar-picker-indicator`) using CSS filter inverting (`filter: invert(0.6)`) to match custom themes, shifting to `invert(0.8)` on hover.
+- **Transitions**: Smoothly animates border colors and indicator filters using transitions (`transition: all var(--td-fast) var(--te-in-out)`).
+- **Read-Only / Disabled Backdrops**: When read-only or disabled, sets background-color to `--layer--1` to visually separate input controls from editable fields.
+
+## Related Components
+
+- **Input**: Standard text input field matching the DatePicker design token heights.
+- **Select**: Dropdown selection menu matching text input field proportions.
+
+
+--- File: search/search.svg ---
+
+
+--- File: search/Search.astro ---
+---
+/**
+ * src/design/controls/search/Search.astro
+ * A styled search field component.
+ * - Wraps a native search input with an inline search icon.
+ * - Supports sizes and clean states.
+ * @props (local): size, variant, disabled, readonly, invalid, name, value, placeholder
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
+import "./Search.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"input">, keyof ControlComponentProps> {}
+
+const {
+  size = "md",
+  variant = "outline",
+  disabled = false,
+  readonly = false,
+  invalid = false,
+  placeholder = "Search...",
+  name,
+  value,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  "search-component",
+  `search-component--${size}`,
+  `search-component--${variant}`,
+  disabled && "is-disabled",
+  readonly && "is-readonly",
+  invalid && "is-invalid",
+];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class="search-wrapper">
+  <span class="search-wrapper__icon">
+    <Icon name="search" size={size === 'sm' ? 'xs' : 'sm'} />
+  </span>
+  <input
+    type="search"
+    name={name}
+    value={value}
+    placeholder={placeholder}
+    disabled={disabled}
+    readonly={readonly}
+    class:list={finalClasses}
+    style={finalStyles}
+    aria-invalid={invalid ? "true" : undefined}
+    {...rest}
+  />
+</div>
+
+
+--- File: search/Search.css ---
+/* src/design/controls/search/Search.css */
+
+.search-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.search-component {
+  width: 100%;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  color: var(--text--5);
+  font-family: var(--ff-sans);
+  font-weight: 400;
+  transition: all var(--td-fast) var(--te-in-out);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-component::placeholder {
+  color: var(--text--m);
+  opacity: 0.6;
+}
+
+.search-component:hover:not(:disabled):not([readonly]) {
+  border-color: var(--border--1);
+}
+
+.search-component:focus:not(:disabled):not([readonly]) {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+/* Sizing modifiers (with left padding offset for icon) */
+.search-component--sm {
+  height: 30px;
+  padding: 0 var(--sp-sm);
+  padding-left: 28px;
+  font-size: 12px;
+}
+
+.search-component--md {
+  height: 38px;
+  padding: 0 var(--sp-md);
+  padding-left: 36px;
+  font-size: 13px;
+}
+
+.search-component--lg {
+  height: 46px;
+  padding: 0 var(--sp-lg);
+  padding-left: 44px;
+  font-size: 15px;
+}
+
+/* Variant modifiers */
+.search-component--solid {
+  background: var(--layer--3);
+  border-color: transparent;
+}
+.search-component--solid:hover:not(:disabled):not([readonly]) {
+  background: var(--layer--4);
+}
+.search-component--solid:focus:not(:disabled):not([readonly]) {
+  background: var(--layer--2);
+}
+
+/* Inline icon container */
+.search-wrapper__icon {
+  position: absolute;
+  top: 50%;
+  left: var(--sp-xs);
+  transform: translateY(-50%);
+  color: var(--text--m);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.search-component--sm ~ .search-wrapper__icon {
+  left: var(--sp-2xs);
+}
+.search-component--lg ~ .search-wrapper__icon {
+  left: var(--sp-sm);
+}
+
+/* Disabled state */
+.search-component:disabled,
+.search-component.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--layer--1);
+}
+
+.search-component:disabled ~ .search-wrapper__icon {
+  opacity: 0.5;
+}
+
+/* Readonly state */
+.search-component[readonly],
+.search-component.is-readonly {
+  background: var(--layer--1);
+  border-color: var(--border--0);
+}
+
+/* Invalid / Error state */
+.search-component.is-invalid {
+  border-color: var(--color-danger-border) !important;
+}
+
+.search-component.is-invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-danger-subtle) !important;
+}
+
+
+--- File: search/Search.md ---
+# Search
+
+A styled search field input component featuring a left-aligned inline search icon.
+
+## Overview
+
+The job of the `Search` component is to collect search query inputs from users. It wraps a native search input element with consistent layouts, focus states, and inline search icon formatting. It is NOT responsible for filtering search results directly or performing query execution (which should be triggered via parent forms or change event handlers).
+
+## Props
+
+The `Search` component accepts all standard HTML attributes for a native `<input type="search">` element (such as `required`, `pattern`, or `autofocus`), in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The size modifier determining height, padding, and font size. |
+| `variant` | `'outline' \| 'solid'` | `'outline'` | The visual border and background styling variant. |
+| `disabled` | `boolean` | `false` | Disables interaction and dims opacity (inherited from `ControlComponentProps`). |
+| `readonly` | `boolean` | `false` | Marks the input as read-only, preventing edits but maintaining form submissions (inherited from `ControlComponentProps`). |
+| `invalid` | `boolean` | `false` | Highlights input borders red to denote validation failure (inherited from `ControlComponentProps`). |
+| `placeholder` | `string` | `'Search...'` | Dim placeholder text displayed when the input is empty (inherited from `ControlComponentProps`). |
+| `value` | `string` | `undefined` | The initial or current text value of the input field (inherited from `ControlComponentProps`). |
+| `name` | `string` | `undefined` | Input name submitted with form data (inherited from `ControlComponentProps`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Variants**:
+  - `outline`: Default style with a thin border (`--border--0`) and light grey background (`--layer--2`).
+  - `solid`: Borderless variant with a darker background (`--layer--3`), recommended for secondary parameters.
+- **Sizes**:
+  - `sm`: Height of 30px, 12px font size. Requires left padding of 28px for the search icon.
+  - `md`: Height of 38px, 13px font size. Requires left padding of 36px for the search icon.
+  - `lg`: Height of 46px, 15px font size. Requires left padding of 44px for the search icon.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Search from "@/design/controls/search/Search.astro";
+---
+
+<Search name="q" />
+```
+
+### Common Patterns
+
+#### Custom Placeholders
+Customizing the help text for context-specific databases:
+
+```astro
+---
+import Search from "@/design/controls/search/Search.astro";
+---
+
+<Search name="users-search" placeholder="Search users by name or email..." />
+```
+
+#### Dense Filter Bars
+Adjusting heights to fit inside filter panels:
+
+```astro
+---
+import Search from "@/design/controls/search/Search.astro";
+---
+
+<Search size="sm" name="table-filter" placeholder="Filter table..." />
+```
+
+## Accessibility
+
+- **Native Search Semantics**: Employs a native browser search input directly, which guarantees default browser keyboard accessibility, screen reader announcements, and native input clear controls.
+- **ARIA States**: Adds `aria-invalid="true"` when the `invalid` prop is enabled to notify assistive technology of validation errors.
+- **Focus Indicators**: Displays focus outlines (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused.
+
+## CSS Architecture
+
+- **Inline Icon Layout**: Places the search icon absolutely inside a wrapper (`.search-wrapper__icon`), adjusting the left-hand padding of the input depending on the size modifier (`padding-left: 28px | 36px | 44px`) to ensure input text never overlaps the icon.
+- **Disabled State**: Dims the wrapper opacity to `0.5` and blocks pointer events (`cursor: not-allowed`) on the input, as well as dimming the icon when disabled.
+- **Transitions**: Smoothly animates border colors and focus box-shadows using transitions (`transition: all var(--td-fast) var(--te-in-out)`).
+
+## Related Components
+
+- **Input**: Standard text input field matching the search component's design token heights.
+- **Icon**: Renders the inline search icon graphic.
+- **InputGroup**: Layout container to join search inputs with adjacent search submit buttons.
+
+
+--- File: vars.css ---
+
+
+--- File: tokens.css ---
+
+
+--- File: controls.css ---
+/**
+ * CONTROLS
+ * 
+ */
+@import '../tokens.css';
+
+--- File: collapsible/Collapsible.md ---
+# Collapsible
+
+An interactive disclosure component used to toggle the visibility of detailed content.
+
+## Overview
+
+The job of the `Collapsible` component is to show or hide details under a summary header, saving vertical layout space. It is NOT responsible for enforcing accordion behaviors (mutually exclusive open states across multiple panels) or acting as a dropdown menu.
+
+## Props
+
+The `Collapsible` component accepts all standard HTML attributes for its root `<details>` element (any options like `id`, `name`, etc., are passed down), in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | `undefined` | The label text displayed in the summary header (ignored if the summary slot is used). |
+| `open` | `boolean` | `false` | The initial open state of the collapsible panel. |
+| `gap` | `SpacingScale` | `undefined` | Space between the summary header and the expanded content, mapping to standard spacing scale tokens. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+| `bg` | `BackgroundTone` | `undefined` | Background layer tone (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Spacing Gaps**: The space between the summary header and the body contents can be adjusted using the `gap` prop (e.g. `gap="md"` maps to `var(--sp-md)`). The default gap is `var(--sp-xs)` (0.25rem).
+- **Chevron Transition**: The chevron icon `.collapsible__icon` automatically rotates 180 degrees when the component transitions to the `[open]` state.
+
+## Usage
+
+### Basic
+
+Provide a header title and include the body content inside the default slot:
+
+```astro
+---
+import Collapsible from "@/design/controls/collapsible/Collapsible.astro";
+---
+
+<Collapsible title="Frequently Asked Questions">
+  This content is hidden by default and is only displayed when the summary header is clicked.
+</Collapsible>
+```
+
+### Common Patterns
+
+#### Custom Summary Header Slot
+To render custom elements (such as badges, formatting, or description details) in the summary header, use the `summary` slot:
+
+```astro
+---
+import Collapsible from "@/design/controls/collapsible/Collapsible.astro";
+import Badge from "@/design/display/badge/Badge.astro";
+import Text from "@/design/typography/text/Text.astro";
+---
+
+<Collapsible>
+  <div slot="summary" style="display: flex; gap: 8px; align-items: center;">
+    <Text as="span" bold>Advanced Configuration</Text>
+    <Badge variant="warning">Beta</Badge>
+  </div>
+
+  <Text>Configure custom backend ports, database strings, and routing settings here.</Text>
+</Collapsible>
+```
+
+#### Pre-expanded Panel
+You can load the component in an expanded state by passing the `open` prop:
+
+```astro
+---
+import Collapsible from "@/design/controls/collapsible/Collapsible.astro";
+---
+
+<Collapsible title="System Diagnostic Logs" open>
+  <pre>System OK. All processes checked.</pre>
+</Collapsible>
+```
+
+## Accessibility
+
+- **Native disclosure semantics**: Built on the native HTML `<details>` and `<summary>` elements, giving screen readers and keyboard users complete native interaction support.
+- **Keyboard Controls**: The summary header acts as a focusable button, automatically opening or closing the content when the user presses `Space` or `Enter`.
+- **Screen Reader Announcements**: Screen readers natively announce the expanded/collapsed state of the details tag as state attributes change.
+
+## CSS Architecture
+
+- **Visual Backdrop Layer**: Wraps the details tree inside a `Paper` component (`.collapsible__summary-paper`), giving the collapsible block a standard background surface card, boundary border, and subtle padding.
+- **Marker Reset**: Hides default browser disclosure arrows (chvrons/triangles) in both Chrome/Safari (`::-webkit-details-marker`) and Firefox (`list-style: none` on the summary).
+- **Smooth Chevron Rotation**: Rotates the chevron down icon (`.collapsible__icon`) smoothly by `180deg` using CSS transitions (`transition: transform var(--td-normal) var(--te-out)`) when the `[open]` attribute is added.
+
+## Related Components
+
+- **Paper**: The surface card component used to wrap and style the Collapsible wrapper.
+- **Icon**: Renders the chevron graphic used for the expand indicator.
+
+
+--- File: collapsible/Collapsible.astro ---
+---
+/**
+ * src/design/controls/collapsible/Collapsible.astro
+ * An interactive disclosure component that toggles visibility of its content.
+ * - Uses native <details> and <summary> for accessibility.
+ * - Bypasses flexbox bugs by wrapping contents in a block div.
+ * @props (local): title, open
+ * @props (global): class, class:list, animate, effects, bg
+ */
+import type { BaseComponentProps } from "@/design/shared/props";
+import type { SpacingScale } from "@/design/shared/types";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import Text from "@/design/typography/text/Text.astro";
+import Icon from "@/design/display/icon/Icon.astro";
+import Inline from "@/design/layout/inline/Inline.astro";
+import Paper from "@/design/surfaces/paper/Paper.astro";
+import type { HTMLAttributes } from "astro/types";
+import "./Collapsible.css";
+
+export interface Props
+  extends
+    BaseComponentProps,
+    Omit<HTMLAttributes<"details">, keyof BaseComponentProps> {
+  title?: string;
+  open?: boolean;
+  /** Space between the summary and the content */
+  gap?: SpacingScale;
+}
+
+const {
+  title,
+  open = false,
+  gap,
+  class: className,
+  "class:list": classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["collapsible"];
+
+const finalClasses = mergeClasses(classes, Astro.props);
+const customGapStyle = gap ? `--collapsible-gap: var(--sp-${gap});` : "";
+const finalStyles = mergeStyles(customGapStyle, Astro.props);
+
+const isOpen = open;
+---
+
+<Paper
+  padding="sm"
+  class:list={[
+    "collapsible__summary-paper",
+    isOpen && "is-open"
+  ]}
+>
+  <details class:list={finalClasses} style={finalStyles} open={open} {...rest}>
+    <summary class="collapsible__summary">
+      <Inline
+        y="center"
+        x="between"
+        wrap={false}
+        gap="md"
+        class="collapsible__summary-inner"
+      >
+        {
+          title && (
+            <Text as="span" class="collapsible__title">
+              {title}
+            </Text>
+          )
+        }
+        <slot name="summary" />
+        <Icon name="chevron-down" size="5xl" class="collapsible__icon" border />
+      </Inline>
+    </summary>
+    <div class="collapsible__content">
+      <slot />
+    </div>
+  </details>
+</Paper>
+
+
+--- File: collapsible/Collapsible.css ---
+.collapsible {
+  width: 100%;
+}
+
+.collapsible__summary {
+  cursor: pointer;
+  list-style: none; /* Hide default arrow in most browsers */
+  user-select: none;
+  /* padding moved to inner Paper component */
+}
+
+.collapsible__summary-paper {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border-layer--1);
+  transition: all .3s fade-in;
+}
+
+.collapsible__summary-paper:has(.collapsible[open]) {
+  border-color: var(--border-primary-subtle);
+}
+
+.collapsible__summary-inner {
+  width: 100%;
+}
+
+.collapsible__summary::-webkit-details-marker {
+  display: none; /* Hide default arrow in Safari */
+}
+
+.collapsible__icon {
+  display: inline-flex;
+  transition: transform var(--td-normal, 0.6s) var(--te-out, ease-out);
+  flex-shrink: 0;
+}
+
+.collapsible[open] .collapsible__icon {
+  transform: rotate(540deg);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+collapsible[open] {
+  border-color: var(--text-primary);
+}
+
+.collapsible__content {
+  padding-top: var(--collapsible-gap, var(--sp-xs, 0.25rem));
+  padding-bottom: var(--sp-md, 1rem);
+}
+
+
+--- File: controls.md ---
+# Controls
+
+The Controls category contains interactive form elements, selection indicators, and utility group wrappers designed to facilitate user input and selection workflows. These components standardize focus behaviors, visual states, and device layouts, ensuring a highly responsive, accessible experience across various screen sizes. By wrapping native browser elements and augmenting them with unified CSS tokens and lightweight client scripts, the controls ensure robust keyboard navigation, native validation compatibility, and smooth transitions throughout the design system.
+
+**Major Areas Documented:**
+- **Unified Form State Modifiers**: Consistent BEM classes for handling disabled, hover, active, focused, and invalid states across all interactive input controls.
+- **Visual Group Merging**: Layout wrappers (ButtonGroup and InputGroup) that collapse internal border radiuses and overlap adjacent boundaries to assemble multiple elements into a unified control interface.
+- **Progressive Client Search**: Component patterns (Combobox and Multiselect) that enrich native single and multiple select inputs with real-time text filtration, keyboard navigation, and chip overlays.
+- **Accessible Native Anchoring**: Using implicit label structures and aria-pressed/checked indicators to coordinate native focus loops and screen reader communications.
+
+## Components
+
+| Component | Type | Shared Props | Solo Props |
+| :--- | :--- | :--- | :--- |
+| [Button](file:///home/jk/Code/DesignSystem/src/design/controls/button/Button.astro) | Primitive | `size`, `variant`, `disabled`, `invalid`, `name` | `href`, `iconOnly`, `toggle`, `active` |
+| [ButtonGroup](file:///home/jk/Code/DesignSystem/src/design/controls/button-group/ButtonGroup.astro) | Primitive | `size` | (none) |
+| [Checkbox](file:///home/jk/Code/DesignSystem/src/design/controls/checkbox/Checkbox.astro) | Primitive | `disabled`, `invalid`, `name`, `value` | `checked` |
+| [Collapsible](file:///home/jk/Code/DesignSystem/src/design/controls/collapsible/Collapsible.astro) | Primitive | (none) | `title`, `open`, `gap` |
+| [Combobox](file:///home/jk/Code/DesignSystem/src/design/controls/combobox/Combobox.astro) | Primitive | `disabled`, `invalid`, `name` | `options`, `selected`, `placeholder` |
+| [DatePicker](file:///home/jk/Code/DesignSystem/src/design/controls/date-picker/DatePicker.astro) | Primitive | `size`, `variant`, `disabled`, `readonly`, `invalid`, `name`, `value` | (none) |
+| [Input](file:///home/jk/Code/DesignSystem/src/design/controls/input/Input.astro) | Primitive | `size`, `variant`, `disabled`, `readonly`, `invalid`, `name`, `value` | `type` |
+| [InputGroup](file:///home/jk/Code/DesignSystem/src/design/controls/input-group/InputGroup.astro) | Primitive | (none) | (none) |
+| [Multiselect](file:///home/jk/Code/DesignSystem/src/design/controls/multiselect/Multiselect.astro) | Primitive | `disabled`, `invalid`, `name`, `label` | `options`, `selected`, `placeholder` |
+| [Radio](file:///home/jk/Code/DesignSystem/src/design/controls/radio/Radio.astro) | Primitive | `disabled`, `invalid`, `name`, `value` | `checked` |
+| [RadioGroup](file:///home/jk/Code/DesignSystem/src/design/controls/radio-group/RadioGroup.astro) | Primitive | `name` | `orientation`, `gap` |
+| [RangeSlider](file:///home/jk/Code/DesignSystem/src/design/controls/range-slider/RangeSlider.astro) | Primitive | (none) | `label`, `valLo`, `valHi`, `min`, `max`, `step`, `prefix` |
+| [Search](file:///home/jk/Code/DesignSystem/src/design/controls/search/Search.astro) | Primitive | `size`, `variant`, `disabled`, `readonly`, `invalid`, `name`, `value` | `placeholder` |
+| [Select](file:///home/jk/Code/DesignSystem/src/design/controls/select/Select.astro) | Primitive | `size`, `variant`, `disabled`, `invalid`, `name` | `placeholder` |
+| [Slider](file:///home/jk/Code/DesignSystem/src/design/controls/slider/Slider.astro) | Primitive | `name`, `value` | `label`, `min`, `max`, `step` |
+| [Switch](file:///home/jk/Code/DesignSystem/src/design/controls/switch/Switch.astro) | Primitive | `disabled`, `name`, `value` | `checked` |
+
+*(Note: All control components implicitly inherit `BaseComponentProps` which includes standard properties like `class`, `class:list`, `animate`, `onScroll`, and `effects`.)*
+
+---
+
+## Component Details
+
+### Button
+
+Path: [Button.astro](file:///home/jk/Code/DesignSystem/src/design/controls/button/Button.astro)
+
+#### Intentional User Action
+The `Button` component triggers immediate developer commands (such as form submissions or dialog opens) or navigates between system routes. It standardizes click visual feedbacks, borders, and button geometries, ensuring high contrast levels and keyboard outlines.
+
+#### Toggle and State Tracking
+To support controls that retain a pressed state (like audio mutes or parameter filters), the component integrates toggle behaviors. It programmatically manages state transitions, adjusting screen reader attributes and theme border stylings dynamically.
+
+---
+
+### ButtonGroup
+
+Path: [ButtonGroup.astro](file:///home/jk/Code/DesignSystem/src/design/controls/button-group/ButtonGroup.astro)
+
+#### Contextual Segmented Control
+The `ButtonGroup` component aggregates adjacent related button choices into a single contiguous segment. This helps users quickly compare and toggle options (such as alignment options or date filters) without cluttering the screen layout.
+
+#### Interactive Border Overlap
+By resetting internal radii and applying negative margin offsets, the group merges sibling borders cleanly. When a child button is focused, hovered, or active, the group raises its z-index so its focus outlines overlay neighbors properly.
+
+---
+
+### Checkbox
+
+Path: [Checkbox.astro](file:///home/jk/Code/DesignSystem/src/design/controls/checkbox/Checkbox.astro)
+
+#### Binary Choice Selection
+The `Checkbox` component collects standalone binary preferences (such as newsletter subscriptions or terms of service agreements) in form fields. It wraps native hidden inputs to ensure accessible screen reader access while displaying a highly styled check indicator.
+
+#### Visual State Springing
+When checked, the indicator box transitions background states and pops a check icon using spring timing curves. If the component is marked invalid, it highlights border frameworks to draw attention to required choices.
+
+---
+
+### Collapsible
+
+Path: [Collapsible.astro](file:///home/jk/Code/DesignSystem/src/design/controls/collapsible/Collapsible.astro)
+
+#### Progressive Detail Disclosure
+The `Collapsible` component hides verbose body details behind a clickable summary header title, conserving vertical viewport layout space. Clicking the summary toggles the disclosure panel natively and rotates chevron indicator icons smoothly.
+
+#### Layout Integration Surface
+It packages disclosures in structured surface layers (via `Paper`), providing standard backdrops, padding, and subtle elevations that visually separate collapsible sections from the surrounding page contents.
+
+---
+
+### Combobox
+
+Path: [Combobox.astro](file:///home/jk/Code/DesignSystem/src/design/controls/combobox/Combobox.astro)
+
+#### Searchable Option Selection
+The `Combobox` component combines single-selection dropdown selectors with text-filtering search fields. This helps users quickly filter down options in long choice lists (such as selection menus for states, currencies, or users), preventing list scanning exhaustion.
+
+#### Form-State Synchronization
+By synchronizing search selections with hidden native inputs, the component maintains native browser form submissions, validation API bindings, and browser autocomplete states.
+
+---
+
+### DatePicker
+
+Path: [DatePicker.astro](file:///home/jk/Code/DesignSystem/src/design/controls/date-picker/DatePicker.astro)
+
+#### Standardized Calendar Picking
+The `DatePicker` component standardizes date selections using browser-native calendar fields. This guarantees built-in keyboard adjustments, screen reader nodes, and native date selection drawers on mobile devices.
+
+#### Custom Webkit Integration
+It overrides native browser calendar pickers using CSS filter overrides, muting native calendar glyph indicators to fit dark and light theme styles.
+
+---
+
+### Input
+
+Path: [Input.astro](file:///home/jk/Code/DesignSystem/src/design/controls/input/Input.astro)
+
+#### Single-line Text Collection
+The `Input` component collects simple alphanumeric text values (such as names, emails, and passwords) from user input forms. It unifies input sizing modifiers, border colors, and focus rings.
+
+#### Inline Modifiers and States
+It standardizes outline widths, focus halos, and disabled/readonly backdrops. When disabled or marked read-only, it dims input opacity and applies distinct background layers to denote lack of editability.
+
+---
+
+### InputGroup
+
+Path: [InputGroup.astro](file:///home/jk/Code/DesignSystem/src/design/controls/input-group/InputGroup.astro)
+
+#### Segmented Form Actions
+The `InputGroup` component groups text fields adjacent to protocol tags, unit labels, or button triggers. By collapsing internal border radiuses, it packages inputs and action triggers into a single visual segment.
+
+#### Child Flex Coordination
+It coordinates flexbox widths inside the container, automatically stretching input fields to fill horizontal space while keeping buttons or addons at their compact fixed visual bounds.
+
+---
+
+### Multiselect
+
+Path: [Multiselect.astro](file:///home/jk/Code/DesignSystem/src/design/controls/multiselect/Multiselect.astro)
+
+#### Searchable Interval Selection
+The `Multiselect` component selects multiple options from a dropdown list using real-time search filtering. It filters option arrays quickly, saving users from having to scroll through long option menus.
+
+#### Dismissible Chip Organization
+Selections are displayed inside the input trigger as interactive dismissible chips. Users can easily view their choices and click the close icon on individual chips to remove them.
+
+---
+
+### Radio
+
+Path: [Radio.astro](file:///home/jk/Code/DesignSystem/src/design/controls/radio/Radio.astro)
+
+#### Mutually Exclusive Choice
+The `Radio` component lets users select a single choice from a list of options. It wraps native radio inputs for accessibility while rendering a styled outer circle and a gold center selection dot.
+
+#### Springing Check Dot
+When selected, the center dot scales up from a smaller size using spring transition functions. It highlights option indicators and supports native keyboard arrow key navigation.
+
+---
+
+### RadioGroup
+
+Path: [RadioGroup.astro](file:///home/jk/Code/DesignSystem/src/design/controls/radio-group/RadioGroup.astro)
+
+#### Selection Layout Coordination
+The `RadioGroup` component organizes related radio options into structured vertical lists or horizontal rows with unified spacing. It sets role attributes to indicate option relationships to screen readers.
+
+#### Auto-Propagated Name Routing
+The group automatically distributes a single `name` prop to all nested native radio inputs via scripts, eliminating the need to write duplicate name attributes on individual radio children.
+
+---
+
+### RangeSlider
+
+Path: [RangeSlider.astro](file:///home/jk/Code/DesignSystem/src/design/controls/range-slider/RangeSlider.astro)
+
+#### Numeric Interval Boundaries
+The `RangeSlider` component selects numeric intervals (such as price budgets or time bounds) between low and high limits. It displays the active value range and renders a gold fill line between the handles.
+
+#### Overlapping Handle Physics
+By stacking two range inputs, it allows users to grab either handle. An inline script prevents handles from crossing over, shifting z-indexes dynamically so active thumbs remain in focus.
+
+---
+
+### Search
+
+Path: [Search.astro](file:///home/jk/Code/DesignSystem/src/design/controls/search/Search.astro)
+
+#### Inline Search Prompts
+The `Search` component collects user query inputs. It embeds a search icon inside the field, standardizing input outlines and clear-field actions.
+
+#### Spacing and Icon Alignment
+The search icon is positioned absolutely inside the input wrapper. The component adjusts left-hand padding based on the size modifier so text never overlaps the icon.
+
+---
+
+### Select
+
+Path: [Select.astro](file:///home/jk/Code/DesignSystem/src/design/controls/select/Select.astro)
+
+#### Structured Menu Picking
+The `Select` component renders a single-option select dropdown. It wraps a native HTML select element, preserving default browser select menus, keyboard adjustments, and screen reader nodes.
+
+#### Custom Chevron Layering
+It hides default browser dropdown indicators, replacing them with a custom chevron icon. Sizing modifiers automatically adjust paddings to prevent options from overlapping the chevron.
+
+---
+
+### Slider
+
+Path: [Slider.astro](file:///home/jk/Code/DesignSystem/src/design/controls/slider/Slider.astro)
+
+#### Linear Value Selection
+The `Slider` component selects a single numeric value by dragging a thumb handle horizontally. It displays current value numbers and lists boundaries at track edges.
+
+#### Progress Fill Tracking
+An inline script tracks value modifications, updating the width of the gold track fill dynamically as the handle is dragged to give instant visual feedback.
+
+---
+
+### Switch
+
+Path: [Switch.astro](file:///home/jk/Code/DesignSystem/src/design/controls/switch/Switch.astro)
+
+#### Instant Status Toggling
+The `Switch` component enables users to toggle settings on or off instantly. It implements switch roles and checked attributes on native buttons to provide keyboard selection and screen reader compatibility.
+
+#### Slider Track Translation
+A BEM modifier slides the thumb handle horizontally across the track while shifting background colors to gold to signal active status.
+
+
+--- File: controls.types.ts ---
+import type { BaseComponentProps } from "@/design/shared";
+
+/**
+ * Size variants for control components
+ */
+export type ControlSize = 
+  | 'xs' 
+  | 'sm' 
+  | 'md' 
+  | 'lg' 
+  | 'xl';
+
+/**
+ * Visual variants for control components
+ */
+export type ControlVariant = 
+  | 'solid' 
+  | 'outline' 
+  | 'ghost' 
+  | 'link' 
+  | 'soft';
+
+/**
+ * Color schemes for control components
+ */
+export type ControlColor = 
+  | 'primary' 
+  | 'secondary' 
+  | 'accent' 
+  | 'success' 
+  | 'warning' 
+  | 'danger' 
+  | 'info' 
+  | 'neutral';
+
+/**
+ * Input types for form controls
+ */
+export type InputType = 
+  | 'text' 
+  | 'email' 
+  | 'password' 
+  | 'number' 
+  | 'tel' 
+  | 'url' 
+  | 'search' 
+  | 'date' 
+  | 'time' 
+  | 'datetime-local' 
+  | 'month' 
+  | 'week' 
+  | 'color' 
+  | 'file' 
+  | 'hidden';
+
+/**
+ * States for control components
+ */
+export type ControlState = 
+  | 'default' 
+  | 'hover' 
+  | 'focus' 
+  | 'active' 
+  | 'disabled' 
+  | 'loading' 
+  | 'error' 
+  | 'success';
+
+/**
+ * Validation states for form controls
+ */
+export type ValidationState = 
+  | 'valid' 
+  | 'invalid' 
+  | 'warning' 
+  | 'pending';
+
+/**
+ * Orientation for control groups
+ */
+export type ControlOrientation = 
+  | 'horizontal' 
+  | 'vertical';
+
+/**
+ * Alignment options for controls
+ */
+export type ControlAlignment = 
+  | 'start' 
+  | 'center' 
+  | 'end' 
+  | 'stretch';
+
+/**
+ * Border radius options for controls
+ */
+export type ControlRadius = 
+  | 'none' 
+  | 'sm' 
+  | 'md' 
+  | 'lg' 
+  | 'full';
+
+/**
+ * Icon position in controls
+ */
+export type IconPosition = 
+  | 'left' 
+  | 'right' 
+  | 'start' 
+  | 'end';
+
+/**
+ * Loading indicator position
+ */
+export type LoadingPosition = 
+  | 'prefix' 
+  | 'suffix' 
+  | 'overlay';
+
+/**
+ * Common properties shared by all control components
+ */
+export interface ControlComponentProps extends BaseComponentProps {
+  /** The size modifier for the control */
+  size?: ControlSize | string;
+  /** Visual theme variant */
+  variant?: ControlVariant | string;
+  /** Disabled state of the control */
+  disabled?: boolean;
+  /** Marks the control as required */
+  required?: boolean;
+  /** Sets the control to read-only */
+  readonly?: boolean;
+  /** Marks the control as invalid or in error state */
+  invalid?: boolean;
+  /** Text label associated with the control */
+  label?: string;
+  /** Name of the control for form submission */
+  name?: string;
+}
+
+
+
+
+--- File: multiselect/Multiselect.astro ---
+---
+/**
+ * src/design/controls/multiselect/Multiselect.astro
+ * A searchable multi-value combobox component.
+ * - Displays selected values as dismissible chips inside the trigger.
+ * - Filters dropdown options based on input value.
+ * - Synchronizes with a hidden multiple `<select>` for form submissions.
+ * @props (local): options, selected, placeholder, label, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { ControlComponentProps } from "@/design/controls/controls.types";
+import { mergeClasses, mergeStyles } from "@/design/shared";
+import Icon from "@/design/display/icon/Icon.astro";
+import Chip from "@/design/display/chip/Chip.astro";
+import "./Multiselect.css";
+
+export interface Props extends ControlComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof ControlComponentProps> {
+  /** List of selectable options */
+  options: Array<{ value: string; label: string } | string>;
+  /** Array of initially selected values */
+  selected?: string[];
+  /** Input placeholder when empty */
+  placeholder?: string;
+  /** Label for the form control */
+  label?: string;
+  /** Input name for form submissions */
+  name?: string;
+}
+
+const {
+  options = [],
+  selected = [],
+  placeholder = "Search...",
+  label,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+// Standardize options array to { value, label } format
+const formattedOptions = options.map((opt) =>
+  typeof opt === "string" ? { value: opt, label: opt } : opt
+);
+
+const classes = ["multiselect"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  {label && <label class="multiselect__label-element">{label}</label>}
+
+  <!-- Hidden native select for form integration -->
+  <select multiple name={name} class="multiselect__native-select" aria-hidden="true" tabindex="-1">
+    {formattedOptions.map((opt) => (
+      <option value={opt.value} selected={selected.includes(opt.value)}>{opt.label}</option>
+    ))}
+  </select>
+
+  <div class="multiselect__trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+    <div class="multiselect__chips-wrap">
+      {formattedOptions.filter(opt => selected.includes(opt.value)).map((opt) => (
+        <Chip variant="primary" size="sm" dismissible data-value={opt.value}>
+          {opt.label}
+        </Chip>
+      ))}
+      <input
+        type="text"
+        class="multiselect__input"
+        placeholder={selected.length === 0 ? placeholder : ""}
+        aria-autocomplete="list"
+      />
+    </div>
+    <Icon name="chevron-down" class="multiselect__chevron" size="md" />
+  </div>
+
+  <ul class="multiselect__dropdown" role="listbox" aria-label={label || "Options"}>
+    {formattedOptions.map((opt) => {
+      const isSelected = selected.includes(opt.value);
+      return (
+        <li
+          class:list={["multiselect__option", isSelected && "is-selected"]}
+          role="option"
+          aria-selected={isSelected ? "true" : "false"}
+          data-value={opt.value}
+          data-label={opt.label}
+        >
+          <span class="multiselect__check">
+            {isSelected && <Icon name="check" size="2xs" />}
+          </span>
+          <span class="multiselect__option-label">{opt.label}</span>
+        </li>
+      );
+    })}
+    <li class="multiselect__empty" style="display: none;">No results found</li>
+  </ul>
+</div>
+
+<script>
+  const setupMultiselects = () => {
+    document.querySelectorAll(".multiselect").forEach((container) => {
+      const trigger = container.querySelector(".multiselect__trigger") as HTMLDivElement;
+      const input = container.querySelector(".multiselect__input") as HTMLInputElement;
+      const dropdown = container.querySelector(".multiselect__dropdown") as HTMLUListElement;
+      const nativeSelect = container.querySelector(".multiselect__native-select") as HTMLSelectElement;
+      const chipsWrap = container.querySelector(".multiselect__chips-wrap") as HTMLDivElement;
+      const options = container.querySelectorAll(".multiselect__option") as NodeListOf<HTMLLIElement>;
+      const emptyItem = container.querySelector(".multiselect__empty") as HTMLLIElement;
+
+      if (!trigger || !input || !dropdown || !nativeSelect || !chipsWrap) return;
+
+      const toggleDropdown = (open?: boolean) => {
+        const isOpen = open !== undefined ? open : !container.classList.contains("is-open");
+        if (isOpen) {
+          container.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+          input.focus();
+        } else {
+          container.classList.remove("is-open");
+          trigger.setAttribute("aria-expanded", "false");
+          input.value = "";
+          filterOptions();
+        }
+      };
+
+      const filterOptions = () => {
+        const query = input.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        options.forEach((opt) => {
+          const label = (opt.getAttribute("data-label") || "").toLowerCase();
+          if (label.includes(query)) {
+            opt.style.display = "";
+            visibleCount++;
+          } else {
+            opt.style.display = "none";
+          }
+        });
+
+        if (emptyItem) {
+          emptyItem.style.display = visibleCount === 0 ? "" : "none";
+        }
+      };
+
+      const selectOption = (value: string) => {
+        const option = nativeSelect.querySelector(`option[value="${value}"]`) as HTMLOptionElement;
+        if (!option) return;
+
+        option.selected = !option.selected;
+        
+        // Update styling of option in dropdown list
+        options.forEach((opt) => {
+          if (opt.getAttribute("data-value") === value) {
+            const isSelected = option.selected;
+            opt.classList.toggle("is-selected", isSelected);
+            opt.setAttribute("aria-selected", isSelected ? "true" : "false");
+            
+            const check = opt.querySelector(".multiselect__check") as HTMLSpanElement;
+            if (check) {
+              check.innerHTML = isSelected ? `<svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-2xs, var(--fs-2xs));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : "";
+            }
+          }
+        });
+
+        rebuildChips();
+        nativeSelect.dispatchEvent(new Event("change"));
+        input.focus();
+      };
+
+      const rebuildChips = () => {
+        // Clear all chips except the input element
+        const chips = chipsWrap.querySelectorAll("button.chip");
+        chips.forEach((c) => c.remove());
+
+        // Rebuild from selected option values
+        Array.from(nativeSelect.options).forEach((opt) => {
+          if (opt.selected) {
+            const chip = document.createElement("button");
+            chip.className = "chip display-size--sm display-variant--primary chip--interactive chip--dismissible";
+            chip.type = "button";
+            chip.setAttribute("data-value", opt.value);
+            chip.innerHTML = `<span class="chip__label">${opt.text}</span><span class="chip__dismiss" aria-label="Remove" role="button" tabindex="0"><svg class="icon-component text-tone--inherit" style="font-size: var(--display-size-sm, var(--fs-sm));" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>`;
+            
+            // Event listener for removing
+            chip.querySelector(".chip__dismiss")?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              selectOption(opt.value);
+            });
+            chip.addEventListener("click", (e) => {
+              e.stopPropagation();
+              selectOption(opt.value);
+            });
+
+            chipsWrap.insertBefore(chip, input);
+          }
+        });
+
+        // Toggle placeholder
+        const selectedCount = nativeSelect.querySelectorAll("option:checked").length;
+        input.placeholder = selectedCount === 0 ? (container.getAttribute("data-placeholder") || "Search...") : "";
+      };
+
+      // Toggle dropdown on trigger click
+      trigger.addEventListener("click", (e) => {
+        // Only toggle if not clicking a chip
+        if ((e.target as HTMLElement).closest(".chip")) return;
+        toggleDropdown();
+      });
+
+      // Handle keyboard navigation on trigger
+      trigger.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          if (e.target === input) return;
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Enter" || e.key === "ArrowDown") {
+          e.preventDefault();
+          toggleDropdown(true);
+        } else if (e.key === "Escape") {
+          toggleDropdown(false);
+        }
+      });
+
+      // Filter options on input keyup
+      input.addEventListener("input", () => {
+        toggleDropdown(true);
+        filterOptions();
+      });
+
+      // Handle option click
+      options.forEach((opt) => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const value = opt.getAttribute("data-value");
+          if (value) selectOption(value);
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!container.contains(e.target as Node)) {
+          toggleDropdown(false);
+        }
+      });
+
+      // Prevent chip-dismiss clicks inside trigger from bubbling
+      chipsWrap.querySelectorAll("button.chip").forEach((chip) => {
+        const val = chip.getAttribute("data-value");
+        if (val) {
+          chip.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectOption(val);
+          });
+          chip.querySelector(".chip__dismiss")?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectOption(val);
+          });
+        }
+      });
+    });
+  };
+
+  // Execute
+  setupMultiselects();
+  document.addEventListener("astro:page-load", setupMultiselects);
+</script>
+
+
+--- File: multiselect/Multiselect.css ---
+/* src/design/controls/multiselect/Multiselect.css */
+
+.multiselect {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.multiselect__label-element {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text--3);
+  font-family: var(--ff-sans);
+}
+
+.multiselect__native-select {
+  display: none;
+}
+
+.multiselect__trigger {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2xs);
+  min-height: 38px;
+  padding: var(--sp-3xs) var(--sp-xs);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  background: var(--layer--2);
+  cursor: pointer;
+  transition: border-color var(--td-fast) var(--te-in-out), box-shadow var(--td-fast) var(--te-in-out);
+  outline: none;
+}
+
+.multiselect__trigger:focus-within,
+.multiselect__trigger:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 2px var(--color-gold-focus);
+}
+
+.multiselect__chips-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2xs);
+  flex: 1;
+}
+
+.multiselect__input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: var(--ff-sans);
+  color: var(--text--5);
+  min-width: 80px;
+  flex: 1;
+  padding: var(--sp-3xs) 0;
+}
+
+.multiselect__input::placeholder {
+  color: var(--text--m);
+}
+
+.multiselect__chevron {
+  color: var(--text--m);
+  flex-shrink: 0;
+  transition: transform var(--td-normal) var(--te-in-out);
+  margin-left: auto;
+}
+
+.multiselect.is-open .multiselect__chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.multiselect__dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--layer--2);
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-md);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: var(--sh-m);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.multiselect.is-open .multiselect__dropdown {
+  display: block;
+}
+
+.multiselect__option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-2xs) var(--sp-xs);
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text--3);
+  transition: background-color var(--td-fast) var(--te-in-out);
+}
+
+.multiselect__option:hover {
+  background-color: var(--layer--3);
+}
+
+.multiselect__option.is-selected {
+  color: var(--color-gold);
+}
+
+.multiselect__option-label {
+  font-family: var(--ff-sans);
+}
+
+/* Checkbox indicator left of the label */
+.multiselect__check {
+  width: 14px;
+  height: 14px;
+  border: 0.5px solid var(--border--0);
+  border-radius: var(--rad-xs);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background-color: var(--layer--1);
+}
+
+.multiselect__option.is-selected .multiselect__check {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+  color: var(--layer--0);
+}
+
+.multiselect__empty {
+  padding: var(--sp-xs) var(--sp-xs);
+  font-size: 13px;
+  color: var(--text--m);
+  font-family: var(--ff-sans);
+  text-align: center;
+}
+
+
+--- File: multiselect/Multiselect.md ---
+# Multiselect
+
+A searchable, multi-value combobox input field used for selecting multiple options from a list.
+
+## Overview
+
+The job of the `Multiselect` component is to allow users to select multiple options from a dropdown menu, showing selected items as dismissible visual chips inside the text field. It includes a live filtering search bar for navigating large lists of choices and synchronizes selections with a hidden multiple `<select>` element to support native forms. It is NOT responsible for single option selection (use `Select` for that) or handling form-level validation.
+
+## Props
+
+The `Multiselect` component accepts all standard HTML attributes for its root `div` container element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `options` | `Array<{ value: string; label: string } \| string>` | `[]` | List of options to choose from (either string values or custom label/value objects). |
+| `selected` | `string[]` | `[]` | Array of initially selected values. |
+| `placeholder` | `string` | `'Search...'` | Placeholder text displayed inside the text input when no options are selected. |
+| `label` | `string` | `undefined` | A text label displayed above the control. |
+| `name` | `string` | `undefined` | Input name submitted with form data. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Selection Chips**: Selected options are rendered as interactive, dismissible `Chip` elements (using size `sm` and variant `primary`).
+- **Interactive States**: Displays a custom border and a gold focus shadow (`box-shadow: 0 0 0 2px var(--color-gold-focus)`) when focused or clicked.
+- **Dropdown List**: Opens an overlay panel directly beneath the trigger, with options highlighted on hover or checkmarked when selected.
+
+## Usage
+
+### Basic
+
+Provide a name and an array of options:
+
+```astro
+---
+import Multiselect from "@/design/controls/multiselect/Multiselect.astro";
+---
+
+<Multiselect
+  name="technologies"
+  options={["Astro", "React", "Vue", "Svelte", "Angular"]}
+  placeholder="Select technologies..."
+/>
+```
+
+### Common Patterns
+
+#### Initial Value Selection
+To render the component with pre-selected options:
+
+```astro
+---
+import Multiselect from "@/design/controls/multiselect/Multiselect.astro";
+---
+
+<Multiselect
+  name="countries"
+  label="Country Selection"
+  options={[
+    { value: "us", label: "United States" },
+    { value: "ca", label: "Canada" },
+    { value: "mx", label: "Mexico" }
+  ]}
+  selected={["us", "ca"]}
+/>
+```
+
+## Logic
+
+The `Multiselect` component contains an inline script that manages the dropdown state, search logic, and chip management:
+
+1. **Dropdown Overlay**: Toggles visibility of the `.multiselect__dropdown` panel when the trigger element is clicked, closing it automatically on clicks outside the component container.
+2. **Keystroke Search Filter**: Captures keyboard input on `.multiselect__input` to filter dropdown list elements in real-time. Displays a "No results found" message if no list option matches the query.
+3. **Form Synchronization**: Toggling items in the dropdown list automatically selects or deselects matching `<option>` elements in the hidden multiple `<select>` element, dispatching standard `change` events.
+4. **Dynamic Chip Building**: Clears and regenerates inline `Chip` components inside `.multiselect__chips-wrap` to match current native selections. Includes event listeners on the chips to let users dismiss selections by clicking the chip close action.
+5. **Keyboard Support**: Listens to `Space`, `Enter`, or `ArrowDown` keys on the combobox trigger to open the options panel, and `Escape` to close it.
+6. **Transitions Support**: Re-executes container scripts on `astro:page-load` to keep dropdowns functional during view transitions.
+
+## Accessibility
+
+- **ARIA Attributes**: The trigger utilizes `role="combobox"`, `aria-haspopup="listbox"`, and `aria-expanded` states. The dropdown container applies `role="listbox"`, and options use `role="option"` with `aria-selected` to provide screen readers with context.
+- **Native Form Integration**: Uses a hidden `<select multiple>` element to ensure selections are processed correctly by standard HTML `<form>` submissions and browser autofill.
+- **Keyboard Navigation**: Focuses the input element when opening, allowing keyboard users to type queries, dismiss selections, and toggle options.
+
+## CSS Architecture
+
+- **BEM Class Structure**: Built with clear modifier selectors (`.multiselect`, `.multiselect__trigger`, `.multiselect__dropdown`, `.multiselect__option`, `.multiselect__check`).
+- **Overlay Elevation**: The dropdown uses `position: absolute` with a high index (`z-index: var(--z-dropdown)`) and shadow rules (`box-shadow: var(--sh-m)`) to overlap pages.
+- **Chevron Rotation**: The chevron icon `.multiselect__chevron` rotates 180 degrees using CSS transitions when the parent element is `.is-open`.
+
+## Related Components
+
+- **Select**: Dropdown component designed for single options.
+- **Chip**: Component used to represent selected options inside the trigger.
+- **Icon**: Renders checkmarks and down arrow glyphs.
+
+
+--- File: range-slider/RangeSlider.astro ---
+---
+/**
+ * src/design/controls/range-slider/RangeSlider.astro
+ * A dual-handle range slider component for selection of value intervals.
+ * - Supports customized min, max, step, prefix, and lo/hi initial values.
+ * - Syncs dual overlapping range inputs and visually clips progress fill.
+ * - Fully client-side interactive.
+ * @props (local): label, valLo, valHi, min, max, step, prefix
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./RangeSlider.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Label for the slider */
+  label?: string;
+  /** Initial low value */
+  valLo?: number;
+  /** Initial high value */
+  valHi?: number;
+  /** Minimum range bound */
+  min?: number;
+  /** Maximum range bound */
+  max?: number;
+  /** Slider step size */
+  step?: number;
+  /** Optional display prefix (e.g. £ or $) */
+  prefix?: string;
+}
+
+const {
+  label,
+  valLo = 20,
+  valHi = 80,
+  min = 0,
+  max = 100,
+  step = 1,
+  prefix = "",
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["range-slider"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+const pctLo = ((valLo - min) / (max - min)) * 100;
+const pctHi = ((valHi - min) / (max - min)) * 100;
+const fillWidth = pctHi - pctLo;
+---
+
+<div class:list={finalClasses} style={finalStyles} data-prefix={prefix} {...rest}>
+  <div class="range-slider__header">
+    {label && <span class="range-slider__label">{label}</span>}
+    <span class="range-slider__display">{prefix}{valLo} – {prefix}{valHi}</span>
+  </div>
+  <div class="range-slider__track-wrap">
+    <div class="range-slider__track"></div>
+    <div class="range-slider__fill" style={`left: ${pctLo}%; width: ${fillWidth}%`}></div>
+    <input
+      class="range-slider__input range-slider__input--lo"
+      type="range"
+      min={min}
+      max={max}
+      value={valLo}
+      step={step}
+    />
+    <input
+      class="range-slider__input range-slider__input--hi"
+      type="range"
+      min={min}
+      max={max}
+      value={valHi}
+      step={step}
+    />
+  </div>
+  <div class="range-slider__bounds">
+    <span>{prefix}{min}</span>
+    <span>{prefix}{max}</span>
+  </div>
+</div>
+
+<script>
+  const setupRangeSliders = () => {
+    document.querySelectorAll(".range-slider").forEach((slider) => {
+      const loInput = slider.querySelector(".range-slider__input--lo") as HTMLInputElement;
+      const hiInput = slider.querySelector(".range-slider__input--hi") as HTMLInputElement;
+      const fill = slider.querySelector(".range-slider__fill") as HTMLDivElement;
+      const display = slider.querySelector(".range-slider__display") as HTMLSpanElement;
+      const prefix = slider.getAttribute("data-prefix") || "";
+
+      if (!loInput || !hiInput || !fill) return;
+
+      const updateTrack = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+
+        const minVal = parseFloat(loInput.min) || 0;
+        const maxVal = parseFloat(loInput.max) || 100;
+
+        const pctLo = ((loVal - minVal) / (maxVal - minVal)) * 100;
+        const pctHi = ((hiVal - minVal) / (maxVal - minVal)) * 100;
+
+        fill.style.left = pctLo + "%";
+        fill.style.width = (pctHi - pctLo) + "%";
+
+        if (display) {
+          display.textContent = `${prefix}${loVal} – ${prefix}${hiVal}`;
+        }
+      };
+
+      const handleLoInput = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+        if (loVal > hiVal) {
+          loInput.value = hiVal.toString();
+        }
+        updateTrack();
+      };
+
+      const handleHiInput = () => {
+        let loVal = parseFloat(loInput.value);
+        let hiVal = parseFloat(hiInput.value);
+        if (hiVal < loVal) {
+          hiInput.value = loVal.toString();
+        }
+        updateTrack();
+      };
+
+      // Clean up event listeners for HMR
+      loInput.removeEventListener("input", handleLoInput);
+      hiInput.removeEventListener("input", handleHiInput);
+
+      loInput.addEventListener("input", handleLoInput);
+      hiInput.addEventListener("input", handleHiInput);
+
+      // Initial layout update
+      updateTrack();
+    });
+  };
+
+  setupRangeSliders();
+  document.addEventListener("astro:page-load", setupRangeSliders);
+</script>
+
+
+--- File: range-slider/RangeSlider.css ---
+/* src/design/controls/range-slider/RangeSlider.css */
+
+.range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.range-slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.range-slider__label {
+  font-size: 13px;
+  color: var(--text--2);
+  font-family: var(--ff-sans);
+}
+
+.range-slider__display {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text--5);
+}
+
+/* Wrapper holds track, fill, and both inputs stacked */
+.range-slider__track-wrap {
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* The full, unfilled track background */
+.range-slider__track {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: var(--layer--4);
+  border-radius: var(--rad-xs);
+  border: 0.5px solid var(--border--0);
+}
+
+/* The gold selected-range segment — left/width set via JS */
+.range-slider__fill {
+  position: absolute;
+  height: 4px;
+  background: var(--color-gold);
+  border-radius: var(--rad-xs);
+  pointer-events: none;
+  transition: left var(--td-fast) var(--te-out), width var(--td-fast) var(--te-out);
+}
+
+/* Both range inputs stack absolutely and share the same track */
+.range-slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  pointer-events: none; /* re-enabled on thumb only */
+}
+
+/* Clean track for webkit/firefox */
+.range-slider__input::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+.range-slider__input::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.range-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+  position: relative;
+  z-index: 10;
+}
+
+.range-slider__input::-moz-range-thumb {
+  pointer-events: all;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+}
+
+.range-slider__input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+.range-slider__input::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.range-slider__input:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+.range-slider__input:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+
+.range-slider__bounds {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text--m);
+}
+
+
+--- File: range-slider/RangeSlider.md ---
+# RangeSlider
+
+A dual-handle range slider component used for selecting numeric value intervals (low and high bounds).
+
+## Overview
+
+The job of the `RangeSlider` component is to allow users to select a range of values (such as price intervals or age ranges). It synchronizes two overlapping native slider inputs, displays the current value interval, and renders a gold track fill between the low and high thumbs. It is NOT responsible for single-value selections (use `Slider` instead) or managing form state value submissions directly.
+
+## Props
+
+The `RangeSlider` component accepts all standard HTML attributes for its root `div` container element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `undefined` | The text label displayed above the range slider. |
+| `valLo` | `number` | `20` | The initial value of the lower slider handle. |
+| `valHi` | `number` | `80` | The initial value of the upper slider handle. |
+| `min` | `number` | `0` | The minimum range bound value. |
+| `max` | `number` | `100` | The maximum range bound value. |
+| `step` | `number` | `1` | The increment step size for slider modifications. |
+| `prefix` | `string` | `""` | An optional display prefix string shown next to values (e.g. `$` or `£`). |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Dynamic Range Fill**: The selected visual range is displayed using a gold track fill `.range-slider__fill` whose horizontal dimensions and offsets are computed dynamically.
+- **Bound Display**: Displays the minimum and maximum selectable bounds at the bottom edges of the slider component.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import RangeSlider from "@/design/controls/range-slider/RangeSlider.astro";
+---
+
+<RangeSlider label="Price Range" min={0} max={100} valLo={20} valHi={80} />
+```
+
+### Common Patterns
+
+#### Currency Range
+Using prefixes and custom step boundaries:
+
+```astro
+---
+import RangeSlider from "@/design/controls/range-slider/RangeSlider.astro";
+---
+
+<RangeSlider
+  label="Select Budget"
+  min={100}
+  max={1000}
+  valLo={250}
+  valHi={750}
+  step={50}
+  prefix="$"
+/>
+```
+
+## Logic
+
+The `RangeSlider` component contains an inline script that manages the dual-handle coordination:
+
+1. **Overlap Prevention**: Restricts values on low and high inputs to prevent the low thumb from crossing over the high thumb. If the low value exceeds the high value, it resets the low input value to match the high input value, and vice-versa.
+2. **Dynamic Progress Fill**: Computes the percentages of both slider handles relative to bounds, and updates the left-offset and width of the gold track fill `.range-slider__fill` dynamically.
+3. **Display Text Update**: Updates the text content of the range display header (e.g. `"$20 - $80"`) in real-time as inputs change.
+4. **Transitions Hook**: Re-executes setup functions on `astro:page-load` to support view transitions.
+
+## Accessibility
+
+- **Native Controls**: Leverages native range input elements for both low and high handles, ensuring standard keyboard accessibility (using arrow keys to adjust bounds) and compatibility with screen readers.
+- **Focus Rings**: Employs focus outlines (`box-shadow: 0 0 0 3px var(--color-gold-focus)`) on the range thumbs when focused via keyboard.
+
+## CSS Architecture
+
+- **BEM Class Structure**: Uses BEM classes for layout modifiers (`.range-slider`, `.range-slider__track`, `.range-slider__fill`, `.range-slider__input`).
+- **Overlapping Inputs**: Stacks inputs absolutely (`position: absolute; width: 100%`) within a shared track container. Disables default tracks using transparent background colors and disables pointer events (`pointer-events: none`) on the input wrappers, re-enabling them only on individual thumbs (`pointer-events: all`) so that both handles remain clickable and draggable.
+- **Thumb States**: Customizes standard Webkit and Firefox thumbs with grab cursors, shifting to `grabbing` and scaling up thumb sizes (`transform: scale(1.1)`) when active.
+
+## Related Components
+
+- **Slider**: Single-handle slider component designed for picking single numeric values.
+- **Input**: Standard numerical input fields.
+
+
+--- File: slider/Slider.astro ---
+---
+/**
+ * src/design/controls/slider/Slider.astro
+ * A single-handle range slider with dynamic filled-progress gold track.
+ * - Supports customized min, max, step, and value properties.
+ * - Auto-updates progress track fill and value display via pure client JS.
+ * - Adheres to accessible focus states and styling.
+ * @props (local): label, value, min, max, step, name
+ * @props (global): class, class:list, animate, onScroll, style
+ */
+
+import type { BaseComponentProps } from "@/design/shared/props";
+import { mergeClasses, mergeStyles } from "@/design/shared/functions";
+import "./Slider.css";
+
+export interface Props extends BaseComponentProps, Omit<import("astro/types").HTMLAttributes<"div">, keyof BaseComponentProps> {
+  /** Label for the slider */
+  label?: string;
+  /** Initial value */
+  value?: number;
+  /** Minimum range bound */
+  min?: number;
+  /** Maximum range bound */
+  max?: number;
+  /** Slider step size */
+  step?: number;
+  /** Form name of the input */
+  name?: string;
+}
+
+const {
+  label,
+  value = 50,
+  min = 0,
+  max = 100,
+  step = 1,
+  name,
+  class: className,
+  'class:list': classList,
+  style,
+  ...rest
+} = Astro.props;
+
+const classes = ["slider"];
+const finalClasses = mergeClasses(classes, Astro.props);
+const finalStyles = mergeStyles("", Astro.props);
+
+const percentage = ((value - min) / (max - min)) * 100;
+---
+
+<div class:list={finalClasses} style={finalStyles} {...rest}>
+  {label && (
+    <div class="slider__header">
+      <span class="slider__label">{label}</span>
+      <span class="slider__value">{value}</span>
+    </div>
+  )}
+  <div class="slider__row">
+    <span class="slider__bound">{min}</span>
+    <div class="slider__track-wrap">
+      <div class="slider__fill" style={`width: ${percentage}%`}></div>
+      <input
+        class="slider__input"
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        step={step}
+        name={name}
+      />
+    </div>
+    <span class="slider__bound">{max}</span>
+  </div>
+</div>
+
+<script>
+  // Dynamic client-side updates for Slider component
+  const setupSliders = () => {
+    document.querySelectorAll(".slider").forEach((slider) => {
+      const input = slider.querySelector(".slider__input") as HTMLInputElement;
+      const fill = slider.querySelector(".slider__fill") as HTMLDivElement;
+      const valDisplay = slider.querySelector(".slider__value") as HTMLSpanElement;
+
+      if (!input || !fill) return;
+
+      const update = () => {
+        const minVal = parseFloat(input.min) || 0;
+        const maxVal = parseFloat(input.max) || 100;
+        const val = parseFloat(input.value) || 0;
+        const pct = ((val - minVal) / (maxVal - minVal)) * 100;
+        fill.style.width = pct + "%";
+        if (valDisplay) valDisplay.textContent = input.value;
+      };
+
+      // Remove existing listener to prevent duplicates in HMR
+      input.removeEventListener("input", update);
+      input.addEventListener("input", update);
+      
+      // Run once on load
+      update();
+    });
+  };
+
+  // Run on load and after page transitions (if any)
+  setupSliders();
+  document.addEventListener("astro:page-load", setupSliders);
+</script>
+
+
+--- File: slider/Slider.css ---
+/* src/design/controls/slider/Slider.css */
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+}
+
+.slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slider__label {
+  font-size: 13px;
+  color: var(--text--2);
+  font-family: var(--ff-sans);
+}
+
+.slider__value {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text--5);
+}
+
+.slider__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.slider__bound {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text--m);
+  flex-shrink: 0;
+}
+
+/* The wrapper positions the fill div behind the thumb */
+.slider__track-wrap {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* Gold fill — width updated via JS as a percentage */
+.slider__fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--color-gold);
+  border-radius: var(--rad-xs);
+  pointer-events: none;
+  transition: width var(--td-fast) var(--te-out);
+}
+
+/* The actual range input — reset then restyle */
+.slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  position: relative; /* sits above .slider__fill */
+}
+
+/* The unfilled track portion */
+.slider__input::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--layer--4);
+  border-radius: var(--rad-xs);
+  z-index: -1;
+  border: 0.5px solid var(--border--0);
+}
+
+.slider__input::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent;
+  border-radius: var(--rad-xs);
+}
+
+.slider__input::-moz-range-track {
+  height: 4px;
+  background: transparent;
+  border-radius: var(--rad-xs);
+}
+
+.slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+  margin-top: -6px; /* center thumb on webkit */
+}
+
+.slider__input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text--5);
+  border: 2px solid var(--layer--1);
+  box-shadow: 0 0 0 1px var(--border--0);
+  cursor: grab;
+  transition: transform var(--td-fast) var(--te-out), box-shadow var(--td-fast) var(--te-out);
+}
+
+.slider__input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+.slider__input::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.slider__input:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+.slider__input:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--color-gold-focus);
+}
+
+
+--- File: slider/Slider.md ---
+# Slider
+
+A single-handle range slider used for selecting a single numeric value.
+
+## Overview
+
+The job of the `Slider` component is to allow users to select a single value from a range of bounds (such as volume levels or sizing dimensions). It dynamically updates a gold track progress fill, displays the current value, and handles standard range constraints. It is NOT responsible for range interval selections (use `RangeSlider` for low/high dual values).
+
+## Props
+
+The `Slider` component accepts all standard HTML attributes for its root `div` container element, in addition to the following props:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `undefined` | The text label displayed above the slider. |
+| `value` | `number` | `50` | The initial value of the slider. |
+| `min` | `number` | `0` | The minimum bounds value. |
+| `max` | `number` | `100` | The maximum bounds value. |
+| `step` | `number` | `1` | The increment step size for slider modifications. |
+| `name` | `string` | `undefined` | Common input name assigned to the native input element. |
+| `animate` | `string` | `undefined` | Entry animation classes (inherited from `BaseComponentProps`). |
+| `effects` | `string[]` | `undefined` | Decorative filters or shadows (inherited from `BaseComponentProps`). |
+
+## Variants / Sizes
+
+- **Progress Fill**: The selected visual range is displayed using a gold track fill `.slider__fill` whose width is computed dynamically based on the current selection.
+- **Bound Display**: Displays the minimum and maximum selectable bounds at the left and right edges of the slider track.
+
+## Usage
+
+### Basic
+
+```astro
+---
+import Slider from "@/design/controls/slider/Slider.astro";
+---
+
+<Slider label="Volume" min={0} max={100} value={50} />
+```
+
+### Common Patterns
+
+#### Custom Step Increments
+Using step values to align choices with discrete intervals:
+
+```astro
+---
+import Slider from "@/design/controls/slider/Slider.astro";
+---
+
+<Slider label="Grid Column Count" min={4} max={64} value={16} step={4} name="columns" />
+```
+
+## Logic
+
+The `Slider` component contains an inline script that manages the progress fill and value display updates:
+
+1. **Dynamic Progress Fill**: Computes the percentage of the current slider handle relative to bounds, and updates the width of the gold track fill `.slider__fill` dynamically.
+2. **Display Value Update**: Updates the text content of the slider value label (e.g., `50`) in real-time as the slider input changes.
+3. **Transitions Hook**: Re-executes setup functions on `astro:page-load` to support view transitions.
+
+## Accessibility
+
+- **Native Controls**: Leverages native range input elements, ensuring standard keyboard accessibility (using arrow keys to adjust values) and compatibility with screen readers.
+- **Focus Rings**: Employs focus outlines (`box-shadow: 0 0 0 3px var(--color-gold-focus)`) on the range thumb when focused via keyboard.
+
+## CSS Architecture
+
+- **BEM Class Structure**: Uses BEM classes for layout modifiers (`.slider`, `.slider__fill`, `.slider__input`).
+- **Custom Progress Track**: Hides browser default tracks using transparent background colors, overlaying the custom gold track progress fill `.slider__fill` beneath the thumb.
+- **Thumb States**: Customizes standard Webkit and Firefox thumbs with grab cursors, shifting to `grabbing` and scaling up thumb sizes (`transform: scale(1.1)`) when active.
+
+## Related Components
+
+- **RangeSlider**: Dual-handle slider component designed for selecting numeric value intervals.
+- **Input**: Standard numerical input fields.
+
+
